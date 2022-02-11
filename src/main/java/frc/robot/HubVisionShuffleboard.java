@@ -22,7 +22,7 @@ import frc.robot.subsystems.RevTurretSubsystem;
 /** Add your docs here. */
 public class HubVisionShuffleboard {
 
-        private LimeLight m_limelight;
+        private LimeLight m_ll;
 
         private RawContoursV2 m_rCV2;
         private GetTarget m_getTarget;
@@ -37,7 +37,7 @@ public class HubVisionShuffleboard {
                         RevTurretSubsystem turret,
                         RevTiltSubsystem tilt, RevShooterSubsystem shooter) {
 
-                m_limelight = ll;
+                m_ll = ll;
                 m_rCV2 = rCV2;
                 m_getTarget = getTarget;
                 m_turret = turret;
@@ -51,7 +51,7 @@ public class HubVisionShuffleboard {
                 // *
                 // */
 
-                if (m_rCV2.lookForTarget) {
+                if (m_rCV2.lookForTarget || true) {
 
                         ShuffleboardLayout contourPX = Shuffleboard.getTab("HubVision")
                                         .getLayout("allXY", BuiltInLayouts.kList).withPosition(0, 0)
@@ -63,14 +63,33 @@ public class HubVisionShuffleboard {
                         contourPX.addString("LtoRTyAngle", () -> m_as.getLCRTyAngle());
                         contourPX.addString("LtoRArea", () -> m_rCV2.getLCRArea());
                         contourPX.addNumber("AreaRatLR", () -> m_rCV2.getLRAreaRatio());
+                        contourPX.addNumber("TX", () -> m_ll.get("tx"));
+                        contourPX.addNumber("TY", () -> m_ll.get("ty"));
 
-                        ShuffleboardLayout contourLSSK = Shuffleboard.getTab("HubVision")
-                                        .getLayout("LSSK", BuiltInLayouts.kList).withPosition(4, 0)
+                        // ShuffleboardLayout contourLSSK = Shuffleboard.getTab("HubVision")
+                        // .getLayout("LSSK", BuiltInLayouts.kList).withPosition(4, 0)
+                        // .withSize(2, 2).withProperties(Map.of("Label position", "TOP")); //
+
+                        // contourLSSK.addString("LeftLSSK", () -> m_rCV2.getLeftLSSk());
+                        // contourLSSK.addString("CenterLSSK", () -> m_rCV2.getCenterLSSk());
+                        // contourLSSK.addString("RightLSSK", () -> m_rCV2.getRightLSSk());
+
+                        ShuffleboardLayout contourDist = Shuffleboard.getTab("HubVision")
+                                        .getLayout("Dist", BuiltInLayouts.kList).withPosition(4, 0)
                                         .withSize(2, 2).withProperties(Map.of("Label position", "TOP")); //
 
-                        contourLSSK.addString("LeftLSSK", () -> m_rCV2.getLeftLSSk());
-                        contourLSSK.addString("CenterLSSK", () -> m_rCV2.getCenterLSSk());
-                        contourLSSK.addString("RightLSSK", () -> m_rCV2.getRightLSSk());
+                        contourDist.addNumber("LDist", () -> m_as.leftDistance);
+                        contourDist.addNumber("CDist", () -> m_as.centerDistance);
+                        contourDist.addNumber("RDist", () -> m_as.rightDistance);
+
+                        ShuffleboardLayout shiftAngle = Shuffleboard.getTab("HubVision")
+                                        .getLayout("Angle", BuiltInLayouts.kList).withPosition(6, 0)
+                                        .withSize(2, 2).withProperties(Map.of("Label position", "TOP")); //
+
+                        shiftAngle.addNumber("LRAngle", () -> m_as.angleShiftLR);
+                        shiftAngle.addNumber("CRAngle", () -> m_as.angleShiftCR);
+                        shiftAngle.addNumber("LCAngle", () -> m_as.angleShiftLC);
+                        shiftAngle.addNumber("AveAngle", () -> m_as.averageAgleShift);
 
                         ShuffleboardLayout testContourPX = Shuffleboard.getTab("HubVision")
                                         .getLayout("testX", BuiltInLayouts.kList).withPosition(2, 0)
@@ -89,18 +108,19 @@ public class HubVisionShuffleboard {
                 if (m_getTarget.getTarget) {
                         ShuffleboardLayout targetValues = Shuffleboard.getTab("HubVision")
                                         .getLayout("bullseye", BuiltInLayouts.kList).withPosition(8, 0)
-                                        .withSize(2, 3).withProperties(Map.of("Label position", "TOP")); // labels)
+                                        .withSize(2, 4).withProperties(Map.of("Label position", "TOP")); // labels)
 
                         // targetValues.addNumber("QuadX", () -> m_getTarget.getCenterX());
                         // targetValues.addNumber("QuadY", () -> m_getTarget.getCenterY());
                         // targetValues.addNumber("avert", () -> m_getTarget.getAVert());
                         targetValues.add("StartLog",
-                                        new LogHubTarget(m_as, m_getTarget, m_tilt, m_turret, m_limelight));
+                                        new LogHubTarget(m_as, m_getTarget, m_tilt, m_turret, m_ll));
                         targetValues.add("StopLog", new EndHubLog(m_as));
 
                         targetValues.addNumber("AreaAngle", () -> m_getTarget.getTargetAngle());
                         targetValues.addNumber("AreaX", () -> m_getTarget.getTargetX());
-                }
+
+                  }
 
                 if (RobotBase.isReal()) {
 

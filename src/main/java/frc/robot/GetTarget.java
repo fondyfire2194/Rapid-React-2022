@@ -27,8 +27,11 @@ public class GetTarget {
 
   public boolean getTarget = true;
 
+  public boolean pxtoaworld;
+
   private RawContoursV2 m_rCV2;
   private AngleSolver m_as;
+  
 
   public GetTarget(RawContoursV2 rcV2, AngleSolver as) {
     m_rCV2 = rcV2;
@@ -41,6 +44,8 @@ public class GetTarget {
     solveQuadratic();
     targetValue = calculateTargetX();
     targetAngle = getTargetAngle(targetValue);
+   
+
     getTarget = false;
 
   }
@@ -56,6 +61,7 @@ public class GetTarget {
 
   }
 
+  
   private int calculateTargetX() {
 
     double leftArea = m_rCV2.getLeftArea();
@@ -98,11 +104,10 @@ public class GetTarget {
 
     temp = Units.radiansToDegrees(ax);
     temp -= 90;
-    return temp;
+    return -temp;
   }
 
   
-
   private int[] solveQuadratic() {
 
     // solving for a,b,c in y = ax^2 + bx + c

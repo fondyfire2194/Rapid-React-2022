@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.Arrays;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Add your docs here. */
@@ -14,9 +15,16 @@ public class RawContoursV2 {
     private int IMG_WIDTH = 320;
     private int IMG_HEIGHT = 240;
 
+    private double HFOV = 30;// 59.6;
+    private double VFOV = 23;// 45.7;
+    private double vpw = 2 * Math.tan(Units.degreesToRadians(HFOV / 2));
+    private double vph = 2 * Math.tan(Units.degreesToRadians(VFOV / 2));
+
     private int[] areaIndex = { 0, 1, 2 };
 
-    private boolean showDebug = true;
+    private boolean showDebug = false;
+
+    private boolean showData = false;
 
     public boolean lock3Contours = false;
 
@@ -27,6 +35,10 @@ public class RawContoursV2 {
     private int[] lRTxValues = { 0, 0, 0 };
 
     private int[] lRTYValues = { 0, 0, 0 };
+
+    double[] lRTxVpValues = { 0, 0, 0 };
+
+    double[] lRTyVpValues = { 0, 0, 0 };
 
     private int maxPossibleContours = 6;
 
@@ -52,12 +64,8 @@ public class RawContoursV2 {
 
     private double[][] ltoRLongShortSkew = new double[3][3];
 
-    public boolean endLog;
-
-    public boolean logInProgress;
-
-    public SimpleCSVLogger hubLogger;
-    public boolean log;
+    double testTxVPValue;
+    double testTyVPValue;
 
     public RawContoursV2(LimeLight ll) {
 
@@ -80,8 +88,6 @@ public class RawContoursV2 {
     // center post target
 
     public void getRawContourData() {
-
-        hubLogger = new SimpleCSVLogger();
 
         lookForTarget = m_ll.getIsTargetFound();
         lookForTarget = true;
@@ -109,11 +115,26 @@ public class RawContoursV2 {
 
             lRTYValues = getLRTYValues(areasLRTxIndex);
 
+            lRTxVpValues = getlrtxvp(areasLRTxIndex);
+
+            lRTyVpValues = getlrtyvp(areasLRTxIndex);
+
+            testTxVPValue = getTesttxvp(testTargetIndex);
+
+            testTyVPValue = getTesttyvp(testTargetIndex);
+
             lToRAreas = get3LargestAreas(areaIndex);
+
+            testTargetTx = (int)  (((1 + (m_ll.get(horCoord + String.valueOf(testTargetIndex)))) / 2) * IMG_WIDTH);
+            testTargetTy = (int)(int)  (((1 + (m_ll.get(vertCoord + String.valueOf(testTargetIndex)))) / 2) * IMG_HEIGHT);
+
+            testTargetTa = 1100. * m_ll.get("ta" + String.valueOf(testTargetIndex));
 
             ltoRLongShortSkew = getLongShortSkew(areasLRTxIndex);
 
-            displayData();
+            if (showData)
+
+                displayData();
 
             if (showDebug)
 
@@ -231,14 +252,40 @@ public class RawContoursV2 {
 
     }
 
+    private double[] getlrtxvp(int[] ltoRIndex) {
+        double[] temp = { 0, 0, 0 };
+        double vpw2 = vpw / 2;
+
+        temp[0] = vpw2 * m_ll.get(horCoord + String.valueOf(ltoRIndex[0]));
+        temp[1] = vpw2 * m_ll.get(horCoord + String.valueOf(ltoRIndex[1]));
+        temp[2] = vpw2 * m_ll.get(horCoord + String.valueOf(ltoRIndex[2]));
+
+        return temp;
+
+    }
+
+    private double[] getlrtyvp(int[] ltoRIndex) {
+        double[] temp = { 0, 0, 0 };
+        double vph2 = vph / 2;
+        SmartDashboard.putNumber("VPH2", vph2);
+        temp[0] = vph2 * m_ll.get(vertCoord + String.valueOf(ltoRIndex[0]));
+        temp[1] = vph2 * m_ll.get(vertCoord + String.valueOf(ltoRIndex[1]));
+        temp[2] = vph2 * m_ll.get(vertCoord + String.valueOf(ltoRIndex[2]));
+        SmartDashboard.putNumber("ltryvpw0", temp[0]);
+        SmartDashboard.putNumber("ltryvpw1", temp[1]);
+        SmartDashboard.putNumber("ltryvpw2", temp[2]);
+        return temp;
+
+    }
+
     private int[] getLRTYValues(int[] lToRIndex) {
 
         double[] temp = { 0, 0, 0 };
         int[] tempI = { 0, 0, 0 };
 
-        temp[0] = (((1 - (m_ll.get(vertCoord + String.valueOf(lToRIndex[0])))) / 2) * IMG_HEIGHT);
-        temp[1] = (((1 - (m_ll.get(vertCoord + String.valueOf(lToRIndex[1])))) / 2) * IMG_HEIGHT);
-        temp[2] = (((1 - (m_ll.get(vertCoord + String.valueOf(lToRIndex[2])))) / 2) * IMG_HEIGHT);
+        temp[0] = (((1 + (m_ll.get(vertCoord + String.valueOf(lToRIndex[0])))) / 2) * IMG_HEIGHT);
+        temp[1] = (((1 + (m_ll.get(vertCoord + String.valueOf(lToRIndex[1])))) / 2) * IMG_HEIGHT);
+        temp[2] = (((1 + (m_ll.get(vertCoord + String.valueOf(lToRIndex[2])))) / 2) * IMG_HEIGHT);
 
         for (int i = 0; i < temp.length; i++)
             tempI[i] = (int) temp[i];
@@ -280,16 +327,25 @@ public class RawContoursV2 {
             }
         }
 
-        double tempx = (((1 + (m_ll.get(horCoord + String.valueOf(lowest)))) / 2) * IMG_WIDTH);
-        double tempy = (((1 - (m_ll.get(vertCoord + String.valueOf(lowest)))) / 2) * IMG_HEIGHT);
-        double tempa = Math.round((m_ll.get("ta" + String.valueOf(lowest)) / 2) * 100);
-        SmartDashboard.putNumber("lowest", lowest);
-
-        testTargetTx = (int) tempx;
-        testTargetTy = (int) tempy;
-        testTargetTa = (int) tempa;
-
         return lowest;
+    }
+
+    private double getTesttxvp(int contour) {
+        double temp = 0;
+        double vpw2 = vpw / 2;
+
+        temp = vpw2 * m_ll.get(horCoord + String.valueOf(contour));
+
+        return temp;
+    }
+
+    private double getTesttyvp(int contour) {
+        double temp = 0;
+        double vph2 = vph / 2;
+
+        temp = vph2 * m_ll.get(vertCoord + String.valueOf(contour));
+
+        return temp;
     }
 
     private double[] showAsDoubleArray(int[] values) {

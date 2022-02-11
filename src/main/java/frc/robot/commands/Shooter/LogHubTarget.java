@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.AngleSolver;
 import frc.robot.GetTarget;
 import frc.robot.LimeLight;
-import frc.robot.RawContoursV2;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
@@ -23,13 +22,13 @@ public class LogHubTarget extends CommandBase {
    */
   public final String[] names = { "LAr", "CAr", "RAr", "TAr",
       "LAn", "CAn", "RAn", "TAn",
-      "TuAn", "TiAn", "Cx", "CaAn"
+      "TuAn", "TiAn", "Cx", "CaAn","ASAn","Dist"
   };
 
   public static String[] units = {
       "A", "A", "A", "A",
       "Dg", "Dg", "Dg", "Dg",
-      "Dg", "Dg", "Px", "Dg"
+      "Dg", "Dg", "Px", "Dg","Dg","Mtr"
   };
 
   private int loopCtr;
@@ -102,13 +101,19 @@ public class LogHubTarget extends CommandBase {
       m_as.hubLogger.writeData(
 
           m_as.getLeftArea(), m_as.getCenterArea(),
+          
           m_as.getRightArea(), m_as.getTestTargetArea(),
 
           m_as.getLeftTxAngle(), m_as.getCenterTxAngle(), m_as.getRightTxAngle(),
 
           m_as.getTestTxAngle(), m_turret.getAngle(), m_tilt.getAngle(),
 
-          m_gt.getTargetX(), m_gt.getTargetAngle());
+          m_gt.getTargetX(), m_gt.getTargetAngle(),
+
+          m_as.averageAgleShift,m_as.leftDistance
+          
+          );
+
 
     }
 

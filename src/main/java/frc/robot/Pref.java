@@ -115,6 +115,8 @@ public class Pref {
     prefDict.put("LimelightHeight", .66);
     prefDict.put("LimelightMaxHeight", .686);
 
+    prefDict.put("HubTgtGn",10.);
+
     // Set to 1 before power up to log
     prefDict.put("LogTilt", 0.);
     prefDict.put("LogTurret", 0.);
