@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Add your docs here. */
@@ -21,22 +22,25 @@ public class GetTarget {
   private double h;
   private double k;
 
-  
   private int targetValue = 0;
+  private double targetAngle;
 
-  public boolean getTarget=true;
+  public boolean getTarget = true;
 
   private RawContoursV2 m_rCV2;
+  private AngleSolver m_as;
 
-  public GetTarget(RawContoursV2 rcV2) {
+  public GetTarget(RawContoursV2 rcV2, AngleSolver as) {
     m_rCV2 = rcV2;
+    m_as = as;
   }
 
   public void runCalcs() {
     getTarget = true;
     getContourData();
     solveQuadratic();
-    targetValue=calculateTargetX();
+    targetValue = calculateTargetX();
+    targetAngle = getTargetAngle(targetValue);
     getTarget = false;
 
   }
@@ -54,25 +58,50 @@ public class GetTarget {
 
   private int calculateTargetX() {
 
-    double second = Math.max(m_rCV2.getLeftArea(), m_rCV2.getRightArea());
-    double center = m_rCV2.getCenterArea();
+    double leftArea = m_rCV2.getLeftArea();
+    double rightArea = m_rCV2.getRightArea();
 
-    double ratio = (center + second) / 2 / center;
+    double secondArea = Math.max(leftArea, rightArea);
+    double centerArea = m_rCV2.getCenterArea();
+
+    double ratio = (centerArea - secondArea) / centerArea;
     SmartDashboard.putNumber("target r", ratio);
 
     int secondX = m_rCV2.getLeftTx();
-    int side = -1;
-    if (second == m_rCV2.getRightArea()) {
+    if (secondArea == rightArea) {
       secondX = m_rCV2.getRightTx();
-      side = 1;
     }
-    int centerX = m_rCV2.getCenterTx();
-    int targetX = (int)(Math.abs(centerX-secondX)*(ratio)*side + (centerX));
+
+    int halfOffset = (m_rCV2.getCenterTx() - secondX) / 2;
+    double offsetX = halfOffset * ratio * 10.;
+    int midpoint = (secondX + m_rCV2.getCenterTx()) / 2;
+    int targetX = midpoint + (int) offsetX;
+    // int targetX = (int)(Math.abs(centerX-secondX)*(ratio)*side + (centerX));
     // int targetX = (int) (centerX*ratio + secondX*(1-ratio));
-    //int targetX = (int) (centerX * ratio);
+    // int targetX = (int) (centerX * ratio);
 
     return targetX;
   }
+
+  private double getTargetAngle(int xValue) {
+    double xAsNx = (xValue - 159.5) / 160;
+
+    double temp = 0;
+
+    double x = 0;
+    double nx = 0;
+    double ax = 0;// rads
+
+    nx = xAsNx;
+    x = nx * (m_as.vpw / 2);
+    ax = Math.atan2(1, x);
+
+    temp = Units.radiansToDegrees(ax);
+    temp -= 90;
+    return temp;
+  }
+
+  
 
   private int[] solveQuadratic() {
 
@@ -92,7 +121,6 @@ public class GetTarget {
 
     SmartDashboard.putNumber("Center X", h);
     SmartDashboard.putNumber("Center Y", k);
-
 
     if (h < 0)
       h = 0;
@@ -133,5 +161,9 @@ public class GetTarget {
   public int getTargetX() {
     return targetValue;
 
+  }
+
+  public double getTargetAngle() {
+    return targetAngle;
   }
 }

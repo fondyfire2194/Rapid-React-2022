@@ -34,7 +34,6 @@ import frc.robot.commands.RobotDrive.StopRobot;
 import frc.robot.commands.Shooter.ChooseShooterSpeedSource;
 import frc.robot.commands.Shooter.ClearShFaults;
 import frc.robot.commands.Shooter.EndShootLog;
-import frc.robot.commands.Shooter.LogDistanceData;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Shooter.StopShoot;
@@ -68,6 +67,8 @@ public class SetUpOI {
         private final LimeLight m_limelight;
         private final IntakesSubsystem m_intake;
         private final ClimberSubsystem m_climber;
+        private final AngleSolver m_as;
+
         private boolean m_showTurret = true;
         private boolean m_showTilt = true;
         private boolean m_showShooter = true;
@@ -75,8 +76,8 @@ public class SetUpOI {
         private boolean m_showTransport = false;
         private boolean m_showClimber = false;
         private boolean m_showSubsystems = false;
-        private boolean m_showIntake = true;
-        private boolean m_showAuto = false;
+        private boolean m_showIntake = false;
+
         private HttpCamera LLFeed;
         private UsbCamera intakeFeed;
         public double timeToStart;
@@ -85,7 +86,7 @@ public class SetUpOI {
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
                         LimeLight limelight, IntakesSubsystem intake,
                         ClimberSubsystem climber,
-                        FondyFireTrajectory traj, boolean liveMatch) {
+                        FondyFireTrajectory traj, AngleSolver as, boolean liveMatch) {
                 m_turret = turret;
                 m_tilt = tilt;
                 m_robotDrive = drive;
@@ -95,6 +96,7 @@ public class SetUpOI {
                 m_limelight = limelight;
                 m_intake = intake;
                 m_climber = climber;
+                m_as = as;
 
                 if (m_showIntake) {
 
@@ -139,9 +141,9 @@ public class SetUpOI {
                         turretCommands.add("Reset to 0", new ResetTurretAngle(m_turret));
                         turretCommands.add("Position To 0", new PositionTurret(m_turret, 0));//
                         // degrees
-                        turretCommands.add("Position To -30", new PositionTurret(m_turret, -30));//
+                        turretCommands.add("Position To -10", new PositionTurret(m_turret, -10));//
 
-                        turretCommands.add("Position To 30", new PositionTurret(m_turret, 30));
+                        turretCommands.add("Position To 10", new PositionTurret(m_turret, 10));
                         turretCommands.add("PosToVis +10", new PositionTurretToVision(m_turret,
                                         m_limelight, 10));
                         turretCommands.add("PosToVis-10", new PositionTurretToVision(m_turret,
@@ -352,9 +354,7 @@ public class SetUpOI {
                         shooterCommands.add("ClearFaults", new ClearShFaults(m_shooter));
                         shooterCommands.add("Cmd", m_shooter);
                         shooterCommands.add("EndLog", new EndShootLog(shooter));
-                        shooterCommands.add("LogDataRun",
-                                        new LogDistanceData(m_robotDrive, m_turret, m_tilt, m_shooter, m_limelight));
-
+                        
                         shooterCommands.add("RunAllShooters", new RunShooter(shooter));
                         shooterCommands.add("UseSpeedSlider", new ChooseShooterSpeedSource(shooter, tilt, turret, 3));
 

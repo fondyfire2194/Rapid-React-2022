@@ -36,14 +36,15 @@ import frc.robot.commands.RobotDrive.ArcadeDriveVelocity;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
-import frc.robot.commands.Shooter.LogHubTarget;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Shooter.StopShoot;
+import frc.robot.commands.Tilt.PositionHoldTilt;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Tilt.TiltJog;
 import frc.robot.commands.Tilt.TiltJogVelocity;
 import frc.robot.commands.Tilt.TiltWaitForStop;
+import frc.robot.commands.Turret.PositionHoldTurret;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.TurretJog;
 import frc.robot.commands.Turret.TurretJogVelocity;
@@ -92,6 +93,8 @@ public class RobotContainer {
 
       public final RawContoursV2 m_rCV2;
 
+      public final AngleSolver m_as;
+
       public GetTarget m_getTarget;
 
       public static boolean autoSelected;
@@ -99,6 +102,8 @@ public class RobotContainer {
       public SetUpOI m_setup;
 
       public HubVisionShuffleboard m_hvis;
+
+      public LLVisionShuffleboard m_llVis;
 
       public LimeLight m_limelight;
 
@@ -162,7 +167,7 @@ public class RobotContainer {
 
             // Preferences.removeAll();
             // Pref.deleteUnused();
-            // Pref.addMissing();
+            Pref.addMissing();
             m_robotDrive = new RevDrivetrain();
             m_transport = new CargoTransportSubsystem();
             // m_rearIntake = new RearIntakeSubsystem();
@@ -184,7 +189,9 @@ public class RobotContainer {
 
             m_rCV2 = new RawContoursV2(m_limelight);
 
-            m_getTarget = new GetTarget(m_rCV2);
+            m_as = new AngleSolver(m_rCV2, m_limelight);
+
+            m_getTarget = new GetTarget(m_rCV2, m_as);
 
             m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
@@ -193,20 +200,24 @@ public class RobotContainer {
             // m_compressor, m_intake);
 
             m_trajectory = new FondyFireTrajectory(m_robotDrive);
-            // m_tilt.setDefaultCommand(new PositionHoldTilt(m_tilt, m_shooter,
-            // m_limelight));
+
+            m_tilt.setDefaultCommand(new PositionHoldTilt(m_tilt, m_shooter,
+                        m_limelight));
             // // m_tilt.setDefaultCommand(new PositionHoldTiltTest(m_tilt));
 
-            // m_turret.setDefaultCommand(new PositionHoldTurret(m_turret, m_shooter,
-            // m_limelight));
+            m_turret.setDefaultCommand(new PositionHoldTurret(m_turret, m_shooter,
+                        m_limelight));
 
-            m_turret.setDefaultCommand(new TurretJog(m_turret, () -> setupGamepad.getRawAxis(0) / 5, setupGamepad));
+            // m_turret.setDefaultCommand(new TurretJog(m_turret, () ->
+            // setupGamepad.getRawAxis(0) / 5, setupGamepad));
 
             boolean isMatch = false;// Pref.getPref("IsMatch") == 1.;
             m_setup = new SetUpOI(m_turret, m_tilt, m_robotDrive, m_shooter, m_transport, m_compressor,
-                        m_limelight, m_intakes, m_climber, m_trajectory, isMatch);
+                        m_limelight, m_intakes, m_climber, m_trajectory, m_as, isMatch);
 
-            m_hvis = new HubVisionShuffleboard(m_limelight, m_rCV2, m_getTarget, m_turret, m_tilt, m_shooter);
+            m_hvis = new HubVisionShuffleboard(m_limelight, m_rCV2, m_as, m_getTarget, m_turret, m_tilt, m_shooter);
+
+            m_llVis = new LLVisionShuffleboard(m_limelight, m_rCV2, m_getTarget, m_turret, m_tilt, m_shooter);
 
             m_robotDrive.setDefaultCommand(getArcadeDriveCommand());
 
@@ -354,7 +365,8 @@ public class RobotContainer {
 
             setupLeftButton.whenPressed(new ReleaseCargo(m_transport));
 
-            setupBack.whenPressed(new LogHubTarget(m_rCV2, m_tilt, m_turret, m_shooter, m_robotDrive, m_limelight));
+            // setupBack.whenPressed(new LogHubTarget(m_rCV2, m_as, m_getTarget, m_tilt,
+            // m_turret, m_limelight));
 
             setupX.whileHeld(getJogTiltVelocityCommand(setupGamepad))
                         .whileHeld(getJogTurretVelocityCommand(setupGamepad)).whenReleased(new TiltWaitForStop(m_tilt))

@@ -94,6 +94,8 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     // m_robotContainer.m_setup.checkLimits();
     m_robotContainer.m_rCV2.getRawContourData();
+    m_robotContainer.m_as.runValues();
+    m_robotContainer.m_getTarget.runCalcs();
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
     // SmartDashboard.putNumber("thr",m_robotContainer.m_driverController.getThrottle());
     SmartDashboard.putNumber("thr1", m_robotContainer.getThrottle());
@@ -118,8 +120,8 @@ public class Robot extends TimedRobot {
     if (m_robotContainer.m_robotDrive.isStopped()) {
       m_robotContainer.m_robotDrive.setIdleMode(false);
     }
-
-    // m_robotContainer.m_setup.checkCANDevices();
+    m_robotContainer.m_limelight.useVision = false;
+    m_robotContainer.m_setup.checkCANDevices();
 
     new SetUpLimelightForDriver(m_robotContainer.m_limelight).schedule();
 

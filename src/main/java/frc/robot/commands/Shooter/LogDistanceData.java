@@ -9,11 +9,12 @@ package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.AngleSolver;
 import frc.robot.LimeLight;
 import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
-import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
+import frc.robot.subsystems.RevTurretSubsystem;
 
 public class LogDistanceData extends CommandBase {
   /**
@@ -33,7 +34,8 @@ public class LogDistanceData extends CommandBase {
   private final RevTurretSubsystem m_turret;
   private final RevTiltSubsystem m_tilt;
   private final RevShooterSubsystem m_shooter;
-
+  
+  
   public LogDistanceData(RevDrivetrain drive, RevTurretSubsystem turret, RevTiltSubsystem tilt,
       RevShooterSubsystem shooter, LimeLight limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -42,13 +44,15 @@ public class LogDistanceData extends CommandBase {
     m_turret = turret;
     m_tilt = tilt;
     m_shooter = shooter;
+  
+
 
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    int ope = m_shooter.simpleCSVLogger.init("TestRun", "Data", names, units);
+    int ope = m_shooter.distCSVLogger.init("TestRun", "Data", names, units);
     SmartDashboard.putNumber("OPE", ope);
     loopCtr = 0;
     fileOpenNow = false;
@@ -73,7 +77,7 @@ public class LogDistanceData extends CommandBase {
     if (loopCtr >= 25) {
       loopCtr = 0;
       step++;
-      m_shooter.simpleCSVLogger.writeData((double) step, -m_drive.getLeftDistance(), -m_drive.getRightDistance(),
+      m_shooter.distCSVLogger.writeData((double) step, -m_drive.getLeftDistance(), -m_drive.getRightDistance(),
           -m_drive.getAverageDistance(), m_shooter.calculatedCameraDistance, m_limelight.getBoundingBoxHeight(),
           m_limelight.getBoundingBoxWidth(), m_limelight.getTargetArea(), m_limelight.getAspectRatio(),
           m_drive.getLeftRate(), m_tilt.getAngle(), m_limelight.getdegVerticalToTarget(),
@@ -87,7 +91,7 @@ public class LogDistanceData extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    int sd = m_shooter.simpleCSVLogger.close();
+    int sd = m_shooter.distCSVLogger.close();
     m_shooter.endFile = false;
     SmartDashboard.putNumber("Close", sd);
   }

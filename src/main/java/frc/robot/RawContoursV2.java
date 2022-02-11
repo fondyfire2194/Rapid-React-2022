@@ -16,14 +16,16 @@ public class RawContoursV2 {
 
     private int[] areaIndex = { 0, 1, 2 };
 
-    private double[] areas3 = { 0, 0, 0 };
-
     private boolean showDebug = true;
 
-    private int[] areasLRTxIndex = { 0, 1, 2 };
-    private double[] lToRAreas = { 0, 0, 0,0 };
+    public boolean lock3Contours = false;
+
+    int[] areasLRTxIndex = { 0, 1, 2 };
+
+    private double[] lToRAreas = { 0, 0, 0, 0 };
 
     private int[] lRTxValues = { 0, 0, 0 };
+
     private int[] lRTYValues = { 0, 0, 0 };
 
     private int maxPossibleContours = 6;
@@ -34,9 +36,9 @@ public class RawContoursV2 {
 
     private boolean cameraAt90 = false;
 
-    private String horCoord;
+    String horCoord;
 
-    private String vertCoord;
+    String vertCoord;
 
     public int testTargetIndex;
 
@@ -49,6 +51,13 @@ public class RawContoursV2 {
     public boolean testTargetInUse = true;
 
     private double[][] ltoRLongShortSkew = new double[3][3];
+
+    public boolean endLog;
+
+    public boolean logInProgress;
+
+    public SimpleCSVLogger hubLogger;
+    public boolean log;
 
     public RawContoursV2(LimeLight ll) {
 
@@ -72,8 +81,10 @@ public class RawContoursV2 {
 
     public void getRawContourData() {
 
-        lookForTarget = m_ll.getIsTargetFound();
+        hubLogger = new SimpleCSVLogger();
 
+        lookForTarget = m_ll.getIsTargetFound();
+        lookForTarget = true;
         if (lookForTarget) {
 
             if (testTargetInUse) {
@@ -84,11 +95,15 @@ public class RawContoursV2 {
 
             // pointers to 3 largest contours
 
-            areaIndex = getIndexOf3LargestContours();
+            if (!lock3Contours) {
 
-            // pointers to LMR
+                areaIndex = getIndexOf3LargestContours();
 
-            areasLRTxIndex = getLeftCenterRightTxPointer(areaIndex);
+                // pointers to LMR
+
+                areasLRTxIndex = getLeftCenterRightTxPointer(areaIndex);
+
+            }
 
             lRTxValues = getLRTXValues(areaIndex);
 
@@ -101,6 +116,7 @@ public class RawContoursV2 {
             displayData();
 
             if (showDebug)
+
                 debugDisplay();
         }
 
@@ -153,15 +169,15 @@ public class RawContoursV2 {
 
     private double[] get3LargestAreas(int[] index) {
 
-        double[] temp = { 0, 0, 0 ,0};
+        double[] temp = { 0, 0, 0, 0 };
 
-        temp[0] = m_ll.get("ta" + String.valueOf(index[0])) * 100;
+        temp[0] = m_ll.get("ta" + String.valueOf(index[0])) * 1000;
 
-        temp[1] = m_ll.get("ta" + String.valueOf(index[1])) * 100;
+        temp[1] = m_ll.get("ta" + String.valueOf(index[1])) * 1000;
 
-        temp[2] = m_ll.get("ta" + String.valueOf(index[2])) * 100;
+        temp[2] = m_ll.get("ta" + String.valueOf(index[2])) * 1000;
 
-        temp[3] = temp[0] / temp[2];//ratio of outside areas
+        temp[3] = temp[0] / temp[2];// ratio of outside areas
         temp[0] = Math.round(temp[0]);
         temp[1] = Math.round(temp[1]);
         temp[2] = Math.round(temp[2]);
@@ -220,9 +236,9 @@ public class RawContoursV2 {
         double[] temp = { 0, 0, 0 };
         int[] tempI = { 0, 0, 0 };
 
-        temp[0] = (((1 + (m_ll.get(vertCoord + String.valueOf(lToRIndex[0])))) / 2) * IMG_WIDTH);
-        temp[1] = (((1 + (m_ll.get(vertCoord + String.valueOf(lToRIndex[1])))) / 2) * IMG_WIDTH);
-        temp[2] = (((1 + (m_ll.get(vertCoord + String.valueOf(lToRIndex[2])))) / 2) * IMG_WIDTH);
+        temp[0] = (((1 - (m_ll.get(vertCoord + String.valueOf(lToRIndex[0])))) / 2) * IMG_HEIGHT);
+        temp[1] = (((1 - (m_ll.get(vertCoord + String.valueOf(lToRIndex[1])))) / 2) * IMG_HEIGHT);
+        temp[2] = (((1 - (m_ll.get(vertCoord + String.valueOf(lToRIndex[2])))) / 2) * IMG_HEIGHT);
 
         for (int i = 0; i < temp.length; i++)
             tempI[i] = (int) temp[i];
@@ -253,22 +269,27 @@ public class RawContoursV2 {
     private int getLowestContourIndex() {
         double temp = 0;
         double min = IMG_HEIGHT;
+        int lowest = 0;
         int i = 0;
 
         for (i = 0; i < maxPossibleContours; i++) {
             temp = (((1 + (m_ll.get(vertCoord + String.valueOf(i)))) / 2) * IMG_WIDTH);
             if (temp < min) {
                 min = temp;
+                lowest = i;
             }
-
         }
 
-        testTargetTx = (int) (((1 + (m_ll.get(horCoord + String.valueOf(i)))) / 2) * IMG_WIDTH);
-        testTargetTy = (int) (((1 + (m_ll.get(vertCoord + String.valueOf(i)))) / 2) * IMG_HEIGHT);
-        testTargetTa = Math.round((m_ll.get("ta" + String.valueOf(i)) / 2) * 100);
+        double tempx = (((1 + (m_ll.get(horCoord + String.valueOf(lowest)))) / 2) * IMG_WIDTH);
+        double tempy = (((1 - (m_ll.get(vertCoord + String.valueOf(lowest)))) / 2) * IMG_HEIGHT);
+        double tempa = Math.round((m_ll.get("ta" + String.valueOf(lowest)) / 2) * 100);
+        SmartDashboard.putNumber("lowest", lowest);
 
-        return i;
+        testTargetTx = (int) tempx;
+        testTargetTy = (int) tempy;
+        testTargetTa = (int) tempa;
 
+        return lowest;
     }
 
     private double[] showAsDoubleArray(int[] values) {
@@ -298,7 +319,7 @@ public class RawContoursV2 {
         return lToRAreas[2];
     }
 
-    public double getLRAreaRatio(){
+    public double getLRAreaRatio() {
         return lToRAreas[3];
     }
 
@@ -342,9 +363,13 @@ public class RawContoursV2 {
         return lRTYValues[2];
     }
 
+    public void setLockContours(boolean on) {
+        lock3Contours = on;
+    }
+
     public String getLCRTx() {
 
-        return String.valueOf(getLeftTx() + " ," + String.valueOf(getCenterTx()) + " ," + String.valueOf(getRightTy()));
+        return String.valueOf(getLeftTx() + " ," + String.valueOf(getCenterTx()) + " ," + String.valueOf(getRightTx()));
     }
 
     public String getLCRTy() {
@@ -417,6 +442,14 @@ public class RawContoursV2 {
         SmartDashboard.putBoolean("TurretOntargt", getTurrettOnTarget(1));
         SmartDashboard.putBoolean("OkToShoot", OKToShoot());
 
+    }
+
+    private double getnX(double x) {
+        return ((x - 159.5)) / 160;
+    }
+
+    private double getnY(int y) {
+        return (1 / (IMG_WIDTH / 2)) * (y - ((double) IMG_WIDTH) - .5);
     }
 
     // private double get(String varName) {

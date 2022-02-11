@@ -53,7 +53,6 @@ public class RevShooterSubsystem extends SubsystemBase {
     public NetworkTableEntry shooterSpeed;
     public FFCSVLogger logger = new FFCSVLogger();
     public FFCSVLogger hubLogger = new FFCSVLogger();
-    
 
     public boolean startShooter;
 
@@ -63,13 +62,9 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public double teleopSetupShooterSpeed;
 
-    public SimpleCSVLogger simpleCSVLogger;
-
     public SimpleCSVLogger shootLogger;
 
     public SimpleCSVLogger shootSetupLogger;
-
-    public SimpleCSVLogger hubTargetLogger;
 
     public boolean logSetup;
 
@@ -166,6 +161,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public boolean hubLogInProgress;
     public boolean log;
     public boolean endHubFile;
+    public SimpleCSVLogger distCSVLogger = new SimpleCSVLogger();
 
     public RevShooterSubsystem() {
 
@@ -199,8 +195,7 @@ public class RevShooterSubsystem extends SubsystemBase {
         getGains();
         requiredMps = 23;
         shootOne = false;
-        simpleCSVLogger = new SimpleCSVLogger();
-        shootLogger = new SimpleCSVLogger();
+
         programSpeed = minMPS;
 
         if (RobotBase.isReal()) {
@@ -278,7 +273,7 @@ public class RevShooterSubsystem extends SubsystemBase {
         if (RobotBase.isReal())
             mLeftMotor.set(speed);
         else
-        mPidController.setReference(speed*12, ControlType.kVoltage, VELOCITY_SLOT);
+            mPidController.setReference(speed * 12, ControlType.kVoltage, VELOCITY_SLOT);
 
     }
 

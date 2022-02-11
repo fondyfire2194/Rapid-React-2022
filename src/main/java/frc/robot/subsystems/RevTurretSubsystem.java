@@ -206,6 +206,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         runAtVelocity(lockPIDOut);
 
+
         targetAngle = getAngle();
     }
 
