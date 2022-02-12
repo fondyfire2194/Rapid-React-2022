@@ -1,16 +1,16 @@
-package frc.robot;
+package frc.robot.Vision;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.LimelightControlMode.Advanced_Crosshair;
-import frc.robot.LimelightControlMode.Advanced_Target;
-import frc.robot.LimelightControlMode.CamMode;
-import frc.robot.LimelightControlMode.LedMode;
-import frc.robot.LimelightControlMode.Snapshot;
-import frc.robot.LimelightControlMode.StreamType;
+import frc.robot.Vision.LimelightControlMode.Advanced_Crosshair;
+import frc.robot.Vision.LimelightControlMode.Advanced_Target;
+import frc.robot.Vision.LimelightControlMode.CamMode;
+import frc.robot.Vision.LimelightControlMode.LedMode;
+import frc.robot.Vision.LimelightControlMode.Snapshot;
+import frc.robot.Vision.LimelightControlMode.StreamType;
 
 /**
  * Limelight Class was started by Corey Applegate of Team 3244 Granite City
@@ -459,7 +459,7 @@ public class LimeLight {
         return Math.toDegrees(Math.acos(ratio));
     }
 
-    double get(String varName) {
+    public double get(String varName) {
         return NetworkTableInstance.getDefault().getTable(m_tableName).getEntry(varName).getDouble(0);
       }
     

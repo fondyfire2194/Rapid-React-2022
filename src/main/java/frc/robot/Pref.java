@@ -37,63 +37,63 @@ public class Pref {
     prefDict.put("tIKp", .001);
     prefDict.put("tIKi", .001);
     prefDict.put("tIKd", 0.);
-    prefDict.put("tIKiz", 1.);
-    prefDict.put("tIMaxV", 250.);// 1000 deg per min
-    prefDict.put("tIMaxA", 700.);// deg per min/sec
+    prefDict.put("tIKiz", 2.);
+    prefDict.put("tIMaxV", 550.);// 1000 deg per min
+    prefDict.put("tIMaxA", 150.);// deg per min/sec
     prefDict.put("tITune", 0.);
 
     // tilt vel
-    prefDict.put("tIKpv", .001);
+    prefDict.put("tIKpv", .006);
     prefDict.put("tIKiv", .001);
     prefDict.put("tIKdv", 0.);
     prefDict.put("tIKizv", 1.);
-    prefDict.put("tIMaxVv", 45.);// these are in revs(deg)per second
-    prefDict.put("tIMaxAv", 125.);// deg per min/sec
+    prefDict.put("tIMaxVv", 50.);// these are in revs(deg)per second
+    prefDict.put("tIMaxAv", 150.);// deg per min/sec
     prefDict.put("tITunev", 0.);
 
     // Tilt Lock
 
-    prefDict.put("TiLkP", 20.);
-    prefDict.put("TiLkI", .01);
+    prefDict.put("TiLkP", 8.);
+    prefDict.put("TiLkI", .001);
     prefDict.put("TiLkD", 0.5);
-    prefDict.put("TiLkIZ", 0.001);
+    prefDict.put("TiLkIZ", 0.8);
     prefDict.put("tiLTune", 0.);
     prefDict.put("TiltLockAdd", 0.);
 
     // Turret smart motion
-    prefDict.put("tURKp", .00018);
+    prefDict.put("tURKp", .00015);
     prefDict.put("tURKi", .0001);
     prefDict.put("tURKd", .0002);
     prefDict.put("tURKiz", 1.);
     prefDict.put("tURMaxV", 250.);// deg/sec motor
-    prefDict.put("tURMaxA", 600.);// deg/sec motor
+    prefDict.put("tURMaxA", 500.);// deg/sec motor
     prefDict.put("tURTune", 0.);
 
     // turret vel
     // Turret smart motion
-    prefDict.put("tURKpv", .000);
+    prefDict.put("tURKpv", .001);
     prefDict.put("tURKiv", .000);
     prefDict.put("tURKdv", .000);
     prefDict.put("tURKizv", 1.);
     prefDict.put("tURMaxVv", 250.);// deg/sec motor
-    prefDict.put("tURMaxAv", 850.);// deg/sec motor
+    prefDict.put("tURMaxAv", 500.);// deg/sec motor
     prefDict.put("tURTunev", 0.);
 
     // Turret Lock
 
-    prefDict.put("TuLkP", 50.0);
-    prefDict.put("TuLkI", .00);
+    prefDict.put("TuLkP", 16.0);
+    prefDict.put("TuLkI", .001);
     prefDict.put("TuLkD", 0.);
-    prefDict.put("TuLkIZ", 0.);
+    prefDict.put("TuLkIZ", 0.9);
     prefDict.put("tuLTune", 0.);
 
     // shooter velocity
 
-    prefDict.put("sHff", .016);// =1/maxMPS = 1/(5700/60 * .638) .016
-    prefDict.put("sHkp", .01);
-    prefDict.put("sHkI", .0001);
-    prefDict.put("sHkd", 50.);
-    prefDict.put("sHkiz", 10.);
+    prefDict.put("sHff", .018);// =1/maxMPS = 1/(5700/60 * .638) .016
+    prefDict.put("sHkp", .02);
+    prefDict.put("sHkI", 1.);
+    prefDict.put("sHkd", 100.);
+    prefDict.put("sHkiz", 500.);
     prefDict.put("sHTune", 0.);
 
     // Drive
@@ -108,21 +108,18 @@ public class Pref {
 
     prefDict.put("dRTune", 0.);
 
-
-
     // camera
 
     prefDict.put("LimelightHeight", .66);
     prefDict.put("LimelightMaxHeight", .686);
 
-    prefDict.put("HubTgtGn",10.);
+    prefDict.put("HubTgtGn", 10.);
 
     // Set to 1 before power up to log
     prefDict.put("LogTilt", 0.);
     prefDict.put("LogTurret", 0.);
     prefDict.put("LogShoot", 0.);
     prefDict.put("LogHub", 0.);
-    
 
     // Shuffleboard
 

@@ -6,8 +6,8 @@ package frc.robot.commands.Vision;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.LimeLight;
-import frc.robot.LimelightControlMode.StreamType;;
+import frc.robot.Vision.LimeLight;
+import frc.robot.Vision.LimelightControlMode.StreamType;;
 
 public class LimelightStreamMode extends CommandBase {
   /** Creates a new LimelightLeds. */

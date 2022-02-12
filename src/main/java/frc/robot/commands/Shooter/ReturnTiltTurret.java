@@ -5,7 +5,7 @@
 package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.LimeLight;
+import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.UseVision;

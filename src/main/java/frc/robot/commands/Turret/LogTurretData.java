@@ -9,7 +9,7 @@ package frc.robot.commands.Turret;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.LimeLight;
+import frc.robot.Vision.LimeLight;
 import frc.robot.subsystems.RevTurretSubsystem;
 
 public class LogTurretData extends CommandBase {

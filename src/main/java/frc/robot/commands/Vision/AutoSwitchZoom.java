@@ -8,7 +8,7 @@
 package frc.robot.commands.Vision;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.LimeLight;
+import frc.robot.Vision.LimeLight;
 
 public class AutoSwitchZoom extends CommandBase {
   /**

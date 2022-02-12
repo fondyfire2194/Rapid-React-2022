@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot;
+package frc.robot.OI;
 
 import java.util.Map;
 
@@ -11,9 +11,12 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import frc.robot.Constants.PipelinesConstants;
-import frc.robot.LimelightControlMode.CamMode;
-import frc.robot.LimelightControlMode.LedMode;
-import frc.robot.LimelightControlMode.StreamType;
+import frc.robot.Vision.GetTarget;
+import frc.robot.Vision.LimeLight;
+import frc.robot.Vision.RawContoursV2;
+import frc.robot.Vision.LimelightControlMode.CamMode;
+import frc.robot.Vision.LimelightControlMode.LedMode;
+import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.commands.Vision.LimelightCamMode;
 import frc.robot.commands.Vision.LimelightLeds;
 import frc.robot.commands.Vision.LimelightSetPipeline;

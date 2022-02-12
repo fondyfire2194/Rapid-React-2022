@@ -9,8 +9,8 @@ package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.AngleSolver;
-import frc.robot.LimeLight;
+import frc.robot.Vision.AngleSolver;
+import frc.robot.Vision.LimeLight;
 import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;

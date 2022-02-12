@@ -11,8 +11,8 @@
 package frc.robot.commands.Turret;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.LimeLight;
-import frc.robot.LimelightControlMode.LedMode;
+import frc.robot.Vision.LimeLight;
+import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.subsystems.RevTurretSubsystem;
 
 public class PositionTurretToVision extends CommandBase {

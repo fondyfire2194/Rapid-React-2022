@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.HoodedShooterConstants;
-import frc.robot.LimeLight;
+import frc.robot.Vision.LimeLight;
 import frc.robot.ShootData;
 import frc.robot.commands.MessageCommand;
 import frc.robot.commands.CargoTransport.SetLeftReleaseShots;

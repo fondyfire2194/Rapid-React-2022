@@ -5,8 +5,8 @@
 package frc.robot.commands.Vision;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.LimeLight;
-import frc.robot.LimelightControlMode.CamMode;
+import frc.robot.Vision.LimeLight;
+import frc.robot.Vision.LimelightControlMode.CamMode;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

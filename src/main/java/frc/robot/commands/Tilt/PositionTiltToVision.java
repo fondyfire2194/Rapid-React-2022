@@ -12,8 +12,8 @@ package frc.robot.commands.Tilt;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.HoodedShooterConstants;
-import frc.robot.LimeLight;
-import frc.robot.LimelightControlMode.LedMode;
+import frc.robot.Vision.LimeLight;
+import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.subsystems.RevTiltSubsystem;
 
 public class PositionTiltToVision extends CommandBase {
