@@ -1,0 +1,57 @@
+{
+  "NetworkTables": {
+    "CameraPublisher": {
+      "limelight": {
+        "open": true
+      },
+      "open": true
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/HubVision/bullseye/StartLog": "Command",
+      "/Shuffleboard/HubVision/bullseye/StopLog": "Command",
+      "/Shuffleboard/LLVision/Camera/DriverCam": "Command",
+      "/Shuffleboard/LLVision/Camera/MainPIP": "Command",
+      "/Shuffleboard/LLVision/Camera/SecIP": "Command",
+      "/Shuffleboard/LLVision/Camera/SideBySideStream": "Command",
+      "/Shuffleboard/LLVision/Camera/VisionCam": "Command",
+      "/Shuffleboard/LLVision/LEDs/LedsBlink": "Command",
+      "/Shuffleboard/LLVision/LEDs/LedsOff": "Command",
+      "/Shuffleboard/LLVision/LEDs/LedsOn": "Command",
+      "/Shuffleboard/LLVision/LEDs/LedsPipeline": "Command",
+      "/Shuffleboard/LLVision/On-Off/Vision Off": "Command",
+      "/Shuffleboard/LLVision/On-Off/Vision On": "Command",
+      "/Shuffleboard/LLVision/Zoom/2XZoom": "Command",
+      "/Shuffleboard/LLVision/Zoom/3X Zoom": "Command",
+      "/Shuffleboard/LLVision/Zoom/No Zoom": "Command",
+      "/Shuffleboard/SetupShooter/MAXMPS 50/ClearFaults": "Command",
+      "/Shuffleboard/SetupShooter/MAXMPS 50/Cmd": "Subsystem",
+      "/Shuffleboard/SetupShooter/MAXMPS 50/EndLog": "Command",
+      "/Shuffleboard/SetupShooter/MAXMPS 50/RunAllShooters": "Command",
+      "/Shuffleboard/SetupShooter/MAXMPS 50/Shoot": "Command",
+      "/Shuffleboard/SetupShooter/MAXMPS 50/Stop Shoot": "Command",
+      "/Shuffleboard/SetupShooter/MAXMPS 50/UseSpeedSlider": "Command",
+      "/Shuffleboard/SetupTilt/Tilt/ClearFaults": "Command",
+      "/Shuffleboard/SetupTilt/Tilt/Cmd": "Subsystem",
+      "/Shuffleboard/SetupTilt/Tilt/PosToVis + ": "Command",
+      "/Shuffleboard/SetupTilt/Tilt/PosToVis -": "Command",
+      "/Shuffleboard/SetupTilt/Tilt/Position To 15": "Command",
+      "/Shuffleboard/SetupTilt/Tilt/Position To 5": "Command",
+      "/Shuffleboard/SetupTilt/Tilt/PositionToSwitch": "Command",
+      "/Shuffleboard/SetupTilt/Tilt/StopTilt": "Command",
+      "/Shuffleboard/SetupTurret/Turret/ClearFaults": "Command",
+      "/Shuffleboard/SetupTurret/Turret/Cmd": "Subsystem",
+      "/Shuffleboard/SetupTurret/Turret/PosToVis +10": "Command",
+      "/Shuffleboard/SetupTurret/Turret/PosToVis-10": "Command",
+      "/Shuffleboard/SetupTurret/Turret/Position To -10": "Command",
+      "/Shuffleboard/SetupTurret/Turret/Position To 0": "Command",
+      "/Shuffleboard/SetupTurret/Turret/Position To 10": "Command",
+      "/Shuffleboard/SetupTurret/Turret/Reset to 0": "Command",
+      "/Shuffleboard/SetupTurret/Turret/StopTurret": "Command",
+      "/SmartDashboard/Field": "Field2d"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client"
+  }
+}

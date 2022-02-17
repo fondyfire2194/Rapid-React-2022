@@ -21,14 +21,14 @@ public class LogHubTarget extends CommandBase {
    * Creates a new LogHubData.
    */
   public final String[] names = { "LAr", "CAr", "RAr", "TAr",
-      "LAn", "CAn", "RAn", "TAn",
-      "TuAn", "TiAn", "Cx", "CaAn","ASAn","Dist"
+      "LAn", "CAn", "RAn", 
+      "TuAn", "TiAn","TstAn", "gttx", "gtAn", "AvSAn", "QuadAn"
   };
 
   public static String[] units = {
       "A", "A", "A", "A",
       "Dg", "Dg", "Dg", "Dg",
-      "Dg", "Dg", "Px", "Dg","Dg","Mtr"
+      "Dg", "Dg", "Px", "Dg", "Dg", "Mtr", "Dg"
   };
 
   private int loopCtr;
@@ -101,19 +101,18 @@ public class LogHubTarget extends CommandBase {
       m_as.hubLogger.writeData(
 
           m_as.getLeftArea(), m_as.getCenterArea(),
-          
+
           m_as.getRightArea(), m_as.getTestTargetArea(),
 
-          m_as.getLeftTxAngle(), m_as.getCenterTxAngle(), m_as.getRightTxAngle(),
+          m_as.getLeftTyAngle(), m_as.getCenterTyAngle(), m_as.getRightTyAngle(),
 
-          m_as.getTestTxAngle(), m_turret.getAngle(), m_tilt.getAngle(),
+          m_turret.getAngle(), m_tilt.getAngle(),
 
-          m_gt.getTargetX(), m_gt.getTargetAngle(),
+          m_as.getTestTxAngle(), m_gt.getTargetX(), m_gt.getTargetAngle(),
 
-          m_as.averageAgleShift,m_as.leftDistance
-          
-          );
+          m_gt.quadAngle
 
+      );
 
     }
 

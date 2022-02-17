@@ -58,17 +58,7 @@ public class AngleSolver {
 
     public double rightDistance;
 
-    public double[] rightXY = { 0, 0 };
-
-    public double[] centerXY = { 0, 0 };
-
-    public double[] leftXY = { 0, 0 };
-
-    public double angleShiftLR;
-    public double angleShiftLC;
-    public double angleShiftCR;
-    public double averageAgleShift;
-
+   
     public AngleSolver(RawContoursV2 rcv2, LimeLight ll) {
 
         m_rcv2 = rcv2;
@@ -99,16 +89,7 @@ public class AngleSolver {
         centerDistance = getTargetDistance(lrTyAngles[1]);
         rightDistance = getTargetDistance(lrTyAngles[2]);
 
-        rightXY = getTargetXY(getTxVpAngles()[2], rightDistance);
-        centerXY = getTargetXY(getTxVpAngles()[1], centerDistance);
-        leftXY = getTargetXY(getTxVpAngles()[0], leftDistance);
-
-        angleShiftCR = getAngleShift(centerXY, rightXY);
-        angleShiftLR = getAngleShift(leftXY, rightXY);
-        angleShiftLC = getAngleShift(leftXY, centerXY);
-
-        averageAgleShift = getAverageAngleShift();
-
+        
     }
 
     private double[] getTxVpAngles() {
@@ -252,7 +233,7 @@ public class AngleSolver {
 
     // METERS
     private double getTargetDistance(double ty) {
-        VISION_TAPE_BOTTOM_HEIGHT = Units.inchesToMeters(72);
+        VISION_TAPE_BOTTOM_HEIGHT = Units.inchesToMeters(78);
         double distance = 0;
         double h1 = CAMERA_HEIGHT;
         double h2 = VISION_TAPE_BOTTOM_HEIGHT + VISION_TAPE_WIDTH;
@@ -262,28 +243,6 @@ public class AngleSolver {
         distance = (h2 - h1) / Math.tan(a1 + a2);
 
         return distance;
-    }
-
-    private double[] getTargetXY(double angle, double distance) {
-        double[] temp = { 0, 0 };
-        temp[0] = distance * Math.sin(Units.degreesToRadians(angle));
-        temp[1] = distance * Math.cos(Units.degreesToRadians(angle));
-        return temp;
-    }
-
-    private double getAngleShift(double[] rpt, double[] lpt) {
-
-        double xDiff = rpt[0] - lpt[0];// opp side
-        double yTotal = rpt[1] + lpt[1];// adj side
-        double temp = Math.atan(xDiff / yTotal);
-        return Units.radiansToDegrees(temp);
-
-    }
-
-    private double getAverageAngleShift() {
-
-        return (angleShiftLR + angleShiftCR + angleShiftLC) / 3;
-
     }
 
     public double getLeftArea() {

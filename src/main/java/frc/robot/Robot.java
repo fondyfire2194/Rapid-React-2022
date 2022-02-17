@@ -17,6 +17,12 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutoCommands.LRetPuShoot;
+import frc.robot.commands.AutoCommands.LRetPuShootLow;
+import frc.robot.commands.AutoCommands.RRetPuS3;
+import frc.robot.commands.AutoCommands.RRetPuShoot;
+import frc.robot.commands.AutoCommands.RRetPuShootLow;
+import frc.robot.commands.AutoCommands.Taxi;
 import frc.robot.commands.RobotDrive.PickupMove;
 import frc.robot.commands.Shooter.ChooseShooterSpeedSource;
 import frc.robot.commands.Shooter.SetLogItemsState;
@@ -95,7 +101,7 @@ public class Robot extends TimedRobot {
     // m_robotContainer.m_setup.checkLimits();
     m_robotContainer.m_rCV2.getRawContourData();
     m_robotContainer.m_as.runValues();
-    m_robotContainer.m_getTarget.runCalcs();
+   // m_robotContainer.m_getTarget.runCalcs();
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
     // SmartDashboard.putNumber("thr",m_robotContainer.m_driverController.getThrottle());
     SmartDashboard.putNumber("thr1", m_robotContainer.getThrottle());
@@ -155,7 +161,6 @@ public class Robot extends TimedRobot {
     new ChooseShooterSpeedSource(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_turret, 0)
         .schedule(true);
 
-    AutoFactory m_autoFactory = m_robotContainer.m_autoFactory;
 
     Shuffleboard.selectTab("Competition");
     Shuffleboard.startRecording();
@@ -172,26 +177,36 @@ public class Robot extends TimedRobot {
 
       case 0:// cross line
 
-        m_autonomousCommand = new PickupMove(m_robotContainer.m_robotDrive, -1, .5);
-
-        // m_robotContainer.m_shooter.stop();
+        m_autonomousCommand = new Taxi(m_robotContainer.m_robotDrive);
 
         break;
       case 1:// in front of power port, move back use shooter data index 1
 
-        m_autonomousCommand = m_autoFactory.getAutonomousCommand1();
+        m_autonomousCommand = new LRetPuShoot(null, null, null, null, null, null, null, null);
 
         break;
 
       case 2:// Trench Pickup 2 ball
 
-        // m_autonomousCommand = m_autoFactory.getAutonomousCommand2();
+        m_autonomousCommand = new RRetPuShoot();
 
         break;
 
       case 3:// ShieldGen Pickup 1 ball
 
-        // m_autonomousCommand = m_autoFactory.getAutonomousCommand3();
+        m_autonomousCommand = new RRetPuS3();
+
+        break;
+
+      case 4:
+
+        m_autonomousCommand = new RRetPuShootLow();
+
+        break;
+      case 5:
+
+        m_autonomousCommand = new LRetPuShootLow();
+
         break;
 
       default:

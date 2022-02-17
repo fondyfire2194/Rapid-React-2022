@@ -247,7 +247,7 @@ public class SetUpOI {
                                         .getLayout("Tilt", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4)
                                         .withProperties(Map.of("Label position", "LEFT")); //
 
-                        tiltCommands.add("Position To 25", new PositionTilt(m_tilt, 25));
+ //                       tiltCommands.add("Position To 25", new PositionTilt(m_tilt, 25));
 
                         tiltCommands.add("Position To 15", new PositionTilt(m_tilt, 15));
                         tiltCommands.add("Position To 5", new PositionTilt(m_tilt, 5));

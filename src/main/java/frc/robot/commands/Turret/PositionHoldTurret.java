@@ -28,7 +28,6 @@ public class PositionHoldTurret extends CommandBase {
 
   private final RevTurretSubsystem m_turret;
   private final LimeLight m_limelight;
-  private final RevShooterSubsystem m_shooter;
   private boolean targetSeen;
   private double cameraHorizontalError;
   private int visionFoundCounter;
@@ -36,11 +35,10 @@ public class PositionHoldTurret extends CommandBase {
   private double deadband = .01;
   private double lastHorizontalError;
 
-  public PositionHoldTurret(RevTurretSubsystem turret, RevShooterSubsystem shooter, LimeLight limelight) {
+  public PositionHoldTurret(RevTurretSubsystem turret, LimeLight limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_turret = turret;
     m_limelight = limelight;
-    m_shooter = shooter;
     addRequirements(m_turret);
   }
 
@@ -101,9 +99,7 @@ public class PositionHoldTurret extends CommandBase {
       visionFoundCounter = 0;
       cameraHorizontalError = 0;
     }
-    if (!m_shooter.shotInProgress)
-      lastHorizontalError = -m_turret.adjustedCameraError;
-
+   
     if (!m_turret.validTargetSeen) {
 
       m_turret.goToPositionMotionMagic(m_turret.targetAngle);

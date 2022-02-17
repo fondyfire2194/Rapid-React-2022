@@ -60,12 +60,15 @@ public class RawContoursV2 {
 
     private double testTargetTa;
 
-    public boolean testTargetInUse = true;
+    public boolean testTargetInUse = false;
 
-    private double[][] ltoRLongShortSkew = new double[3][3];
+    // private double[][] ltoRLongShortSkew = new double[3][3];
 
     double testTxVPValue;
+
     double testTyVPValue;
+
+    public boolean areasValid;
 
     public RawContoursV2(LimeLight ll) {
 
@@ -88,60 +91,71 @@ public class RawContoursV2 {
     // center post target
 
     public void getRawContourData() {
+    }
 
-        lookForTarget = m_ll.getIsTargetFound();
-        lookForTarget = true;
-        if (lookForTarget) {
+    public void display() {
 
-            if (testTargetInUse) {
+        if (showData)
 
-                testTargetIndex = getLowestContourIndex();
+            displayData();
 
-            }
+        if (showDebug)
 
-            // pointers to 3 largest contours
+            debugDisplay();
+    }
 
-            if (!lock3Contours) {
+    public void checkTestTarget() {
 
-                areaIndex = getIndexOf3LargestContours();
+        testTargetIndex = getLowestContourIndex();
 
-                // pointers to LMR
+    }
 
-                areasLRTxIndex = getLeftCenterRightTxPointer(areaIndex);
+    // pointers to 3 largest contours
 
-            }
+    public boolean getAreaData() {
 
-            lRTxValues = getLRTXValues(areaIndex);
+        areaIndex = getIndexOf3LargestContours();
 
-            lRTYValues = getLRTYValues(areasLRTxIndex);
+        // pointers to LMR
 
-            lRTxVpValues = getlrtxvp(areasLRTxIndex);
+        areasLRTxIndex = getLeftCenterRightTxPointer(areaIndex);
 
-            lRTyVpValues = getlrtyvp(areasLRTxIndex);
+        lToRAreas = get3LargestAreas(areaIndex);
+
+        areasValid = checkAreasValid();
+
+        return areasValid;
+    }
+
+    public int[] getlrtxData() {
+
+        lRTxValues = getLRTXValues(areaIndex);
+
+        // lRTYValues = getLRTYValues(areasLRTxIndex);
+
+        lRTxVpValues = getlrtxvp(areasLRTxIndex);
+
+        lRTyVpValues = getlrtyvp(areasLRTxIndex);
+
+        if (testTargetInUse) {
 
             testTxVPValue = getTesttxvp(testTargetIndex);
 
             testTyVPValue = getTesttyvp(testTargetIndex);
 
-            lToRAreas = get3LargestAreas(areaIndex);
+            testTargetTx = (int) (((1 + (m_ll.get(horCoord + String.valueOf(testTargetIndex)))) / 2) * IMG_WIDTH);
 
-            testTargetTx = (int)  (((1 + (m_ll.get(horCoord + String.valueOf(testTargetIndex)))) / 2) * IMG_WIDTH);
-            testTargetTy = (int)(int)  (((1 + (m_ll.get(vertCoord + String.valueOf(testTargetIndex)))) / 2) * IMG_HEIGHT);
+            testTargetTy = (int) (int) (((1 + (m_ll.get(vertCoord + String.valueOf(testTargetIndex)))) / 2)
+                    * IMG_HEIGHT);
 
             testTargetTa = 1100. * m_ll.get("ta" + String.valueOf(testTargetIndex));
 
-            ltoRLongShortSkew = getLongShortSkew(areasLRTxIndex);
-
-            if (showData)
-
-                displayData();
-
-            if (showDebug)
-
-                debugDisplay();
         }
 
+        return lRTxValues;
     }
+
+    // ltoRLongShortSkew = getLongShortSkew(areasLRTxIndex);
 
     private int[] getIndexOf3LargestContours() {
         double[] temp = { 0, 0, 0, 0, 0, 0 };
@@ -439,19 +453,33 @@ public class RawContoursV2 {
                 getLeftArea() + " ," + String.valueOf(getCenterArea()) + " ," + String.valueOf(getRightArea()));
     }
 
-    public String getLeftLSSk() {
-        return String.valueOf(ltoRLongShortSkew[0][0] + " ," + String.valueOf(ltoRLongShortSkew[0][1]) + " ,"
-                + String.valueOf(ltoRLongShortSkew[0][2]));
-    }
+    // public String getLeftLSSk() {
+    // return String.valueOf(ltoRLongShortSkew[0][0] + " ," +
+    // String.valueOf(ltoRLongShortSkew[0][1]) + " ,"
+    // + String.valueOf(ltoRLongShortSkew[0][2]));
+    // }
 
-    public String getCenterLSSk() {
-        return String.valueOf(ltoRLongShortSkew[1][0] + " ," + String.valueOf(ltoRLongShortSkew[1][1]) + " ,"
-                + String.valueOf(ltoRLongShortSkew[1][2]));
-    }
+    // public String getCenterLSSk() {
+    // return String.valueOf(ltoRLongShortSkew[1][0] + " ," +
+    // String.valueOf(ltoRLongShortSkew[1][1]) + " ,"
+    // + String.valueOf(ltoRLongShortSkew[1][2]));
+    // }
 
-    public String getRightLSSk() {
-        return String.valueOf(ltoRLongShortSkew[2][0] + " ," + String.valueOf(ltoRLongShortSkew[2][1]) + " ,"
-                + String.valueOf(ltoRLongShortSkew[2][2]));
+    // public String getRightLSSk() {
+    // return String.valueOf(ltoRLongShortSkew[2][0] + " ," +
+    // String.valueOf(ltoRLongShortSkew[2][1]) + " ,"
+    // + String.valueOf(ltoRLongShortSkew[2][2]));
+    // }
+
+    private boolean checkAreasValid() {
+
+        boolean check3 = lToRAreas[1] > lToRAreas[0];
+        boolean check4 = lToRAreas[1] > lToRAreas[2];
+
+        boolean check1 = lToRAreas[1] - lToRAreas[0] <= lToRAreas[1] / 3;
+        boolean check2 = lToRAreas[1] - lToRAreas[2] <= lToRAreas[1] / 3;
+
+        return check1 && check2 && check3 && check4;
     }
 
     boolean getLRAreasEqual(double tol) {
@@ -508,11 +536,6 @@ public class RawContoursV2 {
         return (1 / (IMG_WIDTH / 2)) * (y - ((double) IMG_WIDTH) - .5);
     }
 
-    // private double get(String varName) {
-    // return
-    // NetworkTableInstance.getDefault().getTable(mTableName).getEntry(varName).getDouble(0);
-    // }
-
     private void debugDisplay() {
 
         double[] temp = showAsDoubleArray(areaIndex);
@@ -524,6 +547,10 @@ public class RawContoursV2 {
         tempIndex = showAsDoubleArray(areasLRTxIndex);
         SmartDashboard.putNumberArray("LRTXIndex", tempIndex);
 
+    }
+
+    public boolean isDone() {
+        return false;
     }
 
 }

@@ -26,10 +26,10 @@ import frc.robot.OI.SetUpOI;
 import frc.robot.Vision.AngleSolver;
 import frc.robot.Vision.GetTarget;
 import frc.robot.Vision.LimeLight;
-import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
+import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.CargoTransport.ReleaseCargo;
 import frc.robot.commands.CargoTransport.RunRollers;
 import frc.robot.commands.CargoTransport.StopRollers;
@@ -174,7 +174,7 @@ public class RobotContainer {
 
             // Preferences.removeAll();
             // Pref.deleteUnused();
-            Pref.addMissing();
+           // Pref.addMissing();
             m_robotDrive = new RevDrivetrain();
             m_transport = new CargoTransportSubsystem();
             // m_rearIntake = new RearIntakeSubsystem();
@@ -427,7 +427,7 @@ public class RobotContainer {
       }
 
       public Command getJogTurretCommand(XboxController gamepad) {
-            return new TurretJog(m_turret, () -> gamepad.getRawAxis(0) / 5, gamepad);
+            return new TurretJog(m_turret, () -> gamepad.getRawAxis(0) / 10, gamepad);
       }
 
       public Command getJogTiltCommand(XboxController gamepad) {
@@ -456,7 +456,7 @@ public class RobotContainer {
        */
 
       public Command getJogTurretVelocityCommand(XboxController gamepad) {
-            return new TurretJogVelocity(m_turret, () -> -gamepad.getRawAxis(0), gamepad);
+            return new TurretJogVelocity(m_turret, () -> -gamepad.getRawAxis(0)/5, gamepad);
       }
 
       public Command getJogTiltVelocityCommand(XboxController gamepad) {

@@ -14,7 +14,6 @@ public class PositionHoldTilt extends CommandBase {
 
   private final RevTiltSubsystem m_tilt;
   private final LimeLight m_limelight;
-  private final RevShooterSubsystem m_shooter;
   private boolean targetSeen;
   private int visionFoundCounter;
   private double cameraVerticalError;
@@ -23,10 +22,10 @@ public class PositionHoldTilt extends CommandBase {
   private int loopctr;
   private double lastVerticalError;
 
-  public PositionHoldTilt(RevTiltSubsystem tilt, RevShooterSubsystem shooter, LimeLight limelight) {
+  public PositionHoldTilt(RevTiltSubsystem tilt,  LimeLight limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_tilt = tilt;
-    m_shooter = shooter;
+
     m_limelight = limelight;
     visionFoundCounter = 0;
     addRequirements(m_tilt);
@@ -100,9 +99,6 @@ public class PositionHoldTilt extends CommandBase {
     }
 
     m_tilt.motorEndpointDegrees = m_tilt.tiltMaxAngle - m_tilt.targetAngle;
-
-    if (!m_shooter.shotInProgress)
-      lastVerticalError = m_tilt.adjustedVerticalError;
 
     if (!m_tilt.validTargetSeen) {
       m_tilt.goToPositionMotionMagic(m_tilt.motorEndpointDegrees);

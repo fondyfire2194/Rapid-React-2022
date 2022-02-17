@@ -28,7 +28,7 @@ public class LimeLight {
     public double verticalOffset;
     public boolean useVision;
 
-    public int pipelineSelection=0;
+    public int pipelineSelection = 0;
 
     public boolean allianceIsBlue;
 
@@ -52,7 +52,6 @@ public class LimeLight {
     }
 
     Notifier _hearBeat = new Notifier(new PeriodicRunnable());
-    
 
     /**
      * Using the Default Lime Light NT table
@@ -461,16 +460,21 @@ public class LimeLight {
 
     public double get(String varName) {
         return NetworkTableInstance.getDefault().getTable(m_tableName).getEntry(varName).getDouble(0);
-      }
-    
-      private void set(String varName, double value) {
+    }
+
+    double[] getArray(String varName) {
+        return NetworkTableInstance.getDefault().getTable(m_tableName).getEntry(varName)
+                .getDoubleArray(new double[] { 0d, 0d });
+    }
+
+    private void set(String varName, double value) {
         NetworkTableInstance.getDefault().getTable(m_tableName).getEntry(varName).setNumber(value);
-    
-      }
+
+    }
 
     public void periodic() {
 
-          if (useVision && getIsTargetFound()) {
+        if (useVision && getIsTargetFound()) {
             useVisionTimer = 0;
         }
         if (useVision && !getIsTargetFound() && useVisionTimer == 0) {
@@ -481,8 +485,6 @@ public class LimeLight {
             useVision = false;
             useVisionTimer = 0;
         }
-
-
 
     }
 

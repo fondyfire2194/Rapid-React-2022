@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.AutoCommands.PowerPort;
+package frc.robot.commands.AutoCommands.Hub;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -75,9 +75,9 @@ public class AutoModeCenterPowerPort extends SequentialCommandGroup {
 
                                                 compressor, shootTime).deadlineWith(
 
-                                                                new PositionHoldTilt(tilt, shooter, limelight),
+                                                                new PositionHoldTilt(tilt, limelight),
 
-                                                                new PositionHoldTurret(turret, shooter, limelight)),
+                                                                new PositionHoldTurret(turret,  limelight)),
 
                                 // s_trajectory.getRamsete(s_trajectory.centerStart).andThen(() ->
                                 // drive.tankDriveVolts(0, 0)),
