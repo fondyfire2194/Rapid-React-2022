@@ -30,6 +30,7 @@ public final class Constants {
    public static final double MINIMUM_TURN_SPEED = 0;
 
    public static final class CANConstants {
+      
       public static final int PDP = 1;
 
       public static final int DRIVETRAIN_LEFT_MASTER = 2;
@@ -52,8 +53,6 @@ public final class Constants {
 
       public static final int FRONT_ROLLER = 14;
       public static final int REAR_ROLLER = 12;
-
-      // public static final int RIGHT_BELT_MOTOR = 11;
 
       public static final int CLIMB_MOTOR = 15;
       public static final int CP_TURN_MOTOR = 16;

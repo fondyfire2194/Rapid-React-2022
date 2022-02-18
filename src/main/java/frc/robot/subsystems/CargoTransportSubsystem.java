@@ -35,14 +35,12 @@ public class CargoTransportSubsystem extends SubsystemBase {
   public boolean rearRollerMotorConnected;
   public boolean allConnected;
 
-  private AnalogInput leftChannelBallDetect;
+  private AnalogInput leftChannelCargoDetect;
 
-  private AnalogInput ballAtShootDetect;// next to be released for shooting
+  private AnalogInput cargoAtShootDetect;// next to be released for shooting
 
-  // private AnalogInput ballBlockLeft;// wait to go into shoot position
+  // private AnalogInput CargoBlockLeft;// wait to go into shoot position
 
-  private double leftHoldPosition;
-  private double leftReleasePosition;
 
   public boolean startRollers;
   public double cargoPassTime = .25;
@@ -53,18 +51,18 @@ public class CargoTransportSubsystem extends SubsystemBase {
   public int cargosShot;
   public boolean leftArmDown;
 
-  public boolean noBallatLeftForOneSecond;
+  public boolean noCargoatLeftForOneSecond;
 
-  public boolean noBallatShooterForOneSecond;
+  public boolean noCargoatShooterForOneSecond;
 
-  private double noBallatShooterTime;
+  private double noCargoatShooterTime;
 
-  private double noBallatLeftTime;
+  private double noCargoatLeftTime;
 
-  private double ballDetectedVolts = 2.75;
+  private double CargoDetectedVolts = 2.75;
 
   public boolean cargoAvailable = true;
-  private double ballTravelTime = 1;
+  private double CargoTravelTime = 1;
   public int cargosToBeShot = 3;
 
   public CargoTransportSubsystem() {
@@ -73,11 +71,11 @@ public class CargoTransportSubsystem extends SubsystemBase {
     m_rearRollerMotor = new WPI_TalonSRX(CANConstants.REAR_ROLLER);
 
 
-    leftChannelBallDetect = new AnalogInput(1);
+    leftChannelCargoDetect = new AnalogInput(1);
 
-    // ballBlockLeft = new AnalogInput(0);
+    // CargoBlockLeft = new AnalogInput(0);
 
-    ballAtShootDetect = new AnalogInput(2);
+    cargoAtShootDetect = new AnalogInput(2);
 
     m_frontRollerMotor.configFactoryDefault();
     m_rearRollerMotor.configFactoryDefault();
@@ -93,31 +91,31 @@ public class CargoTransportSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    if (getBallAtShoot()) {
-      noBallatShooterForOneSecond = false;
-      noBallatShooterTime = 0;
+    if (getCargoAtShoot()) {
+      noCargoatShooterForOneSecond = false;
+      noCargoatShooterTime = 0;
     }
 
-    if (!getBallAtShoot() && noBallatShooterTime == 0) {
-      noBallatShooterTime = Timer.getFPGATimestamp();
+    if (!getCargoAtShoot() && noCargoatShooterTime == 0) {
+      noCargoatShooterTime = Timer.getFPGATimestamp();
     }
 
-    if (!getBallAtShoot() && noBallatShooterTime != 0
-        && Timer.getFPGATimestamp() > noBallatShooterTime + ballTravelTime) {
-      noBallatShooterForOneSecond = true;
+    if (!getCargoAtShoot() && noCargoatShooterTime != 0
+        && Timer.getFPGATimestamp() > noCargoatShooterTime + CargoTravelTime) {
+      noCargoatShooterForOneSecond = true;
     }
     // left cargo detection
-    if (getBallAtLeft()) {
-      noBallatLeftForOneSecond = false;
-      noBallatLeftTime = 0;
+    if (getCargoAtLeft()) {
+      noCargoatLeftForOneSecond = false;
+      noCargoatLeftTime = 0;
     }
 
-    if (!getBallAtShoot() && noBallatLeftTime == 0) {
-      noBallatLeftTime = Timer.getFPGATimestamp();
+    if (!getCargoAtShoot() && noCargoatLeftTime == 0) {
+      noCargoatLeftTime = Timer.getFPGATimestamp();
     }
 
-    if (!getBallAtShoot() && noBallatLeftTime != 0 && Timer.getFPGATimestamp() > noBallatLeftTime + ballTravelTime) {
-      noBallatLeftForOneSecond = true;
+    if (!getCargoAtShoot() && noCargoatLeftTime != 0 && Timer.getFPGATimestamp() > noCargoatLeftTime + CargoTravelTime) {
+      noCargoatLeftForOneSecond = true;
     }
 
   }
@@ -134,13 +132,13 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   
-  public boolean getBallAtLeft() {
-    return leftChannelBallDetect.getVoltage() > ballDetectedVolts;
+  public boolean getCargoAtLeft() {
+    return leftChannelCargoDetect.getVoltage() > CargoDetectedVolts;
 
   }
 
-  public boolean getBallAtShoot() {
-    return ballAtShootDetect.getVoltage() > ballDetectedVolts;
+  public boolean getCargoAtShoot() {
+    return cargoAtShootDetect.getVoltage() > CargoDetectedVolts;
   }
 
   public void runFrontRollerMotor(double speed) {

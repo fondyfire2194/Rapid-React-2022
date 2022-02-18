@@ -29,13 +29,7 @@ import frc.robot.subsystems.RevTurretSubsystem;
 /** Add your docs here. */
 public class LLVisionShuffleboard {
 
-        private LimeLight m_limelight;
-
-        private RawContoursV2 m_rCV2;
-        private GetTarget m_getTarget;
-        private RevTurretSubsystem m_turret;
-        private RevTiltSubsystem m_tilt;
-        private RevShooterSubsystem m_shooter;
+      
         private HttpCamera LLFeed;
 
         private boolean m_showVision = true;
@@ -43,14 +37,9 @@ public class LLVisionShuffleboard {
         private int loopCtr;
 
         public LLVisionShuffleboard(LimeLight ll, RawContoursV2 rCV2, GetTarget getTarget, RevTurretSubsystem turret,
-                        RevTiltSubsystem tilt, RevShooterSubsystem shooter) {
+                        RevTiltSubsystem tilt, RevShooterSubsystem shooter,boolean isMatch) {
 
-                m_limelight = ll;
-                m_rCV2 = rCV2;
-                m_getTarget = getTarget;
-                m_turret = turret;
-                m_tilt = tilt;
-                m_shooter = shooter;
+              
 
                 /**
                  * 
@@ -58,7 +47,7 @@ public class LLVisionShuffleboard {
                  * 
                  */
 
-                if (m_showVision) {
+                if (m_showVision&&!isMatch) {
 
                         ShuffleboardLayout zoomCommands = Shuffleboard.getTab("LLVision")
                                         .getLayout("Zoom", BuiltInLayouts.kList).withPosition(0, 0)
@@ -67,75 +56,75 @@ public class LLVisionShuffleboard {
                                                                                                          // for
 
                         zoomCommands.add("No Zoom",
-                                        new LimelightSetPipeline(m_limelight, PipelinesConstants.noZoomPipeline));
+                                        new LimelightSetPipeline(ll, PipelinesConstants.noZoomPipeline));
                         zoomCommands.add("2XZoom",
-                                        new LimelightSetPipeline(m_limelight, PipelinesConstants.x2ZoomPipeline));
+                                        new LimelightSetPipeline(ll, PipelinesConstants.x2ZoomPipeline));
                         zoomCommands.add("3X Zoom",
-                                        new LimelightSetPipeline(m_limelight, PipelinesConstants.x3ZoomPipeline));
+                                        new LimelightSetPipeline(ll, PipelinesConstants.x3ZoomPipeline));
 
                         ShuffleboardLayout visionCommands = Shuffleboard.getTab("LLVision")
                                         .getLayout("On-Off", BuiltInLayouts.kList).withPosition(0, 2)
                                         .withSize(1, 2).withProperties(Map.of("Label position", "TOP")); //
 
-                        visionCommands.add("Vision On", new UseVision(m_limelight, true));
-                        visionCommands.add("Vision Off", new UseVision(m_limelight, false));
+                        visionCommands.add("Vision On", new UseVision(ll, true));
+                        visionCommands.add("Vision Off", new UseVision(ll, false));
 
                         ShuffleboardLayout cameraCommands = Shuffleboard.getTab("LLVision")
                                         .getLayout("Camera", BuiltInLayouts.kList).withPosition(1, 0)
                                         .withSize(1, 4).withProperties(Map.of("Label position", "TOP")); // labels
                                                                                                          // for
 
-                        cameraCommands.add("DriverCam", new LimelightCamMode(m_limelight, CamMode.kdriver));
-                        cameraCommands.add("VisionCam", new LimelightCamMode(m_limelight, CamMode.kvision));
+                        cameraCommands.add("DriverCam", new LimelightCamMode(ll, CamMode.kdriver));
+                        cameraCommands.add("VisionCam", new LimelightCamMode(ll, CamMode.kvision));
 
                         cameraCommands.add("SideBySideStream",
-                                        new LimelightStreamMode(m_limelight, StreamType.kStandard));
+                                        new LimelightStreamMode(ll, StreamType.kStandard));
                         cameraCommands.add("MainPIP",
-                                        new LimelightStreamMode(m_limelight, StreamType.kPiPMain));
+                                        new LimelightStreamMode(ll, StreamType.kPiPMain));
                         cameraCommands.add("SecIP",
-                                        new LimelightStreamMode(m_limelight, StreamType.kPiPSecondary));
+                                        new LimelightStreamMode(ll, StreamType.kPiPSecondary));
 
                         ShuffleboardLayout ledCommands = Shuffleboard.getTab("LLVision")
                                         .getLayout("LEDs", BuiltInLayouts.kList).withPosition(2, 0)
                                         .withSize(1, 3).withProperties(Map.of("Label position", "TOP"));
 
-                        ledCommands.add("LedsOn", new LimelightLeds(m_limelight, LedMode.kforceOn));
-                        ledCommands.add("LedsOff", new LimelightLeds(m_limelight, LedMode.kforceOff));
-                        ledCommands.add("LedsBlink", new LimelightLeds(m_limelight, LedMode.kforceBlink));
-                        ledCommands.add("LedsPipeline", new LimelightLeds(m_limelight, LedMode.kpipeLine));
+                        ledCommands.add("LedsOn", new LimelightLeds(ll, LedMode.kforceOn));
+                        ledCommands.add("LedsOff", new LimelightLeds(ll, LedMode.kforceOff));
+                        ledCommands.add("LedsBlink", new LimelightLeds(ll, LedMode.kforceBlink));
+                        ledCommands.add("LedsPipeline", new LimelightLeds(ll, LedMode.kpipeLine));
 
                         ShuffleboardLayout visionData = Shuffleboard.getTab("LLVision")
                                         .getLayout("Data", BuiltInLayouts.kList).withPosition(3, 0)
                                         .withSize(2, 3).withProperties(Map.of("Label position", "LEFT")); //
 
-                        visionData.addNumber("DegHToTarget", () -> m_limelight.getdegRotationToTarget());
-                        visionData.addNumber("DegVertToTarget", () -> m_limelight.getdegVerticalToTarget());
-                        visionData.addNumber("Pipeline #", () -> m_limelight.getPipeline());
+                        visionData.addNumber("DegHToTarget", () -> ll.getdegRotationToTarget());
+                        visionData.addNumber("DegVertToTarget", () -> ll.getdegVerticalToTarget());
+                        visionData.addNumber("Pipeline #", () -> ll.getPipeline());
 
-                        visionData.addNumber("TargetArea", () -> m_limelight.getTargetArea());
-                        visionData.addNumber("BNDBoxWidth", () -> m_limelight.getBoundingBoxWidth());
-                        visionData.addNumber("BndBoxHeight", () -> m_limelight.getBoundingBoxHeight());
-                        visionData.addNumber("CameraAngle", () -> m_tilt.getAngle());
-                        visionData.addNumber("TargetDistance", () -> m_shooter.calculatedCameraDistance);
-                        visionData.addNumber("CameraCalculatedMPS", () -> m_shooter.cameraCalculatedSpeed);
-                        visionData.addNumber("VertOff+Low", () -> m_limelight.verticalOffset);
-                        visionData.addNumber("HorOff+Right", () -> m_limelight.horizontalOffset);
+                        visionData.addNumber("TargetArea", () -> ll.getTargetArea());
+                        visionData.addNumber("BNDBoxWidth", () -> ll.getBoundingBoxWidth());
+                        visionData.addNumber("BndBoxHeight", () -> ll.getBoundingBoxHeight());
+                        visionData.addNumber("CameraAngle", () -> tilt.getAngle());
+                        visionData.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
+                        visionData.addNumber("CameraCalculatedMPS", () -> shooter.cameraCalculatedSpeed);
+                        visionData.addNumber("VertOff+Low", () -> ll.verticalOffset);
+                        visionData.addNumber("HorOff+Right", () -> ll.horizontalOffset);
 
                         ShuffleboardLayout visionBools = Shuffleboard.getTab("LLVision")
                                         .getLayout("States", BuiltInLayouts.kList).withPosition(5, 0)
                                         .withSize(1, 4).withProperties(Map.of("Label position", "TOP")); // labels
 
-                        visionBools.addBoolean("Connected", () -> m_limelight.isConnected());
+                        visionBools.addBoolean("Connected", () -> ll.isConnected());
 
                         visionBools.addBoolean("TargetVertOK",
-                                        () -> m_limelight.getVertOnTarget(m_tilt.tiltVisionTolerance));
+                                        () -> ll.getVertOnTarget(tilt.tiltVisionTolerance));
 
                         visionBools.addBoolean("TargetHorOK",
-                                        () -> m_limelight.getHorOnTarget(m_turret.turretVisionTolerance));
+                                        () -> ll.getHorOnTarget(turret.turretVisionTolerance));
 
-                        visionBools.addBoolean("TargetFound", () -> m_limelight.getIsTargetFound());
+                        visionBools.addBoolean("TargetFound", () -> ll.getIsTargetFound());
 
-                        visionBools.addBoolean("Use Vision", () -> m_limelight.useVision);
+                        visionBools.addBoolean("Use Vision", () -> ll.useVision);
 
                 }
 

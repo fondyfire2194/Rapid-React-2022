@@ -4,8 +4,16 @@
 
 package frc.robot.OI;
 
+import java.util.Map;
+
+import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.FieldMap;
@@ -19,6 +27,13 @@ import frc.robot.commands.AutoCommands.RRetPuS3;
 import frc.robot.commands.AutoCommands.RRetPuShoot;
 import frc.robot.commands.AutoCommands.RRetPuShootLow;
 import frc.robot.commands.AutoCommands.Taxi;
+import frc.robot.commands.CargoTransport.HoldCargo;
+import frc.robot.commands.CargoTransport.ReleaseCargo;
+import frc.robot.commands.RobotDrive.ResetEncoders;
+import frc.robot.commands.RobotDrive.ResetGyro;
+import frc.robot.commands.Turret.ResetTurretAngle;
+import frc.robot.commands.Vision.LimelightSetPipeline;
+import frc.robot.commands.Vision.UseVision;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -31,42 +46,22 @@ import frc.robot.trajectories.FondyFireTrajectory;
 /** Add your docs here. */
 public class SetUpAutoOI {
 
-        private final RevTiltSubsystem m_tilt;
-        private final RevTurretSubsystem m_turret;
-        private final RevDrivetrain m_robotDrive;
-        private final RevShooterSubsystem m_shooter;
-        private final CargoTransportSubsystem m_transport;
-        private final Compressor m_compressor;
-        private final LimeLight m_limelight;
-        private final IntakesSubsystem m_intake;
-        private final ClimberSubsystem m_climber;
         public SendableChooser<Command> autoChooser = new SendableChooser<>();
         public SendableChooser<Integer> startDelayChooser = new SendableChooser<>();
-        private boolean m_showAuto;
-        private RawContoursV2 m_rcv2;
-        private GetTarget m_target;
+        private boolean showAuto;
+        private HttpCamera LLFeed;
 
         public SetUpAutoOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
-                        LimeLight limelight, IntakesSubsystem intake, ClimberSubsystem climber,
+                        LimeLight ll, IntakesSubsystem intake, ClimberSubsystem climber,
                         FondyFireTrajectory traj, RawContoursV2 rcv2, GetTarget target, boolean liveMatch) {
-                m_turret = turret;
-                m_tilt = tilt;
-                m_robotDrive = drive;
-                m_transport = transport;
-                m_compressor = compressor;
-                m_shooter = shooter;
-                m_limelight = limelight;
-                m_intake = intake;
-                m_climber = climber;
-                m_rcv2 = rcv2;
-                m_target = target;
+
                 /**
                  * 
                  * Pre round
                  */
 
-                if (m_showAuto) {
+                if (showAuto || liveMatch) {
                         // Put
                         // autonomous chooser on the dashboard.
                         // The first argument is the root container
@@ -75,18 +70,20 @@ public class SetUpAutoOI {
                         Shuffleboard.getTab("Pre-Round").add("Auto Commands", autoChooser).withSize(2, 1)
                                         .withPosition(0, 0); // place it in the top-left corner
                         double distance = 0;
-                        double[] data = { 0, 0, 0, 0, 0 };
+                        double[] data = { 0, 0, 0, 0, 0, 0, 0 };
                         autoChooser.setDefaultOption("Taxi", new Taxi(drive, distance));
 
                         autoChooser.addOption("Left Tarmac Retract Pickup Shoot",
-                                        new LRetPuShoot(intake, drive, turret, tilt, limelight, shooter, m_rcv2,
-                                                        m_target, m_transport, m_compressor, data));
+                                        new LRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
+                                                        target, transport, compressor, data));
 
-                        autoChooser.addOption("Right Tarmac Edge Retract Pickup Shoot", new RRetPuShoot(intake, drive, turret, tilt, limelight, shooter, m_rcv2,
-                        m_target, m_transport, m_compressor, data));
+                        autoChooser.addOption("Right Tarmac Edge Retract Pickup Shoot",
+                                        new RRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
+                                                        target, transport, compressor, data));
 
-                        autoChooser.addOption("Right Tarmac Center Retract Pickup Shoot", new RRetCenPuShoot(intake, drive, turret, tilt, limelight, shooter, m_rcv2,
-                        m_target, m_transport, m_compressor, data));
+                        autoChooser.addOption("Right Tarmac Center Retract Pickup Shoot",
+                                        new RRetCenPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
+                                                        target, transport, compressor, data));
 
                         autoChooser.addOption("Right Tarmac Shoot 3", new RRetPuS3());
 
@@ -104,7 +101,101 @@ public class SetUpAutoOI {
                         startDelayChooser.addOption("Three Seconds", 3);
                         startDelayChooser.addOption("Four Seconds", 4);
                         startDelayChooser.addOption("Five Seconds", 5);
+
+                        ShuffleboardLayout competition = Shuffleboard.getTab("Competition")
+                                        .getLayout("ShootConditions", BuiltInLayouts.kGrid).withPosition(1, 0)
+                                        .withSize(2, 2).withProperties(Map.of("Label position", "TOP"));
+
+                        competition.addBoolean("TiltOnTarget",
+                                        () -> ll.getVertOnTarget(tilt.tiltVisionTolerance));
+                        competition.addBoolean("TurretOnTarget",
+                                        () -> ll.getHorOnTarget(turret.turretVisionTolerance));
+                        competition.addBoolean("ShooterAtSpeed", () -> shooter.atSpeed());
+                        competition.addBoolean("Use Vision", () -> ll.useVision);
+                        competition.addBoolean("RollersAtSpeed", () -> transport.rollersAtSpeed);
+
+                        if (RobotBase.isReal()) {
+
+                                LLFeed = new HttpCamera("Limelight", "http://limelight.local:5800/stream.mjpg");
+                                ShuffleboardTab driverDisplayTab = Shuffleboard.getTab("Competition");
+                                driverDisplayTab.add("Limelight", LLFeed).withWidget(BuiltInWidgets.kCameraStream)
+                                                .withPosition(3, 0).withSize(6, 5)
+                                                .withProperties(Map.of("Show Crosshair", true, "Show Controls", false));// specify
+                                                                                                                        // widget
+                                                                                                                        // properties
+                        }
+
                 }
 
+                ShuffleboardLayout miscComp = Shuffleboard.getTab("CompetitionMisc")
+                                .getLayout("Misc1", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4)
+                                .withProperties(Map.of("Label position", "LEFT"));
+
+                miscComp.add("Reset to 0", new ResetTurretAngle(turret));
+                miscComp.addNumber("TUAngle", () -> turret.getAngle());
+                miscComp.addNumber("TiltAngle", () -> tilt.getAngle());
+                miscComp.addNumber("LeftMPS", () -> shooter.getMPS());
+                miscComp.addNumber("LeftAmps", () -> shooter.getLeftAmps());
+                miscComp.addNumber("RightRPM", () -> shooter.getRightRPM());
+                miscComp.addNumber("RightAmps", () -> shooter.getRightAmps());
+                miscComp.addNumber("TargetArea%Scrn", () -> ll.getTargetArea());
+                miscComp.addNumber("BNDBoxWidth", () -> ll.getBoundingBoxWidth());
+                miscComp.addNumber("BndBoxHeight", () -> ll.getBoundingBoxHeight());
+                miscComp.addNumber("AspectRatio", () -> ll.getAspectRatio());
+
+                miscComp.addNumber("RQDMPS", () -> shooter.requiredMps);
+
+                ShuffleboardLayout misComp1 = Shuffleboard.getTab("CompetitionMisc")
+                                .getLayout("Misc2", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4)
+                                .withProperties(Map.of("Label position", "LEFT"));
+
+                misComp1.add("Hold Cargo", new HoldCargo(transport));
+
+                misComp1.add("Release Cargo", new ReleaseCargo(transport));
+
+                misComp1.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
+
+                ShuffleboardLayout misComp2 = Shuffleboard.getTab("CompetitionMisc")
+                                .getLayout("Misc3", BuiltInLayouts.kList).withPosition(4, 0).withSize(2, 4)
+                                .withProperties(Map.of("Label position", "LEFT"));
+
+                misComp2.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
+                misComp2.addNumber("CameraCalcSpeed", () -> shooter.cameraCalculatedSpeed);
+                misComp2.addNumber("CameraCalcTilt", () -> tilt.cameraCalculatedTiltOffset);
+                misComp2.add("Reset Enc", new ResetEncoders(drive));
+                misComp2.add("Reset Gyro", new ResetGyro(drive));
+                misComp2.addNumber("LeftMeters", () -> drive.getLeftDistance());
+                misComp2.addNumber("RightMeters", () -> drive.getRightDistance());
+
+                ShuffleboardLayout misComp3 = Shuffleboard.getTab("CompetitionMisc")
+                                .getLayout("Misc4", BuiltInLayouts.kList).withPosition(6, 0).withSize(2, 4)
+                                .withProperties(Map.of("Label position", "LEFT"));
+
+                misComp3.addBoolean("RobotStopped", () -> drive.robotStoppedForOneSecond);
+                misComp3.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
+                misComp3.addBoolean("No CargoAtShoot", () -> transport.noCargoatShooterForOneSecond);
+
+                misComp3.addBoolean("CargoAvailable", () -> transport.cargoAvailable);
+                misComp3.addBoolean("IsShooting", () -> shooter.isShooting);
+
+                ShuffleboardLayout misComVis = Shuffleboard.getTab("CompetitionMisc")
+                                .getLayout("MiscVis", BuiltInLayouts.kList).withPosition(8, 0).withSize(2, 4)
+                                .withProperties(Map.of("Label position", "LEFT"));
+                misComVis.add("No Zoom Pipeline", new LimelightSetPipeline(ll, 1));
+                misComVis.add("Driver Pipeline", new LimelightSetPipeline(ll, 0));
+                misComVis.add("Vision On", new UseVision(ll, true));
+                misComVis.add("Vision Off", new UseVision(ll, false));
+                misComVis.addBoolean("LLTGT", () -> ll.getIsTargetFound());
+                misComVis.addBoolean("TiVT", () -> tilt.validTargetSeen);
+                misComVis.addBoolean("TuVT", () -> turret.validTargetSeen);
+
+                // Shuffleboard.getTab("Competition").addNumber("TimeRemaining", () -> drive.getMatchTime())
+                //                 .withWidget(BuiltInWidgets.kTextView).withPosition(9, 0).withSize(1, 1);
+                // Shuffleboard.getTab("Competition").addNumber("Battery", () -> getPDPInfo()[0])
+                //                 .withWidget(BuiltInWidgets.kTextView).withPosition(9, 1).withSize(1, 1);
+                // Shuffleboard.getTab("Competition").addNumber("TotalEnegy Ah", () -> getPDPInfo()[2])
+                //                 .withWidget(BuiltInWidgets.kTextView).withPosition(9, 2).withSize(1, 1);
+
         }
+
 }

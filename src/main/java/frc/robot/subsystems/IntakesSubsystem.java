@@ -20,10 +20,12 @@ public class IntakesSubsystem extends SubsystemBase {
   public boolean useFrontIntake;
 
   private final WPI_TalonSRX m_rearIntakeMotor = new WPI_TalonSRX(CANConstants.REAR_INTAKE_MOTOR);
+
   public final DoubleSolenoid m_rearIntakeArm = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
       SolenoidConstants.REAR_INTAKE_1, SolenoidConstants.REAR_INTAKE_2);
 
   private final WPI_TalonSRX m_frontIntakeMotor = new WPI_TalonSRX(CANConstants.FRONT_INTAKE_MOTOR);
+
   public final DoubleSolenoid m_frontIntakeArm = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
       SolenoidConstants.FRONT_INTAKE_1, SolenoidConstants.FRONT_INTAKE_2);
 

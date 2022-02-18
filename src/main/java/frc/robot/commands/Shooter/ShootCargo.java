@@ -112,7 +112,7 @@ public class ShootCargo extends CommandBase {
     m_shooter.okToShoot = m_shooter.isShooting && (inAuto || !m_shooter.shootOne);
 
     getNextCargo = m_shooter.okToShoot && !m_shooter.shotInProgress && !m_transport.cargoAvailable
-        && m_transport.rollersAtSpeed && m_transport.getBallAtShoot() && m_shooter.atSpeed();
+        && m_transport.rollersAtSpeed && m_transport.getCargoAtShoot() && m_shooter.atSpeed();
 
     if (getNextCargo || cargoReleased) {
       releaseOneCargo();

@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -22,6 +23,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.OI.HubVisionShuffleboard;
 import frc.robot.OI.LLVisionShuffleboard;
+import frc.robot.OI.SetUpAutoOI;
 import frc.robot.OI.SetUpOI;
 import frc.robot.Vision.AngleSolver;
 import frc.robot.Vision.GetTarget;
@@ -108,6 +110,8 @@ public class RobotContainer {
 
       public SetUpOI m_setup;
 
+      public SetUpAutoOI m_autoOi;
+
       public HubVisionShuffleboard m_hvis;
 
       public LLVisionShuffleboard m_llVis;
@@ -164,6 +168,7 @@ public class RobotContainer {
       public POVButton driverRightButton = new POVButton(m_driverController, 90);
       public POVButton driverDownButton = new POVButton(m_driverController, 180);
       public POVButton driverLeftButton = new POVButton(m_driverController, 270);
+      public boolean isMatch;
 
       /**
        * The container for the robot. Contains subsysems, OI devices, and commands.
@@ -216,13 +221,17 @@ public class RobotContainer {
             // m_turret.setDefaultCommand(new TurretJog(m_turret, () ->
             // setupGamepad.getRawAxis(0) / 5, setupGamepad));
 
-            boolean isMatch = false;// Pref.getPref("IsMatch") == 1.;
+            isMatch = Pref.getPref("IsMatch") == 1.;
+
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intakes, m_climber, m_trajectory, m_as, isMatch);
 
-            m_hvis = new HubVisionShuffleboard(m_limelight, m_rCV2, m_as, m_gt, m_turret, m_tilt, m_shooter);
+            m_autoOi = new SetUpAutoOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
+                        m_intakes, m_climber, m_trajectory, m_rCV2, m_gt, isMatch);
 
-            m_llVis = new LLVisionShuffleboard(m_limelight, m_rCV2, m_gt, m_turret, m_tilt, m_shooter);
+            m_hvis = new HubVisionShuffleboard(m_limelight, m_rCV2, m_as, m_gt, m_turret, m_tilt, m_shooter, isMatch);
+
+            m_llVis = new LLVisionShuffleboard(m_limelight, m_rCV2, m_gt, m_turret, m_tilt, m_shooter, isMatch);
 
             m_drive.setDefaultCommand(getArcadeDriveCommand());
 
@@ -264,7 +273,7 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 1)
 
                         .whileHeld(new ShootCargo(m_shooter, m_tilt, m_turret,
-                                    m_limelight, m_transport,  m_compressor, 100));
+                                    m_limelight, m_transport, m_compressor, 100));
 
             new JoystickButton(m_driverController, 5).whenPressed(new RunShooter(m_shooter))
                         .whenPressed(new RunRollers(m_transport));
@@ -477,6 +486,35 @@ public class RobotContainer {
 
       public double getThrottle() {
             return (1 - m_driverController.getThrottle()) / 2;
+      }
+
+      public void checkCANDevices() {
+            m_turret.checkCAN();
+            m_tilt.checkCAN();
+            m_intakes.checkFrontCAN();
+            m_intakes.checkRearCAN();
+            m_shooter.checkCAN();
+            m_drive.checkCAN();
+            m_transport.checkCAN();
+
+      }
+
+      public double[] getPDPInfo() {
+            double temp[] = { 0, 0, 0, 0, 0 };
+            temp[0] = m_shooter.getBatteryVoltage();
+            temp[1] = m_shooter.getTemperature();
+            temp[2] = m_shooter.getTotalEnergy() / 3600;
+            temp[3] = m_shooter.getTotalPower();
+            return temp;
+
+      }
+
+      public void checkLimits() {
+            if (m_tilt.onMinusSoftwareLimit() || m_tilt.onPlusSoftwareLimit() || m_tilt.onMinusHardwarLimit()
+                        || m_turret.onPlusSoftwareLimit() || m_turret.onMinusSoftwareLimit()
+                        || DriverStation.isDisabled())
+                  m_limelight.useVision = false;
+
       }
 
 }

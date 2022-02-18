@@ -91,7 +91,7 @@ public class LogShootData extends CommandBase {
           m_shooter.getLeftAmps(), m_shooter.atSpeed() ? 1.0 : 0.0, m_shooter.okToShoot ? 1.0 : 0.0,
           m_shooter.isShooting ? 1.0 : 0.0, m_shooter.shotInProgress ? 1.0 : 0.0,
           m_transport.cargoAvailable ? 1.0 : 0.0,
-          m_transport.getBallAtLeft() ? 1.0 : 0.0, m_transport.getBallAtShoot() ? 1.0 : 0.0,
+         m_transport.getCargoAtShoot() ? 1.0 : 0.0,
           m_drive.robotStoppedForOneSecond ? 1.0 : 0.0,
           m_drive.getYaw());
     }
