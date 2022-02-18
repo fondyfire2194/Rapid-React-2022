@@ -264,7 +264,7 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 1)
 
                         .whileHeld(new ShootCargo(m_shooter, m_tilt, m_turret,
-                                    m_limelight, m_transport, m_drive, m_compressor, 100));
+                                    m_limelight, m_transport,  m_compressor, 100));
 
             new JoystickButton(m_driverController, 5).whenPressed(new RunShooter(m_shooter))
                         .whenPressed(new RunRollers(m_transport));

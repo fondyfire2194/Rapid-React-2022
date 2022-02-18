@@ -15,6 +15,8 @@ import frc.robot.subsystems.RevTurretSubsystem;
 public class VerifyAndGetTarget extends SequentialCommandGroup {
   /** Creates a new VerifyAndGetTarget. */
   public VerifyAndGetTarget(RawContoursV2 rcv2, GetTarget target, RevTurretSubsystem turret) {
+    
     addCommands(new GetContourData(rcv2), new GetContourTXValues(rcv2), new GetTargetResults(target, turret));
+  
   }
 }

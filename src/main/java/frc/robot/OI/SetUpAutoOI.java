@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.FieldMap;
 import frc.robot.Vision.GetTarget;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
@@ -73,22 +74,26 @@ public class SetUpAutoOI {
                         // tabs
                         Shuffleboard.getTab("Pre-Round").add("Auto Commands", autoChooser).withSize(2, 1)
                                         .withPosition(0, 0); // place it in the top-left corner
-double distance=0;
+                        double distance = 0;
+                        double[] data = { 0, 0, 0, 0, 0 };
                         autoChooser.setDefaultOption("Taxi", new Taxi(drive, distance));
 
                         autoChooser.addOption("Left Tarmac Retract Pickup Shoot",
                                         new LRetPuShoot(intake, drive, turret, tilt, limelight, shooter, m_rcv2,
-                                                        m_target, m_transport, m_compressor));
+                                                        m_target, m_transport, m_compressor, data));
 
-                        autoChooser.addOption("Right Tarmac Edge Retract Pickup Shoot", new RRetPuShoot());
-  
-                        autoChooser.addOption("Right Tarmac Center Retract Pickup Shoot", new RRetCenPuShoot());
+                        autoChooser.addOption("Right Tarmac Edge Retract Pickup Shoot", new RRetPuShoot(intake, drive, turret, tilt, limelight, shooter, m_rcv2,
+                        m_target, m_transport, m_compressor, data));
+
+                        autoChooser.addOption("Right Tarmac Center Retract Pickup Shoot", new RRetCenPuShoot(intake, drive, turret, tilt, limelight, shooter, m_rcv2,
+                        m_target, m_transport, m_compressor, data));
 
                         autoChooser.addOption("Right Tarmac Shoot 3", new RRetPuS3());
 
                         autoChooser.addOption("Right Tarmac Shoot Low", new RRetPuShootLow());
 
-                        autoChooser.addOption("Left Tarmac Shoot Low", new LRetPuShootLow(intake, drive, turret, tilt));
+                        autoChooser.addOption("Left Tarmac Shoot Low",
+                                        new LRetPuShootLow(intake, drive, turret, tilt, FieldMap.leftTarmacData));
 
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
                                         .withPosition(2, 0); //

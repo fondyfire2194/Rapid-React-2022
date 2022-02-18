@@ -12,10 +12,10 @@ public class FieldMap {
         public static final double visionStripWidth = Units.inchesToMeters(2);
         public static final double visionStripLength = Units.inchesToMeters(5);
         public static final int numberOfVisionStrips = 16;
-        public static final double angleStripToStrip = 360 / 16;//22.5 degrees
+        public static final double angleStripToStrip = 360 / 16;// 22.5 degrees
 
         // each tarmac sees 4 vision strips right to left
-        public static final double rightRightOfCenter = 67.5;                        
+        public static final double rightRightOfCenter = 67.5;
         public static final double right2RightOfCenter = 90;
         public static final double rightLeftOfCenter = 45;
         public static final double rightTwoLeftOfCenter = 22.5;
@@ -67,22 +67,52 @@ public class FieldMap {
         // robot starts with rear bumper behind tarmac
         // perimeter and centered on target cargo
 
-        public static final double leftTarmacTiltAngle = 15;
-        public static final double leftTarmacTurretAngle = 15;
         public static final double leftTarmacDriveToPosition = (cargoFieldRingDiameter / 2)
                         - leftTarmacLineFromHubCenter
                         - rearIntakeAdder + robotLength;
-        public static final double tiltTargetPosition = 25;
-        public static final double turretTargetPosition = 10;
-        public static double leftStartMPS = 21;
+        public static final double leftTarmacTiltUpperAngle = 25;
+        public static final double leftTarmacTurretUpperAngle = 10;
+        public static double leftTarmacUpperMPS = 21;
+        public static final double leftTarmacTiltLowerAngle = 25;
+        public static final double leftTarmacTurretLowerAngle = 10;
+        public static double leftTarmacLowerMPS = 21;
 
-        // right tarmac auto start upper
-        public static final double rightTarmacTiltAngle = 15;
-        public static final double rightTarmacTurretAngle = 15;
-        public static final double rightTarmacDrivePosition = 2;
-        public static final double rightTiltTargetPosition = 25;
-        public static final double rightTurretTargetPosition = 10;
+        public static final double[] leftTarmacData = {
+                        leftTarmacTiltUpperAngle, leftTarmacTurretUpperAngle,
+                        leftTarmacDriveToPosition, leftTarmacUpperMPS, leftTarmacTiltLowerAngle,
+                        leftTarmacTurretLowerAngle, leftTarmacLowerMPS
+        };
 
-        public static double rightStartMPS = 21;
+        public static final double rightTarmacDriveToPosition = (cargoFieldRingDiameter / 2)
+                        - leftTarmacLineFromHubCenter
+                        - rearIntakeAdder + robotLength;
+        public static final double rightTarmacTiltUpperAngle = 25;
+        public static final double rightTarmacTurretUpperAngle = 10;
+        public static double rightTarmacUpperMPS = 21;
+        public static final double rightTarmacTiltLowerAngle = 25;
+        public static final double rightTarmacTurretLowerAngle = 10;
+        public static double rightTarmacLowerMPS = 21;
+
+        public static final double[] rightTarmacData = {
+                        rightTarmacTiltUpperAngle, rightTarmacTurretUpperAngle,
+                        rightTarmacDriveToPosition, rightTarmacUpperMPS, rightTarmacTiltLowerAngle,
+                        rightTarmacTurretLowerAngle, rightTarmacLowerMPS
+        };
+
+        public static final double rightCenTarmacDriveToPosition = (cargoFieldRingDiameter / 2)
+                        - leftTarmacLineFromHubCenter
+                        - rearIntakeAdder + robotLength;
+        public static final double rightCenTarmacTiltUpperAngle = 25;
+        public static final double rightCenTarmacTurretUpperAngle = 10;
+        public static double rightCenTarmacUpperMPS = 21;
+        public static final double rightCenTarmacTiltLowerAngle = 25;
+        public static final double rightCenTarmacTurretLowerAngle = 10;
+        public static double rightCenTarmacLowerMPS = 21;
+
+        public static final double[] rightCenTarmacData = {
+                        rightCenTarmacTiltUpperAngle, rightCenTarmacTurretUpperAngle,
+                        rightCenTarmacDriveToPosition, rightCenTarmacUpperMPS, rightTarmacTiltLowerAngle,
+                        rightCenTarmacTurretLowerAngle, rightCenTarmacLowerMPS
+        };
 
 }

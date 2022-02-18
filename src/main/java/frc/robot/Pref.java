@@ -70,7 +70,7 @@ public class Pref {
     prefDict.put("tURTune", 0.);
 
     // turret vel
-    // Turret smart motion
+    // 
     prefDict.put("tURKpv", .001);
     prefDict.put("tURKiv", .000);
     prefDict.put("tURKdv", .000);
@@ -107,6 +107,12 @@ public class Pref {
     prefDict.put("dRacc", .1);
 
     prefDict.put("dRTune", 0.);
+
+    prefDict.put("dRPur", 0.5);
+
+    //Intake
+
+    prefDict.put("IntSp", 0.75);
 
     // camera
 

@@ -15,9 +15,11 @@ import frc.robot.subsystems.RevTurretSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PrepositionTiltAndTurret extends ParallelCommandGroup {
   /** Creates a new PrepositionTiltAndTurret. */
+ 
   public PrepositionTiltAndTurret(RevTiltSubsystem tilt, RevTurretSubsystem turret, double tiltAngle, double turretAngle) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    
     addCommands(new PositionTilt(tilt,tiltAngle), new PositionTurret(turret, turretAngle)); 
   }
 }

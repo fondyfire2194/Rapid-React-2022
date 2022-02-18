@@ -33,58 +33,67 @@ public class GetTarget {
   private RawContoursV2 m_rCV2;
   private AngleSolver m_as;
 
-  private int x;
+  // private int x;
 
   public double quadAngle;
   public double matthewMethod;
 
+  public boolean isFound;
+  public boolean isReady;
+
   public GetTarget(RawContoursV2 rcV2, AngleSolver as) {
+
     m_rCV2 = rcV2;
     m_as = as;
   }
 
   public void runCalcs() {
-    getTarget = true;
-  //  getContourData();
-    targetValue = calculateTargetX();
-    targetAngle = getTargetAngle(targetValue);
 
-    getTarget = false;
+    isReady = false;
 
+    isFound = m_rCV2.areasValid;
+
+    if (isFound) {
+
+      targetValue = calculateTargetX();
+
+      targetAngle = getTargetAngle(targetValue);
+
+      isReady = true;
+    }
   }
 
   // public void getContourData() {
 
-  //   x_1 = m_rCV2.getLeftTx();
-  //   x_2 = m_rCV2.getCenterTx();
-  //   x_3 = m_rCV2.getRightTx();
-  //   y_1 = m_rCV2.getLeftTy();
-  //   y_2 = m_rCV2.getCenterTy();
-  //   y_3 = m_rCV2.getRightTy();
+  // x_1 = m_rCV2.getLeftTx();
+  // x_2 = m_rCV2.getCenterTx();
+  // x_3 = m_rCV2.getRightTx();
+  // y_1 = m_rCV2.getLeftTy();
+  // y_2 = m_rCV2.getCenterTy();
+  // y_3 = m_rCV2.getRightTy();
 
   // }
   // private int matthewMethodGetX() {
-  //   double leftArea = m_rCV2.getLeftArea();
-  //   double rightArea = m_rCV2.getRightArea();
+  // double leftArea = m_rCV2.getLeftArea();
+  // double rightArea = m_rCV2.getRightArea();
 
-  //   double secondArea = Math.max(leftArea, rightArea);
-  //   double centerArea = m_rCV2.getCenterArea();
+  // double secondArea = Math.max(leftArea, rightArea);
+  // double centerArea = m_rCV2.getCenterArea();
 
-  //   int centerX = m_rCV2.getCenterTx();
-  //   int secondX = m_rCV2.getLeftTx();
-  //   double side = 1;
-  //   if (secondArea == rightArea) {
-  //     secondX = m_rCV2.getRightTx();
-  //     side = -1;
-  //   }
-
-  //   int differenceOfX = Math.abs(centerX-secondX);
-  //   double ratio = ((centerArea+secondArea) / 2) / centerArea;
-  //   int target = (int)(secondX + (differenceOfX * ratio * side));
-  //   return target;
-
+  // int centerX = m_rCV2.getCenterTx();
+  // int secondX = m_rCV2.getLeftTx();
+  // double side = 1;
+  // if (secondArea == rightArea) {
+  // secondX = m_rCV2.getRightTx();
+  // side = -1;
   // }
 
+  // int differenceOfX = Math.abs(centerX-secondX);
+  // double ratio = ((centerArea+secondArea) / 2) / centerArea;
+  // int target = (int)(secondX + (differenceOfX * ratio * side));
+  // return target;
+
+  // }
 
   public int calculateTargetX() {
 
@@ -131,60 +140,61 @@ public class GetTarget {
     return -temp;
   }
 
-  
   // private int[] solveQuadratic() {
 
-  //   // solving for a,b,c in y = ax^2 + bx + c
-  //   a = y_1 / ((x_1 - x_2) * (x_1 - x_3)) + y_2 / ((x_2 - x_1) * (x_2 - x_3))
-  //       + y_3 / ((x_3 - x_1) * (x_3 - x_2));
+  // // solving for a,b,c in y = ax^2 + bx + c
+  // a = y_1 / ((x_1 - x_2) * (x_1 - x_3)) + y_2 / ((x_2 - x_1) * (x_2 - x_3))
+  // + y_3 / ((x_3 - x_1) * (x_3 - x_2));
 
-  //   b = -y_1 * (x_2 + x_3) / ((x_1 - x_2) * (x_1 - x_3)) - y_2 * (x_1 + x_3) / ((x_2 - x_1) * (x_2 - x_3))
-  //       - y_3 * (x_1 + x_2) / ((x_3 - x_1) * (x_3 - x_2));
+  // b = -y_1 * (x_2 + x_3) / ((x_1 - x_2) * (x_1 - x_3)) - y_2 * (x_1 + x_3) /
+  // ((x_2 - x_1) * (x_2 - x_3))
+  // - y_3 * (x_1 + x_2) / ((x_3 - x_1) * (x_3 - x_2));
 
-  //   c = y_1 * x_2 * x_3 / ((x_1 - x_2) * (x_1 - x_3)) + y_2 * x_1 * x_3 / ((x_2 - x_1) * (x_2 - x_3))
-  //       + y_3 * x_1 * x_2 / ((x_3 - x_1) * (x_3 - x_2));
+  // c = y_1 * x_2 * x_3 / ((x_1 - x_2) * (x_1 - x_3)) + y_2 * x_1 * x_3 / ((x_2 -
+  // x_1) * (x_2 - x_3))
+  // + y_3 * x_1 * x_2 / ((x_3 - x_1) * (x_3 - x_2));
 
-  //   // solving for the vertex h, k
-  //   h = -b / (2 * a);
-  //   k = -1 * ((b * b) - (4 * a * c)) / (4 * a);
+  // // solving for the vertex h, k
+  // h = -b / (2 * a);
+  // k = -1 * ((b * b) - (4 * a * c)) / (4 * a);
 
-  //   SmartDashboard.putNumber("Center X", h);
-  //   SmartDashboard.putNumber("Center Y", k);
+  // SmartDashboard.putNumber("Center X", h);
+  // SmartDashboard.putNumber("Center Y", k);
 
-  //   if (h < 0)
-  //     h = 0;
-  //   if (h > 320)
-  //     h = 319;
-  //   if (k < 0)
-  //     k = 0;
-  //   if (k > 240)
-  //     k = 239;
-  //   return new int[] { (int) h, (int) k };
+  // if (h < 0)
+  // h = 0;
+  // if (h > 320)
+  // h = 319;
+  // if (k < 0)
+  // k = 0;
+  // if (k > 240)
+  // k = 239;
+  // return new int[] { (int) h, (int) k };
 
   // }
 
   // public double getCenterX() {
-  //   return h;
+  // return h;
   // }
 
   // public double getCenterY() {
-  //   return k;
+  // return k;
   // }
 
   // public double getC() {
-  //   return h;
+  // return h;
   // }
 
   // public double getAVert() {
-  //   return a;
+  // return a;
   // }
 
   // public double getBVert() {
-  //   return b;
+  // return b;
   // }
 
   // public double getCVert() {
-  //   return c;
+  // return c;
   // }
 
   public int getTargetX() {

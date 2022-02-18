@@ -6,7 +6,6 @@ package frc.robot.commands.AutoCommands.Common;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.FieldMap;
 import frc.robot.Vision.GetTarget;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
@@ -19,21 +18,22 @@ import frc.robot.subsystems.RevTurretSubsystem;
 
 public class AimAndLockTarget extends SequentialCommandGroup {
   /** Creates a new AimAndShoot. */
-  private double tiltTargetPosition = FieldMap.tiltTargetPosition;
-
-  private double turretTargetPosition = FieldMap.turretTargetPosition;
 
   public AimAndLockTarget(LimeLight ll, RevTurretSubsystem turret, RevTiltSubsystem tilt,
 
-      RawContoursV2 rcv2, GetTarget target) {
+      RawContoursV2 rcv2, GetTarget target, double[] data) {
 
-    addCommands(new PositionTiltToVision(tilt, ll, tiltTargetPosition),
+    double tiltTargetPosition = data[0];
 
-        new PositionTurretToVision(turret, ll, turretTargetPosition),
+    double turretTargetPosition = data[1];
 
-        new ParallelCommandGroup(new PositionHoldTilt(tilt, ll), new PositionHoldTurret(turret, ll)),
+    addCommands(new ParallelCommandGroup(new PositionTiltToVision(tilt, ll, tiltTargetPosition),
 
-        new VerifyAndGetTarget(rcv2, target, turret));
+        new PositionTurretToVision(turret, ll, turretTargetPosition)),
+
+        new VerifyAndGetTarget(rcv2, target, turret).deadlineWith(new PositionHoldTilt(tilt, ll),
+
+            new PositionHoldTurret(turret, ll)));
 
   }
 }

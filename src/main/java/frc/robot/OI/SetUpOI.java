@@ -351,7 +351,7 @@ public class SetUpOI {
 
                         shooterCommands.add("Stop Shoot", new StopShoot(m_shooter, m_transport));
                         shooterCommands.add("Shoot",
-                                        new ShootCargo(m_shooter, m_tilt, m_turret, m_limelight, m_transport, drive,
+                                        new ShootCargo(m_shooter, m_tilt, m_turret, m_limelight, m_transport,
                                                         m_compressor, 0));
                         shooterCommands.add("ClearFaults", new ClearShFaults(m_shooter));
                         shooterCommands.add("Cmd", m_shooter);

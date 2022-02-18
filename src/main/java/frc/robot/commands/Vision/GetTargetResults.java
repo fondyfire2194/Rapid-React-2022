@@ -6,7 +6,6 @@ package frc.robot.commands.Vision;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Vision.GetTarget;
-import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
 public class GetTargetResults extends CommandBase {
@@ -30,7 +29,9 @@ public class GetTargetResults extends CommandBase {
   @Override
   public void execute() {
     int targetChange = m_target.calculateTargetX(); // returns x to be used later
+
     angleChange = m_target.getTargetAngle(targetChange);
+
     m_turret.targetHorizontalOffset = angleChange;
   }
 
@@ -42,6 +43,6 @@ public class GetTargetResults extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return !m_target.isFound || (m_target.isFound && m_target.isReady);
   }
 }

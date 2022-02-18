@@ -28,7 +28,6 @@ public class ShootCargo extends CommandBase {
   private final RevTiltSubsystem m_tilt;
   private final RevTurretSubsystem m_turret;
   private final CargoTransportSubsystem m_transport;
-  private final RevDrivetrain m_drive;
   private final Compressor m_compressor;
   private final LimeLight m_limelight;
   private double m_time;
@@ -47,13 +46,13 @@ public class ShootCargo extends CommandBase {
   public boolean robotStoppedFor1Sec;
 
   public ShootCargo(RevShooterSubsystem shooter, RevTiltSubsystem tilt, RevTurretSubsystem turret, LimeLight limelight,
-      CargoTransportSubsystem transport, RevDrivetrain drive, Compressor compressor, double time) {
+      CargoTransportSubsystem transport,Compressor compressor, double time) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_transport = transport;
     m_compressor = compressor;
     m_limelight = limelight;
-    m_drive = drive;
+    // m_drive = drive;
     m_tilt = tilt;
     m_turret = turret;
     m_time = time;
@@ -83,7 +82,7 @@ public class ShootCargo extends CommandBase {
   @Override
   public void execute() {
 
-    robotStoppedFor1Sec = m_drive.robotStoppedForOneSecond;
+  //  robotStoppedFor1Sec = m_drive.robotStoppedForOneSecond;
 
     inAuto = DriverStation.isAutonomous();
 

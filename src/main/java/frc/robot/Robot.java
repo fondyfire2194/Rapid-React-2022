@@ -204,19 +204,19 @@ public class Robot extends TimedRobot {
 
       case 1:// in front of power port, move back use shooter data index 1
 
-        m_autonomousCommand = new LRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp);
+        m_autonomousCommand = new LRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp,FieldMap.leftTarmacData);
 
         break;
 
       case 2://
 
-        m_autonomousCommand = new RRetPuShoot();
+        m_autonomousCommand = new RRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp,FieldMap.rightTarmacData);
 
         break;
 
       case 3://
 
-        m_autonomousCommand = new RRetCenPuShoot();
+        m_autonomousCommand = new RRetCenPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp,FieldMap.rightCenTarmacData);
 
         break;
 
@@ -234,7 +234,7 @@ public class Robot extends TimedRobot {
 
       case 6:
 
-        m_autonomousCommand = new LRetPuShootLow(intake, drive, turret, tilt);
+        m_autonomousCommand = new LRetPuShootLow(intake, drive, turret, tilt,FieldMap.leftTarmacData);
 
         break;
 

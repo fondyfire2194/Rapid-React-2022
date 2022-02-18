@@ -4,10 +4,10 @@
 
 package frc.robot.commands.AutoCommands.Common;
 
-
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.FieldMap;
+import frc.robot.Pref;
 import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
 import frc.robot.commands.Intakes.RunActiveIntakeMotor;
@@ -21,18 +21,18 @@ import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
-public class LRetPu extends SequentialCommandGroup {
+public class AllRetPu extends SequentialCommandGroup {
 
-  double tiltAngle = FieldMap.leftTarmacTiltAngle;
-  double turretAngle = FieldMap.leftTarmacTurretAngle;
-  double driveToPosition = FieldMap.leftTarmacDriveToPosition;
-  double pickUpRate = FieldMap.drivePickupRate;
-  double mps = FieldMap.leftStartMPS;
-  double intakeSpeed = FieldMap.intakeSpeed;
+  double intakeSpeed = Pref.getPref("IntSp");
+  double pickUpRate = Pref.getPref("dRPur");
 
   /** Creates a new LRetPuShoot. */
-  public LRetPu(IntakesSubsystem intake, RevDrivetrain drive, RevTurretSubsystem turret, RevTiltSubsystem tilt) {
+  public AllRetPu(IntakesSubsystem intake, RevDrivetrain drive, RevTurretSubsystem turret, RevTiltSubsystem tilt,
+      double[] data) {
     // Use addRequirements() here to declare subsystem dependencies.
+    double tiltAngle = data[0];
+    double turretAngle = data[1];
+    double driveToPosition = data[2];
 
     addCommands(
 
