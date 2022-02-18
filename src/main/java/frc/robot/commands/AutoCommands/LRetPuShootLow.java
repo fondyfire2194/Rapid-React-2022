@@ -5,28 +5,21 @@
 package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.AutoCommands.Common.LRetPu;
+import frc.robot.subsystems.IntakesSubsystem;
+import frc.robot.subsystems.RevDrivetrain;
+import frc.robot.subsystems.RevTiltSubsystem;
+import frc.robot.subsystems.RevTurretSubsystem;
 
-public class LRetPuShootLow extends CommandBase {
+public class LRetPuShootLow extends SequentialCommandGroup {
   /** Creates a new LRetPuShootLow. */
-  public LRetPuShootLow() {
+  public LRetPuShootLow(IntakesSubsystem intake, RevDrivetrain drive, RevTurretSubsystem turret,
+      RevTiltSubsystem tilt) {
     // Use addRequirements() here to declare subsystem dependencies.
+
+    addCommands(new LRetPu(intake, drive, turret, tilt));
+
   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
 }

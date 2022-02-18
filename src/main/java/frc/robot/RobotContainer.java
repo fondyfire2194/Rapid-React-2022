@@ -84,7 +84,7 @@ public class RobotContainer {
       public final XboxController codriverGamepad = new XboxController(OIConstants.kCoDriverControllerPort);
       public final XboxController setupGamepad = new XboxController(OIConstants.kSetupControllerPort);
 
-      public final RevDrivetrain m_robotDrive;
+      public final RevDrivetrain m_drive;
 
       public final IntakesSubsystem m_intakes;
 
@@ -102,7 +102,7 @@ public class RobotContainer {
 
       public final AngleSolver m_as;
 
-      public GetTarget m_getTarget;
+      public GetTarget m_gt;
 
       public static boolean autoSelected;
 
@@ -114,11 +114,9 @@ public class RobotContainer {
 
       public LimeLight m_limelight;
 
-      private Compressor m_compressor;
+      public Compressor m_compressor;
 
       public FondyFireTrajectory m_trajectory;
-
-      public AutoFactory m_autoFactory;
 
       public boolean clickUp;
 
@@ -174,8 +172,8 @@ public class RobotContainer {
 
             // Preferences.removeAll();
             // Pref.deleteUnused();
-           // Pref.addMissing();
-            m_robotDrive = new RevDrivetrain();
+            // Pref.addMissing();
+            m_drive = new RevDrivetrain();
             m_transport = new CargoTransportSubsystem();
             // m_rearIntake = new RearIntakeSubsystem();
             // m_frontIntake = new FrontIntakeSubsystem();
@@ -198,7 +196,7 @@ public class RobotContainer {
 
             m_as = new AngleSolver(m_rCV2, m_limelight);
 
-            m_getTarget = new GetTarget(m_rCV2, m_as);
+            m_gt = new GetTarget(m_rCV2, m_as);
 
             m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
@@ -206,27 +204,27 @@ public class RobotContainer {
             // m_robotDrive, m_limelight,
             // m_compressor, m_intake);
 
-            m_trajectory = new FondyFireTrajectory(m_robotDrive);
+            m_trajectory = new FondyFireTrajectory(m_drive);
 
-            m_tilt.setDefaultCommand(new PositionHoldTilt(m_tilt, m_shooter,
+            m_tilt.setDefaultCommand(new PositionHoldTilt(m_tilt,
                         m_limelight));
             // // m_tilt.setDefaultCommand(new PositionHoldTiltTest(m_tilt));
 
-            m_turret.setDefaultCommand(new PositionHoldTurret(m_turret, m_shooter,
+            m_turret.setDefaultCommand(new PositionHoldTurret(m_turret,
                         m_limelight));
 
             // m_turret.setDefaultCommand(new TurretJog(m_turret, () ->
             // setupGamepad.getRawAxis(0) / 5, setupGamepad));
 
             boolean isMatch = false;// Pref.getPref("IsMatch") == 1.;
-            m_setup = new SetUpOI(m_turret, m_tilt, m_robotDrive, m_shooter, m_transport, m_compressor,
+            m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intakes, m_climber, m_trajectory, m_as, isMatch);
 
-            m_hvis = new HubVisionShuffleboard(m_limelight, m_rCV2, m_as, m_getTarget, m_turret, m_tilt, m_shooter);
+            m_hvis = new HubVisionShuffleboard(m_limelight, m_rCV2, m_as, m_gt, m_turret, m_tilt, m_shooter);
 
-            m_llVis = new LLVisionShuffleboard(m_limelight, m_rCV2, m_getTarget, m_turret, m_tilt, m_shooter);
+            m_llVis = new LLVisionShuffleboard(m_limelight, m_rCV2, m_gt, m_turret, m_tilt, m_shooter);
 
-            m_robotDrive.setDefaultCommand(getArcadeDriveCommand());
+            m_drive.setDefaultCommand(getArcadeDriveCommand());
 
             configureButtonBindings();
 
@@ -266,7 +264,7 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 1)
 
                         .whileHeld(new ShootCargo(m_shooter, m_tilt, m_turret,
-                                    m_limelight, m_transport, m_robotDrive, m_compressor, 100));
+                                    m_limelight, m_transport, m_drive, m_compressor, 100));
 
             new JoystickButton(m_driverController, 5).whenPressed(new RunShooter(m_shooter))
                         .whenPressed(new RunRollers(m_transport));
@@ -382,7 +380,7 @@ public class RobotContainer {
             setupY.whileHeld(getJogTiltCommand(setupGamepad)).whileHeld(getJogTurretCommand(setupGamepad))
                         .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));
 
-            setupB.whenPressed(new RunTargetValues(m_getTarget));
+            setupB.whenPressed(new RunTargetValues(m_gt));
 
             setupA.whileHeld(new RunActiveIntakeMotor(m_intakes, .75))
                         .whenReleased(new StopIntakeMotors(m_intakes));
@@ -413,16 +411,16 @@ public class RobotContainer {
       }
 
       public Command getArcadeDriveCommand() {
-            return new ArcadeDrive(m_robotDrive, () -> -m_driverController.getY(), () -> m_driverController.getTwist());
+            return new ArcadeDrive(m_drive, () -> -m_driverController.getY(), () -> m_driverController.getTwist());
       }
 
       public Command getArcadeDriveVelocityCommand() {
-            return new ArcadeDriveVelocity(m_robotDrive, () -> -m_driverController.getY(),
+            return new ArcadeDriveVelocity(m_drive, () -> -m_driverController.getY(),
                         () -> m_driverController.getTwist());
       }
 
       public Command getDriveStraightCommand() {
-            return new DriveStraightJoystick(m_robotDrive, () -> -m_driverController.getY());
+            return new DriveStraightJoystick(m_drive, () -> -m_driverController.getY());
 
       }
 
@@ -456,7 +454,7 @@ public class RobotContainer {
        */
 
       public Command getJogTurretVelocityCommand(XboxController gamepad) {
-            return new TurretJogVelocity(m_turret, () -> -gamepad.getRawAxis(0)/5, gamepad);
+            return new TurretJogVelocity(m_turret, () -> -gamepad.getRawAxis(0) / 5, gamepad);
       }
 
       public Command getJogTiltVelocityCommand(XboxController gamepad) {

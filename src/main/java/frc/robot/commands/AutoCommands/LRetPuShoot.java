@@ -11,15 +11,14 @@ import frc.robot.FieldMap;
 import frc.robot.Vision.GetTarget;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.commands.Intakes.ActiveIntakeArmLower;
-import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
-import frc.robot.commands.Intakes.RunActiveIntakeMotor;
-import frc.robot.commands.Intakes.SetRearIntakeActive;
-import frc.robot.commands.Intakes.StopActiveIntake;
-import frc.robot.commands.RobotDrive.PickupMove;
-import frc.robot.commands.RobotDrive.ResetEncoders;
-import frc.robot.commands.RobotDrive.ResetGyro;
+import frc.robot.commands.AutoCommands.Common.AimAndLockTarget;
+import frc.robot.commands.AutoCommands.Common.LRetPu;
+import frc.robot.commands.CargoTransport.RunRollers;
+import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.SetShootSpeed;
 import frc.robot.commands.Shooter.ShootCargo;
+import frc.robot.commands.Tilt.PositionHoldTilt;
+import frc.robot.commands.Turret.PositionHoldTurret;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -30,8 +29,10 @@ import frc.robot.subsystems.RevTurretSubsystem;
 public class LRetPuShoot extends SequentialCommandGroup {
   double tiltAngle = FieldMap.leftTarmacTiltAngle;
   double turretAngle = FieldMap.leftTarmacTurretAngle;
-  double drivePosition = FieldMap.leftTarmacDrivePosition;
+  double driveToPosition = FieldMap.leftTarmacDriveToPosition;
   double pickUpRate = FieldMap.drivePickupRate;
+  double mps = FieldMap.leftStartMPS;
+  double intakeSpeed = FieldMap.intakeSpeed;
 
   /** Creates a new LRetPuShoot. */
   public LRetPuShoot(IntakesSubsystem intake, RevDrivetrain drive, RevTurretSubsystem turret, RevTiltSubsystem tilt,
@@ -39,19 +40,17 @@ public class LRetPuShoot extends SequentialCommandGroup {
       CargoTransportSubsystem transport, Compressor compressor) {
     // Use addRequirements() here to declare subsystem dependencies.
 
-    addCommands(
-        new ParallelCommandGroup(new ResetEncoders(drive), new ResetGyro(drive),
-            new PickupMove(drive, drivePosition, pickUpRate),
-            new PrepositionTiltAndTurret(tilt, turret, tiltAngle, turretAngle))
-                .deadlineWith(new SetRearIntakeActive(intake),
-                    new ActiveIntakeArmLower(intake),
-                    new RunActiveIntakeMotor(intake, 0.75)),
-
-        new ParallelCommandGroup(new StopActiveIntake(intake), new ActiveIntakeArmRaise(intake)),
+    addCommands(new LRetPu(intake, drive, turret, tilt),
 
         new AimAndLockTarget(ll, turret, tilt, rcv2, target),
 
-        new ShootCargo(shooter, tilt, turret, ll, transport, drive, compressor, 1.));
+        new SetShootSpeed(shooter, mps),
+
+        new RunShooter(shooter), new RunRollers(transport),
+
+        new ShootCargo(shooter, tilt, turret, ll, transport, drive, compressor, 1.)
+
+            .deadlineWith(new PositionHoldTilt(tilt, ll), new PositionHoldTurret(turret, ll)));
 
   }
 

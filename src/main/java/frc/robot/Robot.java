@@ -17,19 +17,29 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Vision.GetTarget;
+import frc.robot.Vision.LimeLight;
+import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.AutoCommands.LRetPuShoot;
 import frc.robot.commands.AutoCommands.LRetPuShootLow;
+import frc.robot.commands.AutoCommands.RRetCenPuShoot;
 import frc.robot.commands.AutoCommands.RRetPuS3;
 import frc.robot.commands.AutoCommands.RRetPuShoot;
 import frc.robot.commands.AutoCommands.RRetPuShootLow;
 import frc.robot.commands.AutoCommands.Taxi;
-import frc.robot.commands.RobotDrive.PickupMove;
 import frc.robot.commands.Shooter.ChooseShooterSpeedSource;
 import frc.robot.commands.Shooter.SetLogItemsState;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Vision.CalculateSpeedFromDistance;
 import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.commands.Vision.SetUpLimelightForDriver;
+import frc.robot.subsystems.CargoTransportSubsystem;
+import frc.robot.subsystems.IntakesSubsystem;
+import frc.robot.subsystems.RevDrivetrain;
+import frc.robot.subsystems.RevShooterSubsystem;
+import frc.robot.subsystems.RevTiltSubsystem;
+import frc.robot.subsystems.RevTurretSubsystem;
+import edu.wpi.first.wpilibj.Compressor;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -101,7 +111,7 @@ public class Robot extends TimedRobot {
     // m_robotContainer.m_setup.checkLimits();
     m_robotContainer.m_rCV2.getRawContourData();
     m_robotContainer.m_as.runValues();
-   // m_robotContainer.m_getTarget.runCalcs();
+    // m_robotContainer.m_getTarget.runCalcs();
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
     // SmartDashboard.putNumber("thr",m_robotContainer.m_driverController.getThrottle());
     SmartDashboard.putNumber("thr1", m_robotContainer.getThrottle());
@@ -123,8 +133,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    if (m_robotContainer.m_robotDrive.isStopped()) {
-      m_robotContainer.m_robotDrive.setIdleMode(false);
+    if (m_robotContainer.m_drive.isStopped()) {
+      m_robotContainer.m_drive.setIdleMode(false);
     }
     m_robotContainer.m_limelight.useVision = false;
     m_robotContainer.m_setup.checkCANDevices();
@@ -147,7 +157,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_limelight.allianceIsBlue = DriverStation.getAlliance() == Alliance.Blue;
 
-    m_robotContainer.m_robotDrive.setIdleMode(true);
+    m_robotContainer.m_drive.setIdleMode(true);
 
     if (RobotBase.isReal())
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
@@ -161,7 +171,6 @@ public class Robot extends TimedRobot {
     new ChooseShooterSpeedSource(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_turret, 0)
         .schedule(true);
 
-
     Shuffleboard.selectTab("Competition");
     Shuffleboard.startRecording();
     // get delay time
@@ -173,39 +182,59 @@ public class Robot extends TimedRobot {
     new SetLogItemsState(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_turret, true)
         .schedule();
 
+    LimeLight ll = m_robotContainer.m_limelight;
+    RevTiltSubsystem tilt = m_robotContainer.m_tilt;
+    RevTurretSubsystem turret = m_robotContainer.m_turret;
+    RevShooterSubsystem shooter = m_robotContainer.m_shooter;
+    RevDrivetrain drive = m_robotContainer.m_drive;
+    CargoTransportSubsystem transport = m_robotContainer.m_transport;
+    IntakesSubsystem intake = m_robotContainer.m_intakes;
+    RawContoursV2 rcv2 = m_robotContainer.m_rCV2;
+    GetTarget gt = m_robotContainer.m_gt;
+    Compressor comp = m_robotContainer.m_compressor;
+
+
     switch (autoChoice) {
 
-      case 0:// cross line
+      case 0:// taxi start anywhere as agreed with other teams inside a tarmac facing in
 
-        m_autonomousCommand = new Taxi(m_robotContainer.m_robotDrive);
+        m_autonomousCommand = new Taxi(m_robotContainer.m_drive, -(FieldMap.robotLength + 1));
 
         break;
+
       case 1:// in front of power port, move back use shooter data index 1
 
-        m_autonomousCommand = new LRetPuShoot(null, null, null, null, null, null, null, null);
+        m_autonomousCommand = new LRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp);
 
         break;
 
-      case 2:// Trench Pickup 2 ball
+      case 2://
 
         m_autonomousCommand = new RRetPuShoot();
 
         break;
 
-      case 3:// ShieldGen Pickup 1 ball
+      case 3://
+
+        m_autonomousCommand = new RRetCenPuShoot();
+
+        break;
+
+      case 4://
 
         m_autonomousCommand = new RRetPuS3();
 
         break;
 
-      case 4:
+      case 5:
 
         m_autonomousCommand = new RRetPuShootLow();
 
         break;
-      case 5:
 
-        m_autonomousCommand = new LRetPuShootLow();
+      case 6:
+
+        m_autonomousCommand = new LRetPuShootLow(intake, drive, turret, tilt);
 
         break;
 
@@ -257,7 +286,7 @@ public class Robot extends TimedRobot {
 
     Shuffleboard.startRecording();
 
-    m_robotContainer.m_robotDrive.setIdleMode(true);
+    m_robotContainer.m_drive.setIdleMode(true);
 
     autoHasRun = false;
 
@@ -332,9 +361,9 @@ public class Robot extends TimedRobot {
 
   private void setStartingPose(Pose2d pose) {
 
-    m_robotContainer.m_robotDrive.resetAll();
+    m_robotContainer.m_drive.resetAll();
 
-    m_robotContainer.m_robotDrive.resetPose(pose);
+    m_robotContainer.m_drive.resetPose(pose);
   }
 
 }

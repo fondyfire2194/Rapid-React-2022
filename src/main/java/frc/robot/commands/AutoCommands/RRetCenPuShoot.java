@@ -5,41 +5,28 @@
 package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.RevDrivetrain;
 
-public class Taxi extends CommandBase {
-  /** Creates a new Taxi. */
-  private final RevDrivetrain m_drive;
-  private double m_distance;
-  public Taxi(RevDrivetrain drive,double distance) {
+public class RRetCenPuShoot extends CommandBase {
+  /** Creates a new RRetPuShoot. */
+  public RRetCenPuShoot() {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_drive = drive;
-    m_distance = distance;
-    addRequirements(m_drive);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_drive.resetEncoders();
-    m_drive.resetGyro();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    m_drive.positionDistance(m_distance,m_distance);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    m_drive.stop();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_drive.getInPosition();
+    return false;
   }
 }
