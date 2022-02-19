@@ -8,6 +8,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,6 +35,9 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public boolean rearIntakeMotorConnected;
 
+  public PhotonCamera FrontCamera = new PhotonCamera("photonvision");
+  public PhotonCamera RearCamera = new PhotonCamera("photonvision");
+
   public IntakesSubsystem() {
 
     m_rearIntakeMotor.configFactoryDefault();
@@ -44,10 +49,7 @@ public class IntakesSubsystem extends SubsystemBase {
     raiseFrontArm();
   }
 
-  public enum intakeSelect {
-    frontIntake,
-    rearIntake;
-  }
+  
 
   public void toggleActiveIntake() {
 
@@ -198,6 +200,7 @@ public class IntakesSubsystem extends SubsystemBase {
     } else
       return getRearMotorAmps();
   }
+
   public double getActiveMotor() {
     if (useFrontIntake) {
       return getFrontMotor();
@@ -205,4 +208,48 @@ public class IntakesSubsystem extends SubsystemBase {
       return getRearMotor();
   }
 
+  public void setActivePipeline(int pipelineNumber) {
+    FrontCamera.setPipelineIndex(pipelineNumber);
+    RearCamera.setPipelineIndex(pipelineNumber);
+  }
+
+  public double getActiveTargetYaw() {
+
+    double temp = 0;
+
+    if (useFrontIntake) {
+
+      var result = FrontCamera.getLatestResult();
+
+      if (result.hasTargets()) {
+
+        temp = result.getBestTarget().getYaw();
+      }
+    }
+
+    else {
+
+      var result = RearCamera.getLatestResult();
+
+      if (result.hasTargets()) {
+
+        temp = result.getBestTarget().getYaw();
+      }
+
+    }
+    return temp;
+  }
+
+  public void setActiveCamDriverMode() {
+    boolean on = true;
+    if (useFrontIntake) {
+
+      FrontCamera.setDriverMode(on);
+
+    } else {
+
+      RearCamera.setDriverMode(on);
+    }
+
+  }
 }

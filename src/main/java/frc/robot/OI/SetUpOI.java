@@ -10,6 +10,7 @@ import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -72,6 +73,7 @@ public class SetUpOI {
         private HttpCamera LLFeed;
         private UsbCamera intakeFeed;
         public double timeToStart;
+        private HttpCamera frontFeed;
 
         public SetUpOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
@@ -109,10 +111,17 @@ public class SetUpOI {
                         intakeValues.addNumber("Motor Amps", () -> intake.getActiveMotorAmps());
                         intakeValues.addNumber("Motor CMD", () -> intake.getActiveMotor());
 
-                        // Shuffleboard.getTab("Intake").add("Intake", intakeFeed)
-                        // .withWidget(BuiltInWidgets.kCameraStream)
-                        // .withPosition(2, 0).withSize(6, 4)
-                        // .withProperties(Map.of("Show Crosshair", true, "Show Controls", false));//
+                        ShuffleboardLayout intakeVision = Shuffleboard.getTab("Intake")
+                                        .getLayout("IntakeValues", BuiltInLayouts.kList).withPosition(2, 2)
+                                        .withSize(2, 2).withProperties(Map.of("Label position", "TOP"));
+ 
+                                        frontFeed = new HttpCamera("photonvision",
+                                        "http://photopnvision.local:5800/stream.mjpg");
+
+                        intakeVision.add("FrontIntake", frontFeed)
+                                        .withWidget(BuiltInWidgets.kCameraStream).withPosition(4, 0)
+                                        .withSize(3, 2).withProperties(Map.of("Show Crosshair", false,
+                                                        "Show Controls", false));//
                 }
 
                 if (showTurret && !isMatch) {
