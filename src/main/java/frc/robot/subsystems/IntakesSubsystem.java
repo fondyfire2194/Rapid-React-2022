@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -38,6 +40,14 @@ public class IntakesSubsystem extends SubsystemBase {
   public PhotonCamera FrontCamera = new PhotonCamera("photonvision");
   public PhotonCamera RearCamera = new PhotonCamera("photonvision");
 
+  public int redCargoPipeline = 0;
+  public int blueCargoPipeline = 1;
+  public int redLauchPadPipeline = 2;
+  public int blueLaunchPadPipeline = 3;
+
+  public int activeCargoPipeline = redCargoPipeline;
+  public int activeLaunchPadPipeline = redLauchPadPipeline;
+
   public IntakesSubsystem() {
 
     m_rearIntakeMotor.configFactoryDefault();
@@ -48,8 +58,6 @@ public class IntakesSubsystem extends SubsystemBase {
     raiseRearArm();
     raiseFrontArm();
   }
-
-  
 
   public void toggleActiveIntake() {
 

@@ -23,9 +23,12 @@ import frc.robot.commands.CargoTransport.StopRollers;
 import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
 import frc.robot.commands.Intakes.RunActiveIntakeMotor;
+import frc.robot.commands.Intakes.SetActiveCameraPipeline;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
+import frc.robot.commands.Intakes.SetRearCameraPipeline;
 import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StopIntakeMotors;
+import frc.robot.commands.Intakes.ToggleActiveCameraDriverMode;
 import frc.robot.commands.RobotDrive.ClearRobFaults;
 import frc.robot.commands.RobotDrive.EndDriveLog;
 import frc.robot.commands.RobotDrive.PickupMove;
@@ -70,10 +73,9 @@ public class SetUpOI {
         private boolean showSubsystems = true;
         private boolean showIntake = true;
 
-        private HttpCamera LLFeed;
-        private UsbCamera intakeFeed;
         public double timeToStart;
         private HttpCamera frontFeed;
+        private HttpCamera rearFeed;
 
         public SetUpOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
@@ -111,15 +113,25 @@ public class SetUpOI {
                         intakeValues.addNumber("Motor Amps", () -> intake.getActiveMotorAmps());
                         intakeValues.addNumber("Motor CMD", () -> intake.getActiveMotor());
 
+                        ShuffleboardLayout intakeCam = Shuffleboard.getTab("Intake")
+                                        .getLayout("IntakeCam", BuiltInLayouts.kList).withPosition(4, 0)
+                                        .withSize(1, 4).withProperties(Map.of("Label position", "TOP"));
+
+                        intakeCam.add("ToggleDriverView", new ToggleActiveCameraDriverMode(intake));
+                        intakeCam.add("SetActivePipeline",
+                                        new SetActiveCameraPipeline(intake, intake.activeCargoPipeline));
+                        intakeCam.add("SetRearLaunchPipeline",
+                                        new SetRearCameraPipeline(intake, intake.activeLaunchPadPipeline));
+
                         ShuffleboardLayout intakeVision = Shuffleboard.getTab("Intake")
-                                        .getLayout("IntakeValues", BuiltInLayouts.kList).withPosition(2, 2)
+                                        .getLayout("IntakeCamera", BuiltInLayouts.kList).withPosition(2, 2)
                                         .withSize(2, 2).withProperties(Map.of("Label position", "TOP"));
- 
-                                        frontFeed = new HttpCamera("photonvision",
+
+                        frontFeed = new HttpCamera("photonvision",
                                         "http://photopnvision.local:5800/stream.mjpg");
 
                         intakeVision.add("FrontIntake", frontFeed)
-                                        .withWidget(BuiltInWidgets.kCameraStream).withPosition(4, 0)
+                                        .withWidget(BuiltInWidgets.kCameraStream).withPosition(5, 0)
                                         .withSize(3, 2).withProperties(Map.of("Show Crosshair", false,
                                                         "Show Controls", false));//
                 }

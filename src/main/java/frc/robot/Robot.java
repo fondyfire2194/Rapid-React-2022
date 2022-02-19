@@ -61,6 +61,7 @@ public class Robot extends TimedRobot {
   public double timeToStart;
   int tst;
   private int loopCtr;
+  private boolean allianceColorBlue;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -72,6 +73,14 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     // CameraServer.startAutomaticCapture("Intake", 0);
+
+    allianceColorBlue = DriverStation.getAlliance() == Alliance.Blue;
+    if (allianceColorBlue) {
+      m_robotContainer.m_intakes.activeCargoPipeline = m_robotContainer.m_intakes.blueCargoPipeline;
+      m_robotContainer.m_intakes.activeLaunchPadPipeline = m_robotContainer.m_intakes.blueLaunchPadPipeline;
+      m_robotContainer.m_intakes.setActivePipeline(m_robotContainer.m_intakes.activeCargoPipeline);
+
+    }
 
     if (m_robotContainer.isMatch)
       Shuffleboard.selectTab("Pre-Round");
