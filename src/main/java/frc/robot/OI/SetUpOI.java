@@ -423,10 +423,10 @@ public class SetUpOI {
                         transportValues.add("StartRollers", new RunRollers(transport));
                         transportValues.add("StopRollers", new StopRollers(transport));
 
-                        transportValues.addNumber("FrontRollerAmps", () -> transport.getFrontRollerMotorAmps());
-                        transportValues.addNumber("RearRollerAmps", () -> transport.getRearRollerMotorAmps());
-                        transportValues.addNumber("FrontRollerOut", () -> transport.getFrontRoller());
-                        transportValues.addNumber("RearRollerOut", () -> transport.getRearRoller());
+                        transportValues.addNumber("FrontRollerAmps", () -> transport.getTopRollerMotorAmps());
+                        transportValues.addNumber("RearRollerAmps", () -> transport.getLowerRollerMotorAmps());
+                        transportValues.addNumber("FrontRollerOut", () -> transport.getTopRoller());
+                        transportValues.addNumber("RearRollerOut", () -> transport.getLowerRoller());
                         transportValues.add("Cmd", transport);
 
                         ShuffleboardLayout transportCargoArm = Shuffleboard.getTab("SetupTransport")
@@ -444,10 +444,10 @@ public class SetUpOI {
 
                         transportValues1.addBoolean("RollersAtSpeed", () -> transport.rollersAtSpeed);
 
-                        transportValues1.addBoolean("RearRollerConnected (12)",
-                                        () -> transport.rearRollerMotorConnected);
-                        transportValues1.addBoolean("FrontRollerConnected (14)",
-                                        () -> transport.frontRollerMotorConnected);
+                        transportValues1.addBoolean("TopRollerConnected (12)",
+                                        () -> transport.topRollerMotorConnected);
+                        transportValues1.addBoolean("LowerRollerConnected (14)",
+                                        () -> transport.lowerRollerMotorConnected);
 
                 }
 
@@ -551,8 +551,8 @@ public class SetUpOI {
                         canBus.addBoolean("TurretConnected (8)", () -> turret.turretMotorConnected);
                         canBus.addBoolean("TiltConnected (9)", () -> tilt.tiltMotorConnected);
                         // canBus.addBoolean("LeftShooterConnected (6)
-                        canBus.addBoolean("RearRollerConnected (12)", () -> transport.rearRollerMotorConnected);
-                        canBus.addBoolean("FrontRollerConnected(14)", () -> transport.frontRollerMotorConnected);
+                        canBus.addBoolean("TopRollerConnected (12)", () -> transport.topRollerMotorConnected);
+                        canBus.addBoolean("LowerRollerConnected(14)", () -> transport.lowerRollerMotorConnected);
                         canBus.addBoolean("LDR1Connected  (2)", () -> drive.leftLeadConnected);
 
                         // (4)",()->robotDrive.rightLeadConnected)

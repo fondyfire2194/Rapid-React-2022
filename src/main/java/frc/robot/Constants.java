@@ -30,7 +30,7 @@ public final class Constants {
    public static final double MINIMUM_TURN_SPEED = 0;
 
    public static final class CANConstants {
-      
+
       public static final int PDP = 1;
 
       public static final int DRIVETRAIN_LEFT_MASTER = 2;
@@ -51,8 +51,8 @@ public final class Constants {
       public static final int REAR_INTAKE_MOTOR = 10;
       public static final int FRONT_INTAKE_MOTOR = 13;
 
-      public static final int FRONT_ROLLER = 14;
-      public static final int REAR_ROLLER = 12;
+      public static final int TOP_ROLLER = 14;
+      public static final int LOWER_ROLLER = 12;
 
       public static final int CLIMB_MOTOR = 15;
       public static final int CP_TURN_MOTOR = 16;
@@ -159,10 +159,6 @@ public final class Constants {
             kvVoltSecondsPerMeter, kaVoltSecondsSquaredPerMeter, kvVoltSecondsPerRadian, kaVoltSecondsSquaredPerRadian);
 
       public static final DCMotor kDriveGearbox = DCMotor.getNEO(2);
-
-   }
-
-   public static final class ControlPanelConstants {
 
    }
 
@@ -274,32 +270,15 @@ public final class Constants {
 
       public static final double fieldWidth = Units.inchesToMeters(323);
       public static final double fieldLength = Units.inchesToMeters(626.25);
-      public static final double initiationLine = Units.inchesToMeters(115);// meters from Alliance wall
-      public static final double centerPowerPort = 2.4;// meters
-      public static final double centerTrench = 0;
-      public static final double trenchToSecondBall = 0;
-      public static final double trenchToThirdBall = 0;
 
-      public static final double trenchToUnderCP = 0;
+      public static final double hubTargetHeight = Units.inchesToMeters(626.25);
 
-      public static final double powerPortTargetCenterHeight = Units.inchesToMeters(84);
-      public static final double PORT_CENTER_HEIGHT = Units.inchesToMeters(90);
-      public static final double BASE_CAMERA_HEIGHT = Units.inchesToMeters(25.);
-      public static final double SHOT_HEIGHT = PORT_CENTER_HEIGHT - BASE_CAMERA_HEIGHT;
-      public static final double SHOT_HEIGHT_SQUARED = SHOT_HEIGHT * SHOT_HEIGHT;
-      public static final double MAX_CAMERA_HEIGHT = Units.inchesToMeters(26.75);
-      public static final double CARGO_DIAMETER = Units.inchesToMeters(7);
-      public static final double INNER_PORT_DIAMETER = Units.inchesToMeters(13);
-      public static final double INNER_PORT_DISTANCE = Units.inchesToMeters(29.25);
-      public static final double OUTER_PORT_MAX_GAP = Units.inchesToMeters(30);
-      public static final double MIN_BALL_CENTER_AT_OUTER = PORT_CENTER_HEIGHT - (OUTER_PORT_MAX_GAP / 2)
-            + CARGO_DIAMETER / 2;
-      public static final double CAMERA_BASE_ANGLE = 30.;
-      public static final double CAMERA_MAX_ANGLE = 0;
-      public static double cameraAngleRange = CAMERA_MAX_ANGLE - CAMERA_BASE_ANGLE;
-      public static final double cameraHeightRange = MAX_CAMERA_HEIGHT - BASE_CAMERA_HEIGHT;
-      public static double cameraHeightSlope = cameraHeightRange / HoodedShooterConstants.tiltRange;
-      public static double cameraAngleSlope = cameraAngleRange / HoodedShooterConstants.tiltRange;
+      public static final double CAMERA_HEIGHT = Units.inchesToMeters(90.);
+
+      public static final double heightDifference = hubTargetHeight - CAMERA_HEIGHT;
+ 
+      public static final double CAMERA_BASE_ANGLE = 128.;
+
    }
 
    public static class PipelinesConstants {

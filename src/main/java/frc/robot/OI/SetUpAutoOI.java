@@ -20,12 +20,7 @@ import frc.robot.FieldMap;
 import frc.robot.Vision.GetTarget;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.commands.AutoCommands.LRetPuShoot;
-import frc.robot.commands.AutoCommands.LRetPuShootLow;
-import frc.robot.commands.AutoCommands.RRetCenPuShoot;
-import frc.robot.commands.AutoCommands.RRetPuS3;
-import frc.robot.commands.AutoCommands.RRetPuShoot;
-import frc.robot.commands.AutoCommands.RRetPuShootLow;
+import frc.robot.commands.AutoCommands.AllRetPuShoot;
 import frc.robot.commands.AutoCommands.Taxi;
 import frc.robot.commands.CargoTransport.HoldCargo;
 import frc.robot.commands.CargoTransport.ReleaseCargo;
@@ -74,23 +69,18 @@ public class SetUpAutoOI {
                         autoChooser.setDefaultOption("Taxi", new Taxi(drive, distance));
 
                         autoChooser.addOption("Left Tarmac Retract Pickup Shoot",
-                                        new LRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
+                                        new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
                                                         target, transport, compressor, data));
 
                         autoChooser.addOption("Right Tarmac Edge Retract Pickup Shoot",
-                                        new RRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
+                                        new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
                                                         target, transport, compressor, data));
 
                         autoChooser.addOption("Right Tarmac Center Retract Pickup Shoot",
-                                        new RRetCenPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
+                                        new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
                                                         target, transport, compressor, data));
 
-                        autoChooser.addOption("Right Tarmac Shoot 3", new RRetPuS3());
-
-                        autoChooser.addOption("Right Tarmac Shoot Low", new RRetPuShootLow());
-
-                        autoChooser.addOption("Left Tarmac Shoot Low",
-                                        new LRetPuShootLow(intake, drive, turret, tilt, FieldMap.leftTarmacData));
+                       // autoChooser.addOption("Right Tarmac Shoot 3", new RRetPuS3());
 
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
                                         .withPosition(2, 0); //
@@ -153,7 +143,7 @@ public class SetUpAutoOI {
 
                 misComp1.add("Release Cargo", new ReleaseCargo(transport));
 
-                misComp1.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
+             //   misComp1.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
 
                 ShuffleboardLayout misComp2 = Shuffleboard.getTab("CompetitionMisc")
                                 .getLayout("Misc3", BuiltInLayouts.kList).withPosition(4, 0).withSize(2, 4)
@@ -172,7 +162,7 @@ public class SetUpAutoOI {
                                 .withProperties(Map.of("Label position", "LEFT"));
 
                 misComp3.addBoolean("RobotStopped", () -> drive.robotStoppedForOneSecond);
-                misComp3.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
+                //misComp3.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
                 misComp3.addBoolean("No CargoAtShoot", () -> transport.noCargoatShooterForOneSecond);
 
                 misComp3.addBoolean("CargoAvailable", () -> transport.cargoAvailable);

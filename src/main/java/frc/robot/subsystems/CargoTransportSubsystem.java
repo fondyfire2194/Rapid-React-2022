@@ -13,10 +13,14 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.ColorSensorV3;
 
-import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RevColorSensor;
+import frc.robot.Robot;
 import frc.robot.Constants.CANConstants;
 
 public class CargoTransportSubsystem extends SubsystemBase {
@@ -24,23 +28,18 @@ public class CargoTransportSubsystem extends SubsystemBase {
    * Creates a new CargoTransport.
    */
 
-  private final WPI_TalonSRX m_frontRollerMotor;
-  private final WPI_TalonSRX m_rearRollerMotor;
+  private final WPI_TalonSRX m_topRollerMotor;
+  private final WPI_TalonSRX m_lowerRollerMotor;
 
   public List<BaseTalon> transportTalons;
 
   public boolean leftBeltMotorConnected;
   public boolean rightBeltMotorConnected;
-  public boolean frontRollerMotorConnected;
-  public boolean rearRollerMotorConnected;
+  public boolean topRollerMotorConnected;
+  public boolean lowerRollerMotorConnected;
   public boolean allConnected;
 
-  private AnalogInput leftChannelCargoDetect;
-
-  private AnalogInput cargoAtShootDetect;// next to be released for shooting
-
   // private AnalogInput CargoBlockLeft;// wait to go into shoot position
-
 
   public boolean startRollers;
   public double cargoPassTime = .25;
@@ -59,32 +58,30 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   private double noCargoatLeftTime;
 
-  private double CargoDetectedVolts = 2.75;
-
   public boolean cargoAvailable = true;
+
   private double CargoTravelTime = 1;
-  public int cargosToBeShot = 3;
+
+  private boolean cargoAtShoot;
+
+  private final I2C.Port i2cPort = I2C.Port.kOnboard;
+  public ColorSensorV3 cargoAtShootsensor = new ColorSensorV3(i2cPort);
+  private int cargoSensedLevel = 180;
+  private RevColorSensor rcs = new RevColorSensor(cargoAtShootsensor);
 
   public CargoTransportSubsystem() {
 
-    m_frontRollerMotor = new WPI_TalonSRX(CANConstants.FRONT_ROLLER);
-    m_rearRollerMotor = new WPI_TalonSRX(CANConstants.REAR_ROLLER);
+    m_topRollerMotor = new WPI_TalonSRX(CANConstants.TOP_ROLLER);
+    m_lowerRollerMotor = new WPI_TalonSRX(CANConstants.LOWER_ROLLER);
 
+    m_topRollerMotor.configFactoryDefault();
+    m_lowerRollerMotor.configFactoryDefault();
 
-    leftChannelCargoDetect = new AnalogInput(1);
+    m_topRollerMotor.setNeutralMode(NeutralMode.Brake);
+    m_lowerRollerMotor.setNeutralMode(NeutralMode.Brake);
 
-    // CargoBlockLeft = new AnalogInput(0);
-
-    cargoAtShootDetect = new AnalogInput(2);
-
-    m_frontRollerMotor.configFactoryDefault();
-    m_rearRollerMotor.configFactoryDefault();
-
-    m_frontRollerMotor.setNeutralMode(NeutralMode.Brake);
-    m_rearRollerMotor.setNeutralMode(NeutralMode.Brake);
-
-    setFrontRollerBrakeOn(true);
-    setRearRollerBrakeOn(true);
+    setTopRollerBrakeOn(true);
+    setLowerRollerBrakeOn(true);
   }
 
   @Override
@@ -101,97 +98,102 @@ public class CargoTransportSubsystem extends SubsystemBase {
     }
 
     if (!getCargoAtShoot() && noCargoatShooterTime != 0
+
         && Timer.getFPGATimestamp() > noCargoatShooterTime + CargoTravelTime) {
+
       noCargoatShooterForOneSecond = true;
     }
-    // left cargo detection
-    if (getCargoAtLeft()) {
-      noCargoatLeftForOneSecond = false;
-      noCargoatLeftTime = 0;
-    }
 
-    if (!getCargoAtShoot() && noCargoatLeftTime == 0) {
-      noCargoatLeftTime = Timer.getFPGATimestamp();
-    }
+    noCargoatLeftTime = Timer.getFPGATimestamp();
 
-    if (!getCargoAtShoot() && noCargoatLeftTime != 0 && Timer.getFPGATimestamp() > noCargoatLeftTime + CargoTravelTime) {
+    if (getCargoAtShoot() == false && noCargoatShooterForOneSecond) {
       noCargoatLeftForOneSecond = true;
     }
-
   }
 
   public boolean checkCAN() {
 
-    frontRollerMotorConnected = m_frontRollerMotor.getFirmwareVersion() != -1;
-    rearRollerMotorConnected = m_rearRollerMotor.getFirmwareVersion() != -1;
-    allConnected = leftBeltMotorConnected && rightBeltMotorConnected && frontRollerMotorConnected
-        && rearRollerMotorConnected;
+    topRollerMotorConnected = m_topRollerMotor.getFirmwareVersion() != -1;
+    lowerRollerMotorConnected = m_lowerRollerMotor.getFirmwareVersion() != -1;
+    allConnected = topRollerMotorConnected
+        && lowerRollerMotorConnected;
 
-    return leftBeltMotorConnected && rightBeltMotorConnected && frontRollerMotorConnected && rearRollerMotorConnected;
+    return topRollerMotorConnected && lowerRollerMotorConnected;
 
   }
 
-  
-  public boolean getCargoAtLeft() {
-    return leftChannelCargoDetect.getVoltage() > CargoDetectedVolts;
+  public boolean getCargoIsBlue() {
+    return rcs.getIsBlue();
+  }
 
+  public boolean getCargoIsRed() {
+    return rcs.getIsRed();
+  }
+
+  public boolean getAllianceBlue() {
+    return Robot.getAllianceColor();
+  }
+
+  public boolean getCargoAllianceMatch() {
+    return getAllianceBlue() && getCargoAtShoot() && getCargoIsBlue()
+        || !getAllianceBlue() && getCargoAtShoot() && getCargoIsRed();
   }
 
   public boolean getCargoAtShoot() {
-    return cargoAtShootDetect.getVoltage() > CargoDetectedVolts;
+    return cargoAtShootsensor.getProximity() > cargoSensedLevel;
   }
 
-  public void runFrontRollerMotor(double speed) {
-    m_frontRollerMotor.set(ControlMode.PercentOutput, speed);
+  public void runTopRollerMotor(double speed) {
+    m_topRollerMotor.set(ControlMode.PercentOutput, speed);
   }
 
-  public double getFrontRoller() {
-    return m_frontRollerMotor.getMotorOutputPercent();
+  public double getTopRoller() {
+    return m_topRollerMotor.getMotorOutputPercent();
   }
 
-  public void stopFrontRollerMotor() {
-    m_frontRollerMotor.set(ControlMode.PercentOutput, 0);
+  public void stopTopRollerMotor() {
+    m_topRollerMotor.set(ControlMode.PercentOutput, 0);
   }
 
-  public void setFrontRollerBrakeOn(boolean on) {
+  public void setTopRollerBrakeOn(boolean on) {
     if (on) {
-      m_frontRollerMotor.setNeutralMode(NeutralMode.Brake);
+      m_topRollerMotor.setNeutralMode(NeutralMode.Brake);
     } else {
-      m_frontRollerMotor.setNeutralMode(NeutralMode.Coast);
+      m_topRollerMotor.setNeutralMode(NeutralMode.Coast);
     }
   }
 
-  public void runRearRollerMotor(double speed) {
-    m_rearRollerMotor.set(ControlMode.PercentOutput, -speed);
+  public void runLowerRollerMotor(double speed) {
+    m_lowerRollerMotor.set(ControlMode.PercentOutput, -speed);
   }
 
-  public double getRearRoller() {
-    return m_rearRollerMotor.getMotorOutputPercent();
+  public double getLowerRoller() {
+    return m_lowerRollerMotor.getMotorOutputPercent();
   }
 
-  public void stopRearRollerMotor() {
-    m_rearRollerMotor.set(ControlMode.PercentOutput, 0);
+  public void stopLowerRollerMotor() {
+    m_lowerRollerMotor.set(ControlMode.PercentOutput, 0);
   }
 
   public void stopRollers() {
-    m_frontRollerMotor.stopMotor();
-    m_rearRollerMotor.stopMotor();
+    m_topRollerMotor.stopMotor();
+    m_lowerRollerMotor.stopMotor();
   }
 
-  public void setRearRollerBrakeOn(boolean on) {
+  public void setLowerRollerBrakeOn(boolean on) {
     if (on) {
-      m_rearRollerMotor.setNeutralMode(NeutralMode.Brake);
+      m_lowerRollerMotor.setNeutralMode(NeutralMode.Brake);
     } else {
-      m_rearRollerMotor.setNeutralMode(NeutralMode.Coast);
+      m_lowerRollerMotor.setNeutralMode(NeutralMode.Coast);
     }
   }
 
-  public double getFrontRollerMotorAmps() {
-    return m_rearRollerMotor.getStatorCurrent();
+  public double getTopRollerMotorAmps() {
+    return m_topRollerMotor.getStatorCurrent();
   }
 
-  public double getRearRollerMotorAmps() {
-    return m_frontRollerMotor.getStatorCurrent();
+  public double getLowerRollerMotorAmps() {
+    return m_lowerRollerMotor.getStatorCurrent();
   }
 
   public void simulationInit() {

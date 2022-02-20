@@ -372,10 +372,10 @@ public class RobotContainer {
             // PositionTiltToVision(m_tilt, m_limelight, 24)),
             // new PositionTurretToVision(m_turret, m_limelight, -32)));
 
-            setupUpButton.whileHeld(() -> m_transport.runFrontRollerMotor(.5))
-                        .whileHeld(() -> m_transport.runRearRollerMotor(.5))
-                        .whenReleased(() -> m_transport.stopFrontRollerMotor())
-                        .whenReleased(() -> m_transport.stopRearRollerMotor());
+            setupUpButton.whileHeld(() -> m_transport.runTopRollerMotor(.5))
+                        .whileHeld(() -> m_transport.runLowerRollerMotor(.5))
+                        .whenReleased(() -> m_transport.stopTopRollerMotor())
+                        .whenReleased(() -> m_transport.stopLowerRollerMotor());
 
             setupLeftButton.whenPressed(new ReleaseCargo(m_transport));
 

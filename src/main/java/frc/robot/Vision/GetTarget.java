@@ -40,10 +40,13 @@ public class GetTarget {
 
   public boolean isFound;
   public boolean isReady;
+  public int weightedTargetValue;
+  public double weightedTargetAngle;
 
   public GetTarget(RawContoursV2 rcV2, AngleSolver as) {
 
     m_rCV2 = rcV2;
+
     m_as = as;
   }
 
@@ -57,7 +60,11 @@ public class GetTarget {
 
       targetValue = calculateTargetX();
 
+      weightedTargetValue = weightedAverageX();
+
       targetAngle = getTargetAngle(targetValue);
+
+      weightedTargetAngle = getTargetAngle(weightedTargetValue);
 
       isReady = true;
     }
@@ -97,11 +104,13 @@ public class GetTarget {
 
   public int calculateTargetX() {
 
-    double leftArea = m_rCV2.getLeftArea();
-    double rightArea = m_rCV2.getRightArea();
+    double leftArea = m_rCV2.areasAverage[0];
+
+    double centerArea = m_rCV2.areasAverage[1];
+
+    double rightArea = m_rCV2.areasAverage[2];
 
     double secondArea = Math.max(leftArea, rightArea);
-    double centerArea = m_rCV2.getCenterArea();
 
     double ratio = (centerArea - secondArea) / centerArea;
     SmartDashboard.putNumber("target r", ratio);
@@ -120,6 +129,27 @@ public class GetTarget {
     // int targetX = (int) (centerX * ratio);
 
     return targetX;
+  }
+
+  public int weightedAverageX() {
+
+    double leftArea = m_rCV2.areasAverage[0];
+
+    double centerArea = m_rCV2.areasAverage[1];
+
+    double rightArea = m_rCV2.areasAverage[2];
+
+    double totaArea = leftArea + centerArea + rightArea;
+
+    int leftX = m_rCV2.txAverage[0];
+    int centerX = m_rCV2.txAverage[1];
+    int rightX = m_rCV2.txAverage[2];
+
+    double leftWeight = leftX * leftArea;
+    double centerWeight = centerX * centerArea;
+    double rightWeight = rightX * rightArea;
+
+    return (int) ((leftWeight + centerWeight + rightWeight) / totaArea);
   }
 
   public double getTargetAngle(int xValue) {

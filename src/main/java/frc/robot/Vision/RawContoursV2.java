@@ -6,6 +6,7 @@ package frc.robot.Vision;
 
 import java.util.Arrays;
 
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -20,7 +21,7 @@ public class RawContoursV2 {
     private double vpw = 2 * Math.tan(Units.degreesToRadians(HFOV / 2));
     private double vph = 2 * Math.tan(Units.degreesToRadians(VFOV / 2));
 
-    private int[] areaIndex = { 0, 1, 2 };
+    public int[] areaIndex = { 0, 1, 2 };
 
     private boolean showDebug = false;
 
@@ -30,9 +31,9 @@ public class RawContoursV2 {
 
     int[] areasLRTxIndex = { 0, 1, 2 };
 
-    private double[] lToRAreas = { 0, 0, 0, 0 };
+    public double[] lToRAreas = { 0, 0, 0, 0 };
 
-    private int[] lRTxValues = { 0, 0, 0 };
+    public int[] lRTxValues = { 0, 0, 0 };
 
     private int[] lRTYValues = { 0, 0, 0 };
 
@@ -70,6 +71,30 @@ public class RawContoursV2 {
 
     public boolean areasValid;
 
+    public double[][] areaSample = new double[3][3];
+
+    public int[][] tXSample = new int[3][3];
+
+    public double[] areasAverage = new double[3];
+
+    public int[] txAverage = new int[3];
+
+    public MedianFilter ltx = new MedianFilter(5);
+
+    public MedianFilter ctx = new MedianFilter(5);
+
+    public MedianFilter rtx = new MedianFilter(5);
+
+    public MedianFilter larea = new MedianFilter(5);
+
+    public MedianFilter carea = new MedianFilter(5);
+
+    public MedianFilter rarea = new MedianFilter(5);
+
+    public boolean areaGood;
+    public boolean txGood;
+    public int[] lastAreaIndex;
+
     public RawContoursV2(LimeLight ll) {
 
         m_ll = ll;
@@ -93,16 +118,16 @@ public class RawContoursV2 {
     public void getRawContourData() {
     }
 
-    public void display() {
+    // public void display() {
 
-        if (showData)
+    // if (showData)
 
-            displayData();
+    // displayData();
 
-        if (showDebug)
+    // if (showDebug)
 
-            debugDisplay();
-    }
+    // debugDisplay();
+    // }
 
     public void checkTestTarget() {
 
@@ -122,6 +147,11 @@ public class RawContoursV2 {
 
         lToRAreas = get3LargestAreas(areaIndex);
 
+        areasAverage[0] = larea.calculate(lToRAreas[0]);
+        areasAverage[1] = carea.calculate(lToRAreas[1]);
+        areasAverage[2] = rarea.calculate(lToRAreas[2]);
+        
+
         areasValid = checkAreasValid();
 
         return areasValid;
@@ -130,6 +160,10 @@ public class RawContoursV2 {
     public int[] getlrtxData() {
 
         lRTxValues = getLRTXValues(areaIndex);
+
+        txAverage[0] = (int) ltx.calculate((double) lRTxValues[0]);
+        txAverage[1] = (int) ctx.calculate((double) lRTxValues[1]);
+        txAverage[2] = (int) rtx.calculate((double) lRTxValues[2]);
 
         // lRTYValues = getLRTYValues(areasLRTxIndex);
 

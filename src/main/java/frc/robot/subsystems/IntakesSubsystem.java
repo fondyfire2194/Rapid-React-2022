@@ -4,15 +4,16 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.AnalogInput;
+import com.revrobotics.ColorSensorV3;
 
 import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
@@ -48,6 +49,12 @@ public class IntakesSubsystem extends SubsystemBase {
   public int activeCargoPipeline = redCargoPipeline;
   public int activeLaunchPadPipeline = redLauchPadPipeline;
 
+  private AnalogInput frontIntakeCargoDetect;
+
+  private AnalogInput rearIntakeCargoDetect;// next to be released for shooting
+
+  private double cargoDetectedVolts = 2.75;
+ 
   public IntakesSubsystem() {
 
     m_rearIntakeMotor.configFactoryDefault();
@@ -57,6 +64,12 @@ public class IntakesSubsystem extends SubsystemBase {
 
     raiseRearArm();
     raiseFrontArm();
+
+    frontIntakeCargoDetect = new AnalogInput(1);
+
+    // CargoBlockLeft = new AnalogInput(0);
+
+    rearIntakeCargoDetect = new AnalogInput(2);
   }
 
   public void toggleActiveIntake() {
@@ -79,6 +92,16 @@ public class IntakesSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  public boolean getCargoAtFront() {
+    return frontIntakeCargoDetect.getVoltage() > cargoDetectedVolts;
+
+  }
+
+  public boolean getCargoAtRear() {
+    return rearIntakeCargoDetect.getVoltage() > cargoDetectedVolts;
+
   }
 
   public boolean checkFrontCAN() {

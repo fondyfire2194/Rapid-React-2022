@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import java.util.Arrays;
-import java.util.Map;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -19,7 +18,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
@@ -112,8 +110,8 @@ public class RevShooterSubsystem extends SubsystemBase {
      * 
      */
 
-    public double[] speedBreakMeters = new double[] { 2, 4, 6, 8, 10 };
-    public double[] MPSFromCameraDistance = new double[] { 25, 30, 35, 40, 45 };
+    public double[] tiltAngleFromCamerDistance = new double[] { 25, 30, 35, 40, 45, 25, 30, 35, 40, 45 };
+    public double[] RPMFromCameraDistance = new double[] { 25, 30, 35, 40, 45, 25, 30, 35, 40, 45 };
 
     public String[] shootColor = { "red", "yellow", "green" };
     public int shootColorNumber;
@@ -143,9 +141,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public boolean logSetupFileOpen;
     public boolean okToShoot;
-    private double shootError = Units.inchesToMeters(8);
-    private double tiltShootError = Units.inchesToMeters(12);
-    private double speedPerDegree = .1;
+    
     public double adjustedCameraMPS;
     public double driverThrottleValue;
     public boolean useProgramSpeed;
@@ -184,13 +180,7 @@ public class RevShooterSubsystem extends SubsystemBase {
         Arrays.asList(mLeftMotor, mRightMotor)
                 .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
 
-        // if (Pref.getPref("IsMatch") == 0.) {
-        //     shooterSpeed = Shuffleboard.getTab("SetupShooter").add("ShooterSpeed",
-        //             3).withWidget("Number Slider")
-        //             .withPosition(0, 3).withSize(4, 1).withProperties(Map.of("Min", 15, "Max",
-        //                     50))
-        //             .getEntry();
-        // }
+      
         tuneGains();
         getGains();
         requiredMps = 23;
@@ -244,6 +234,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     }
 
+    
     public void close() {
         mLeftMotor.close();
         mRightMotor.close();
@@ -420,68 +411,33 @@ public class RevShooterSubsystem extends SubsystemBase {
         return pdp.getTemperature();
     }
 
-    public double getTurretTolerance(double calculatedCameraDistance) {
-        return Math.toDegrees(Math.atan(shootError / calculatedCameraDistance));
-    }
+   
 
-    public double getTiltTolerance(double calculatedCameraDistance) {
-        return Math.toDegrees(Math.atan(tiltShootError / calculatedCameraDistance));
-    }
+    
 
-    public double calculateMPS() {
-        return calculateMPSFromDistance(calculatedCameraDistance);
-    }
+    // public double calculateMPSFromDistance(double distance) {
 
-    public double calculateSpeedChangeFromCameraVerticalError(double cameraError, double speed) {
-        return speed * (1 - (speedPerDegree * cameraError));
-    }
+    // double temp = 0;
+    // /**
+    // * The arrays have distances at which speed step changes
+    // *
+    // *
+    // */
+    // int distanceLength = speedBreakMeters.length;
+    // double minimumDistance = speedBreakMeters[0];
+    // double maximumDistance = speedBreakMeters[distanceLength - 1];
 
-    public double calculateMPSFromDistance(double distance) {
+    // double pu;
+    // double speedRange;
+    // double unitAdder;
+    // double distanceRange;
 
-        double temp = 0;
-        /**
-         * The arrays have distances at which speed step changes
-         * 
-         * 
-         */
-        int distanceLength = speedBreakMeters.length;
-        double minimumDistance = speedBreakMeters[0];
-        double maximumDistance = speedBreakMeters[distanceLength - 1];
+    // if (distance < minimumDistance)
+    // distance = minimumDistance;
+    // if (distance > maximumDistance)
+    // distance = maximumDistance;
 
-        double pu;
-        double speedRange;
-        double unitAdder;
-        double distanceRange;
-
-        if (distance < minimumDistance)
-            distance = minimumDistance;
-        if (distance > maximumDistance)
-            distance = maximumDistance;
-
-        for (int i = 0; i < distanceLength - 1; i++) {
-            if (distance >= speedBreakMeters[i] && distance < speedBreakMeters[i + 1]) {
-                temp = MPSFromCameraDistance[i];
-                SmartDashboard.putNumber("MYi", i);
-                SmartDashboard.putNumber("MYDistL", distanceLength);
-                SmartDashboard.putNumber("MyTemp", temp);
-
-                distanceRange = speedBreakMeters[i + 1] - speedBreakMeters[i];
-
-                double distanceFromEndOfRange = speedBreakMeters[i + 1] - distance;
-
-                pu = distanceFromEndOfRange / distanceRange;
-
-                speedRange = MPSFromCameraDistance[i + 1] - MPSFromCameraDistance[i];
-
-                unitAdder = speedRange * pu;
-                temp += unitAdder;
-
-            }
-
-        }
-        return temp;
-    }
-
+    // }
     private void tuneGains() {
         fixedSettings();
         double f = Pref.getPref("sHff");// 5700 rpm = 95 rps = 95 * .638 =

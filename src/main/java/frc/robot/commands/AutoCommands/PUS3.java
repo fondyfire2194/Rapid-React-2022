@@ -10,10 +10,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.GetTarget;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.commands.AutoCommands.Common.AimAndLockTarget;
+import frc.robot.commands.AutoCommands.Common.GetTargetCenter;
 import frc.robot.commands.AutoCommands.Common.AllRetPu;
+import frc.robot.commands.AutoCommands.Common.GetNumberOfContourValues;
 import frc.robot.commands.AutoCommands.Common.LowerShoot;
 import frc.robot.commands.AutoCommands.Common.UpperShoot;
+
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -21,17 +23,19 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
-public class RRetPuShoot extends SequentialCommandGroup {
+public class PUS3 extends SequentialCommandGroup {
 
   /** Creates a new LRetPuShoot. */
-  public RRetPuShoot(IntakesSubsystem intake, RevDrivetrain drive, RevTurretSubsystem turret, RevTiltSubsystem tilt,
+  public PUS3(IntakesSubsystem intake, RevDrivetrain drive, RevTurretSubsystem turret, RevTiltSubsystem tilt,
       LimeLight ll, RevShooterSubsystem shooter, RawContoursV2 rcv2, GetTarget target,
       CargoTransportSubsystem transport, Compressor compressor, double[] data) {
-    // Use addRequirements() here to declare subsystem dependencies.
+    
 
     addCommands(new AllRetPu(intake, drive, turret, tilt, data),
 
-        new AimAndLockTarget(ll, turret, tilt, rcv2, target, data),
+        new GetNumberOfContourValues(rcv2, turret),
+
+        new GetTargetCenter(ll, turret, tilt, rcv2, target, data),
 
         new ConditionalCommand(
 

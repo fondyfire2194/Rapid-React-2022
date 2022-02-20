@@ -33,8 +33,8 @@ public class RunRollers extends CommandBase {
   @Override
   public void execute() {
     SmartDashboard.putBoolean("ROHlt", m_transport.haltRollers);
-    m_transport.runFrontRollerMotor(speed);
-    m_transport.runRearRollerMotor(speed);
+    m_transport.runTopRollerMotor(speed);
+    m_transport.runLowerRollerMotor(speed);
 
     if (Timer.getFPGATimestamp() > rollerStartTime + .75)
       m_transport.rollersAtSpeed = true;

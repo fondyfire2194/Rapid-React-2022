@@ -20,18 +20,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Vision.GetTarget;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.commands.AutoCommands.LRetPuShoot;
-import frc.robot.commands.AutoCommands.LRetPuShootLow;
-import frc.robot.commands.AutoCommands.RRetCenPuShoot;
-import frc.robot.commands.AutoCommands.RRetPuS3;
-import frc.robot.commands.AutoCommands.RRetPuShoot;
-import frc.robot.commands.AutoCommands.RRetPuShootLow;
+import frc.robot.commands.AutoCommands.AllRetPuShoot;
+import frc.robot.commands.AutoCommands.PUS3;
 import frc.robot.commands.AutoCommands.Taxi;
 import frc.robot.commands.Shooter.ChooseShooterSpeedSource;
 import frc.robot.commands.Shooter.SetLogItemsState;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
-import frc.robot.commands.Vision.CalculateSpeedFromDistance;
-import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.commands.Vision.SetUpLimelightForDriver;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -72,9 +66,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer = new RobotContainer();
 
-    // CameraServer.startAutomaticCapture("Intake", 0);
-
-    allianceColorBlue = DriverStation.getAlliance() == Alliance.Blue;
+    allianceColorBlue = getAllianceColor();
     if (allianceColorBlue) {
       m_robotContainer.m_intakes.activeCargoPipeline = m_robotContainer.m_intakes.blueCargoPipeline;
       m_robotContainer.m_intakes.activeLaunchPadPipeline = m_robotContainer.m_intakes.blueLaunchPadPipeline;
@@ -129,12 +121,12 @@ public class Robot extends TimedRobot {
 
     // m_robotContainer.m_limelight.periodic();
 
-    // m_robotContainer.m_tilt.testLock =
-    // m_robotContainer.m_driverController.getTrigger();
+    m_robotContainer.m_tilt.testLock = m_robotContainer.m_driverController.getTrigger();
 
-    // m_robotContainer.m_tilt.testLockFromThrottle =
-    // m_robotContainer.m_driverController.getThrottle();
+    m_robotContainer.m_tilt.testLockFromThrottle = m_robotContainer.m_driverController.getThrottle();
+
     loopCtr++;
+
     SmartDashboard.putNumber("LPCTRA", loopCtr);
   }
 
@@ -172,16 +164,11 @@ public class Robot extends TimedRobot {
     if (RobotBase.isReal())
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
 
-    new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_tilt, m_robotContainer.m_turret,
-        m_robotContainer.m_shooter).schedule(true);
-
-    new CalculateSpeedFromDistance(m_robotContainer.m_limelight, m_robotContainer.m_tilt, m_robotContainer.m_turret,
-        m_robotContainer.m_shooter).schedule(true);
-
     new ChooseShooterSpeedSource(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_turret, 0)
         .schedule(true);
 
     Shuffleboard.selectTab("Competition");
+
     Shuffleboard.startRecording();
     // get delay time
 
@@ -213,40 +200,29 @@ public class Robot extends TimedRobot {
 
       case 1:// in front of power port, move back use shooter data index 1
 
-        m_autonomousCommand = new LRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp,
-            FieldMap.leftTarmacData);
+        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp,
+           FieldMap.leftTarmacData);
 
         break;
 
       case 2://
 
-        m_autonomousCommand = new RRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp,
+        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp,
             FieldMap.rightTarmacData);
 
         break;
 
       case 3://
 
-        m_autonomousCommand = new RRetCenPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp,
+        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp,
             FieldMap.rightCenTarmacData);
 
         break;
 
       case 4://
 
-        m_autonomousCommand = new RRetPuS3();
-
-        break;
-
-      case 5:
-
-        m_autonomousCommand = new RRetPuShootLow();
-
-        break;
-
-      case 6:
-
-        m_autonomousCommand = new LRetPuShootLow(intake, drive, turret, tilt, FieldMap.leftTarmacData);
+        m_autonomousCommand = new PUS3(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp,
+            FieldMap.rightCenTarmacData);
 
         break;
 
@@ -325,32 +301,6 @@ public class Robot extends TimedRobot {
    */
   @Override
 
-  /**
-   * In teleop after cargos have been picked up, the tilt and turret need to be
-   * pointed at the target so the Limelight can be used to lock them on.
-   * 
-   * The robot is designed so it can use the trench and this will be the default
-   * turret / tilt positions afer a pickup. Thes axes will be positioned to a
-   * place where the camera can pick up the target as the robot comes out from
-   * under the control panel. At this point they will both be in position hold
-   * mode until a target is seen and then they will move to lock on the target.
-   * Target horizontal and vertical offsets can be used to shift the lock on
-   * points. To lock on with vision a limelight useVision boolean must be set. A
-   * Shoot when Ready command can be started at any point and will initiate
-   * shooting when the shooter is at speed, the tilt and turret are lock on and
-   * the robot is not moving. Shooting will prevent the joystick being used to
-   * move the robot.
-   * 
-   * If the trench is not being used, the co driver picks either a right, left,
-   * short straight or long straight shot turret from driver instructions. The
-   * tilt angle will be move from its base 30 degree angle towards 0. It should
-   * then pick up a target and both tilt and turret will lock on.
-   * 
-   * Shot speed is determined from distance calculated from target height and
-   * camera angle. Speeds need to be empirically determined and put in a table to
-   * be interpolated.
-   * 
-   */
   public void teleopPeriodic() {
 
     // m_robotContainer.setupGamepad.setRumble(RumbleType.kLeftRumble, 1.0);
@@ -376,6 +326,10 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_drive.resetAll();
 
     m_robotContainer.m_drive.resetPose(pose);
+  }
+
+  public static boolean getAllianceColor() {
+    return DriverStation.getAlliance() == Alliance.Blue;
   }
 
 }

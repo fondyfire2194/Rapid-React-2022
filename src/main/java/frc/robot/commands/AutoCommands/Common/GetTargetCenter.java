@@ -6,9 +6,11 @@ package frc.robot.commands.AutoCommands.Common;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Vision.AngleSolver;
 import frc.robot.Vision.GetTarget;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
+import frc.robot.commands.Shooter.WaitTiltTurretLocked;
 import frc.robot.commands.Tilt.PositionHoldTilt;
 import frc.robot.commands.Tilt.PositionTiltToVision;
 import frc.robot.commands.Turret.PositionHoldTurret;
@@ -16,12 +18,12 @@ import frc.robot.commands.Turret.PositionTurretToVision;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
-public class AimAndLockTarget extends SequentialCommandGroup {
+public class GetTargetCenter extends SequentialCommandGroup {
   /** Creates a new AimAndShoot. */
 
-  public AimAndLockTarget(LimeLight ll, RevTurretSubsystem turret, RevTiltSubsystem tilt,
+  public GetTargetCenter(LimeLight ll, RevTurretSubsystem turret, RevTiltSubsystem tilt,
 
-      RawContoursV2 rcv2, GetTarget target, double[] data) {
+      RawContoursV2 rcv2, GetTarget gt, double[] data) {
 
     double tiltTargetPosition = data[0];
 
@@ -31,7 +33,15 @@ public class AimAndLockTarget extends SequentialCommandGroup {
 
         new PositionTurretToVision(turret, ll, turretTargetPosition)),
 
-        new VerifyAndGetTarget(rcv2, target, turret).deadlineWith(new PositionHoldTilt(tilt, ll),
+        new WaitTiltTurretLocked(tilt, turret, ll),
+
+        new GetNumberOfContourValues(rcv2, turret)
+
+            .deadlineWith(new PositionHoldTilt(tilt, ll),
+
+                new PositionHoldTurret(turret, ll)),
+
+        new CalculateTarget(gt).deadlineWith(new PositionHoldTilt(tilt, ll),
 
             new PositionHoldTurret(turret, ll)));
 
