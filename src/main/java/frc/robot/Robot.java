@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Vision.GetTarget;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.AutoCommands.AllRetPuShoot;
@@ -111,9 +110,9 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     // m_robotContainer.m_setup.checkLimits();
-    m_robotContainer.m_rCV2.getRawContourData();
-    m_robotContainer.m_as.runValues();
-    // m_robotContainer.m_getTarget.runCalcs();
+   // m_robotContainer.m_rCV2.getRawContourData();
+    //m_robotContainer.m_as.runValues();
+  
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
     // SmartDashboard.putNumber("thr",m_robotContainer.m_driverController.getThrottle());
     SmartDashboard.putNumber("thr1", m_robotContainer.getThrottle());
@@ -187,7 +186,6 @@ public class Robot extends TimedRobot {
     CargoTransportSubsystem transport = m_robotContainer.m_transport;
     IntakesSubsystem intake = m_robotContainer.m_intakes;
     RawContoursV2 rcv2 = m_robotContainer.m_rCV2;
-    GetTarget gt = m_robotContainer.m_gt;
     Compressor comp = m_robotContainer.m_compressor;
 
     switch (autoChoice) {
@@ -200,28 +198,28 @@ public class Robot extends TimedRobot {
 
       case 1:// in front of power port, move back use shooter data index 1
 
-        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp,
+        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, transport, comp,
            FieldMap.leftTarmacData);
 
         break;
 
       case 2://
 
-        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp,
+        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,transport, comp,
             FieldMap.rightTarmacData);
 
         break;
 
       case 3://
 
-        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp,
+        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,transport, comp,
             FieldMap.rightCenTarmacData);
 
         break;
 
       case 4://
 
-        m_autonomousCommand = new PUS3(intake, drive, turret, tilt, ll, shooter, rcv2, gt, transport, comp,
+        m_autonomousCommand = new PUS3(intake, drive, turret, tilt, ll, shooter, rcv2, transport, comp,
             FieldMap.rightCenTarmacData);
 
         break;

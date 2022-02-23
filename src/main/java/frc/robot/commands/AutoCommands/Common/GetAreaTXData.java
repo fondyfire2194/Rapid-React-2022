@@ -4,33 +4,37 @@
 
 package frc.robot.commands.AutoCommands.Common;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.Vision.VisionReferenceTarget;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class CalculateTarget extends InstantCommand {
+public class GetAreaTXData extends InstantCommand {
   private RawContoursV2 m_rcv2;
-  
 
-  public CalculateTarget(RawContoursV2 rcv2) {
+  public GetAreaTXData(RawContoursV2 rcv2) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_rcv2 = rcv2;
-  
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
 
-    m_rcv2.weightedTargetValue = m_rcv2.weightedAverageX();
-    m_rcv2.weightedTargetAngle = m_rcv2.getTargetAngle(m_rcv2.weightedTargetValue);
+    m_rcv2.startTime = m_rcv2.getStartTime();
 
-    m_rcv2.targetValue = m_rcv2.calculateTargetX();
-    m_rcv2.targetAngle = m_rcv2.getTargetAngle(m_rcv2.targetValue);
+    m_rcv2.getAreaData();
 
+    m_rcv2.getMedianAreas();
 
+    m_rcv2.getTxValues();
+
+    m_rcv2.getMedianTX();
+
+    SmartDashboard.putNumber("AreaTxCmdTime", m_rcv2.getEndTime(m_rcv2.startTime));
+
+  
   }
 }

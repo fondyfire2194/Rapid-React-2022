@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import frc.robot.Constants.PipelinesConstants;
-import frc.robot.Vision.GetTarget;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.LimelightControlMode.CamMode;
@@ -36,18 +35,18 @@ public class LLVisionShuffleboard {
 
         private int loopCtr;
 
-        public LLVisionShuffleboard(LimeLight ll, RawContoursV2 rCV2, GetTarget getTarget, RevTurretSubsystem turret,
+        public LLVisionShuffleboard(LimeLight ll, RawContoursV2 rCV2,  RevTurretSubsystem turret,
                         RevTiltSubsystem tilt, RevShooterSubsystem shooter,boolean isMatch) {
 
               
 
                 /**
                  * 
-                 * 
+                 * &&!isMatch
                  * 
                  */
 
-                if (m_showVision&&!isMatch) {
+                if (m_showVision) {
 
                         ShuffleboardLayout zoomCommands = Shuffleboard.getTab("LLVision")
                                         .getLayout("Zoom", BuiltInLayouts.kList).withPosition(0, 0)

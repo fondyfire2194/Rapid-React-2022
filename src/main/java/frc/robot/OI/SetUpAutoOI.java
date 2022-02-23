@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.FieldMap;
-import frc.robot.Vision.GetTarget;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.AutoCommands.AllRetPuShoot;
@@ -49,7 +48,7 @@ public class SetUpAutoOI {
         public SetUpAutoOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
                         LimeLight ll, IntakesSubsystem intake, ClimberSubsystem climber,
-                        FondyFireTrajectory traj, RawContoursV2 rcv2, GetTarget target, boolean liveMatch) {
+                        FondyFireTrajectory traj, RawContoursV2 rcv2,  boolean liveMatch) {
 
                 /**
                  * 
@@ -70,15 +69,15 @@ public class SetUpAutoOI {
 
                         autoChooser.addOption("Left Tarmac Retract Pickup Shoot",
                                         new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
-                                                        target, transport, compressor, data));
+                                                         transport, compressor, data));
 
                         autoChooser.addOption("Right Tarmac Edge Retract Pickup Shoot",
                                         new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
-                                                        target, transport, compressor, data));
+                                                        transport, compressor, data));
 
                         autoChooser.addOption("Right Tarmac Center Retract Pickup Shoot",
                                         new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
-                                                        target, transport, compressor, data));
+                                                       transport, compressor, data));
 
                        // autoChooser.addOption("Right Tarmac Shoot 3", new RRetPuS3());
 

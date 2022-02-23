@@ -6,17 +6,21 @@ package frc.robot.commands.AutoCommands.Common;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.commands.Vision.GetContourData;
-import frc.robot.subsystems.RevTurretSubsystem;
+
 
 public class GetNumberOfContourValues extends SequentialCommandGroup {
   /** Creates a new VerifyAndGetTarget. */
 
-  public GetNumberOfContourValues(RawContoursV2 rcv2,  RevTurretSubsystem turret) {
+  public GetNumberOfContourValues(RawContoursV2 rcv2) {
 
-    addCommands(new GetContourData(rcv2), new GetContourData(rcv2),
-        new GetContourData(rcv2), new GetContourData(rcv2),
-        new GetContourData(rcv2));
+    addCommands(new GetVisionValues(rcv2), new GetVisionValues(rcv2),
+        new GetVisionValues(rcv2), new GetVisionValues(rcv2),
+        new GetVisionValues(rcv2), new GetVisionValues(rcv2),
+        new GetVisionValues(rcv2), new GetVisionValues(rcv2),
+        new GetVisionValues(rcv2), new GetVisionValues(rcv2),
+        new GetVisionValues(rcv2));
+
+        
 
   }
 }

@@ -6,8 +6,6 @@ package frc.robot.commands.AutoCommands.Common;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Vision.AngleSolver;
-import frc.robot.Vision.GetTarget;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.Shooter.WaitTiltTurretLocked;
@@ -23,7 +21,7 @@ public class GetTargetCenter extends SequentialCommandGroup {
 
   public GetTargetCenter(LimeLight ll, RevTurretSubsystem turret, RevTiltSubsystem tilt,
 
-      RawContoursV2 rcv2, GetTarget gt, double[] data) {
+      RawContoursV2 rcv2,  double[] data) {
 
     double tiltTargetPosition = data[0];
 
@@ -35,13 +33,13 @@ public class GetTargetCenter extends SequentialCommandGroup {
 
         new WaitTiltTurretLocked(tilt, turret, ll),
 
-        new GetNumberOfContourValues(rcv2, turret)
+      //  new GetNumberOfContourValues(rcv2)
 
-            .deadlineWith(new PositionHoldTilt(tilt, ll),
+           // .deadlineWith(new PositionHoldTilt(tilt, ll),
 
-                new PositionHoldTurret(turret, ll)),
+           //     new PositionHoldTurret(turret, ll)),
 
-        new CalculateTarget(gt).deadlineWith(new PositionHoldTilt(tilt, ll),
+        new CalculateTarget(rcv2).deadlineWith(new PositionHoldTilt(tilt, ll),
 
             new PositionHoldTurret(turret, ll)));
 

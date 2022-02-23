@@ -26,12 +26,12 @@ import frc.robot.OI.LLVisionShuffleboard;
 import frc.robot.OI.SetUpAutoOI;
 import frc.robot.OI.SetUpOI;
 import frc.robot.Vision.AngleSolver;
-import frc.robot.Vision.GetTarget;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.RawContoursV2;
+import frc.robot.Vision.VisionReferenceTarget;
 import frc.robot.commands.CargoTransport.ReleaseCargo;
 import frc.robot.commands.CargoTransport.RunRollers;
 import frc.robot.commands.CargoTransport.StopRollers;
@@ -58,7 +58,6 @@ import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.TurretJog;
 import frc.robot.commands.Turret.TurretJogVelocity;
 import frc.robot.commands.Turret.TurretWaitForStop;
-import frc.robot.commands.Vision.RunTargetValues;
 import frc.robot.commands.Vision.SetUpLimelightForDriver;
 import frc.robot.commands.Vision.SetUpLimelightForNoVision;
 import frc.robot.commands.Vision.SetVisionMode;
@@ -102,9 +101,7 @@ public class RobotContainer {
 
       public final RawContoursV2 m_rCV2;
 
-      public final AngleSolver m_as;
-
-      public GetTarget m_gt;
+     // public final AngleSolver m_as;
 
       public static boolean autoSelected;
 
@@ -121,6 +118,8 @@ public class RobotContainer {
       public Compressor m_compressor;
 
       public FondyFireTrajectory m_trajectory;
+
+      public VisionReferenceTarget m_vrt;
 
       public boolean clickUp;
 
@@ -198,10 +197,12 @@ public class RobotContainer {
             m_limelight.useVision = false;
 
             m_rCV2 = new RawContoursV2(m_limelight);
+            
 
-            m_as = new AngleSolver(m_rCV2, m_limelight);
+           // m_as = new AngleSolver(m_rCV2,m_limelight);
 
-            m_gt = new GetTarget(m_rCV2, m_as);
+
+            m_vrt = new VisionReferenceTarget(m_rCV2, m_limelight);
 
             m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
@@ -224,14 +225,14 @@ public class RobotContainer {
             isMatch = Pref.getPref("IsMatch") == 1.;
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
-                        m_limelight, m_intakes, m_climber, m_trajectory, m_as, isMatch);
+                        m_limelight, m_intakes, m_climber, m_trajectory, isMatch);
 
             m_autoOi = new SetUpAutoOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
-                        m_intakes, m_climber, m_trajectory, m_rCV2, m_gt, isMatch);
+                        m_intakes, m_climber, m_trajectory, m_rCV2,  isMatch);
 
-            m_hvis = new HubVisionShuffleboard(m_limelight, m_rCV2, m_as, m_gt, m_turret, m_tilt, m_shooter, isMatch);
+            m_hvis = new HubVisionShuffleboard(m_limelight, m_rCV2, m_vrt, m_turret, m_tilt, m_shooter, isMatch);
 
-            m_llVis = new LLVisionShuffleboard(m_limelight, m_rCV2, m_gt, m_turret, m_tilt, m_shooter, isMatch);
+            m_llVis = new LLVisionShuffleboard(m_limelight, m_rCV2,m_turret, m_tilt, m_shooter, isMatch);
 
             m_drive.setDefaultCommand(getArcadeDriveCommand());
 
@@ -388,8 +389,6 @@ public class RobotContainer {
 
             setupY.whileHeld(getJogTiltCommand(setupGamepad)).whileHeld(getJogTurretCommand(setupGamepad))
                         .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));
-
-            setupB.whenPressed(new RunTargetValues(m_gt));
 
             setupA.whileHeld(new RunActiveIntakeMotor(m_intakes, .75))
                         .whenReleased(new StopIntakeMotors(m_intakes));

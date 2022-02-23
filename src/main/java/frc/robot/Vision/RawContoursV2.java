@@ -8,40 +8,45 @@ import java.util.Arrays;
 
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Add your docs here. */
 public class RawContoursV2 {
 
-    private int IMG_WIDTH = 320;
-    private int IMG_HEIGHT = 240;
+    int IMG_WIDTH = 320;
+    int IMG_HEIGHT = 240;
 
-    private double HFOV = 30;// 59.6;
-    private double VFOV = 23;// 45.7;
-    private double vpw = 2 * Math.tan(Units.degreesToRadians(HFOV / 2));
-    private double vph = 2 * Math.tan(Units.degreesToRadians(VFOV / 2));
+    private double HFOV;// = 30;// 59.6;
+    private double VFOV;// = 23;// 45.7;
+    double vpw;
+    double vph;
 
     public int[] areaIndex = { 0, 1, 2 };
 
     private boolean showDebug = false;
 
-    private boolean showData = false;
+    private boolean showData = true;
 
-    public boolean lock3Contours = false;
+    // public boolean lock3Contours = false;
 
-    int[] areasLRTxIndex = { 0, 1, 2 };
+    public int[] lTRIndex = { 0, 1, 2 };
 
-    public double[] lToRAreas = { 0, 0, 0, 0 };
+    public double[] lToRAreas = { 0, 0, 0 };
 
-    public int[] lRTxValues = { 0, 0, 0 };
+    public int[] ltoRTxValues = { 0, 0, 0 };
 
-    private int[] lRTYValues = { 0, 0, 0 };
+    private int[] ltoRTyValues = { 0, 0, 0 };
+
+    public double[] lrTxAngles = new double[3];
+
+    public double[] lrTyAngles = new double[3];
 
     double[] lRTxVpValues = { 0, 0, 0 };
 
     double[] lRTyVpValues = { 0, 0, 0 };
 
-    private int maxPossibleContours = 6;
+    int maxPossibleContours = 6;
 
     public boolean lookForTarget = true;
 
@@ -53,31 +58,17 @@ public class RawContoursV2 {
 
     String vertCoord;
 
-    public int testTargetIndex;
-
-    private int testTargetTx;
-
-    private int testTargetTy;
-
-    private double testTargetTa;
-
-    public boolean testTargetInUse = false;
-
-    // private double[][] ltoRLongShortSkew = new double[3][3];
-
-    double testTxVPValue;
-
-    double testTyVPValue;
-
     public boolean areasValid;
 
     public double[][] areaSample = new double[3][3];
 
     public int[][] tXSample = new int[3][3];
 
-    public double[] areasAverage = new double[3];
+    public double[] medianAreas = { 0, 0, 0 };
 
-    public int[] txAverage = new int[3];
+    public double[] areas0_1_2 = { 0, 0, 0 };
+
+    public double[] medianTx = new double[3];
 
     public MedianFilter ltx = new MedianFilter(5);
 
@@ -92,8 +83,26 @@ public class RawContoursV2 {
     public MedianFilter rarea = new MedianFilter(5);
 
     public boolean areaGood;
+
     public boolean txGood;
-    public int[] lastAreaIndex;
+
+    public boolean runAll;
+    public boolean runTX = false;
+    public boolean runAreas = false;
+    public boolean runLRAreas = false;
+
+    public boolean runTXDone = false;
+    public boolean runAreasDone = false;
+    public boolean runLRAreasDone = false;
+    public double startTime;
+    public int targetValue = 0;
+    public double targetAngle;
+    public int weightedTargetValue;
+
+    public double[] contourTx = { 0, 0, 0 };
+    public double[] contourTy = { 0, 0, 0 };
+    public double weightedTargetAngle;
+    public boolean isFound;
 
     public RawContoursV2(LimeLight ll) {
 
@@ -103,204 +112,196 @@ public class RawContoursV2 {
         vertCoord = "ty";
         IMG_WIDTH = 320;
         IMG_HEIGHT = 240;
+        HFOV = 30;// 59.6;
+        VFOV = 23;// 45.7;
 
         if (cameraAt90) {
             horCoord = "ty";
             vertCoord = "tx";
             IMG_WIDTH = 240;
             IMG_HEIGHT = 320;
+            HFOV = 23;// 59.6;
+            VFOV = 30;// 45.7;
         }
 
-    }
+        vpw = 2 * Math.tan(Units.degreesToRadians(HFOV / 2));
 
-    // center post target
-
-    public void getRawContourData() {
-    }
-
-    // public void display() {
-
-    // if (showData)
-
-    // displayData();
-
-    // if (showDebug)
-
-    // debugDisplay();
-    // }
-
-    public void checkTestTarget() {
-
-        testTargetIndex = getLowestContourIndex();
+        vph = 2 * Math.tan(Units.degreesToRadians(VFOV / 2));
 
     }
 
-    // pointers to 3 largest contours
+     public void display() {
 
-    public boolean getAreaData() {
+        if (showData)
 
-        areaIndex = getIndexOf3LargestContours();
+            displayData();
 
-        // pointers to LMR
+        if (showDebug)
 
-        areasLRTxIndex = getLeftCenterRightTxPointer(areaIndex);
-
-        lToRAreas = get3LargestAreas(areaIndex);
-
-        areasAverage[0] = larea.calculate(lToRAreas[0]);
-        areasAverage[1] = carea.calculate(lToRAreas[1]);
-        areasAverage[2] = rarea.calculate(lToRAreas[2]);
-        
-
-        areasValid = checkAreasValid();
-
-        return areasValid;
+            debugDisplay();
     }
 
-    public int[] getlrtxData() {
+    /**
+     * call getAreaData to get 3 largest areaa always 0,1,2
+     * 
+     * 
+     * 
+     * 
+     */
+    public void getAreaData() {
 
-        lRTxValues = getLRTXValues(areaIndex);
+        areaIndex[0] = 0;// getIndexOf3LargestContours();
+        areaIndex[1] = 1;
+        areaIndex[2] = 2;
 
-        txAverage[0] = (int) ltx.calculate((double) lRTxValues[0]);
-        txAverage[1] = (int) ctx.calculate((double) lRTxValues[1]);
-        txAverage[2] = (int) rtx.calculate((double) lRTxValues[2]);
+        areas0_1_2[0] = m_ll.get("ta0") * 1000;
 
-        // lRTYValues = getLRTYValues(areasLRTxIndex);
+        areas0_1_2[1] = m_ll.get("ta1") * 1000;
 
-        lRTxVpValues = getlrtxvp(areasLRTxIndex);
+        areas0_1_2[2] = m_ll.get("ta2") * 1000;
 
-        lRTyVpValues = getlrtyvp(areasLRTxIndex);
+        areas0_1_2[0] = Math.round(areas0_1_2[0]);
+        areas0_1_2[1] = Math.round(areas0_1_2[1]);
+        areas0_1_2[2] = Math.round(areas0_1_2[2]);
 
-        if (testTargetInUse) {
+        SmartDashboard.putNumber("CON0O", areas0_1_2[0]);
+        SmartDashboard.putNumber("CON1O", areas0_1_2[1]);
+        SmartDashboard.putNumber("CON2O", areas0_1_2[2]);
 
-            testTxVPValue = getTesttxvp(testTargetIndex);
+        // SmartDashboard.putNumberArray("ari", showAsDoubleArray(areaIndex));
 
-            testTyVPValue = getTesttyvp(testTargetIndex);
-
-            testTargetTx = (int) (((1 + (m_ll.get(horCoord + String.valueOf(testTargetIndex)))) / 2) * IMG_WIDTH);
-
-            testTargetTy = (int) (int) (((1 + (m_ll.get(vertCoord + String.valueOf(testTargetIndex)))) / 2)
-                    * IMG_HEIGHT);
-
-            testTargetTa = 1100. * m_ll.get("ta" + String.valueOf(testTargetIndex));
-
-        }
-
-        return lRTxValues;
     }
 
-    // ltoRLongShortSkew = getLongShortSkew(areasLRTxIndex);
+    public void getMedianAreas() {
 
-    private int[] getIndexOf3LargestContours() {
-        double[] temp = { 0, 0, 0, 0, 0, 0 };
+        medianAreas[0] = larea.calculate(areas0_1_2[0]);
+        medianAreas[1] = carea.calculate(areas0_1_2[1]);
+        medianAreas[2] = rarea.calculate(areas0_1_2[2]);
 
-        int[] tempI = { 0, 1, 2, 3, 4, 5 };
-
-        int[] tempI1 = { 0, 1, 2 };
-
-        int swI;
-        double swD;
-
-        boolean swap = true;
-
-        int range = temp.length - 1;
-
-        for (int i = 0; i < maxPossibleContours; i++) {
-
-            if (testTargetInUse && i == testTargetIndex) {
-
-                continue;
-            }
-
-            temp[i] = m_ll.get("ta" + String.valueOf(i));
-        }
-
-        while (swap) {
-            swap = false;
-            for (int i = 0; i < range; i++) {
-                if (temp[i] < temp[i + 1]) {
-                    swD = temp[i + 1];
-                    temp[i + 1] = temp[i];
-                    temp[i] = swD;
-                    swI = tempI[i + 1];
-                    tempI[i + 1] = tempI[i];
-                    tempI[i] = swI;
-                    swap = true;
-                }
-            }
-            range--;
-        }
-
-        tempI1 = Arrays.copyOfRange(tempI, 0, 3);
-
-        return tempI1;
     }
 
-    private double[] get3LargestAreas(int[] index) {
+    public void getTxValues() {
 
-        double[] temp = { 0, 0, 0, 0 };
+        contourTx[0] = (((1 + (m_ll.get(horCoord + String.valueOf(0)))) / 2) * IMG_HEIGHT);
+        contourTx[1] = (((1 + (m_ll.get(horCoord + String.valueOf(1)))) / 2) * IMG_HEIGHT);
+        contourTx[2] = (((1 + (m_ll.get(horCoord + String.valueOf(2)))) / 2) * IMG_HEIGHT);
 
-        temp[0] = m_ll.get("ta" + String.valueOf(index[0])) * 1000;
-
-        temp[1] = m_ll.get("ta" + String.valueOf(index[1])) * 1000;
-
-        temp[2] = m_ll.get("ta" + String.valueOf(index[2])) * 1000;
-
-        temp[3] = temp[0] / temp[2];// ratio of outside areas
-        temp[0] = Math.round(temp[0]);
-        temp[1] = Math.round(temp[1]);
-        temp[2] = Math.round(temp[2]);
-
-        return temp;
     }
 
-    private int[] getLeftCenterRightTxPointer(int[] areaIndex) {
-        double[] contourTx = { 0, 0, 0 };
-        int[] tempI = areaIndex;// Arrays.copyOfRange(areaIndex, 0, 3);
+    public void getMedianTX() {
+
+        medianTx[0] = (int) ltx.calculate(contourTx[0]);
+        medianTx[1] = (int) ctx.calculate(contourTx[1]);
+        medianTx[2] = (int) rtx.calculate(contourTx[2]);
+    }
+
+    public int[] getHubVisionData() {
+
+        lTRIndex = areaIndex;
         double swD;
         int swI;
-        contourTx[0] = (((1 + (m_ll.get(horCoord + String.valueOf(areaIndex[0])))) / 2) * IMG_WIDTH);
-        contourTx[1] = (((1 + (m_ll.get(horCoord + String.valueOf(areaIndex[1])))) / 2) * IMG_WIDTH);
-        contourTx[2] = (((1 + (m_ll.get(horCoord + String.valueOf(areaIndex[2])))) / 2) * IMG_WIDTH);
 
-        boolean swap = true;
-        int range = contourTx.length - 1;
-        while (swap) {
-            swap = false;
-            for (int i = 0; i < range; i++) {
-                if (contourTx[i] > contourTx[i + 1]) {
-                    swD = contourTx[i + 1];
-                    contourTx[i + 1] = contourTx[i];
-                    contourTx[i] = swD;
+        lToRAreas = medianAreas;
 
-                    swI = tempI[i + 1];
-                    tempI[i + 1] = tempI[i];
-                    tempI[i] = swI;
-                    swap = true;
+        contourTy[0] = (((1 + (m_ll.get(vertCoord + String.valueOf(lTRIndex[0])))) / 2) * IMG_HEIGHT);
+        contourTy[1] = (((1 + (m_ll.get(vertCoord + String.valueOf(lTRIndex[1])))) / 2) * IMG_HEIGHT);
+        contourTy[2] = (((1 + (m_ll.get(vertCoord + String.valueOf(lTRIndex[2])))) / 2) * IMG_HEIGHT);
+
+        int range = contourTx.length;
+        int j = 0;
+        int i = 0;
+        for (i = 0; i < (range - 1); i++) {
+
+            for (j = 0; j < range - i - 1; j++) {
+
+                if (medianTx[j] > medianTx[j + 1]) {
+
+                    swD = medianTx[j + 1];
+
+                    medianTx[j + 1] = medianTx[j];
+
+                    medianTx[j] = swD;
+
+                    swD = contourTy[j + 1];
+
+                    contourTy[j + 1] = contourTy[j];
+
+                    contourTy[j] = swD;
+
+                    swD = lToRAreas[j + 1];
+
+                    lToRAreas[j + 1] = lToRAreas[j];
+
+                    lToRAreas[j] = swD;
+
+                    swI = lTRIndex[j + 1];
+
+                    lTRIndex[j + 1] = lTRIndex[j];
+
+                    lTRIndex[j] = swI;
+
                 }
             }
-            range--;
         }
-        return tempI;
+
+        // lTRIndex = lTRIndex;
+
+        for (int k = 0; k < ltoRTxValues.length; k++) {
+
+            ltoRTxValues[k] = (int) medianTx[k];
+
+            ltoRTyValues[k] = (int) contourTy[k];
+        }
+
+        // SmartDashboard.putNumber("JJJ", j);
+        // SmartDashboard.putNumber("III", i);
+
+        SmartDashboard.putNumberArray("ltrI", showAsDoubleArray(lTRIndex));
+
+        return lTRIndex;
     }
 
-    private int[] getLRTXValues(int[] lToRIndex) {
+    public double getStartTime() {
+        return Timer.getFPGATimestamp();
+    }
+
+    public double getEndTime(double startTime) {
+        return (Timer.getFPGATimestamp() - startTime);
+
+    }
+
+    public void runAngleValues() {
+
+        getlrtxyData();
+
+        lrTxAngles = getTxVpAngles(lTRIndex);
+
+        lrTyAngles = getTyVpAngles(lTRIndex);
+
+    }
+
+    public void getlrtxyData() {
+
+        lRTxVpValues = getlrtxvp(lTRIndex);
+
+        lRTyVpValues = getlrtyvp(lTRIndex);
+
+    }
+
+    private double[] getlrtyvp(int[] ltoRIndex) {
 
         double[] temp = { 0, 0, 0 };
-        int[] tempI = { 0, 0, 0 };
+        double vph2 = vph / 2;
+        temp[0] = vph2 * m_ll.get(vertCoord + String.valueOf(ltoRIndex[0]));
+        temp[1] = vph2 * m_ll.get(vertCoord + String.valueOf(ltoRIndex[1]));
+        temp[2] = vph2 * m_ll.get(vertCoord + String.valueOf(ltoRIndex[2]));
 
-        temp[0] = (((1 + (m_ll.get(horCoord + String.valueOf(lToRIndex[0])))) / 2) * IMG_WIDTH);
-        temp[1] = (((1 + (m_ll.get(horCoord + String.valueOf(lToRIndex[1])))) / 2) * IMG_WIDTH);
-        temp[2] = (((1 + (m_ll.get(horCoord + String.valueOf(lToRIndex[2])))) / 2) * IMG_WIDTH);
-
-        for (int i = 0; i < temp.length; i++)
-            tempI[i] = (int) temp[i];
-
-        return tempI;
+        return temp;
 
     }
 
     private double[] getlrtxvp(int[] ltoRIndex) {
+
         double[] temp = { 0, 0, 0 };
         double vpw2 = vpw / 2;
 
@@ -312,88 +313,158 @@ public class RawContoursV2 {
 
     }
 
-    private double[] getlrtyvp(int[] ltoRIndex) {
+    public double[] getTxVpAngles(int[] index) {
+        int[] m_index = index;
         double[] temp = { 0, 0, 0 };
-        double vph2 = vph / 2;
-        SmartDashboard.putNumber("VPH2", vph2);
-        temp[0] = vph2 * m_ll.get(vertCoord + String.valueOf(ltoRIndex[0]));
-        temp[1] = vph2 * m_ll.get(vertCoord + String.valueOf(ltoRIndex[1]));
-        temp[2] = vph2 * m_ll.get(vertCoord + String.valueOf(ltoRIndex[2]));
-        SmartDashboard.putNumber("ltryvpw0", temp[0]);
-        SmartDashboard.putNumber("ltryvpw1", temp[1]);
-        SmartDashboard.putNumber("ltryvpw2", temp[2]);
+        double x = 0;
+        double ax = 0;// rads
+
+        x = lRTxVpValues[m_index[0]];
+
+        ax = Math.atan2(1, x);
+
+        temp[0] = Units.radiansToDegrees(ax);
+
+        x = lRTxVpValues[m_index[1]];
+
+        ax = Math.atan2(1, x);
+
+        temp[1] = Units.radiansToDegrees(ax);
+
+        x = lRTxVpValues[m_index[2]];
+
+        ax = Math.atan2(1, x);
+
+        temp[2] = Units.radiansToDegrees(ax);
+
+        temp[0] -= 90;
+        temp[1] -= 90;
+        temp[2] -= 90;
+
+        temp[0] = -Math.round(temp[0] * 1000) / 1000.;
+        temp[1] = -Math.round(temp[1] * 1000) / 1000.;
+        temp[2] = -Math.round(temp[2] * 1000) / 1000.;
+
         return temp;
-
     }
 
-    private int[] getLRTYValues(int[] lToRIndex) {
-
+    public double[] getTyVpAngles(int[] index) {
+        int[] m_index = index;
         double[] temp = { 0, 0, 0 };
-        int[] tempI = { 0, 0, 0 };
+        double y = 0;
+        double ay = 0;// rads
 
-        temp[0] = (((1 + (m_ll.get(vertCoord + String.valueOf(lToRIndex[0])))) / 2) * IMG_HEIGHT);
-        temp[1] = (((1 + (m_ll.get(vertCoord + String.valueOf(lToRIndex[1])))) / 2) * IMG_HEIGHT);
-        temp[2] = (((1 + (m_ll.get(vertCoord + String.valueOf(lToRIndex[2])))) / 2) * IMG_HEIGHT);
+        y = lRTyVpValues[m_index[0]];
 
-        for (int i = 0; i < temp.length; i++)
-            tempI[i] = (int) temp[i];
+        ay = Math.atan2(1, y);
 
-        return tempI;
+        temp[0] = Units.radiansToDegrees(ay);
 
+        y = lRTyVpValues[m_index[1]];
+
+        ay = Math.atan2(1, y);
+
+        temp[1] = Units.radiansToDegrees(ay);
+
+        y = lRTyVpValues[m_index[2]];
+
+        ay = Math.atan2(1, y);
+
+        temp[2] = Units.radiansToDegrees(ay);
+
+        temp[0] -= 90;
+        temp[1] -= 90;
+        temp[2] -= 90;
+
+        temp[0] = -Math.round(temp[0] * 1000) / 1000.;
+        temp[1] = -Math.round(temp[1] * 1000) / 1000.;
+        temp[2] = -Math.round(temp[2] * 1000) / 1000.;
+
+        return temp;
     }
 
-    private double[][] getLongShortSkew(int[] lToRIndex) {
+    public void runTarget() {
+        targetValue = calculateTargetX();
+        weightedTargetValue = weightedAverageX();
 
-        // get the long and short sides and skew of the fitted boundng boxes
-        // [0] is long, [1] is short, [2] is skew
+        targetAngle = getTargetAngle(targetValue);
+        double weightedTargetAngle = getTargetAngle(weightedTargetValue);
+    }
 
-        double[][] temp = new double[3][3];
+    public int calculateTargetX() {
 
-        for (int i = 0; i < 3; i++) {
+        double leftArea = medianAreas[0];
 
-            temp[i][0] = Math.round(m_ll.get("tlong" + String.valueOf(lToRIndex[i])));
-            temp[i][1] = Math.round(m_ll.get("tshort" + String.valueOf(lToRIndex[i])));
-            temp[i][2] = Math.round(m_ll.get("ts" + String.valueOf(lToRIndex[i])));
+        double centerArea = medianAreas[1];
 
+        double rightArea = medianAreas[2];
+
+        double secondArea = Math.max(leftArea, rightArea);
+
+        double ratio = (centerArea - secondArea) / centerArea;
+
+        SmartDashboard.putNumber("target r", ratio);
+
+        int secondX = (int) medianTx[0];
+
+        if (secondArea == rightArea) {
+
+            secondX = (int) medianTx[2];
         }
 
-        return temp;
+        int halfOffset = ((int) medianTx[1] - secondX) / 2;
 
+        double offsetX = halfOffset * ratio * 10;// Pref.getPref("HubTgtGn");
+
+        int midpoint = (secondX + (int) medianTx[1]) / 2;
+
+        int targetX = midpoint + (int) offsetX;
+
+        return targetX;
     }
 
-    private int getLowestContourIndex() {
-        double temp = 0;
-        double min = IMG_HEIGHT;
-        int lowest = 0;
-        int i = 0;
+    public int weightedAverageX() {
 
-        for (i = 0; i < maxPossibleContours; i++) {
-            temp = (((1 + (m_ll.get(vertCoord + String.valueOf(i)))) / 2) * IMG_WIDTH);
-            if (temp < min) {
-                min = temp;
-                lowest = i;
-            }
-        }
+        double leftArea = medianAreas[0];
 
-        return lowest;
+        double centerArea = medianAreas[1];
+
+        double rightArea = medianAreas[2];
+
+        double totaArea = leftArea + centerArea + rightArea;
+
+        int leftX = (int) medianTx[0];
+        int centerX = (int) medianTx[1];
+        int rightX = (int) medianTx[2];
+
+        double leftWeight = leftX * leftArea;
+        double centerWeight = centerX * centerArea;
+        double rightWeight = rightX * rightArea;
+
+        return (int) ((leftWeight + centerWeight + rightWeight) / totaArea);
     }
 
-    private double getTesttxvp(int contour) {
+    public double getTargetAngle(int xValue) {
+
+        double xAsNx = (xValue - 159.5) / 160;
+
         double temp = 0;
-        double vpw2 = vpw / 2;
 
-        temp = vpw2 * m_ll.get(horCoord + String.valueOf(contour));
+        double x = 0;
+        double nx = 0;
+        double ax = 0;// rads
 
-        return temp;
-    }
+        nx = xAsNx;
 
-    private double getTesttyvp(int contour) {
-        double temp = 0;
-        double vph2 = vph / 2;
+        x = nx * (vpw / 2);
 
-        temp = vph2 * m_ll.get(vertCoord + String.valueOf(contour));
+        ax = Math.atan2(1, x);
 
-        return temp;
+        temp = Units.radiansToDegrees(ax);
+
+        temp -= 90;
+
+        return -temp;
     }
 
     private double[] showAsDoubleArray(int[] values) {
@@ -428,52 +499,41 @@ public class RawContoursV2 {
     }
 
     public int getLeftTx() {
-        return lRTxValues[0];
+        return (int) medianTx[0];
     }
 
     public int getCenterTx() {
-        return lRTxValues[1];
+        return (int) medianTx[1];
     }
 
     public int getRightTx() {
-        return lRTxValues[2];
-    }
-
-    public int getTestContourNumber() {
-        return testTargetIndex;
-    }
-
-    public int getTestTargetTx() {
-        return testTargetTx;
-    }
-
-    public int getTestTargetTy() {
-        return testTargetTy;
-    }
-
-    public double getTestTargetArea() {
-        return testTargetTa;
+        return (int) medianTx[2];
     }
 
     public int getLeftTy() {
-        return lRTYValues[0];
+        return ltoRTyValues[0];
     }
 
     public int getCenterTy() {
-        return lRTYValues[1];
+        return ltoRTyValues[1];
     }
 
     public int getRightTy() {
-        return lRTYValues[2];
+        return ltoRTyValues[2];
     }
 
-    public void setLockContours(boolean on) {
-        lock3Contours = on;
-    }
+    // public void setLockContours(boolean on) {
+    // lock3Contours = on;
+    // }
 
     public String getLCRTx() {
 
         return String.valueOf(getLeftTx() + " ," + String.valueOf(getCenterTx()) + " ," + String.valueOf(getRightTx()));
+    }
+
+    public String getMedLCRTx() {
+
+        return String.valueOf(medianTx[0] + " ," + String.valueOf(medianTx[1]) + " ," + String.valueOf(medianTx[2]));
     }
 
     public String getLCRTy() {
@@ -487,23 +547,51 @@ public class RawContoursV2 {
                 getLeftArea() + " ," + String.valueOf(getCenterArea()) + " ," + String.valueOf(getRightArea()));
     }
 
-    // public String getLeftLSSk() {
-    // return String.valueOf(ltoRLongShortSkew[0][0] + " ," +
-    // String.valueOf(ltoRLongShortSkew[0][1]) + " ,"
-    // + String.valueOf(ltoRLongShortSkew[0][2]));
-    // }
+    public String getLCRMedianArea() {
 
-    // public String getCenterLSSk() {
-    // return String.valueOf(ltoRLongShortSkew[1][0] + " ," +
-    // String.valueOf(ltoRLongShortSkew[1][1]) + " ,"
-    // + String.valueOf(ltoRLongShortSkew[1][2]));
-    // }
+        return String.valueOf(
+                medianAreas[0] + " ," + String.valueOf(medianAreas[1]) + " ," + String.valueOf(medianAreas[2]));
+    }
 
-    // public String getRightLSSk() {
-    // return String.valueOf(ltoRLongShortSkew[2][0] + " ," +
-    // String.valueOf(ltoRLongShortSkew[2][1]) + " ,"
-    // + String.valueOf(ltoRLongShortSkew[2][2]));
-    // }
+    public double getLeftTxAngle() {
+        return lrTxAngles[0];
+    }
+
+    public double getCenterTxAngle() {
+        return lrTxAngles[1];
+    }
+
+    public double getRightTxAngle() {
+        return lrTxAngles[2];
+    }
+
+    public double getLeftTyAngle() {
+        return lrTyAngles[0];
+    }
+
+    public double getCenterTyAngle() {
+        return lrTyAngles[1];
+    }
+
+    public double getRightTyAngle() {
+        return lrTyAngles[2];
+    }
+
+    public String getLCRTxMedAngle() {
+
+        return String.valueOf(getLeftTxAngle() + " ," + String.valueOf(getCenterTxAngle()) + " ,"
+                + String.valueOf(getRightTxAngle()));
+    }
+
+    public String getLCRTyAngle() {
+        return String.valueOf(getLeftTyAngle() + " ," + String.valueOf(getCenterTyAngle()) + " ,"
+                + String.valueOf(getRightTyAngle()));
+
+    }
+
+    public String getXYPoints(double[] points) {
+        return String.valueOf(points[0]) + "," + String.valueOf(points[1]);
+    }
 
     private boolean checkAreasValid() {
 
@@ -562,24 +650,13 @@ public class RawContoursV2 {
 
     }
 
-    private double getnX(double x) {
-        return ((x - 159.5)) / 160;
-    }
-
-    private double getnY(int y) {
-        return (1 / (IMG_WIDTH / 2)) * (y - ((double) IMG_WIDTH) - .5);
-    }
-
     private void debugDisplay() {
 
         double[] temp = showAsDoubleArray(areaIndex);
         SmartDashboard.putNumberArray("3LargeIndex", temp);
 
-        double[] tempIndex = showAsDoubleArray(areasLRTxIndex);
+        double[] tempIndex = showAsDoubleArray(lTRIndex);
         SmartDashboard.putNumberArray("LRAreasIndex", tempIndex);
-
-        tempIndex = showAsDoubleArray(areasLRTxIndex);
-        SmartDashboard.putNumberArray("LRTXIndex", tempIndex);
 
     }
 

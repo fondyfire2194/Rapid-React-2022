@@ -5,57 +5,53 @@
 package frc.robot.commands.Vision;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Vision.AngleSolver;
 import frc.robot.Vision.RawContoursV2;
+import frc.robot.Vision.VisionReferenceTarget;
 
-public class GetContourData extends CommandBase {
-  /** Creates a new GetContourData. */
+public class GetContourAngles extends CommandBase {
+  /** Creates a new GetContouurAreas. */
+  private AngleSolver m_as;;
   private RawContoursV2 m_rcv2;
+  private VisionReferenceTarget m_vrt;
+  private boolean areasOK;
   private double m_startTime;
 
-  public GetContourData(RawContoursV2 rcv2) {
-    m_rcv2 = rcv2;
+  public GetContourAngles(AngleSolver as,RawContoursV2 rcv2,VisionReferenceTarget vrt) {
     // Use addRequirements() here to declare subsystem dependencies.
+    m_as = as;
+    m_rcv2 =rcv2;
+    m_vrt=vrt;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-   
     m_startTime = Timer.getFPGATimestamp();
-
-   m_startTime = Timer.getFPGATimestamp();
-    m_rcv2.larea.reset();
-    m_rcv2.carea.reset();
-    m_rcv2.rarea.reset();
-    
-    m_rcv2.ltx.reset();
-    m_rcv2.ctx.reset();
-    m_rcv2.rtx.reset();
-
-
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    m_rcv2.getAreaData();
-    m_rcv2.getlrtxData();
-    }
+    m_as.lrTxAngles = m_as.getTxVpAngles(m_rcv2.lTRIndex);
+
+    m_as.lrTyAngles = m_as.getTyVpAngles(m_rcv2.lTRIndex);
+
+    m_vrt.testAngles =m_vrt.getTestTargetVPAngles();
+
   
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    SmartDashboard.putNumber("ATXtime", Timer.getFPGATimestamp() - m_startTime);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_rcv2.isDone();
+    return true;
   }
 }

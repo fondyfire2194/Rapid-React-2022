@@ -7,8 +7,6 @@ package frc.robot.commands.AutoCommands;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Vision.AngleSolver;
-import frc.robot.Vision.GetTarget;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.AutoCommands.Common.GetTargetCenter;
@@ -28,15 +26,15 @@ public class AllRetPuShoot extends SequentialCommandGroup {
 
   /** Creates a new LRetPuShoot. */
   public AllRetPuShoot(IntakesSubsystem intake, RevDrivetrain drive, RevTurretSubsystem turret, RevTiltSubsystem tilt,
-      LimeLight ll, RevShooterSubsystem shooter, RawContoursV2 rcv2, GetTarget target,
+      LimeLight ll, RevShooterSubsystem shooter, RawContoursV2 rcv2,
       CargoTransportSubsystem transport, Compressor compressor,double[] data) {
     
 
     addCommands(new AllRetPu(intake, drive, turret, tilt, data),
 
-        new GetNumberOfContourValues(rcv2,  turret),
+       new GetNumberOfContourValues(rcv2),
 
-        new GetTargetCenter(ll, turret, tilt, rcv2, target,  data),
+        new GetTargetCenter(ll, turret, tilt, rcv2,  data),
 
         new ConditionalCommand(
 
@@ -44,7 +42,7 @@ public class AllRetPuShoot extends SequentialCommandGroup {
 
             new LowerShoot(turret, tilt, ll, shooter, transport, compressor, data),
 
-            () -> target.isFound));
+            () -> rcv2.isFound));
 
   }
 

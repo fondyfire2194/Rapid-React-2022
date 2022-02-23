@@ -81,7 +81,9 @@ public class SetUpOI {
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
                         LimeLight limelight, IntakesSubsystem intake,
                         ClimberSubsystem climber,
-                        FondyFireTrajectory traj, AngleSolver as, boolean isMatch) {
+                        FondyFireTrajectory traj,  boolean isMatch) {
+
+        
 
                 if (showIntake && !isMatch) {
 

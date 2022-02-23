@@ -5,19 +5,19 @@
 package frc.robot.commands.AutoCommands.Common;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.VisionReferenceTarget;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class CalculateTarget extends InstantCommand {
-  private RawContoursV2 m_rcv2;
+public class CalculateTestTarget extends InstantCommand {
+
+  private VisionReferenceTarget m_vrt;
   
 
-  public CalculateTarget(RawContoursV2 rcv2) {
+  public CalculateTestTarget(VisionReferenceTarget vrt) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_rcv2 = rcv2;
+    m_vrt = vrt;
   
   }
 
@@ -25,12 +25,7 @@ public class CalculateTarget extends InstantCommand {
   @Override
   public void initialize() {
 
-    m_rcv2.weightedTargetValue = m_rcv2.weightedAverageX();
-    m_rcv2.weightedTargetAngle = m_rcv2.getTargetAngle(m_rcv2.weightedTargetValue);
-
-    m_rcv2.targetValue = m_rcv2.calculateTargetX();
-    m_rcv2.targetAngle = m_rcv2.getTargetAngle(m_rcv2.targetValue);
-
+    m_vrt.getTestTargetData();
 
   }
 }
