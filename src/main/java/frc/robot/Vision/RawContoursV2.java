@@ -22,8 +22,6 @@ public class RawContoursV2 {
     double vpw;
     double vph;
 
-    public int[] areaIndex = { 0, 1, 2 };
-
     private boolean showDebug = false;
 
     private boolean showData = true;
@@ -103,6 +101,7 @@ public class RawContoursV2 {
     public double[] contourTy = { 0, 0, 0 };
     public double weightedTargetAngle;
     public boolean isFound;
+    public double targetAngle2;
 
     public RawContoursV2(LimeLight ll) {
 
@@ -112,25 +111,25 @@ public class RawContoursV2 {
         vertCoord = "ty";
         IMG_WIDTH = 320;
         IMG_HEIGHT = 240;
-        HFOV = 30;// 59.6;
-        VFOV = 23;// 45.7;
+        HFOV = 59.6;
+        VFOV = 45.7;
 
         if (cameraAt90) {
             horCoord = "ty";
             vertCoord = "tx";
             IMG_WIDTH = 240;
             IMG_HEIGHT = 320;
-            HFOV = 23;// 59.6;
-            VFOV = 30;// 45.7;
+            HFOV = 45.7;
+            VFOV = 59.6;
         }
-
+        HFOV = 30;
         vpw = 2 * Math.tan(Units.degreesToRadians(HFOV / 2));
 
         vph = 2 * Math.tan(Units.degreesToRadians(VFOV / 2));
 
     }
 
-     public void display() {
+    public void display() {
 
         if (showData)
 
@@ -150,10 +149,6 @@ public class RawContoursV2 {
      */
     public void getAreaData() {
 
-        areaIndex[0] = 0;// getIndexOf3LargestContours();
-        areaIndex[1] = 1;
-        areaIndex[2] = 2;
-
         areas0_1_2[0] = m_ll.get("ta0") * 1000;
 
         areas0_1_2[1] = m_ll.get("ta1") * 1000;
@@ -168,9 +163,9 @@ public class RawContoursV2 {
         SmartDashboard.putNumber("CON1O", areas0_1_2[1]);
         SmartDashboard.putNumber("CON2O", areas0_1_2[2]);
 
-        // SmartDashboard.putNumberArray("ari", showAsDoubleArray(areaIndex));
-
     }
+
+    // sort areas by size in
 
     public void getMedianAreas() {
 
@@ -197,15 +192,18 @@ public class RawContoursV2 {
 
     public int[] getHubVisionData() {
 
-        lTRIndex = areaIndex;
+        lTRIndex[0] = 0;
+        lTRIndex[1] = 1;
+        lTRIndex[2] = 2;
+
         double swD;
         int swI;
 
         lToRAreas = medianAreas;
 
-        contourTy[0] = (((1 + (m_ll.get(vertCoord + String.valueOf(lTRIndex[0])))) / 2) * IMG_HEIGHT);
-        contourTy[1] = (((1 + (m_ll.get(vertCoord + String.valueOf(lTRIndex[1])))) / 2) * IMG_HEIGHT);
-        contourTy[2] = (((1 + (m_ll.get(vertCoord + String.valueOf(lTRIndex[2])))) / 2) * IMG_HEIGHT);
+        contourTy[0] = (((1 + (m_ll.get(vertCoord + String.valueOf(0)))) / 2) * IMG_HEIGHT);
+        contourTy[1] = (((1 + (m_ll.get(vertCoord + String.valueOf(1)))) / 2) * IMG_HEIGHT);
+        contourTy[2] = (((1 + (m_ll.get(vertCoord + String.valueOf(2)))) / 2) * IMG_HEIGHT);
 
         int range = contourTx.length;
         int j = 0;
@@ -244,19 +242,7 @@ public class RawContoursV2 {
             }
         }
 
-        // lTRIndex = lTRIndex;
-
-        for (int k = 0; k < ltoRTxValues.length; k++) {
-
-            ltoRTxValues[k] = (int) medianTx[k];
-
-            ltoRTyValues[k] = (int) contourTy[k];
-        }
-
-        // SmartDashboard.putNumber("JJJ", j);
-        // SmartDashboard.putNumber("III", i);
-
-        SmartDashboard.putNumberArray("ltrI", showAsDoubleArray(lTRIndex));
+        SmartDashboard.putNumberArray("ltri", showAsDoubleArray(lTRIndex));
 
         return lTRIndex;
     }
@@ -274,9 +260,9 @@ public class RawContoursV2 {
 
         getlrtxyData();
 
-        lrTxAngles = getTxVpAngles(lTRIndex);
+        lrTxAngles = getTxVpAngles();
 
-        lrTyAngles = getTyVpAngles(lTRIndex);
+        lrTyAngles = getTyVpAngles();
 
     }
 
@@ -285,6 +271,23 @@ public class RawContoursV2 {
         lRTxVpValues = getlrtxvp(lTRIndex);
 
         lRTyVpValues = getlrtyvp(lTRIndex);
+
+    }
+
+    private double[] getlrtxvp(int[] ltoRIndex) {
+        SmartDashboard.putNumberArray("LTXTPI", showAsDoubleArray(lTRIndex));
+        double[] temp = { 0, 0, 0 };
+        double vpw2 = vpw / 2;
+
+        temp[0] = vpw2 * m_ll.get(horCoord + String.valueOf(ltoRIndex[0]));
+        temp[1] = vpw2 * m_ll.get(horCoord + String.valueOf(ltoRIndex[1]));
+        temp[2] = vpw2 * m_ll.get(horCoord + String.valueOf(ltoRIndex[2]));
+
+        SmartDashboard.putNumber("X0Rad", temp[0]);
+        SmartDashboard.putNumber("X1Rad", temp[1]);
+        SmartDashboard.putNumber("X2Rad", temp[2]);
+
+        return temp;
 
     }
 
@@ -300,85 +303,78 @@ public class RawContoursV2 {
 
     }
 
-    private double[] getlrtxvp(int[] ltoRIndex) {
+    public double[] getTxVpAngles() {
 
-        double[] temp = { 0, 0, 0 };
-        double vpw2 = vpw / 2;
+        // SmartDashboard.putNumberArray("LTXAI", showAsDoubleArray(index));
 
-        temp[0] = vpw2 * m_ll.get(horCoord + String.valueOf(ltoRIndex[0]));
-        temp[1] = vpw2 * m_ll.get(horCoord + String.valueOf(ltoRIndex[1]));
-        temp[2] = vpw2 * m_ll.get(horCoord + String.valueOf(ltoRIndex[2]));
-
-        return temp;
-
-    }
-
-    public double[] getTxVpAngles(int[] index) {
-        int[] m_index = index;
         double[] temp = { 0, 0, 0 };
         double x = 0;
         double ax = 0;// rads
 
-        x = lRTxVpValues[m_index[0]];
+        x = lRTxVpValues[0];
 
         ax = Math.atan2(1, x);
 
         temp[0] = Units.radiansToDegrees(ax);
 
-        x = lRTxVpValues[m_index[1]];
+        x = lRTxVpValues[1];
 
         ax = Math.atan2(1, x);
 
         temp[1] = Units.radiansToDegrees(ax);
 
-        x = lRTxVpValues[m_index[2]];
+        x = lRTxVpValues[2];
 
         ax = Math.atan2(1, x);
 
         temp[2] = Units.radiansToDegrees(ax);
 
-        temp[0] -= 90;
-        temp[1] -= 90;
-        temp[2] -= 90;
+        temp[0] = 90 - temp[0];
 
-        temp[0] = -Math.round(temp[0] * 1000) / 1000.;
-        temp[1] = -Math.round(temp[1] * 1000) / 1000.;
-        temp[2] = -Math.round(temp[2] * 1000) / 1000.;
+        temp[1] = 90 - temp[1];
+
+        temp[2] = 90 - temp[2];
+
+        temp[0] = Math.round(temp[0] * 1000) / 1000.;
+        temp[1] = Math.round(temp[1] * 1000) / 1000.;
+        temp[2] = Math.round(temp[2] * 1000) / 1000.;
 
         return temp;
     }
 
-    public double[] getTyVpAngles(int[] index) {
-        int[] m_index = index;
+    public double[] getTyVpAngles() {
+
         double[] temp = { 0, 0, 0 };
         double y = 0;
         double ay = 0;// rads
 
-        y = lRTyVpValues[m_index[0]];
+        y = lRTyVpValues[0];
 
         ay = Math.atan2(1, y);
 
         temp[0] = Units.radiansToDegrees(ay);
 
-        y = lRTyVpValues[m_index[1]];
+        y = lRTyVpValues[1];
 
         ay = Math.atan2(1, y);
 
         temp[1] = Units.radiansToDegrees(ay);
 
-        y = lRTyVpValues[m_index[2]];
+        y = lRTyVpValues[2];
 
         ay = Math.atan2(1, y);
 
         temp[2] = Units.radiansToDegrees(ay);
 
-        temp[0] -= 90;
-        temp[1] -= 90;
-        temp[2] -= 90;
+        temp[0] = 90 - temp[0];
 
-        temp[0] = -Math.round(temp[0] * 1000) / 1000.;
-        temp[1] = -Math.round(temp[1] * 1000) / 1000.;
-        temp[2] = -Math.round(temp[2] * 1000) / 1000.;
+        temp[1] = 90 - temp[1];
+
+        temp[2] = 90 - temp[2];
+
+        temp[0] = Math.round(temp[0] * 1000) / 1000.;
+        temp[1] = Math.round(temp[1] * 1000) / 1000.;
+        temp[2] = Math.round(temp[2] * 1000) / 1000.;
 
         return temp;
     }
@@ -388,7 +384,7 @@ public class RawContoursV2 {
         weightedTargetValue = weightedAverageX();
 
         targetAngle = getTargetAngle(targetValue);
-        double weightedTargetAngle = getTargetAngle(weightedTargetValue);
+         weightedTargetAngle = getTargetAngle(weightedTargetValue);
     }
 
     public int calculateTargetX() {
@@ -467,9 +463,47 @@ public class RawContoursV2 {
         return -temp;
     }
 
+    public double calcTargetFromAngles() {
+
+        double targetAngle2 = 0;
+
+        double centerAngle = getCenterTxAngle();
+
+        double leftAngle = getLeftTxAngle();
+
+        double rightAngle = getRightTxAngle();
+
+        double rightToCenter = getRightTxAngle() - getCenterTxAngle();
+        double leftToCenter = getCenterTxAngle() - getLeftTxAngle();
+
+        SmartDashboard.putNumber("LtoC", leftToCenter);
+        SmartDashboard.putNumber("RtoC", rightToCenter);
+
+        double sinCenter = Math.sin(Units.degreesToRadians(centerAngle));
+
+        double sinRight = Math.sin(Units.degreesToRadians(rightAngle));
+
+        double sinLeft = Math.sin(Units.degreesToRadians(leftAngle));
+
+        double lcSinAve = (sinCenter + sinLeft) / 2;
+
+        double crSinAve = (sinCenter + sinRight) / 2;
+
+        double gapToUse = crSinAve;
+
+        if (rightToCenter < leftToCenter)
+
+            gapToUse = lcSinAve;
+
+        targetAngle2 = Units.radiansToDegrees(Math.asin(gapToUse));
+
+        return targetAngle2;
+    }
+
     private double[] showAsDoubleArray(int[] values) {
 
         int[] temp = values;
+
         double[] tempA = new double[6];
 
         for (int i = 0; i < temp.length; i++) {
@@ -651,9 +685,6 @@ public class RawContoursV2 {
     }
 
     private void debugDisplay() {
-
-        double[] temp = showAsDoubleArray(areaIndex);
-        SmartDashboard.putNumberArray("3LargeIndex", temp);
 
         double[] tempIndex = showAsDoubleArray(lTRIndex);
         SmartDashboard.putNumberArray("LRAreasIndex", tempIndex);

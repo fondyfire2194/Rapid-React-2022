@@ -31,6 +31,8 @@ public class CalculateTarget extends InstantCommand {
     m_rcv2.targetValue = m_rcv2.calculateTargetX();
     m_rcv2.targetAngle = m_rcv2.getTargetAngle(m_rcv2.targetValue);
 
+    m_rcv2.targetAngle2 = m_rcv2.calcTargetFromAngles();
+
 
   }
 }
