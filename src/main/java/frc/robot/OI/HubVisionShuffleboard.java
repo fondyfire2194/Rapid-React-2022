@@ -19,9 +19,6 @@ import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.VisionReferenceTarget;
 import frc.robot.commands.AutoCommands.Common.CalculateTarget;
 import frc.robot.commands.AutoCommands.Common.CalculateTestTarget;
-import frc.robot.commands.AutoCommands.Common.GetAngleData;
-import frc.robot.commands.AutoCommands.Common.GetAreaTXData;
-import frc.robot.commands.AutoCommands.Common.SortLtoRData;
 import frc.robot.commands.AutoCommands.Common.GetNumberOfContourValues;
 import frc.robot.commands.AutoCommands.Common.GetVisionValues;
 import frc.robot.subsystems.RevShooterSubsystem;
@@ -51,6 +48,7 @@ public class HubVisionShuffleboard {
 
                         contourPX.addString("LtoRTx", () -> rCV2.getLCRTx());
                         contourPX.addString("LtoRTy", () -> rCV2.getLCRTy());
+ 
                         contourPX.addString("LtoRTxMed", () -> rCV2.getMedLCRTx());
                         contourPX.addString("LtoRTyAngle", () -> rCV2.getLCRTyAngle());
                         contourPX.addString("LtoRTxMedAngle", () -> rCV2.getLCRTxMedAngle());
@@ -59,6 +57,7 @@ public class HubVisionShuffleboard {
                         contourPX.addNumber("TX", () -> ll.get("tx"));
                         contourPX.addNumber("TY", () -> ll.get("ty"));
 
+        
                         ShuffleboardLayout contourDist = Shuffleboard.getTab("HubVision")
                                         .getLayout("Dist", BuiltInLayouts.kList).withPosition(4, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "TOP")); //

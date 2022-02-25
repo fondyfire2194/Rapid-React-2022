@@ -38,7 +38,7 @@ public class AllRetPu extends SequentialCommandGroup {
 
         new ParallelCommandGroup(new ResetEncoders(drive), new ResetGyro(drive),
 
-            new PickupMove(drive, driveToPosition, pickUpRate),
+            new PickupMove(drive, intake,driveToPosition, pickUpRate),
 
             new PrepositionTiltAndTurret(tilt, turret, tiltAngle, turretAngle))
 

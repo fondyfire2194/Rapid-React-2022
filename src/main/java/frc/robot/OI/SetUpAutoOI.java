@@ -20,6 +20,7 @@ import frc.robot.FieldMap;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.AutoCommands.AllRetPuShoot;
+import frc.robot.commands.AutoCommands.DoNothing;
 import frc.robot.commands.AutoCommands.Taxi;
 import frc.robot.commands.CargoTransport.HoldCargo;
 import frc.robot.commands.CargoTransport.ReleaseCargo;
@@ -65,7 +66,10 @@ public class SetUpAutoOI {
                                         .withPosition(0, 0); // place it in the top-left corner
                         double distance = 0;
                         double[] data = { 0, 0, 0, 0, 0, 0, 0 };
-                        autoChooser.setDefaultOption("Taxi", new Taxi(drive, distance));
+
+                        autoChooser.setDefaultOption("Do Nothing", new DoNothing());
+
+                        autoChooser.addOption("Taxi", new Taxi(drive, distance));
 
                         autoChooser.addOption("Left Tarmac Retract Pickup Shoot",
                                         new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,

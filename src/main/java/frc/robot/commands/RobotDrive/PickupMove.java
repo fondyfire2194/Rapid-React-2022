@@ -7,6 +7,7 @@ package frc.robot.commands.RobotDrive;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
+import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
 
 public class PickupMove extends CommandBase {
@@ -25,9 +26,18 @@ public class PickupMove extends CommandBase {
 
   private int loopCtr;
 
-  public PickupMove(RevDrivetrain drive, double endpoint, double speed) {
+  private IntakesSubsystem m_intake;
+
+  private double yawInUse;
+
+  private double gyroYawGain;
+
+  private double intakeCameraYawGain=.1;
+
+  public PickupMove(RevDrivetrain drive, IntakesSubsystem intake, double endpoint, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = drive;
+    m_intake = intake;
     m_endpoint = endpoint;
     m_speed = Math.abs(speed);
 
@@ -45,6 +55,7 @@ public class PickupMove extends CommandBase {
     currentSpeed = m_speed;
 
     if (DriverStation.isTeleopEnabled()) {
+
       m_drive.logDriveItems = true;
     }
 
@@ -77,10 +88,22 @@ public class PickupMove extends CommandBase {
     useSpeed = currentSpeed;
 
     if (!plusDirection)
+
       useSpeed = -useSpeed;
 
-    m_drive.arcadeDrive(useSpeed, -m_drive.getYaw() * Pref.getPref("dRStKp"));
+    if (m_intake.useFrontIntake) {
+
+    yawInUse=  m_intake.getActiveTargetYaw()*intakeCameraYawGain;
+
+    }
     
+    else {
+
+      yawInUse =m_drive.getYaw() * Pref.getPref("dRStKp");
+    }
+
+    m_drive.arcadeDrive(useSpeed, -yawInUse );
+
   }
 
   // Called once the command ends or is interrupted.

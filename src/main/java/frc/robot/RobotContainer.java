@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,7 +26,6 @@ import frc.robot.OI.HubVisionShuffleboard;
 import frc.robot.OI.LLVisionShuffleboard;
 import frc.robot.OI.SetUpAutoOI;
 import frc.robot.OI.SetUpOI;
-import frc.robot.Vision.AngleSolver;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
@@ -100,8 +100,6 @@ public class RobotContainer {
       public final ClimberSubsystem m_climber;
 
       public final RawContoursV2 m_rCV2;
-
-     // public final AngleSolver m_as;
 
       public static boolean autoSelected;
 
@@ -197,10 +195,6 @@ public class RobotContainer {
             m_limelight.useVision = false;
 
             m_rCV2 = new RawContoursV2(m_limelight);
-            
-
-           // m_as = new AngleSolver(m_rCV2,m_limelight);
-
 
             m_vrt = new VisionReferenceTarget(m_rCV2, m_limelight);
 
@@ -379,9 +373,6 @@ public class RobotContainer {
                         .whenReleased(() -> m_transport.stopLowerRollerMotor());
 
             setupLeftButton.whenPressed(new ReleaseCargo(m_transport));
-
-            // setupBack.whenPressed(new LogHubTarget(m_rCV2, m_as, m_getTarget, m_tilt,
-            // m_turret, m_limelight));
 
             setupX.whileHeld(getJogTiltVelocityCommand(setupGamepad))
                         .whileHeld(getJogTurretVelocityCommand(setupGamepad)).whenReleased(new TiltWaitForStop(m_tilt))

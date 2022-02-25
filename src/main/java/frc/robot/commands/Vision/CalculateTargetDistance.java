@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Vision.LimeLight;
-import frc.robot.Pref;
+import frc.robot.Vision.RawContoursV2;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
@@ -19,19 +19,22 @@ public class CalculateTargetDistance extends CommandBase {
   private final RevTiltSubsystem m_tilt;
   private final RevShooterSubsystem m_shooter;
   private final RevTurretSubsystem m_turret;
+  private final RawContoursV2 m_rcv2;
 
   private double baseCameraHeight = FieldConstants.CAMERA_HEIGHT;
 
   private double m_cameraVerticalError;
   private double cameraAngle;
 
-  public CalculateTargetDistance(LimeLight limelight, RevTiltSubsystem tilt, RevTurretSubsystem turret,
+  public CalculateTargetDistance(LimeLight limelight, RawContoursV2 rcv2, RevTiltSubsystem tilt,
+      RevTurretSubsystem turret,
       RevShooterSubsystem shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_limelight = limelight;
     m_tilt = tilt;
     m_shooter = shooter;
     m_turret = turret;
+    m_rcv2 = rcv2;
   }
 
   // Called when the command is initially scheduled.
@@ -40,8 +43,8 @@ public class CalculateTargetDistance extends CommandBase {
 
   }
 
- 
-  /* * 
+  /*
+   * *
    * Target distance can be calculated from
    * 
    * tan(a1+a2) = (h2-h1) / d so d = (h2-h1) / tan(a1+a2)
@@ -57,7 +60,6 @@ public class CalculateTargetDistance extends CommandBase {
   @Override
   public void execute() {
 
-
     if (m_limelight.useVision && (m_limelight.getIsTargetFound() || RobotBase.isSimulation())) {
 
       m_cameraVerticalError = m_limelight.getdegVerticalToTarget() - m_limelight.verticalOffset;
@@ -67,15 +69,17 @@ public class CalculateTargetDistance extends CommandBase {
         m_cameraVerticalError = 0;
 
       }
-      // tilt counts up camera angle counts down
+     
 
-      if (RobotBase.isSimulation())
-      
-        cameraAngle = 48;
+    
 
       double tanAngleSum = Math.tan((Math.toRadians(m_cameraVerticalError + cameraAngle)));
 
       m_shooter.calculatedCameraDistance = FieldConstants.heightDifference / tanAngleSum;
+
+      m_shooter.calculatedCameraDistance = FieldConstants.heightDifference
+        
+      / (Math.tan(m_rcv2.getCenterTxAngle() * Math.cos(m_rcv2.getCenterTyAngle())));
 
       m_tilt.driverAdjustAngle = Math.toDegrees(Math.atan(m_tilt.adjustMeters / m_shooter.calculatedCameraDistance));
 

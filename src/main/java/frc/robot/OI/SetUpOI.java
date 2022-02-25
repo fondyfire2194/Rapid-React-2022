@@ -7,14 +7,12 @@ package frc.robot.OI;
 import java.util.Map;
 
 import edu.wpi.first.cscore.HttpCamera;
-import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Vision.AngleSolver;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.CargoTransport.HoldCargo;
 import frc.robot.commands.CargoTransport.ReleaseCargo;
@@ -480,7 +478,7 @@ public class SetUpOI {
                         robotCommands.add("To -4(3)", new PickupMoveVelocity(drive, -4, 3));
                         robotCommands.add("To -4(1)", new PickupMoveVelocity(drive, -4, 1));
                         robotCommands.add("To 0(1)", new PickupMoveVelocity(drive, 0, 1));
-                        robotCommands.add("To 0", new PickupMove(drive, 0, .5));
+                        robotCommands.add("To 0", new PickupMove(drive,intake, 0, .5));
                         robotCommands.add("Cmd", drive);
 
                         robotCommands.add("EndLog", new EndDriveLog(drive));

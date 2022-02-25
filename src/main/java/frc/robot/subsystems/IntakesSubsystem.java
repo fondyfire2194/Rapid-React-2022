@@ -272,7 +272,9 @@ public class IntakesSubsystem extends SubsystemBase {
   }
 
   public void setActiveCamDriverMode() {
+
     boolean on = true;
+
     if (useFrontIntake) {
 
       FrontCamera.setDriverMode(on);
