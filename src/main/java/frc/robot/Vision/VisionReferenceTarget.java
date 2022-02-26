@@ -38,23 +38,39 @@ public class VisionReferenceTarget {
 
     public void getTestTargetData() {
 
+         testTargetIndex = 0;
+        testTxVPValue = 0;
+        testTxVPValue = 0;
+        testAngles[0] = 0;
+        testAngles[1] = 0;
+        testTargetTx = 0;
+        testTargetTy = 0;
+        testTargetTa = 0;
         testTargetIndex = getLowestContourIndex();
 
-         testTxVPValue = getTesttxvp(testTargetIndex);
+        if (testTargetIndex > 4) {
 
-         testTyVPValue = getTesttyvp(testTargetIndex);
+            testTxVPValue = getTesttxvp(testTargetIndex);
 
-        testAngles = getTestTargetVPAngles();
+            testTxVPValue = getTesttyvp(testTargetIndex);
 
-        testTargetTx = (int) (((1 + (m_ll.get(m_rcv2.horCoord + String.valueOf(testTargetIndex)))) / 2)
-                * m_rcv2.IMG_WIDTH);
+          //  testAngles = getTestTargetVPAngles();
 
-        testTargetTy = (int) (((1 + (m_ll.get(
-                m_rcv2.vertCoord + String.valueOf(testTargetIndex)))) / 2)
-                * m_rcv2.IMG_HEIGHT);
 
-        testTargetTa = 1100. * m_ll.get("ta" + String.valueOf(testTargetIndex));
 
+            testTargetTx = (int) (((1 + (m_ll.get(m_rcv2.horCoord + String.valueOf(testTargetIndex)))) / 2)
+                    * m_rcv2.IMG_WIDTH);
+
+            testTargetTy = (int) (((1 + (m_ll.get(
+                    m_rcv2.vertCoord + String.valueOf(testTargetIndex)))) / 2)
+                    * m_rcv2.IMG_HEIGHT);
+
+
+                    testTargetTa = 1000. * m_ll.get("ta" + String.valueOf(testTargetIndex));
+ 
+ testAngles[0]= m_rcv2.getTargetAngle(testTargetTx);
+ 
+                }
     }
 
     private int getLowestContourIndex() {
@@ -77,6 +93,7 @@ public class VisionReferenceTarget {
 
     private double getTesttxvp(int contour) {
         double temp = 0;
+
         double vpw2 = m_rcv2.vpw / 2;
 
         temp = vpw2 * m_ll.get(m_rcv2.horCoord + String.valueOf(contour));

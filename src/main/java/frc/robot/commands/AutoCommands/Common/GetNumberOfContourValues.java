@@ -14,9 +14,7 @@ public class GetNumberOfContourValues extends SequentialCommandGroup {
   public GetNumberOfContourValues(RawContoursV2 rcv2) {
 
     addCommands(new GetVisionValues(rcv2), new GetVisionValues(rcv2),
-        new GetVisionValues(rcv2), new GetVisionValues(rcv2),
-        new GetVisionValues(rcv2), new GetVisionValues(rcv2),
-        new GetVisionValues(rcv2), new GetVisionValues(rcv2),
+        new GetVisionValues(rcv2),
         new GetVisionValues(rcv2), new GetVisionValues(rcv2),
         new GetVisionValues(rcv2));
 

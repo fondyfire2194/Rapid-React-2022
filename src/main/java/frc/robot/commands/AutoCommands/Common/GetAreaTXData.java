@@ -33,6 +33,10 @@ public class GetAreaTXData extends InstantCommand {
 
     m_rcv2.getMedianTX();
 
+    m_rcv2.getHubVisionData();
+
+    m_rcv2.runAngleValues();
+
     SmartDashboard.putNumber("AreaTxCmdTime", m_rcv2.getEndTime(m_rcv2.startTime));
 
   

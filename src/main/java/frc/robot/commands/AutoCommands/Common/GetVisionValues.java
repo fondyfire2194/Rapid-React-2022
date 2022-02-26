@@ -16,8 +16,8 @@ public class GetVisionValues extends SequentialCommandGroup {
 
   public GetVisionValues(RawContoursV2 rcv2) {
     m_rcv2 = rcv2;
-    // Add your commands in the addCommands() call, e.g.
+    // Add your commands in the addCommands() call, e.g.new SortLtoRData(m_rcv2),
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new GetAreaTXData(m_rcv2),new SortLtoRData(m_rcv2), new GetAngleData(rcv2));
+    addCommands(new GetAreaTXData(m_rcv2));
   }
 }

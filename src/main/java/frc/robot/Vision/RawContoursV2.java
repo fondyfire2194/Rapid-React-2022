@@ -156,9 +156,9 @@ public class RawContoursV2 {
      */
     public void getAreaData() {
 
-        shortSide = getShort();
-        longSide = getLong();
-        skew = getSkew();
+        // shortSide = getShort();
+        // longSide = getLong();
+        // skew = getSkew();
 
         areas0_1_2[0] = m_ll.get("ta0") * 1000;
 
@@ -188,9 +188,9 @@ public class RawContoursV2 {
 
     public void getTxValues() {
 
-        contourTx[0] = (((1 + (m_ll.get(horCoord + String.valueOf(0)))) / 2) * IMG_HEIGHT);
-        contourTx[1] = (((1 + (m_ll.get(horCoord + String.valueOf(1)))) / 2) * IMG_HEIGHT);
-        contourTx[2] = (((1 + (m_ll.get(horCoord + String.valueOf(2)))) / 2) * IMG_HEIGHT);
+        contourTx[0] = (((1 + (m_ll.get(horCoord + String.valueOf(0)))) / 2) * IMG_WIDTH);
+        contourTx[1] = (((1 + (m_ll.get(horCoord + String.valueOf(1)))) / 2) * IMG_WIDTH);
+        contourTx[2] = (((1 + (m_ll.get(horCoord + String.valueOf(2)))) / 2) * IMG_WIDTH);
 
     }
 
@@ -382,19 +382,19 @@ public class RawContoursV2 {
         double x = 0;
         double ax = 0;// rads
 
-        x = lRTxVpValues[0];
+        x = xCoordsToVP(medianTx[0]);
 
         ax = Math.atan2(1, x);
 
         temp[0] = Units.radiansToDegrees(ax);
 
-        x = lRTxVpValues[1];
+        x = xCoordsToVP(medianTx[1]);
 
         ax = Math.atan2(1, x);
 
         temp[1] = Units.radiansToDegrees(ax);
 
-        x = lRTxVpValues[2];
+        x = xCoordsToVP(medianTx[2]);
 
         ax = Math.atan2(1, x);
 
@@ -448,6 +448,13 @@ public class RawContoursV2 {
         temp[2] = Math.round(temp[2] * 1000) / 1000.;
 
         return temp;
+    }
+
+    private double xCoordsToVP(double medianTx) {
+
+        double xAsNx = 2 * (medianTx - (IMG_WIDTH / 2) + .5) / IMG_WIDTH;
+
+        return xAsNx;
     }
 
     public void runTarget() {
@@ -512,8 +519,9 @@ public class RawContoursV2 {
     }
 
     public double getTargetAngle(int xValue) {
-
-        double xAsNx = (xValue - ((IMG_WIDTH / 2) - .5)) / IMG_WIDTH;
+        SmartDashboard.putNumber("taxval", xValue);
+        double xAsNx = xCoordsToVP((double) xValue);
+        SmartDashboard.putNumber("taxsvpval", xAsNx);
 
         double temp = 0;
 
