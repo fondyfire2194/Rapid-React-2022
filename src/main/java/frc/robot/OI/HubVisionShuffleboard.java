@@ -52,6 +52,9 @@ public class HubVisionShuffleboard {
                         contourPX.addString("LtoRTxMed", () -> rCV2.getMedLCRTx());
                         contourPX.addString("LtoRTyAngle", () -> rCV2.getLCRTyAngle());
                         contourPX.addString("LtoRTxMedAngle", () -> rCV2.getLCRTxMedAngle());
+                        contourPX.addString("LtoRShort", () -> rCV2.getLCRShortSide());
+                        contourPX.addString("LtoRLong", () -> rCV2.getLCRLongSide());
+                        contourPX.addString("LtoRSkew", () -> rCV2.getLCRSkew());      
 
                         // contourPX.addNumber("AreaRatLR", () -> rCV2.getLRAreaRatio());
                         contourPX.addNumber("TX", () -> ll.get("tx"));

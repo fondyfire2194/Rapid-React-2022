@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
       m_robotContainer.m_intakes.setActivePipeline(m_robotContainer.m_intakes.activeCargoPipeline);
 
     }
-RotateLimelight90.init();
+    RotateLimelight90.init();
     if (m_robotContainer.isMatch)
       Shuffleboard.selectTab("Pre-Round");
 
@@ -112,14 +112,12 @@ RotateLimelight90.init();
     CommandScheduler.getInstance().run();
     // m_robotContainer.m_setup.checkLimits();
 
-
-  
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
     // SmartDashboard.putNumber("thr",m_robotContainer.m_driverController.getThrottle());
     SmartDashboard.putNumber("thr1", m_robotContainer.getThrottle());
     SmartDashboard.putNumber("thry", m_robotContainer.m_driverController.getY());
 
-  m_robotContainer.m_limelight.periodic();
+    m_robotContainer.m_limelight.periodic();
 
     m_robotContainer.m_tilt.testLock = m_robotContainer.m_driverController.getTrigger();
 
@@ -200,20 +198,20 @@ RotateLimelight90.init();
       case 1:// in front of power port, move back use shooter data index 1
 
         m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, transport, comp,
-           FieldMap.leftTarmacData);
+            FieldMap.leftTarmacData);
 
         break;
 
       case 2://
 
-        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,transport, comp,
+        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, transport, comp,
             FieldMap.rightTarmacData);
 
         break;
 
       case 3://
 
-        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,transport, comp,
+        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, transport, comp,
             FieldMap.rightCenTarmacData);
 
         break;

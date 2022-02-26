@@ -100,9 +100,15 @@ public class RawContoursV2 {
     public double[] contourTx = { 0, 0, 0 };
     public double[] contourTy = { 0, 0, 0 };
 
+    public double[] skew = { 0, 0, 0 };
+
     public double weightedTargetAngle;
     public boolean isFound;
     public double targetAngle2;
+
+    public double[] shortSide = { 0, 0, 0 };
+
+    public double[] longSide = { 0, 0, 0 };
 
     public RawContoursV2(LimeLight ll) {
 
@@ -149,6 +155,10 @@ public class RawContoursV2 {
      * 
      */
     public void getAreaData() {
+
+        shortSide = getShort();
+        longSide = getLong();
+        skew = getSkew();
 
         areas0_1_2[0] = m_ll.get("ta0") * 1000;
 
@@ -245,6 +255,12 @@ public class RawContoursV2 {
 
                     lToRAreas[j] = swD;
 
+                    swD = skew[j + 1];
+
+                    skew[j + 1] = skew[j];
+
+                    skew[j] = swD;
+
                     swI = lTRIndex[j + 1];
 
                     lTRIndex[j + 1] = lTRIndex[j];
@@ -258,6 +274,48 @@ public class RawContoursV2 {
         SmartDashboard.putNumberArray("ltri", showAsDoubleArray(lTRIndex));
 
         return lTRIndex;
+    }
+
+    public double[] getShort() {
+        double[] temp = { 0, 0, 0 };
+
+        temp[0] = m_ll.get("tshort0");
+        temp[1] = m_ll.get("tshort1");
+        temp[1] = m_ll.get("tshort2");
+
+        temp[0] = Math.round(temp[0] * 1000) / 1000.;
+        temp[1] = Math.round(temp[1] * 1000) / 1000.;
+        temp[2] = Math.round(temp[2] * 1000) / 1000.;
+
+        return temp;
+    }
+
+    public double[] getLong() {
+        double[] temp = { 0, 0, 0 };
+
+        temp[0] = m_ll.get("tlong0");
+        temp[1] = m_ll.get("tlong1");
+        temp[1] = m_ll.get("tlong2");
+
+        temp[0] = Math.round(temp[0] * 1000) / 1000.;
+        temp[1] = Math.round(temp[1] * 1000) / 1000.;
+        temp[2] = Math.round(temp[2] * 1000) / 1000.;
+
+        return temp;
+    }
+
+    public double[] getSkew() {
+        double[] temp = { 0, 0, 0 };
+
+        temp[0] = m_ll.get("ts0");
+        temp[1] = m_ll.get("ts1");
+        temp[1] = m_ll.get("ts2");
+
+        // temp[0] = Math.round(temp[0] * 100000) / 100000.;
+        // temp[1] = Math.round(temp[1] * 100000) / 100000.;
+        // temp[2] = Math.round(temp[2] * 100000) / 100000.;
+
+        return temp;
     }
 
     public double getStartTime() {
@@ -455,7 +513,7 @@ public class RawContoursV2 {
 
     public double getTargetAngle(int xValue) {
 
-        double xAsNx = (xValue - 159.5) / 160;
+        double xAsNx = (xValue - ((IMG_WIDTH / 2) - .5)) / IMG_WIDTH;
 
         double temp = 0;
 
@@ -486,9 +544,13 @@ public class RawContoursV2 {
 
         double rightAngle = getRightTxAngle();
 
-        double rightToCenter = getRightTxAngle() - getCenterTxAngle();
+        double rightToCenter = 0;
 
-        double leftToCenter = getCenterTxAngle() - getLeftTxAngle();
+        double leftToCenter = 0;
+
+        rightToCenter = getRightTxAngle() - getCenterTxAngle();
+
+        leftToCenter = getCenterTxAngle() - getLeftTxAngle();
 
         SmartDashboard.putNumber("LtoC", leftToCenter);
 
@@ -503,7 +565,7 @@ public class RawContoursV2 {
                 * Math.cos(Units.degreesToRadians(getRightTyAngle()));
 
         double sinLeft = Math.sin(Units.degreesToRadians(leftAngle))
-        
+
                 * Math.cos(Units.degreesToRadians(getLeftTyAngle()));
 
         double lcSinAve = (sinCenter + sinLeft) / 2;
@@ -606,6 +668,22 @@ public class RawContoursV2 {
 
         return String.valueOf(
                 medianAreas[0] + " ," + String.valueOf(medianAreas[1]) + " ," + String.valueOf(medianAreas[2]));
+    }
+
+    public String getLCRShortSide() {
+
+        return String.valueOf(
+                shortSide[0] + " ," + String.valueOf(shortSide[1]) + " ," + String.valueOf(shortSide[2]));
+    }
+
+    public String getLCRLongSide() {
+        return String.valueOf(
+                longSide[0] + " ," + String.valueOf(longSide[1]) + " ," + String.valueOf(longSide[2]));
+    }
+
+    public String getLCRSkew() {
+        return String.valueOf(
+                skew[0] + " ," + String.valueOf(skew[1]) + " ," + String.valueOf(skew[2]));
     }
 
     public double getLeftTxAngle() {
