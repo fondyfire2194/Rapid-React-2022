@@ -6,7 +6,6 @@ package frc.robot.commands.AutoCommands.Common;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.Vision.VisionReferenceTarget;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -26,13 +25,8 @@ public class CalculateTarget extends InstantCommand {
   public void initialize() {
 
     m_rcv2.weightedTargetValue = m_rcv2.weightedAverageX();
+
     m_rcv2.weightedTargetAngle = m_rcv2.getTargetAngle(m_rcv2.weightedTargetValue);
-
-    m_rcv2.targetValue = m_rcv2.calculateTargetX();
-    m_rcv2.targetAngle = m_rcv2.getTargetAngle(m_rcv2.targetValue);
-
-    m_rcv2.targetAngle2 = m_rcv2.calcTargetFromAngles();
-
 
   }
 }

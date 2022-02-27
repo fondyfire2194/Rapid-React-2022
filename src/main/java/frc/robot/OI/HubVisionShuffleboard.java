@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
+import frc.robot.Vision.Set2XZoomValues;
+import frc.robot.Vision.SetNoZoomValues;
 import frc.robot.Vision.VisionReferenceTarget;
 import frc.robot.commands.AutoCommands.Common.CalculateTarget;
 import frc.robot.commands.AutoCommands.Common.CalculateTestTarget;
@@ -47,15 +49,12 @@ public class HubVisionShuffleboard {
                                         .withSize(2, 4).withProperties(Map.of("Label position", "TOP")); //
 
                         contourPX.addString("LtoRTx", () -> rCV2.getLCRTx());
-                        contourPX.addString("LtoRTy", () -> rCV2.getLCRTy());
+                        contourPX.addString("LtoRTy", () -> rCV2.getMedLCRTy());
  
                         contourPX.addString("LtoRTxMed", () -> rCV2.getMedLCRTx());
                         contourPX.addString("LtoRTyAngle", () -> rCV2.getLCRTyAngle());
                         contourPX.addString("LtoRTxMedAngle", () -> rCV2.getLCRTxMedAngle());
-                        contourPX.addString("LtoRShort", () -> rCV2.getLCRShortSide());
-                        contourPX.addString("LtoRLong", () -> rCV2.getLCRLongSide());
-                        contourPX.addString("LtoRSkew", () -> rCV2.getLCRSkew());      
-
+            
                         // contourPX.addNumber("AreaRatLR", () -> rCV2.getLRAreaRatio());
                         contourPX.addNumber("TX", () -> ll.get("tx"));
                         contourPX.addNumber("TY", () -> ll.get("ty"));
@@ -66,10 +65,16 @@ public class HubVisionShuffleboard {
                                         .withSize(2, 4).withProperties(Map.of("Label position", "TOP")); //
 
                         contourDist.add("GetVisionData", new GetVisionValues(rCV2));
+
                         contourDist.add("Get11", new GetNumberOfContourValues(rCV2));
 
                         contourDist.add("CalcTestTarget", new CalculateTestTarget(vrt));
+
                         contourDist.add("CalcTarget", new CalculateTarget(rCV2));
+
+                        contourDist.add("SetNoZoom", new SetNoZoomValues(rCV2, ll));
+
+                        contourDist.add("Set2XZoom", new Set2XZoomValues(rCV2, ll));
 
                         contourPX.addString("LtoRMedArea", () -> rCV2.getLCRMedianArea());
 
@@ -96,11 +101,11 @@ public class HubVisionShuffleboard {
                         // new LogHubTarget(as, getTarget, tilt, turret, ll));
                         // targetValues.add("StopLog", new EndHubLog(as));
 
-                        targetValues.addNumber("AreaAngle", () -> rCV2.targetAngle);
-                        targetValues.addNumber("AreaX", () -> rCV2.targetValue);
+                //        targetValues.addNumber("AreaAngle", () -> rCV2.targetAngle);
+                 //       targetValues.addNumber("AreaX", () -> rCV2.targetValue);
                         targetValues.addNumber("WeightedX", () -> rCV2.weightedTargetValue);
                         targetValues.addNumber("WeightedAngle", () -> rCV2.weightedTargetAngle);
-                        targetValues.addNumber("TargetAngle2", () -> rCV2.targetAngle2);
+                //        targetValues.addNumber("TargetAngle2", () -> rCV2.targetAngle2);
 
                 }
 

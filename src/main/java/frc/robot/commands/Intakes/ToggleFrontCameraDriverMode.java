@@ -25,12 +25,6 @@ public class ToggleFrontCameraDriverMode extends InstantCommand {
   @Override
   public void initialize() {
 
-    if (m_intake.FrontCamera.getDriverMode())
-
-      m_intake.FrontCamera.setDriverMode(false);
-
-    else
-      m_intake.FrontCamera.setDriverMode(true);
-
+    
   }
 }

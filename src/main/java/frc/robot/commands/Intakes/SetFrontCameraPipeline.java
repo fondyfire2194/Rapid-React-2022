@@ -27,7 +27,7 @@ public class SetFrontCameraPipeline extends InstantCommand {
   @Override
   public void initialize() {
 
-    m_intake.FrontCamera.setPipelineIndex(m_pipeline);
+    m_intake.rearll.setPipeline(m_pipeline);
 
   }
 }

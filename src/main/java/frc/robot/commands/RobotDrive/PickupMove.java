@@ -32,7 +32,7 @@ public class PickupMove extends CommandBase {
 
   private double gyroYawGain;
 
-  private double intakeCameraYawGain=.1;
+  private double intakeCameraYawGain = .1;
 
   public PickupMove(RevDrivetrain drive, IntakesSubsystem intake, double endpoint, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -93,16 +93,16 @@ public class PickupMove extends CommandBase {
 
     if (m_intake.useFrontIntake) {
 
-    yawInUse=  m_intake.getActiveTargetYaw()*intakeCameraYawGain;
+      yawInUse = m_intake.getActiveTargetYaw() * intakeCameraYawGain;
 
     }
-    
+
     else {
 
-      yawInUse =m_drive.getYaw() * Pref.getPref("dRStKp");
+      yawInUse = m_drive.getYaw() * Pref.getPref("dRStKp");
     }
 
-    m_drive.arcadeDrive(useSpeed, -yawInUse );
+    m_drive.arcadeDrive(useSpeed, -yawInUse);
 
   }
 

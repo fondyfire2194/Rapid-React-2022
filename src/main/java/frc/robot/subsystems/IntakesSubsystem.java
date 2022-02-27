@@ -8,16 +8,13 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.AnalogInput;
-import com.revrobotics.ColorSensorV3;
-
-import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.SolenoidConstants;
+import frc.robot.Vision.LimeLight;
 
 public class IntakesSubsystem extends SubsystemBase {
   /** Creates a new Intakes. */
@@ -38,9 +35,6 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public boolean rearIntakeMotorConnected;
 
-  public PhotonCamera FrontCamera = new PhotonCamera("photonvision");
-  public PhotonCamera RearCamera = new PhotonCamera("photonvision");
-
   public int redCargoPipeline = 0;
   public int blueCargoPipeline = 1;
   public int redLauchPadPipeline = 2;
@@ -54,7 +48,11 @@ public class IntakesSubsystem extends SubsystemBase {
   private AnalogInput rearIntakeCargoDetect;// next to be released for shooting
 
   private double cargoDetectedVolts = 2.75;
- 
+
+  public LimeLight frontll = new LimeLight("limelightfront");
+
+  public LimeLight rearll = new LimeLight("limelightrear");
+
   public IntakesSubsystem() {
 
     m_rearIntakeMotor.configFactoryDefault();
@@ -67,9 +65,11 @@ public class IntakesSubsystem extends SubsystemBase {
 
     frontIntakeCargoDetect = new AnalogInput(1);
 
-    // CargoBlockLeft = new AnalogInput(0);
-
     rearIntakeCargoDetect = new AnalogInput(2);
+
+    frontll.setPipeline(8);// no leds
+
+    rearll.setPipeline(8);
   }
 
   public void toggleActiveIntake() {
@@ -240,8 +240,8 @@ public class IntakesSubsystem extends SubsystemBase {
   }
 
   public void setActivePipeline(int pipelineNumber) {
-    FrontCamera.setPipelineIndex(pipelineNumber);
-    RearCamera.setPipelineIndex(pipelineNumber);
+    frontll.setPipeline(pipelineNumber);
+    rearll.setPipeline(pipelineNumber);
   }
 
   public double getActiveTargetYaw() {
@@ -250,39 +250,47 @@ public class IntakesSubsystem extends SubsystemBase {
 
     if (useFrontIntake) {
 
-      var result = FrontCamera.getLatestResult();
+      if (frontll.getIsTargetFound()) {
 
-      if (result.hasTargets()) {
+        temp = frontll.getdegVerticalToTarget();
 
-        temp = result.getBestTarget().getYaw();
       }
     }
 
     else {
 
-      var result = RearCamera.getLatestResult();
+      if (rearll.getIsTargetFound()) {
 
-      if (result.hasTargets()) {
+        temp = rearll.getdegVerticalToTarget();
 
-        temp = result.getBestTarget().getYaw();
       }
-
     }
     return temp;
   }
 
-  public void setActiveCamDriverMode() {
+  public double getActiveTargetDist() {
 
-    boolean on = true;
+    double temp = 0;
 
     if (useFrontIntake) {
 
-      FrontCamera.setDriverMode(on);
+      if (frontll.getIsTargetFound()) {
 
-    } else {
+        temp = frontll.getdegRotationToTarget();
 
-      RearCamera.setDriverMode(on);
+      }
     }
 
+    else {
+
+      if (rearll.getIsTargetFound()) {
+
+        temp = rearll.getdegRotationToTarget();
+
+      }
+    }
+    return temp;
   }
+
+  
 }

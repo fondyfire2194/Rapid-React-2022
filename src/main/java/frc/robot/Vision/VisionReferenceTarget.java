@@ -59,11 +59,11 @@ public class VisionReferenceTarget {
 
 
             testTargetTx = (int) (((1 + (m_ll.get(m_rcv2.horCoord + String.valueOf(testTargetIndex)))) / 2)
-                    * m_rcv2.IMG_WIDTH);
+                    * m_rcv2.active_IMG_WIDTH);
 
             testTargetTy = (int) (((1 + (m_ll.get(
                     m_rcv2.vertCoord + String.valueOf(testTargetIndex)))) / 2)
-                    * m_rcv2.IMG_HEIGHT);
+                    * m_rcv2.active_IMG_HEIGHT);
 
 
                     testTargetTa = 1000. * m_ll.get("ta" + String.valueOf(testTargetIndex));
@@ -76,12 +76,12 @@ public class VisionReferenceTarget {
     private int getLowestContourIndex() {
 
         double temp = 0;
-        double min = m_rcv2.IMG_HEIGHT;
+        double min = m_rcv2.active_IMG_HEIGHT;
         int lowest = 0;
         int i = 0;
 
         for (i = 0; i < m_rcv2.maxPossibleContours; i++) {
-            temp = (((1 + (m_ll.get(m_rcv2.vertCoord + String.valueOf(i)))) / 2) * m_rcv2.IMG_WIDTH);
+            temp = (((1 + (m_ll.get(m_rcv2.vertCoord + String.valueOf(i)))) / 2) * m_rcv2.active_IMG_WIDTH);
             if (temp < min) {
                 min = temp;
                 lowest = i;
@@ -94,7 +94,7 @@ public class VisionReferenceTarget {
     private double getTesttxvp(int contour) {
         double temp = 0;
 
-        double vpw2 = m_rcv2.vpw / 2;
+        double vpw2 = m_rcv2.active_vpw / 2;
 
         temp = vpw2 * m_ll.get(m_rcv2.horCoord + String.valueOf(contour));
 
@@ -103,7 +103,7 @@ public class VisionReferenceTarget {
 
     private double getTesttyvp(int contour) {
         double temp = 0;
-        double vph2 = m_rcv2.vph / 2;
+        double vph2 = m_rcv2.active_vph / 2;
 
         temp = vph2 * m_ll.get(m_rcv2.vertCoord + String.valueOf(contour));
 

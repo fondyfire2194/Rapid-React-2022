@@ -14,13 +14,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /** Add your docs here. */
 public class RawContoursV2 {
 
-    int IMG_WIDTH = 320;
-    int IMG_HEIGHT = 240;
+    int ZOOM_IMG_WIDTH = 320;
+    int ZOOM_IMG_HEIGHT = 240;
 
-    private double HFOV;// = 30;// 59.6;
-    private double VFOV;// = 23;// 45.7;
-    double vpw;
-    double vph;
+    int NO_ZOOM_IMG_WIDTH = 960;
+    int NO_ZOOM_IMG_HEIGHT = 720;
+
+    int active_IMG_WIDTH = NO_ZOOM_IMG_WIDTH;
+    int active_IMG_HEIGHT = NO_ZOOM_IMG_HEIGHT;
+
+    double NO_ZOOM_CAMERA_HFOV = 59.6;
+    double NO_ZOOM_CAMERA_VFOV = 45.7;
+
+    double ZOOM_CAMERA_HFOV = NO_ZOOM_CAMERA_HFOV / 2;
+    double ZOOM_CAMERA_VFOV = NO_ZOOM_CAMERA_VFOV / 2;
+
+    double active_vpw;
+    double active_vph;
 
     private boolean showDebug = false;
 
@@ -50,17 +60,13 @@ public class RawContoursV2 {
 
     private LimeLight m_ll;
 
-    private boolean cameraAt90 = false;
+    boolean cameraAt90 = true;
 
     String horCoord;
 
     String vertCoord;
 
     public boolean areasValid;
-
-    // public double[][] areaSample = new double[3][3];
-
-    // public int[][] tXSample = new int[3][3];
 
     public double[] medianAreas = { 0, 0, 0 };
 
@@ -74,6 +80,14 @@ public class RawContoursV2 {
 
     public MedianFilter rtx = new MedianFilter(5);
 
+    public MedianFilter lty = new MedianFilter(5);
+
+    public double[] medianTy = new double[3];
+
+    public MedianFilter cty = new MedianFilter(5);
+
+    public MedianFilter rty = new MedianFilter(5);
+
     public MedianFilter larea = new MedianFilter(5);
 
     public MedianFilter carea = new MedianFilter(5);
@@ -84,14 +98,6 @@ public class RawContoursV2 {
 
     public boolean txGood;
 
-    public boolean runAll;
-    public boolean runTX = false;
-    public boolean runAreas = false;
-    public boolean runLRAreas = false;
-
-    public boolean runTXDone = false;
-    public boolean runAreasDone = false;
-    public boolean runLRAreasDone = false;
     public double startTime;
     public int targetValue = 0;
     public double targetAngle;
@@ -100,15 +106,12 @@ public class RawContoursV2 {
     public double[] contourTx = { 0, 0, 0 };
     public double[] contourTy = { 0, 0, 0 };
 
-    public double[] skew = { 0, 0, 0 };
-
     public double weightedTargetAngle;
     public boolean isFound;
-    public double targetAngle2;
 
-    public double[] shortSide = { 0, 0, 0 };
+    public double activeHFOV;
 
-    public double[] longSide = { 0, 0, 0 };
+    public double activeVFOV;
 
     public RawContoursV2(LimeLight ll) {
 
@@ -116,23 +119,24 @@ public class RawContoursV2 {
 
         horCoord = "tx";
         vertCoord = "ty";
-        IMG_WIDTH = 320;
-        IMG_HEIGHT = 240;
-        HFOV = 59.6;
-        VFOV = 45.7;
+        active_IMG_WIDTH = NO_ZOOM_IMG_WIDTH;
+        active_IMG_HEIGHT = NO_ZOOM_IMG_HEIGHT;
+        activeHFOV = NO_ZOOM_CAMERA_HFOV;
+        activeVFOV = NO_ZOOM_CAMERA_VFOV;
 
         if (cameraAt90) {
             horCoord = "ty";
             vertCoord = "tx";
-            IMG_WIDTH = 240;
-            IMG_HEIGHT = 320;
-            HFOV = 45.7;
-            VFOV = 59.6;
+            active_IMG_WIDTH = NO_ZOOM_IMG_HEIGHT;
+            active_IMG_HEIGHT = NO_ZOOM_IMG_WIDTH;
+            activeHFOV = NO_ZOOM_CAMERA_VFOV;
+            activeVFOV = NO_ZOOM_CAMERA_HFOV;
+            ;
         }
-        HFOV = 30;
-        vpw = 2 * Math.tan(Units.degreesToRadians(HFOV / 2));
 
-        vph = 2 * Math.tan(Units.degreesToRadians(VFOV / 2));
+        active_vpw = 2 * Math.tan(Units.degreesToRadians(activeHFOV / 2));
+
+        active_vph = 2 * Math.tan(Units.degreesToRadians(activeVFOV / 2));
 
     }
 
@@ -155,10 +159,6 @@ public class RawContoursV2 {
      * 
      */
     public void getAreaData() {
-
-        // shortSide = getShort();
-        // longSide = getLong();
-        // skew = getSkew();
 
         areas0_1_2[0] = m_ll.get("ta0") * 1000;
 
@@ -188,9 +188,9 @@ public class RawContoursV2 {
 
     public void getTxValues() {
 
-        contourTx[0] = (((1 + (m_ll.get(horCoord + String.valueOf(0)))) / 2) * IMG_WIDTH);
-        contourTx[1] = (((1 + (m_ll.get(horCoord + String.valueOf(1)))) / 2) * IMG_WIDTH);
-        contourTx[2] = (((1 + (m_ll.get(horCoord + String.valueOf(2)))) / 2) * IMG_WIDTH);
+        contourTx[0] = (((1 + (m_ll.get(horCoord + String.valueOf(0)))) / 2) * active_IMG_WIDTH);
+        contourTx[1] = (((1 + (m_ll.get(horCoord + String.valueOf(1)))) / 2) * active_IMG_WIDTH);
+        contourTx[2] = (((1 + (m_ll.get(horCoord + String.valueOf(2)))) / 2) * active_IMG_WIDTH);
 
     }
 
@@ -203,10 +203,17 @@ public class RawContoursV2 {
 
     public void getTyValues() {
 
-        contourTy[0] = (((1 + (m_ll.get(vertCoord + String.valueOf(0)))) / 2) * IMG_HEIGHT);
-        contourTy[1] = (((1 + (m_ll.get(vertCoord + String.valueOf(1)))) / 2) * IMG_HEIGHT);
-        contourTy[2] = (((1 + (m_ll.get(vertCoord + String.valueOf(2)))) / 2) * IMG_HEIGHT);
+        contourTy[0] = (((1 + (m_ll.get(vertCoord + String.valueOf(0)))) / 2) * active_IMG_HEIGHT);
+        contourTy[1] = (((1 + (m_ll.get(vertCoord + String.valueOf(1)))) / 2) * active_IMG_HEIGHT);
+        contourTy[2] = (((1 + (m_ll.get(vertCoord + String.valueOf(2)))) / 2) * active_IMG_HEIGHT);
 
+    }
+
+    public void getMedianTY() {
+
+        medianTy[0] = (int) cty.calculate(contourTy[0]);
+        medianTy[1] = (int) lty.calculate(contourTy[1]);
+        medianTy[2] = (int) rty.calculate(contourTy[2]);
     }
 
     public int[] getHubVisionData() {
@@ -222,9 +229,9 @@ public class RawContoursV2 {
 
         getTyValues();
 
-        ltoRTyValues[0] = (int) contourTy[0];
-        ltoRTyValues[1] = (int) contourTy[1];
-        ltoRTyValues[2] = (int) contourTy[2];
+        ltoRTyValues[0] = (int) medianTy[0];
+        ltoRTyValues[1] = (int) medianTy[1];
+        ltoRTyValues[2] = (int) medianTy[2];
 
         getTyValues();
 
@@ -254,12 +261,6 @@ public class RawContoursV2 {
                     lToRAreas[j + 1] = lToRAreas[j];
 
                     lToRAreas[j] = swD;
-
-                    swD = skew[j + 1];
-
-                    skew[j + 1] = skew[j];
-
-                    skew[j] = swD;
 
                     swI = lTRIndex[j + 1];
 
@@ -304,20 +305,6 @@ public class RawContoursV2 {
         return temp;
     }
 
-    public double[] getSkew() {
-        double[] temp = { 0, 0, 0 };
-
-        temp[0] = m_ll.get("ts0");
-        temp[1] = m_ll.get("ts1");
-        temp[1] = m_ll.get("ts2");
-
-        // temp[0] = Math.round(temp[0] * 100000) / 100000.;
-        // temp[1] = Math.round(temp[1] * 100000) / 100000.;
-        // temp[2] = Math.round(temp[2] * 100000) / 100000.;
-
-        return temp;
-    }
-
     public double getStartTime() {
         return Timer.getFPGATimestamp();
     }
@@ -348,7 +335,7 @@ public class RawContoursV2 {
     private double[] getlrtxvp(int[] ltoRIndex) {
         SmartDashboard.putNumberArray("LTXTPI", showAsDoubleArray(lTRIndex));
         double[] temp = { 0, 0, 0 };
-        double vpw2 = vpw / 2;
+        double vpw2 = active_vpw / 2;
 
         temp[0] = vpw2 * m_ll.get(horCoord + String.valueOf(ltoRIndex[0]));
         temp[1] = vpw2 * m_ll.get(horCoord + String.valueOf(ltoRIndex[1]));
@@ -365,7 +352,7 @@ public class RawContoursV2 {
     private double[] getlrtyvp(int[] ltoRIndex) {
 
         double[] temp = { 0, 0, 0 };
-        double vph2 = vph / 2;
+        double vph2 = active_vph / 2;
         temp[0] = vph2 * m_ll.get(vertCoord + String.valueOf(ltoRIndex[0]));
         temp[1] = vph2 * m_ll.get(vertCoord + String.valueOf(ltoRIndex[1]));
         temp[2] = vph2 * m_ll.get(vertCoord + String.valueOf(ltoRIndex[2]));
@@ -452,12 +439,13 @@ public class RawContoursV2 {
 
     private double xCoordsToVP(double medianTx) {
 
-        double xAsNx = 2 * (medianTx - (IMG_WIDTH / 2) + .5) / IMG_WIDTH;
+        double xAsNx = 2 * (medianTx - (active_IMG_WIDTH / 2) + .5) / active_IMG_WIDTH;
 
         return xAsNx;
     }
 
     public void runTarget() {
+        
         targetValue = calculateTargetX();
         weightedTargetValue = weightedAverageX();
 
@@ -531,7 +519,7 @@ public class RawContoursV2 {
 
         nx = xAsNx;
 
-        x = nx * (vpw / 2);
+        x = nx * (active_vpw / 2);
 
         ax = Math.atan2(1, x);
 
@@ -540,55 +528,6 @@ public class RawContoursV2 {
         temp -= 90;
 
         return -temp;
-    }
-
-    public double calcTargetFromAngles() {
-
-        double targetAngle2 = 0;
-
-        double centerAngle = getCenterTxAngle();
-
-        double leftAngle = getLeftTxAngle();
-
-        double rightAngle = getRightTxAngle();
-
-        double rightToCenter = 0;
-
-        double leftToCenter = 0;
-
-        rightToCenter = getRightTxAngle() - getCenterTxAngle();
-
-        leftToCenter = getCenterTxAngle() - getLeftTxAngle();
-
-        SmartDashboard.putNumber("LtoC", leftToCenter);
-
-        SmartDashboard.putNumber("RtoC", rightToCenter);
-
-        double sinCenter = Math.sin(Units.degreesToRadians(centerAngle))
-
-                * Math.cos(Units.degreesToRadians(getCenterTyAngle()));
-
-        double sinRight = Math.sin(Units.degreesToRadians(rightAngle))
-
-                * Math.cos(Units.degreesToRadians(getRightTyAngle()));
-
-        double sinLeft = Math.sin(Units.degreesToRadians(leftAngle))
-
-                * Math.cos(Units.degreesToRadians(getLeftTyAngle()));
-
-        double lcSinAve = (sinCenter + sinLeft) / 2;
-
-        double crSinAve = (sinCenter + sinRight) / 2;
-
-        double gapToUse = crSinAve;
-
-        if (Math.abs(rightToCenter) < Math.abs(leftToCenter))
-
-            gapToUse = lcSinAve;
-
-        targetAngle2 = Units.radiansToDegrees(Math.asin(gapToUse));
-
-        return targetAngle2;
     }
 
     private double[] showAsDoubleArray(int[] values) {
@@ -636,20 +575,16 @@ public class RawContoursV2 {
     }
 
     public int getLeftTy() {
-        return (int) ltoRTyValues[0];
+        return (int) medianTy[0];
     }
 
     public int getCenterTy() {
-        return (int) ltoRTyValues[1];
+        return (int) medianTy[1];
     }
 
     public int getRightTy() {
-        return (int) ltoRTyValues[2];
+        return (int) medianTy[2];
     }
-
-    // public void setLockContours(boolean on) {
-    // lock3Contours = on;
-    // }
 
     public String getLCRTx() {
 
@@ -661,7 +596,7 @@ public class RawContoursV2 {
         return String.valueOf(medianTx[0] + " ," + String.valueOf(medianTx[1]) + " ," + String.valueOf(medianTx[2]));
     }
 
-    public String getLCRTy() {
+    public String getMedLCRTy() {
         return String.valueOf(getLeftTy() + " ," + String.valueOf(getCenterTy()) + " ," + String.valueOf(getRightTy()));
 
     }
@@ -676,22 +611,6 @@ public class RawContoursV2 {
 
         return String.valueOf(
                 medianAreas[0] + " ," + String.valueOf(medianAreas[1]) + " ," + String.valueOf(medianAreas[2]));
-    }
-
-    public String getLCRShortSide() {
-
-        return String.valueOf(
-                shortSide[0] + " ," + String.valueOf(shortSide[1]) + " ," + String.valueOf(shortSide[2]));
-    }
-
-    public String getLCRLongSide() {
-        return String.valueOf(
-                longSide[0] + " ," + String.valueOf(longSide[1]) + " ," + String.valueOf(longSide[2]));
-    }
-
-    public String getLCRSkew() {
-        return String.valueOf(
-                skew[0] + " ," + String.valueOf(skew[1]) + " ," + String.valueOf(skew[2]));
     }
 
     public double getLeftTxAngle() {

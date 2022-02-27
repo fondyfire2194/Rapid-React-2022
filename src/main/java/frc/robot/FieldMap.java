@@ -108,6 +108,7 @@ public class FieldMap {
         public static final double rightCenTarmacTiltLowerAngle = 25;
         public static final double rightCenTarmacTurretLowerAngle = 10;
         public static double rightCenTarmacLowerMPS = 21;
+        
 
         public static final double[] rightCenTarmacData = {
                         rightCenTarmacTiltUpperAngle, rightCenTarmacTurretUpperAngle,

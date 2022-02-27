@@ -25,12 +25,6 @@ public class ToggleRearCameraDriverMode extends InstantCommand {
   @Override
   public void initialize() {
 
-    if (m_intake.RearCamera.getDriverMode())
-
-      m_intake.RearCamera.setDriverMode(false);
-
-    else
-      m_intake.RearCamera.setDriverMode(true);
 
   }
 }
