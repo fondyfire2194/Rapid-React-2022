@@ -9,26 +9,29 @@ import java.util.Arrays;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Robot;
+import frc.robot.SmartDashboard;
 
 /** Add your docs here. */
 public class RawContoursV2 {
 
-    int ZOOM_IMG_WIDTH = 320;
-    int ZOOM_IMG_HEIGHT = 240;
+	static int ZOOM_IMG_WIDTH = 320;
+    static int ZOOM_IMG_HEIGHT = 240;
 
-    int NO_ZOOM_IMG_WIDTH = 960;
-    int NO_ZOOM_IMG_HEIGHT = 720;
+    static int NO_ZOOM_IMG_WIDTH = 960;
+    static int NO_ZOOM_IMG_HEIGHT = 720;
+
+    static double NO_ZOOM_CAMERA_HFOV = 59.6;
+    static double NO_ZOOM_CAMERA_VFOV = 45.7;
+
+    static double ZOOM_CAMERA_HFOV = NO_ZOOM_CAMERA_HFOV / 2;
+    static double ZOOM_CAMERA_VFOV = NO_ZOOM_CAMERA_VFOV / 2;
+
+    static boolean cameraAt90 = true;
+
+    SmartDashboard dash = new SmartDashboard();
 
     int active_IMG_WIDTH = NO_ZOOM_IMG_WIDTH;
     int active_IMG_HEIGHT = NO_ZOOM_IMG_HEIGHT;
-
-    double NO_ZOOM_CAMERA_HFOV = 59.6;
-    double NO_ZOOM_CAMERA_VFOV = 45.7;
-
-    double ZOOM_CAMERA_HFOV = NO_ZOOM_CAMERA_HFOV / 2;
-    double ZOOM_CAMERA_VFOV = NO_ZOOM_CAMERA_VFOV / 2;
 
     double active_vpw;
     double active_vph;
@@ -61,7 +64,6 @@ public class RawContoursV2 {
 
     private LimeLight m_ll;
 
-    boolean cameraAt90 = true;
 
     String horCoord;
 
@@ -154,10 +156,10 @@ public class RawContoursV2 {
 
     /**
      * call getAreaData to get 3 largest areaa always 0,1,2
-     * 
-     * 
-     * 
-     * 
+     *
+     *
+     *
+     *
      */
     public void getAreaData() {
 
@@ -171,9 +173,9 @@ public class RawContoursV2 {
         areas0_1_2[1] = Math.round(areas0_1_2[1]);
         areas0_1_2[2] = Math.round(areas0_1_2[2]);
 
-        SmartDashboard.putNumber("CON0O", areas0_1_2[0]);
-        SmartDashboard.putNumber("CON1O", areas0_1_2[1]);
-        SmartDashboard.putNumber("CON2O", areas0_1_2[2]);
+        dash.putNumber("CON0O", areas0_1_2[0]);
+        dash.putNumber("CON1O", areas0_1_2[1]);
+        dash.putNumber("CON2O", areas0_1_2[2]);
 
     }
 
@@ -234,7 +236,7 @@ public class RawContoursV2 {
         ltoRTyValues[1] = (int) medianTy[1];
         ltoRTyValues[2] = (int) medianTy[2];
 
-        getTyValues();
+        getTyValues(); // TODO Why do we get the values twice?
 
         int range = contourTx.length;
         int j = 0;
@@ -273,7 +275,7 @@ public class RawContoursV2 {
             }
         }
 
-        SmartDashboard.putNumberArray("ltri", showAsDoubleArray(lTRIndex));
+        dash.putNumberArray("ltri", showAsDoubleArray(lTRIndex));
 
         return lTRIndex;
     }
@@ -334,7 +336,7 @@ public class RawContoursV2 {
     }
 
     private double[] getlrtxvp(int[] ltoRIndex) {
-        SmartDashboard.putNumberArray("LTXTPI", showAsDoubleArray(lTRIndex));
+        dash.putNumberArray("LTXTPI", showAsDoubleArray(lTRIndex));
         double[] temp = { 0, 0, 0 };
         double vpw2 = active_vpw / 2;
 
@@ -342,9 +344,9 @@ public class RawContoursV2 {
         temp[1] = vpw2 * m_ll.get(horCoord + String.valueOf(ltoRIndex[1]));
         temp[2] = vpw2 * m_ll.get(horCoord + String.valueOf(ltoRIndex[2]));
 
-        SmartDashboard.putNumber("X0Rad", temp[0]);
-        SmartDashboard.putNumber("X1Rad", temp[1]);
-        SmartDashboard.putNumber("X2Rad", temp[2]);
+        dash.putNumber("X0Rad", temp[0]);
+        dash.putNumber("X1Rad", temp[1]);
+        dash.putNumber("X2Rad", temp[2]);
 
         return temp;
 
@@ -364,7 +366,7 @@ public class RawContoursV2 {
 
     public double[] getTxVpAngles() {
 
-        // SmartDashboard.putNumberArray("LTXAI", showAsDoubleArray(index));
+        // dash.putNumberArray("LTXAI", showAsDoubleArray(index));
 
         double[] temp = { 0, 0, 0 };
         double x = 0;
@@ -438,15 +440,15 @@ public class RawContoursV2 {
         return temp;
     }
 
-    private double xCoordsToVP(double medianTx) {
+    private double xCoordsToVP(double xValue) {
 
-        double xAsNx = 2 * (medianTx - (active_IMG_WIDTH / 2) + .5) / active_IMG_WIDTH;
+        double xAsNx = 2 * (xValue - (active_IMG_WIDTH / 2) + .5) / active_IMG_WIDTH;
 
         return xAsNx;
     }
 
     public void runTarget() {
-        
+
         targetValue = calculateTargetX();
         weightedTargetValue = weightedAverageX();
 
@@ -466,7 +468,7 @@ public class RawContoursV2 {
 
         double ratio = (centerArea - secondArea) / centerArea;
 
-        SmartDashboard.putNumber("target r", ratio);
+        dash.putNumber("target r", ratio);
 
         int secondX = (int) medianTx[0];
 
@@ -508,9 +510,9 @@ public class RawContoursV2 {
     }
 
     public double getTargetAngle(int xValue) {
-        SmartDashboard.putNumber("taxval", xValue);
-        double xAsNx = xCoordsToVP((double) xValue);
-        SmartDashboard.putNumber("taxsvpval", xAsNx);
+        dash.putNumber("taxval", xValue);
+        double xAsNx = xCoordsToVP(xValue);
+        dash.putNumber("taxsvpval", xAsNx);
 
         double temp = 0;
 
@@ -538,7 +540,7 @@ public class RawContoursV2 {
         double[] tempA = new double[6];
 
         for (int i = 0; i < temp.length; i++) {
-            tempA[i] = (double) temp[i];
+            tempA[i] = temp[i];
 
         }
         double[] tempB = Arrays.copyOfRange(tempA, 0, temp.length);
@@ -679,31 +681,31 @@ public class RawContoursV2 {
 
     private void displayData() {
 
-        SmartDashboard.putNumber("Left Area", getLeftArea());
-        SmartDashboard.putNumber("Center Area", getCenterArea());
-        SmartDashboard.putNumber("Right Area", getRightArea());
+        dash.putNumber("Left Area", getLeftArea());
+        dash.putNumber("Center Area", getCenterArea());
+        dash.putNumber("Right Area", getRightArea());
 
-        SmartDashboard.putNumber("Left Tx", getLeftTx());
-        SmartDashboard.putNumber("Center Tx", getCenterTx());
-        SmartDashboard.putNumber("Right Tx", getRightTx());
+        dash.putNumber("Left Tx", getLeftTx());
+        dash.putNumber("Center Tx", getCenterTx());
+        dash.putNumber("Right Tx", getRightTx());
 
-        SmartDashboard.putNumber("Left Ty", getLeftTy());
-        SmartDashboard.putNumber("Center Ty", getCenterTy());
-        SmartDashboard.putNumber("Right Ty", getRightTy());
+        dash.putNumber("Left Ty", getLeftTy());
+        dash.putNumber("Center Ty", getCenterTy());
+        dash.putNumber("Right Ty", getRightTy());
 
-        SmartDashboard.putBoolean("LRAreasSame", getLRAreasEqual(1));
-        SmartDashboard.putBoolean("LRTYsSame", getLRTyValuesEqual(5));
+        dash.putBoolean("LRAreasSame", getLRAreasEqual(1));
+        dash.putBoolean("LRTYsSame", getLRTyValuesEqual(5));
 
-        SmartDashboard.putBoolean("TiltOnTarget", getTiltOnTarget(1));
-        SmartDashboard.putBoolean("TurretOntargt", getTurrettOnTarget(1));
-        SmartDashboard.putBoolean("OkToShoot", OKToShoot());
+        dash.putBoolean("TiltOnTarget", getTiltOnTarget(1));
+        dash.putBoolean("TurretOntargt", getTurrettOnTarget(1));
+        dash.putBoolean("OkToShoot", OKToShoot());
 
     }
 
     private void debugDisplay() {
 
         double[] tempIndex = showAsDoubleArray(lTRIndex);
-        SmartDashboard.putNumberArray("LRAreasIndex", tempIndex);
+        dash.putNumberArray("LRAreasIndex", tempIndex);
 
     }
 
