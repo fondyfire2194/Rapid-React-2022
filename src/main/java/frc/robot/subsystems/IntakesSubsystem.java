@@ -41,6 +41,7 @@ public class IntakesSubsystem extends SubsystemBase {
   public int blueLaunchPadPipeline = 3;
 
   public int activeCargoPipeline = redCargoPipeline;
+  
   public int activeLaunchPadPipeline = redLauchPadPipeline;
 
   private AnalogInput frontIntakeCargoDetect;

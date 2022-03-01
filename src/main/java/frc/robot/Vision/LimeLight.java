@@ -5,7 +5,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimelightControlMode.Advanced_Crosshair;
 import frc.robot.Vision.LimelightControlMode.Advanced_Target;
 import frc.robot.Vision.LimelightControlMode.CamMode;
@@ -448,6 +448,17 @@ public class LimeLight {
         return t;
     }
 
+    public boolean getBoundingBoxHeightInNoZoomRange() {
+        double temp = getBoundingBoxHeight();
+        return getIsTargetFound() && temp > PipelinesConstants.noZoomMinBoundingBoxHeight && getIsTargetFound()
+                && temp <= PipelinesConstants.noZoomMaxBoundingBoxHeight;
+    }
+
+    public boolean getBoundingBoxHeightInX2ZoomRange() {
+        double temp = getBoundingBoxHeight();
+        return getIsTargetFound() && temp > PipelinesConstants.x2ZoomMinBoundingBoxHeight;
+    }
+
     public double getAspectRatio() {
         return getBoundingBoxWidth() / getBoundingBoxHeight();
     }
@@ -486,7 +497,6 @@ public class LimeLight {
             useVision = false;
             useVisionTimer = 0;
         }
-
 
     }
 

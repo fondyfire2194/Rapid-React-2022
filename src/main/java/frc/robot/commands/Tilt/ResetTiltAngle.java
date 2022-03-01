@@ -7,6 +7,7 @@ package frc.robot.commands.Tilt;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.HoodedShooterConstants;
+import frc.robot.Constants.TiltConstants;
 import frc.robot.subsystems.RevTiltSubsystem;
 
 public class ResetTiltAngle extends CommandBase {
@@ -31,7 +32,7 @@ public class ResetTiltAngle extends CommandBase {
     public void execute() {
         loopCtr++;
         m_tilt.resetAngle();
-        m_tilt.targetAngle = HoodedShooterConstants.TILT_MAX_ANGLE;
+        m_tilt.targetAngle = TiltConstants.TILT_MAX_ANGLE;
         if (RobotBase.isReal())
             m_tilt.setSoftwareLimits();
     }

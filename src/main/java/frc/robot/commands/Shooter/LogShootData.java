@@ -87,7 +87,7 @@ public class LogShootData extends CommandBase {
       if (firstLogTime == 0)
         firstLogTime = logTime;
 
-      m_shooter.shootLogger.writeData(logTime, logTime - firstLogTime, m_shooter.shootCargosRunning, m_shooter.getMPS(),
+      m_shooter.shootLogger.writeData(logTime, logTime - firstLogTime, m_shooter.shootCargosRunning, m_shooter.getRPM(),
           m_shooter.getLeftAmps(), m_shooter.atSpeed() ? 1.0 : 0.0, m_shooter.okToShoot ? 1.0 : 0.0,
           m_shooter.isShooting ? 1.0 : 0.0, m_shooter.shotInProgress ? 1.0 : 0.0,
           m_transport.cargoAvailable ? 1.0 : 0.0,

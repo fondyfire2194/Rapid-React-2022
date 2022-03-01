@@ -366,12 +366,12 @@ public class SetUpOI {
                                         .getLayout("ShooterValues", BuiltInLayouts.kList).withPosition(2, 0)
                                         .withSize(2, 3).withProperties(Map.of("Label position", "LEFT")); // labels
 
-                        shooterValues.addNumber("LeftMPS", () -> shooter.getMPS());
+                        shooterValues.addNumber("RPM", () -> shooter.getRPM());
                         shooterValues.addNumber("Left PCT", () -> shooter.getLeftPctOut());
                         shooterValues.addNumber("LeftAmps", () -> shooter.getLeftAmps());
-                        shooterValues.addNumber("RightRPM", () -> shooter.getRightRPM());
+                   
                         shooterValues.addNumber("RightAmps", () -> shooter.getRightAmps());
-                        shooterValues.addNumber("SpeedCommand MPS", () -> shooter.requiredMps);
+                        shooterValues.addNumber("SpeedCommand RPM", () -> shooter.requiredRPM);
                         shooterValues.addNumber("LeftFaults", () -> shooter.getLeftFaults());
                         shooterValues.addNumber("RightFaults", () -> shooter.getRightFaults());
                         shooterValues.addBoolean("CameraHasSpeed", () -> shooter.useCameraSpeed);

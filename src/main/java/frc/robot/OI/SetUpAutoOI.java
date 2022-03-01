@@ -127,16 +127,15 @@ public class SetUpAutoOI {
                 miscComp.add("Reset to 0", new ResetTurretAngle(turret));
                 miscComp.addNumber("TUAngle", () -> turret.getAngle());
                 miscComp.addNumber("TiltAngle", () -> tilt.getAngle());
-                miscComp.addNumber("LeftMPS", () -> shooter.getMPS());
+                miscComp.addNumber("RPM", () -> shooter.getRPM());
                 miscComp.addNumber("LeftAmps", () -> shooter.getLeftAmps());
-                miscComp.addNumber("RightRPM", () -> shooter.getRightRPM());
                 miscComp.addNumber("RightAmps", () -> shooter.getRightAmps());
                 miscComp.addNumber("TargetArea%Scrn", () -> ll.getTargetArea());
                 miscComp.addNumber("BNDBoxWidth", () -> ll.getBoundingBoxWidth());
                 miscComp.addNumber("BndBoxHeight", () -> ll.getBoundingBoxHeight());
                 miscComp.addNumber("AspectRatio", () -> ll.getAspectRatio());
 
-                miscComp.addNumber("RQDMPS", () -> shooter.requiredMps);
+                miscComp.addNumber("RQDRPM", () -> shooter.requiredRPM);
 
                 ShuffleboardLayout misComp1 = Shuffleboard.getTab("CompetitionMisc")
                                 .getLayout("Misc2", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4)
@@ -166,9 +165,10 @@ public class SetUpAutoOI {
 
                 misComp3.addBoolean("RobotStopped", () -> drive.robotStoppedForOneSecond);
                 //misComp3.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
-                misComp3.addBoolean("No CargoAtShoot", () -> transport.noCargoatShooterForOneSecond);
+                misComp3.addBoolean("No CargoAtShoot", () -> transport.noCargoAtShooterForOneSecond);
 
                 misComp3.addBoolean("CargoAvailable", () -> transport.cargoAvailable);
+                
                 misComp3.addBoolean("IsShooting", () -> shooter.isShooting);
 
                 ShuffleboardLayout misComVis = Shuffleboard.getTab("CompetitionMisc")

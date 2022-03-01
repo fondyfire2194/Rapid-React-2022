@@ -2,34 +2,32 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands.AutoCommands.Common;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.RevShooterSubsystem;
+import frc.robot.Vision.LimeLight;
+import frc.robot.Vision.RawContoursV2;
+import frc.robot.subsystems.RevTiltSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ChangeShooterSpeed extends InstantCommand {
-  private final RevShooterSubsystem m_shooter;
-  private double m_rpm;
+public class FindTargetFail extends InstantCommand {
+  String m_message;
 
-  public ChangeShooterSpeed(RevShooterSubsystem shooter, double rpm) {
+  public FindTargetFail(String message) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_shooter = shooter;
-    m_rpm = rpm;
+    m_message = message;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooter.programSpeed += m_rpm;
 
-    if (m_shooter.programSpeed > m_shooter.maxRPM)
-      m_shooter.programSpeed = m_shooter.maxRPM;
-
-    if (m_shooter.programSpeed < m_shooter.minRPM)
-      m_shooter.programSpeed = m_shooter.minRPM;
-
+    SmartDashboard.putString("Message", m_message);
+    super.cancel();
+    
   }
 }

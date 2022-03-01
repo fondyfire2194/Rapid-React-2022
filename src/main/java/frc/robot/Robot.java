@@ -67,12 +67,18 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     allianceColorBlue = getAllianceColor();
+
     if (allianceColorBlue) {
+      
       m_robotContainer.m_intakes.activeCargoPipeline = m_robotContainer.m_intakes.blueCargoPipeline;
       m_robotContainer.m_intakes.activeLaunchPadPipeline = m_robotContainer.m_intakes.blueLaunchPadPipeline;
       m_robotContainer.m_intakes.setActivePipeline(m_robotContainer.m_intakes.activeCargoPipeline);
 
     }
+
+
+
+
     RotateLimelight90.init();
     if (m_robotContainer.isMatch)
       Shuffleboard.selectTab("Pre-Round");
@@ -278,15 +284,9 @@ public class Robot extends TimedRobot {
     if (RobotBase.isReal() && !m_robotContainer.m_tilt.positionResetDone)
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
 
-    // m_robotContainer.m_limelight.useVision = false;
+     m_robotContainer.m_limelight.useVision = false;
 
-    // new CalculateTargetDistance(m_robotContainer.m_limelight,
-    // m_robotContainer.m_tilt, m_robotContainer.m_turret,
-    // m_robotContainer.m_shooter).schedule(true);
-
-    // new CalculateSpeedFromDistance(m_robotContainer.m_limelight,
-    // m_robotContainer.m_tilt, m_robotContainer.m_turret,
-    // m_robotContainer.m_shooter).schedule(true);
+    
 
     new ChooseShooterSpeedSource(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_turret, 0)
         .schedule(true);
@@ -326,6 +326,7 @@ public class Robot extends TimedRobot {
   }
 
   public static boolean getAllianceColor() {
+
     return DriverStation.getAlliance() == Alliance.Blue;
   }
 

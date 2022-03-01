@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.HoodedShooterConstants;
+import frc.robot.Constants.TiltConstants;
 import frc.robot.Pref;
 import frc.robot.SimpleCSVLogger;
 
@@ -59,11 +60,11 @@ public class RevTiltSubsystem extends SubsystemBase {
     public boolean tiltLogInProgress;
     private final double[] pinDistances = { 2.1, 3.0842519685, 4.068503937, 5.0527559055, 6.037007874, 7.0212598425,
             8.005511811 };
-    public final double cameraBaseAngle = HoodedShooterConstants.TILT_MIN_ANGLE;
-    public final double tiltMaxAngle = HoodedShooterConstants.TILT_MAX_ANGLE;
+    public final double cameraBaseAngle = TiltConstants.TILT_MIN_ANGLE;
+    public final double tiltMaxAngle = TiltConstants .TILT_MAX_ANGLE;
 
-    public final double degreesPerRev = HoodedShooterConstants.tiltDegreesPerRev;// degrees per motor turn
-    public final double tiltMinAngle = HoodedShooterConstants.TILT_MIN_ANGLE;
+    public final double degreesPerRev = TiltConstants.tiltDegreesPerRev;// degrees per motor turn
+    public final double tiltMinAngle = TiltConstants.TILT_MIN_ANGLE;
 
     public double pset, iset, dset, ffset, izset, maxAccset, maxVelset;
     public double psetv, isetv, dsetv, ffsetv, izsetv;
@@ -118,6 +119,10 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     /** 
      * 
+     * 
+     * 
+     * 
+     * 
      */
 
     public RevTiltSubsystem() {
@@ -146,6 +151,8 @@ public class RevTiltSubsystem extends SubsystemBase {
         m_motor.setIdleMode(IdleMode.kBrake);
 
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
+        m_reverseLimit.enableLimitSwitch(true);
+
 
         tiltLogger = new SimpleCSVLogger();
 

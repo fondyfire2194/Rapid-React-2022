@@ -60,6 +60,8 @@ public class Pref {
     prefDict.put("tiLTune", 0.);
     prefDict.put("TiltLockAdd", 0.);
 
+
+
     // Turret smart motion
     prefDict.put("tURKp", .00015);
     prefDict.put("tURKi", .0001);
@@ -89,7 +91,7 @@ public class Pref {
 
     // shooter velocity
 
-    prefDict.put("sHff", .018);// =1/maxMPS = 1/(5700/60 * .638) .016
+    prefDict.put("sHff", .018);// =1/maxRPM = 1/(5700/60 *
     prefDict.put("sHkp", .02);
     prefDict.put("sHkI", 1.);
     prefDict.put("sHkd", 100.);
@@ -116,9 +118,7 @@ public class Pref {
 
     // camera
 
-    prefDict.put("LimelightHeight", .66);
-    prefDict.put("LimelightMaxHeight", .686);
-
+    
     prefDict.put("HubTgtGn", 10.);
 
     // Set to 1 before power up to log

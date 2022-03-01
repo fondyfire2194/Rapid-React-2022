@@ -7,18 +7,14 @@ package frc.robot.commands.AutoCommands.Common;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.RawContoursV2;
 
-
 public class GetNumberOfContourValues extends SequentialCommandGroup {
   /** Creates a new VerifyAndGetTarget. */
 
   public GetNumberOfContourValues(RawContoursV2 rcv2) {
 
     addCommands(new GetVisionValues(rcv2), new GetVisionValues(rcv2),
-        new GetVisionValues(rcv2),
-        new GetVisionValues(rcv2), new GetVisionValues(rcv2),
+        new GetVisionValues(rcv2), new GetVisionValues(rcv2), new GetVisionValues(rcv2),
         new GetVisionValues(rcv2));
-
-        
 
   }
 }

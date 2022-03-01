@@ -21,8 +21,6 @@ public class CalculateTargetDistance extends CommandBase {
   private final RevTurretSubsystem m_turret;
   private final RawContoursV2 m_rcv2;
 
-  private double baseCameraHeight = FieldConstants.CAMERA_HEIGHT;
-
   private double m_cameraVerticalError;
   private double cameraAngle;
 

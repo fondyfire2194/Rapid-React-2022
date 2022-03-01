@@ -106,9 +106,7 @@ public class LLVisionShuffleboard {
                         visionData.addNumber("CameraAngle", () -> tilt.getAngle());
                         visionData.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
                         visionData.addNumber("CameraCalculatedMPS", () -> shooter.cameraCalculatedSpeed);
-                        visionData.addNumber("VertOff+Low", () -> ll.verticalOffset);
-                        visionData.addNumber("HorOff+Right", () -> ll.horizontalOffset);
-
+       
                         ShuffleboardLayout visionBools = Shuffleboard.getTab("LLVision")
                                         .getLayout("States", BuiltInLayouts.kList).withPosition(5, 0)
                                         .withSize(1, 4).withProperties(Map.of("Label position", "TOP")); // labels

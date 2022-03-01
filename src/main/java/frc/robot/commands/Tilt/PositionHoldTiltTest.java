@@ -54,6 +54,7 @@ public class PositionHoldTiltTest extends CommandBase {
     }
 
     else {
+      
       m_tilt.lockTiltToThrottle(m_tilt.testLockFromThrottle * 2);
 
       SmartDashboard.putNumber("TTILFRTH", m_tilt.testLockFromThrottle);

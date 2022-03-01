@@ -22,12 +22,26 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.HoodedShooterConstants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.Pref;
 import frc.robot.SimpleCSVLogger;
 
+
+/**
+ * 21:1 gearing 
+ * 
+ * 222 to 18 gear to pinion
+ * 
+ * 21 revs of motor = 1 rev of pinion = 18/222 of 360 degrees = (18 * 360) /222
+ * 
+ * 1 rev of motor = (18 * 360)/(21 * 222) = 1.38996 degrees
+ * 
+ * neo 550 motor max rpm 11,000
+ */
+
 public class RevTurretSubsystem extends SubsystemBase {
 
-    private static final double DEG_PER_MOTOR_REV = HoodedShooterConstants.TURRET_DEG_PER_MOTOR_REV;
+    private static final double DEG_PER_MOTOR_REV = TurretConstants.TURRET_DEG_PER_MOTOR_REV;
     private static final int SMART_MOTION_SLOT = 1;
     public final int POSITION_SLOT = 2;
     public final int VELOCITY_SLOT = 0;
@@ -250,9 +264,9 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     public void setSoftwareLimits() {
         m_motor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward,
-                (float) HoodedShooterConstants.TURRET_MAX_ANGLE);
+                (float) TurretConstants.TURRET_MAX_ANGLE);
         m_motor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse,
-                (float) HoodedShooterConstants.TURRET_MIN_ANGLE);
+                (float) TurretConstants.TURRET_MIN_ANGLE);
         enableSofLimits(true);
         m_motor.setIdleMode(IdleMode.kBrake);
     }

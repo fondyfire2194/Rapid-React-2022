@@ -28,13 +28,13 @@ public class LowerShoot extends SequentialCommandGroup {
 
     double lowerTiltAngle = data[4];
     double lowerTurretAngle = data[5];
-    double lowerMps = data[6];
+    double lowerRPM = data[6];
     
     addCommands(
 
         new ParallelCommandGroup(new PositionTilt(tilt, lowerTiltAngle), new PositionTurret(turret, lowerTurretAngle)),
 
-        new StartAllShooter(shooter, transport, lowerMps),
+        new StartAllShooter(shooter, transport, lowerRPM),
 
         new ShootCargo(shooter, tilt, turret, ll, transport, comp, 6));
 

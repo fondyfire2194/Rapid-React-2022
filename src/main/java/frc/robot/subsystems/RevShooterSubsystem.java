@@ -12,7 +12,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -33,8 +32,8 @@ public class RevShooterSubsystem extends SubsystemBase {
     private final RelativeEncoder mRightEncoder;
     private final SparkMaxPIDController mPidController;
 
-    public double requiredMpsLast;
-    public double requiredMps;
+    public double requiredRPMLast;
+    public double requiredRPM;
     public double shotDistance;
     public double shootTime;
     public double shootTimeRemaining;
@@ -71,53 +70,14 @@ public class RevShooterSubsystem extends SubsystemBase {
     public PowerDistribution pdp = new PowerDistribution(1, ModuleType.kCTRE);
 
     private final int VELOCITY_SLOT = 0;
-    /**
-     * 8" diameter wheels = (8/12)*pi ft circ.
-     * 
-     * so circ = (2 *pi)/3 = 2.1 ft = .638 meters per rev max speed 80 revs per sec
-     * so about 50 meters per sec 3000 per minute = max Angle range is 30 to around
-     * 1
-     */
-    public final double metersPerRev = .638;
-
-    /**
-     * 
-     * https://www.omnicalculator.com/physics/projectile-motion
-     * 
-     * Following are arrays representing shoot mpersec and offset degrees for
-     * distances from 2 to 10 meters in steps of 2 meters.
-     * 
-     * Calibrate both Limelight cursors. Turn off the Use Vision boolean. At 2
-     * meters with shooter directly in front of target calibrate the first slider.
-     * In the trench just in front of the control panel with the turret turned so
-     * the shooter would hit the target, calibrate the second slider.
-     * 
-     * Turn on Use Vision and lock tilt and turret to Limeight. The SetUpShooter tab
-     * has sliders for speed and offset. They are active when the "SpeedFromSlider"
-     * indicator is on. It is toggled using the ToggleSpeedFromSlider button.
-     * 
-     * Slider range is 20 to 50 MPS. Offset slider range is -10 to +10 degrees
-     * 
-     * 
-     * Starting at 2 meters fire cargos and get the best speed and y offset to hit
-     * center of target +/ 1/2 diameter of inner port .33/2 = .16 meters. Move back
-     * to 4, 6, 8 and 10 meters and repeat.
-     * 
-     * Numbers will be entered in arays and interpolated so midway between 2
-     * distance points, the speed will be the lower plus 1/2 the difference of the
-     * range.
-     * 
-     * 
-     */
 
     public double[] tiltAngleFromCamerDistance = new double[] { 25, 30, 35, 40, 45, 25, 30, 35, 40, 45 };
-    public double[] RPMFromCameraDistance = new double[] { 25, 30, 35, 40, 45, 25, 30, 35, 40, 45 };
 
-    public String[] shootColor = { "red", "yellow", "green" };
-    public int shootColorNumber;
+    public double[] rpmFromCameraDistance = new double[] { 25, 30, 35, 40, 45, 25, 30, 35, 40, 45 };
+
     public double startDistance;
+
     public double calculatedCameraDistance;
-    public double innerPortFloorDistance;
 
     public boolean tuneOn = false;
     public boolean lastTuneOn;
@@ -141,18 +101,18 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public boolean logSetupFileOpen;
     public boolean okToShoot;
-    
+
     public double adjustedCameraMPS;
     public double driverThrottleValue;
     public boolean useProgramSpeed;
     public double programSpeed;
     public String[] speedSource = { "Program", "Camera", "Driver", "Setup" };
     public String activeSpeedSource = "Program";
-    public double shooterFPSAdder;
-    public double shooterFPSChange;
+    public double shooterRPMAdder;
+    public double shooterRPMChange;
     public double cameraCalculatedTiltOffset;
-    public double maxMPS = 40;
-    public double minMPS = 23;
+    public double maxRPM = 4500;
+    public double minRPM = 1000;
     public double shootCargosRunning;
     public boolean hubLogInProgress;
     public boolean log;
@@ -180,18 +140,20 @@ public class RevShooterSubsystem extends SubsystemBase {
         Arrays.asList(mLeftMotor, mRightMotor)
                 .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
 
-      
         tuneGains();
+
         getGains();
-        requiredMps = 23;
+
+        requiredRPM = 2500;
+
         shootOne = false;
 
-        programSpeed = minMPS;
+        programSpeed = minRPM;
 
         if (RobotBase.isReal()) {
 
-            mEncoder.setPositionConversionFactor(metersPerRev);
-            mEncoder.setVelocityConversionFactor(metersPerRev / 60);
+            mEncoder.setPositionConversionFactor(1);
+            mEncoder.setVelocityConversionFactor(1 / 60);
         }
 
         if (RobotBase.isSimulation()) {
@@ -207,15 +169,15 @@ public class RevShooterSubsystem extends SubsystemBase {
         checkTune();
 
         if (useCameraSpeed)
-            requiredMps = cameraCalculatedSpeed;
+            requiredRPM = cameraCalculatedSpeed;
         if (useDriverSpeed)
-            requiredMps = getDriverMPS();
+            requiredRPM = getDriverRPM();
         if (Pref.getPref("IsMatch") == 0) {
             if (useSetupSlider)
-                requiredMps = shooterSpeed.getDouble(20);
+                requiredRPM = shooterSpeed.getDouble(20);
         }
         if (useProgramSpeed) {
-            requiredMps = programSpeed;
+            requiredRPM = programSpeed;
         }
 
         if (cameraCalculatedSpeed < 12 || cameraCalculatedSpeed > 40) {
@@ -234,14 +196,13 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     }
 
-    
     public void close() {
         mLeftMotor.close();
         mRightMotor.close();
     }
 
     public void spinAtRpm(double rpm) {
-        requiredMps = rpm;
+        requiredRPM = rpm;
         mPidController.setReference(rpm, ControlType.kVelocity, VELOCITY_SLOT);
 
     }
@@ -251,13 +212,13 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     }
 
-    public double getDriverMPS() {
+    public double getDriverRPM() {
         return 20 + driverThrottleValue * 20;
     }
 
     public void runShooter() {
-        requiredMps += shooterFPSAdder;
-        spinAtMetersPerSec(-requiredMps);
+        requiredRPM += shooterRPMAdder;
+        spinAtMetersPerSec(-requiredRPM);
     }
 
     public void moveManually(double speed) {
@@ -279,17 +240,9 @@ public class RevShooterSubsystem extends SubsystemBase {
         return mEncoder.getVelocity();
     }
 
-    public double getRightRPM() {
-        return mRightEncoder.getVelocityConversionFactor();
-    }
-
-    public double getMPS() {
-        return mEncoder.getVelocity();
-    }
-
     public boolean atSpeed() {
 
-        return Math.abs(requiredMps + getMPS()) < (requiredMps * .05);// getmps is -
+        return Math.abs(requiredRPM + getRPM()) < (requiredRPM * .05);// getmps is -
 
     }
 
@@ -410,10 +363,6 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double getTemperature() {
         return pdp.getTemperature();
     }
-
-   
-
-    
 
     // public double calculateMPSFromDistance(double distance) {
 

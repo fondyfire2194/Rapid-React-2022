@@ -7,6 +7,7 @@ package frc.robot.commands.Tilt;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.HoodedShooterConstants;
+import frc.robot.Constants.TiltConstants;
 import frc.robot.subsystems.RevTiltSubsystem;
 
 public class PositionTilt extends CommandBase {
@@ -32,10 +33,10 @@ public class PositionTilt extends CommandBase {
   @Override
   public void initialize() {
     m_tilt.programRunning = 2;
-    if (m_endpoint < HoodedShooterConstants.TILT_MIN_ANGLE)
-      m_endpoint = HoodedShooterConstants.TILT_MIN_ANGLE;
-    if (m_endpoint > HoodedShooterConstants.TILT_MAX_ANGLE)
-      m_endpoint = HoodedShooterConstants.TILT_MAX_ANGLE;
+    if (m_endpoint < TiltConstants.TILT_MIN_ANGLE)
+      m_endpoint = TiltConstants.TILT_MIN_ANGLE;
+    if (m_endpoint > TiltConstants.TILT_MAX_ANGLE)
+      m_endpoint = TiltConstants.TILT_MAX_ANGLE;
     m_tilt.targetAngle = m_endpoint;
     motorDegrees = (m_tilt.tiltMaxAngle - m_endpoint);
     m_tilt.motorEndpointDegrees = motorDegrees;

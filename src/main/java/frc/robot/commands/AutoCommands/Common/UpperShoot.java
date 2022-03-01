@@ -28,10 +28,10 @@ public class UpperShoot extends SequentialCommandGroup {
   
     // Use addRequirements() here to declare subsystem dependencies.
  
-    double mps = data[3];
+    double rpm = data[3];
 
-    addCommands(new StartAllShooter(shooter, transport, mps),
-        new ShootCargo(shooter, tilt, turret, ll, transport, comp,mps));
+    addCommands(new StartAllShooter(shooter, transport, rpm),
+        new ShootCargo(shooter, tilt, turret, ll, transport, comp,rpm));
 
   }
 

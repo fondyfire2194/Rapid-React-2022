@@ -169,8 +169,8 @@ public final class Constants {
    public static class HoodedShooterConstants {
 
       public static final double MAX_SHOOTER_RPM = 5700;
-      public static final double MAX_SHOOTER_MPS = 80;//
-
+      
+   }
       /**
        * Tilt axis is a leadscrew driven through a 14T to 28T or 2:1 belt and a 10:1
        * gearbox = 20:1
@@ -194,29 +194,38 @@ public final class Constants {
        * 
        * 
        */
+   
+
+   public static class TiltConstants{
 
       public static final double TILT_MIN_ANGLE = 1;
+
       public static final double TILT_MAX_ANGLE = 31.5;
 
       public static final double TILT_CLOSE_ANGLE = 22;
+
       public static final double TILT_MIDFIELD_ANGLE = 12;
 
-      public static double TILT_HEIGHT = Units.inchesToMeters(26);
+      public  double TILT_HEIGHT = Units.inchesToMeters(26);
 
-      public static double maxAngleChange = TILT_MAX_ANGLE - TILT_MIN_ANGLE;
+      public static double  maxAngleChange = TILT_MAX_ANGLE - TILT_MIN_ANGLE;
 
       public static double maxLeadscrewTurns = 6.0;
 
       public static double maxMotorTurns = 120;
 
       public static double tiltRange = TILT_MAX_ANGLE - TILT_MIN_ANGLE;
-      public static final double TILT_MID_ANGLE = TILT_MIN_ANGLE + ((TILT_MAX_ANGLE - TILT_MIN_ANGLE) / 2);
-      public static double tiltDegreesPerRev = maxAngleChange / maxMotorTurns;// 30/120 = .25 degrees per rev
 
+      public static final double TILT_MID_ANGLE = TILT_MIN_ANGLE + ((TILT_MAX_ANGLE - TILT_MIN_ANGLE) / 2);
+ 
+      public static double tiltDegreesPerRev = maxAngleChange / maxMotorTurns;// 30/120 = .25 degrees per rev
+   }
+
+   public static class TurretConstants{
       /**
-       * 20 revs of turret motor turns an 18 tooth pinion one time There are 228 teeth
-       * in 360 degrees, so 1 tooth = 360/228 = 1.579 degrees So 18 teeth = 18 * 1.579
-       * = 28.42 degrees and one motor rev is 1.421 degrees
+       * 21 revs of turret motor turns an 18 tooth pinion one time There are 222 teeth
+       * in 360 degrees, so 1 tooth = 360/222 = 1.6216 degrees So 18 teeth = 18 * 1.6216
+       * = 28.189 degrees and one motor rev is 1.38996 degrees
        * 
        * At 6000 motor rpm = 100 rps the turret rotates at 1.421 * 100 = 142 deg per
        * With end to end travel of 200 degrees = 200/142 = 1.4 second
@@ -229,8 +238,8 @@ public final class Constants {
 
       public static final double TURRET_MIN_ANGLE = -45;
 
-      public static final double TURRET_DEG_PER_MOTOR_REV = 1.421;
-
+      public static final double TURRET_DEG_PER_MOTOR_REV = 1.38996;
+   
    }
 
    public static final class IntakeConstants {
@@ -288,6 +297,13 @@ public final class Constants {
       public static final int x3ZoomPipeline = 2;
       public static final int driverPipeline = 4;
       public static final int ledsOffPipeline = 8;
+
+
+      public static final double noZoomMinBoundingBoxHeight = 3;
+      
+      public static final double noZoomMaxBoundingBoxHeight = 10;
+     
+      public static final double x2ZoomMinBoundingBoxHeight = 8;
 
    }
 

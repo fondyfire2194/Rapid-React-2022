@@ -52,11 +52,9 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean noCargoatLeftForOneSecond;
 
-  public boolean noCargoatShooterForOneSecond;
+  public boolean noCargoAtShooterForOneSecond;
 
-  private double noCargoatShooterTime;
-
-  private double noCargoatLeftTime;
+  private double noCargoAtShooterTime;
 
   public boolean cargoAvailable = true;
 
@@ -89,25 +87,21 @@ public class CargoTransportSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
 
     if (getCargoAtShoot()) {
-      noCargoatShooterForOneSecond = false;
-      noCargoatShooterTime = 0;
+
+      noCargoAtShooterForOneSecond = false;
+
+      noCargoAtShooterTime = 0;
     }
 
-    if (!getCargoAtShoot() && noCargoatShooterTime == 0) {
-      noCargoatShooterTime = Timer.getFPGATimestamp();
+    if (!getCargoAtShoot() && noCargoAtShooterTime == 0) {
+      noCargoAtShooterTime = Timer.getFPGATimestamp();
     }
 
-    if (!getCargoAtShoot() && noCargoatShooterTime != 0
+    if (!getCargoAtShoot() && noCargoAtShooterTime != 0
 
-        && Timer.getFPGATimestamp() > noCargoatShooterTime + CargoTravelTime) {
+        && Timer.getFPGATimestamp() > noCargoAtShooterTime + CargoTravelTime) {
 
-      noCargoatShooterForOneSecond = true;
-    }
-
-    noCargoatLeftTime = Timer.getFPGATimestamp();
-
-    if (getCargoAtShoot() == false && noCargoatShooterForOneSecond) {
-      noCargoatLeftForOneSecond = true;
+      noCargoAtShooterForOneSecond = true;
     }
   }
 

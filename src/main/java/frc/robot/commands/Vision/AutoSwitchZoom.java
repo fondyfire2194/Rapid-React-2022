@@ -8,6 +8,7 @@
 package frc.robot.commands.Vision;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 
 public class AutoSwitchZoom extends CommandBase {
@@ -54,7 +55,8 @@ public class AutoSwitchZoom extends CommandBase {
 
     if (m_limelight.getIsTargetFound()) {
 
-      if (m_limelight.getPipeline() == 1 && m_limelight.getBoundingBoxHeight() < minUseableTargetHeight
+      if (m_limelight.getPipeline() == PipelinesConstants.noZoomPipeline
+          && m_limelight.getBoundingBoxHeight() < minUseableTargetHeight
           && !changeLocked) {
 
         changeToZoom2Counter++;
@@ -77,7 +79,10 @@ public class AutoSwitchZoom extends CommandBase {
       }
 
       // check if too close for 2 x zoom
-      if (m_limelight.getPipeline() == 2 && (m_limelight.getBoundingBoxHeight() > maxUseableTargetHeight)
+      if (m_limelight.getPipeline() == PipelinesConstants.x2ZoomPipeline
+      
+          && (m_limelight.getBoundingBoxHeight() > maxUseableTargetHeight)
+
           && !changeLocked) {
 
         changeToZoom1Counter++;

@@ -72,15 +72,15 @@ public class FieldMap {
                         - rearIntakeAdder + robotLength;
         public static final double leftTarmacTiltUpperAngle = 25;
         public static final double leftTarmacTurretUpperAngle = 10;
-        public static double leftTarmacUpperMPS = 21;
+        public static double leftTarmacUpperRPM = 21;
         public static final double leftTarmacTiltLowerAngle = 25;
         public static final double leftTarmacTurretLowerAngle = 10;
-        public static double leftTarmacLowerMPS = 21;
+        public static double leftTarmacLowerRPM = 21;
 
         public static final double[] leftTarmacData = {
                         leftTarmacTiltUpperAngle, leftTarmacTurretUpperAngle,
-                        leftTarmacDriveToPosition, leftTarmacUpperMPS, leftTarmacTiltLowerAngle,
-                        leftTarmacTurretLowerAngle, leftTarmacLowerMPS
+                        leftTarmacDriveToPosition, leftTarmacUpperRPM, leftTarmacTiltLowerAngle,
+                        leftTarmacTurretLowerAngle, leftTarmacLowerRPM
         };
 
         public static final double rightTarmacDriveToPosition = (cargoFieldRingDiameter / 2)
@@ -88,15 +88,15 @@ public class FieldMap {
                         - rearIntakeAdder + robotLength;
         public static final double rightTarmacTiltUpperAngle = 25;
         public static final double rightTarmacTurretUpperAngle = 10;
-        public static double rightTarmacUpperMPS = 21;
+        public static double rightTarmacUpperRPM = 21;
         public static final double rightTarmacTiltLowerAngle = 25;
         public static final double rightTarmacTurretLowerAngle = 10;
-        public static double rightTarmacLowerMPS = 21;
+        public static double rightTarmacLowerRPM = 21;
 
         public static final double[] rightTarmacData = {
                         rightTarmacTiltUpperAngle, rightTarmacTurretUpperAngle,
-                        rightTarmacDriveToPosition, rightTarmacUpperMPS, rightTarmacTiltLowerAngle,
-                        rightTarmacTurretLowerAngle, rightTarmacLowerMPS
+                        rightTarmacDriveToPosition, rightTarmacUpperRPM, rightTarmacTiltLowerAngle,
+                        rightTarmacTurretLowerAngle, rightTarmacLowerRPM
         };
 
         public static final double rightCenTarmacDriveToPosition = (cargoFieldRingDiameter / 2)
@@ -104,16 +104,16 @@ public class FieldMap {
                         - rearIntakeAdder + robotLength;
         public static final double rightCenTarmacTiltUpperAngle = 25;
         public static final double rightCenTarmacTurretUpperAngle = 10;
-        public static double rightCenTarmacUpperMPS = 21;
+        public static double rightCenTarmacUpperRPM = 21;
         public static final double rightCenTarmacTiltLowerAngle = 25;
         public static final double rightCenTarmacTurretLowerAngle = 10;
-        public static double rightCenTarmacLowerMPS = 21;
+        public static double rightCenTarmacLowerRPM = 21;
         
 
         public static final double[] rightCenTarmacData = {
                         rightCenTarmacTiltUpperAngle, rightCenTarmacTurretUpperAngle,
-                        rightCenTarmacDriveToPosition, rightCenTarmacUpperMPS, rightTarmacTiltLowerAngle,
-                        rightCenTarmacTurretLowerAngle, rightCenTarmacLowerMPS
+                        rightCenTarmacDriveToPosition, rightCenTarmacUpperRPM, rightTarmacTiltLowerAngle,
+                        rightCenTarmacTurretLowerAngle, rightCenTarmacLowerRPM
         };
 
 }
