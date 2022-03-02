@@ -33,13 +33,14 @@ import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.VisionReferenceTarget;
 import frc.robot.commands.CargoTransport.ReleaseCargo;
-import frc.robot.commands.CargoTransport.RunRollers;
+import frc.robot.commands.CargoTransport.RunTopRoller;
 import frc.robot.commands.CargoTransport.StopRollers;
 import frc.robot.commands.Climber.ClimberArm;
 import frc.robot.commands.Climber.RunClimber;
 import frc.robot.commands.Intakes.RunActiveIntakeMotor;
 import frc.robot.commands.Intakes.StartActiveIntake;
 import frc.robot.commands.Intakes.StopIntakeMotors;
+import frc.robot.commands.Intakes.ToggleActiveIntake;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.ArcadeDriveVelocity;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
@@ -173,7 +174,7 @@ public class RobotContainer {
       public RobotContainer() {
 
             // Preferences.removeAll();
-            // Pref.deleteUnused();
+            //  Pref.deleteUnused();
             // Pref.addMissing();
             m_drive = new RevDrivetrain();
             m_transport = new CargoTransportSubsystem();
@@ -271,7 +272,7 @@ public class RobotContainer {
                                     m_limelight, m_transport, m_compressor, 100));
 
             new JoystickButton(m_driverController, 5).whenPressed(new RunShooter(m_shooter))
-                        .whenPressed(new RunRollers(m_transport));
+                        .whenPressed(new RunTopRoller(m_transport));
 
             new JoystickButton(m_driverController, 3).whenPressed(new StopShoot(m_shooter, m_transport))
                         .whenPressed(new StopRollers(m_transport))
@@ -292,7 +293,7 @@ public class RobotContainer {
                         .whenReleased(new SetVisionMode(m_limelight))
                         .whenReleased(new SetUpLimelightForNoVision(m_limelight));
 
-            // new JoystickButton(m_driverController, 8)
+             new JoystickButton(m_driverController, 8).whenPressed(new ToggleActiveIntake(m_intakes));
 
             // new JoystickButton(m_driverController, 9)
 
@@ -367,10 +368,10 @@ public class RobotContainer {
             // PositionTiltToVision(m_tilt, m_limelight, 24)),
             // new PositionTurretToVision(m_turret, m_limelight, -32)));
 
-            setupUpButton.whileHeld(() -> m_transport.runTopRollerMotor(.5))
-                        .whileHeld(() -> m_transport.runLowerRollerMotor(.5))
-                        .whenReleased(() -> m_transport.stopTopRollerMotor())
-                        .whenReleased(() -> m_transport.stopLowerRollerMotor());
+            // setupUpButton.whileHeld(() -> m_transport.runTopRollerMotor(.5))
+            //             .whileHeld(() -> m_transport.runLowerRollerMotor(.5))
+            //             .whenReleased(() -> m_transport.stopTopRollerMotor())
+            //             .whenReleased(() -> m_transport.stopLowerRollerMotor());
 
             setupLeftButton.whenPressed(new ReleaseCargo(m_transport));
 

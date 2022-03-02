@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.SolenoidConstants;
-import frc.robot.Vision.LimeLight;
 
 public class IntakesSubsystem extends SubsystemBase {
   /** Creates a new Intakes. */
@@ -50,9 +49,7 @@ public class IntakesSubsystem extends SubsystemBase {
 
   private double cargoDetectedVolts = 2.75;
 
-  public LimeLight frontll = new LimeLight("limelightfront");
 
-  public LimeLight rearll = new LimeLight("limelightrear");
 
   public IntakesSubsystem() {
 
@@ -62,15 +59,14 @@ public class IntakesSubsystem extends SubsystemBase {
     m_frontIntakeMotor.setNeutralMode(NeutralMode.Brake);
 
     raiseRearArm();
+
     raiseFrontArm();
 
     frontIntakeCargoDetect = new AnalogInput(1);
 
     rearIntakeCargoDetect = new AnalogInput(2);
 
-    frontll.setPipeline(8);// no leds
-
-    rearll.setPipeline(8);
+    
   }
 
   public void toggleActiveIntake() {
@@ -240,58 +236,10 @@ public class IntakesSubsystem extends SubsystemBase {
       return getRearMotor();
   }
 
-  public void setActivePipeline(int pipelineNumber) {
-    frontll.setPipeline(pipelineNumber);
-    rearll.setPipeline(pipelineNumber);
-  }
+ 
 
-  public double getActiveTargetYaw() {
-
-    double temp = 0;
-
-    if (useFrontIntake) {
-
-      if (frontll.getIsTargetFound()) {
-
-        temp = frontll.getdegVerticalToTarget();
-
-      }
-    }
-
-    else {
-
-      if (rearll.getIsTargetFound()) {
-
-        temp = rearll.getdegVerticalToTarget();
-
-      }
-    }
-    return temp;
-  }
-
-  public double getActiveTargetDist() {
-
-    double temp = 0;
-
-    if (useFrontIntake) {
-
-      if (frontll.getIsTargetFound()) {
-
-        temp = frontll.getdegRotationToTarget();
-
-      }
-    }
-
-    else {
-
-      if (rearll.getIsTargetFound()) {
-
-        temp = rearll.getdegRotationToTarget();
-
-      }
-    }
-    return temp;
-  }
+  
+  
 
   
 }

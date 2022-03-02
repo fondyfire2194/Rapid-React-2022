@@ -87,9 +87,9 @@ public class ShootCargo extends CommandBase {
     inAuto = DriverStation.isAutonomous();
 
     okToShoot = (m_limelight.getVertOnTarget(m_tilt.tiltVisionTolerance)
-        && m_limelight.getHorOnTarget(m_turret.turretVisionTolerance)) || m_shooter.useDriverSpeed;
+        && m_limelight.getHorOnTarget(m_turret.turretVisionTolerance)) ;
 
-    if (m_shooter.atSpeed() && m_transport.rollersAtSpeed && okToShoot && robotStoppedFor1Sec || m_shooter.isShooting) {
+    if (m_shooter.atSpeed() && m_transport.topRollersAtSpeed && okToShoot && robotStoppedFor1Sec || m_shooter.isShooting) {
 
       m_shooter.isShooting = true;
 

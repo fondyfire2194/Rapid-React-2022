@@ -6,7 +6,7 @@ package frc.robot.commands.AutoCommands.Common;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.CargoTransport.RunRollers;
+import frc.robot.commands.CargoTransport.RunTopRoller;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
@@ -21,7 +21,7 @@ public class StartAllShooter extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
 
-        new ParallelCommandGroup(new RunShooter(shooter), new RunRollers(transport))
+        new ParallelCommandGroup(new RunShooter(shooter), new RunTopRoller(transport))
 
     );
   }

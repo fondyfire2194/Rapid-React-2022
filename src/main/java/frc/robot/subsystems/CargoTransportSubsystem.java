@@ -43,10 +43,11 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean startRollers;
   public double cargoPassTime = .25;
-  public boolean rollersAtSpeed;
+  public boolean topRollersAtSpeed;
+  public boolean lowerRollerAtSpeed;
   public double rollerSpeed;
-  public boolean haltRollers;
-  public boolean haltBelts;
+  public boolean haltTopRollers;
+  public boolean haltLowerRoller;
   public int cargosShot;
   public boolean leftArmDown;
 
@@ -74,6 +75,9 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     m_topRollerMotor.configFactoryDefault();
     m_lowerRollerMotor.configFactoryDefault();
+
+    m_topRollerMotor.setInverted(true);
+    m_lowerRollerMotor.setInverted(true);    
 
     m_topRollerMotor.setNeutralMode(NeutralMode.Brake);
     m_lowerRollerMotor.setNeutralMode(NeutralMode.Brake);

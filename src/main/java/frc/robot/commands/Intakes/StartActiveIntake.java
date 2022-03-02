@@ -31,11 +31,13 @@ public class StartActiveIntake extends CommandBase {
     if (m_intake.useFrontIntake) {
 
       m_intake.runFrontIntakeMotor(m_speed);
+
       m_intake.lowerFrontArm();
 
     } else {
 
       m_intake.runRearIntakeMotor(m_speed);
+      
       m_intake.lowerRearArm();
     }
 

@@ -105,7 +105,7 @@ public class SetUpAutoOI {
                                         () -> ll.getHorOnTarget(turret.turretVisionTolerance));
                         competition.addBoolean("ShooterAtSpeed", () -> shooter.atSpeed());
                         competition.addBoolean("Use Vision", () -> ll.useVision);
-                        competition.addBoolean("RollersAtSpeed", () -> transport.rollersAtSpeed);
+                        competition.addBoolean("TopRollersAtSpeed", () -> transport.topRollersAtSpeed);
 
                         if (RobotBase.isReal()) {
 

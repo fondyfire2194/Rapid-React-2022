@@ -43,16 +43,11 @@ public class ReverseToLaunchpad extends CommandBase {
   @Override
   public void execute() {
 
-    if ( m_intake.rearll.getIsTargetFound() && forward.getAsDouble() < 0) {
-
-      m_drive.arcadeDrive(forward.getAsDouble(), (m_intake.rearll.getdegRotationToTarget()) * Pref.getPref("dRPuKp"));
-
-    }
-
-    else {
+    
+    
       m_drive.arcadeDrive(forward.getAsDouble(), rotate.getAsDouble());
 
-    }
+    
   }
 
   // Called once the command ends or is interrupted.

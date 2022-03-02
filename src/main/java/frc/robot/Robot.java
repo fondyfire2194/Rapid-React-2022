@@ -23,7 +23,6 @@ import frc.robot.Vision.RotateLimelight90;
 import frc.robot.commands.AutoCommands.AllRetPuShoot;
 import frc.robot.commands.AutoCommands.PUS3;
 import frc.robot.commands.AutoCommands.Taxi;
-import frc.robot.commands.Shooter.ChooseShooterSpeedSource;
 import frc.robot.commands.Shooter.SetLogItemsState;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Vision.SetUpLimelightForDriver;
@@ -67,16 +66,6 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     allianceColorBlue = getAllianceColor();
-
-    if (allianceColorBlue) {
-      
-      m_robotContainer.m_intakes.activeCargoPipeline = m_robotContainer.m_intakes.blueCargoPipeline;
-      m_robotContainer.m_intakes.activeLaunchPadPipeline = m_robotContainer.m_intakes.blueLaunchPadPipeline;
-      m_robotContainer.m_intakes.setActivePipeline(m_robotContainer.m_intakes.activeCargoPipeline);
-
-    }
-
-
 
 
     RotateLimelight90.init();
@@ -168,8 +157,7 @@ public class Robot extends TimedRobot {
     if (RobotBase.isReal())
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
 
-    new ChooseShooterSpeedSource(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_turret, 0)
-        .schedule(true);
+     
 
     Shuffleboard.selectTab("Competition");
 
@@ -287,9 +275,6 @@ public class Robot extends TimedRobot {
      m_robotContainer.m_limelight.useVision = false;
 
     
-
-    new ChooseShooterSpeedSource(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_turret, 0)
-        .schedule(true);
 
   }
 

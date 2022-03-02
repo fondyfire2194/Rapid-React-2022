@@ -16,17 +16,16 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.CargoTransport.HoldCargo;
 import frc.robot.commands.CargoTransport.ReleaseCargo;
-import frc.robot.commands.CargoTransport.RunRollers;
-import frc.robot.commands.CargoTransport.StopRollers;
+import frc.robot.commands.CargoTransport.RunBottomRoller;
+import frc.robot.commands.CargoTransport.RunTopRoller;
+import frc.robot.commands.CargoTransport.StopLowerRoller;
+import frc.robot.commands.CargoTransport.StopTopRoller;
 import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
 import frc.robot.commands.Intakes.RunActiveIntakeMotor;
-import frc.robot.commands.Intakes.SetActiveCameraPipeline;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
-import frc.robot.commands.Intakes.SetRearCameraPipeline;
 import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StopIntakeMotors;
-import frc.robot.commands.Intakes.ToggleActiveCameraDriverMode;
 import frc.robot.commands.RobotDrive.ClearRobFaults;
 import frc.robot.commands.RobotDrive.EndDriveLog;
 import frc.robot.commands.RobotDrive.PickupMove;
@@ -34,7 +33,7 @@ import frc.robot.commands.RobotDrive.PickupMoveVelocity;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.StopRobot;
-import frc.robot.commands.Shooter.ChooseShooterSpeedSource;
+
 import frc.robot.commands.Shooter.ClearShFaults;
 import frc.robot.commands.Shooter.EndShootLog;
 import frc.robot.commands.Shooter.RunShooter;
@@ -117,12 +116,7 @@ public class SetUpOI {
                                         .getLayout("IntakeCam", BuiltInLayouts.kList).withPosition(4, 0)
                                         .withSize(1, 4).withProperties(Map.of("Label position", "TOP"));
 
-                        intakeCam.add("ToggleDriverView", new ToggleActiveCameraDriverMode(intake));
-                        intakeCam.add("SetActivePipeline",
-                                        new SetActiveCameraPipeline(intake, intake.activeCargoPipeline));
-                        intakeCam.add("SetRearLaunchPipeline",
-                                        new SetRearCameraPipeline(intake, intake.activeLaunchPadPipeline));
-
+                        
                         ShuffleboardLayout intakeVision = Shuffleboard.getTab("Intake")
                                         .getLayout("IntakeCamera", BuiltInLayouts.kList).withPosition(2, 2)
                                         .withSize(2, 2).withProperties(Map.of("Label position", "TOP"));
@@ -360,8 +354,7 @@ public class SetUpOI {
                         shooterCommands.add("EndLog", new EndShootLog(shooter));
 
                         shooterCommands.add("RunAllShooters", new RunShooter(shooter));
-                        shooterCommands.add("UseSpeedSlider", new ChooseShooterSpeedSource(shooter, tilt, turret, 3));
-
+                        
                         ShuffleboardLayout shooterValues = Shuffleboard.getTab("SetupShooter")
                                         .getLayout("ShooterValues", BuiltInLayouts.kList).withPosition(2, 0)
                                         .withSize(2, 3).withProperties(Map.of("Label position", "LEFT")); // labels
@@ -394,7 +387,7 @@ public class SetUpOI {
                         shooterValues1.addBoolean("BothConnected(6,7)", () -> shooter.allConnected);
                         shooterValues1.addBoolean("DriverOKShoot", () -> shooter.driverOKShoot);
                         shooterValues1.addBoolean("ShootOne", () -> shooter.shootOne);
-                        shooterValues1.addBoolean("UsingSliders", () -> shooter.useSetupSlider);
+                        shooterValues1.addBoolean("Use Entry", () -> shooter.useSetupEntry);
 
                         ShuffleboardLayout shooterValues2 = Shuffleboard.getTab("SetupShooter")
 
@@ -407,10 +400,7 @@ public class SetUpOI {
                         shooterValues2.addNumber("D", () -> shooter.dset);
                         shooterValues2.addNumber("IZ", () -> shooter.izset);
 
-                        shooter.shooterSpeed = Shuffleboard.getTab("SetupShooter").add("ShooterSpeed", 3)
-                                        .withWidget("NumberSlider")
-                                        .withPosition(0, 3).withSize(4, 1).withProperties(Map.of("Min", 15, "Max", 50))
-                                        .getEntry();
+                  
 
                 }
 
@@ -420,8 +410,10 @@ public class SetUpOI {
                                         .getLayout("TransportValues", BuiltInLayouts.kList).withPosition(0, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels
 
-                        transportValues.add("StartRollers", new RunRollers(transport));
-                        transportValues.add("StopRollers", new StopRollers(transport));
+                        transportValues.add("StartTopRoller", new RunTopRoller(transport));
+                        transportValues.add("StartBottomRoller", new RunBottomRoller(transport));
+                        transportValues.add("StopTopRoller", new StopTopRoller(transport));
+                        transportValues.add("StopLowerRoller", new StopLowerRoller(transport));                       
 
                         transportValues.addNumber("FrontRollerAmps", () -> transport.getTopRollerMotorAmps());
                         transportValues.addNumber("RearRollerAmps", () -> transport.getLowerRollerMotorAmps());
@@ -442,7 +434,8 @@ public class SetUpOI {
                                         .getLayout("TransportStates", BuiltInLayouts.kGrid).withPosition(4, 0)
                                         .withSize(2, 2).withProperties(Map.of("Label position", "TOP")); // label
 
-                        transportValues1.addBoolean("RollersAtSpeed", () -> transport.rollersAtSpeed);
+                        transportValues1.addBoolean("TopRollersAtSpeed", () -> transport.topRollersAtSpeed);
+                        transportValues1.addBoolean("LowerRollerAtSpeed", () -> transport.lowerRollerAtSpeed);
 
                         transportValues1.addBoolean("TopRollerConnected (12)",
                                         () -> transport.topRollerMotorConnected);

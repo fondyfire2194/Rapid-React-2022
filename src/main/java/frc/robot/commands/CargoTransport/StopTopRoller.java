@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CargoTransportSubsystem;
 
-public class StopRollers extends CommandBase {
+public class StopTopRoller extends CommandBase {
   /** Creates a new RunRollers. */
   private final CargoTransportSubsystem m_transport;
   private double rollerStopTime;
-  
+  private final double speed = .75;
 
-  public StopRollers(CargoTransportSubsystem transport) {
+  public StopTopRoller(CargoTransportSubsystem transport) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_transport = transport;
   }
@@ -29,10 +29,8 @@ public class StopRollers extends CommandBase {
   @Override
   public void execute() {
 
-    m_transport.stopRollers();
+    m_transport.stopTopRollerMotor();
     m_transport.haltTopRollers=true;
-    m_transport.haltLowerRoller = true;
- 
   }
 
   // Called once the command ends or is interrupted.

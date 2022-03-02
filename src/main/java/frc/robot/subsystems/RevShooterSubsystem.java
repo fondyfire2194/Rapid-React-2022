@@ -45,9 +45,9 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double cameraCalculatedSpeed;
     public double pset, iset, dset, ffset, izset;
     public boolean useCameraSpeed;
-    public boolean useSetupSlider;
-    public boolean useDriverSpeed;
-    public NetworkTableEntry shooterSpeed;
+    public boolean useSetupEntry=true;
+
+
     public FFCSVLogger logger = new FFCSVLogger();
     public FFCSVLogger hubLogger = new FFCSVLogger();
 
@@ -112,7 +112,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double shooterRPMChange;
     public double cameraCalculatedTiltOffset;
     public double maxRPM = 4500;
-    public double minRPM = 1000;
+    public double minRPM = 100;
     public double shootCargosRunning;
     public boolean hubLogInProgress;
     public boolean log;
@@ -168,17 +168,11 @@ public class RevShooterSubsystem extends SubsystemBase {
 
         checkTune();
 
-        if (useCameraSpeed)
-            requiredRPM = cameraCalculatedSpeed;
-        if (useDriverSpeed)
-            requiredRPM = getDriverRPM();
-        if (Pref.getPref("IsMatch") == 0) {
-            if (useSetupSlider)
-                requiredRPM = shooterSpeed.getDouble(20);
-        }
-        if (useProgramSpeed) {
-            requiredRPM = programSpeed;
-        }
+     
+            if (useSetupEntry)
+                requiredRPM = Pref.getPref("shRPM");
+        
+        
 
         if (cameraCalculatedSpeed < 12 || cameraCalculatedSpeed > 40) {
             useCameraSpeed = false;
@@ -207,8 +201,8 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     }
 
-    public void spinAtMetersPerSec(double metersPerSec) {
-        mPidController.setReference(metersPerSec, ControlType.kVelocity, VELOCITY_SLOT);
+    public void spinAtRPM(double rpm) {
+        mPidController.setReference(rpm, ControlType.kVelocity, VELOCITY_SLOT);
 
     }
 
@@ -218,7 +212,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public void runShooter() {
         requiredRPM += shooterRPMAdder;
-        spinAtMetersPerSec(-requiredRPM);
+        spinAtRPM(-requiredRPM);
     }
 
     public void moveManually(double speed) {
