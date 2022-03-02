@@ -33,8 +33,6 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public List<BaseTalon> transportTalons;
 
-  public boolean leftBeltMotorConnected;
-  public boolean rightBeltMotorConnected;
   public boolean topRollerMotorConnected;
   public boolean lowerRollerMotorConnected;
   public boolean allConnected;
@@ -64,8 +62,11 @@ public class CargoTransportSubsystem extends SubsystemBase {
   private boolean cargoAtShoot;
 
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
+
   public ColorSensorV3 cargoAtShootsensor = new ColorSensorV3(i2cPort);
+
   private int cargoSensedLevel = 180;
+
   private RevColorSensor rcs = new RevColorSensor(cargoAtShootsensor);
 
   public CargoTransportSubsystem() {
@@ -77,9 +78,12 @@ public class CargoTransportSubsystem extends SubsystemBase {
     m_lowerRollerMotor.configFactoryDefault();
 
     m_topRollerMotor.setInverted(true);
-    m_lowerRollerMotor.setInverted(true);    
+    m_lowerRollerMotor.setInverted(true);
 
+    m_lowerRollerMotor.enableCurrentLimit(true);
+  
     m_topRollerMotor.setNeutralMode(NeutralMode.Brake);
+    
     m_lowerRollerMotor.setNeutralMode(NeutralMode.Brake);
 
     setTopRollerBrakeOn(true);
@@ -138,7 +142,19 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   public boolean getCargoAtShoot() {
+
     return cargoAtShootsensor.getProximity() > cargoSensedLevel;
+    
+  }
+
+  public void intakeLowerRollerMotor(double speed) {
+
+    if (!getCargoAtShoot()) {
+
+      runLowerRollerMotor(speed);
+
+    }
+
   }
 
   public void runTopRollerMotor(double speed) {
@@ -192,6 +208,16 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public double getLowerRollerMotorAmps() {
     return m_lowerRollerMotor.getStatorCurrent();
+  }
+
+  public void configLowerCurrentLimit(int amps, int time_ms, boolean enable){
+
+    m_lowerRollerMotor.enableCurrentLimit(enable);
+
+    m_lowerRollerMotor.configPeakCurrentDuration(time_ms);
+
+    m_lowerRollerMotor.configPeakCurrentLimit(amps);
+
   }
 
   public void simulationInit() {

@@ -10,19 +10,24 @@ import frc.robot.Constants.PipelinesConstants;
 
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
-
+import frc.robot.commands.Turret.PositionTurret;
+import frc.robot.commands.Turret.PositionTurretToVision;
+import frc.robot.commands.Turret.SetTurretUseVision;
+import frc.robot.commands.Turret.TurretWaitForStop;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
+import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class CheckForValidTarget extends SequentialCommandGroup {
+public class AcquireTarget extends SequentialCommandGroup {
 
-  /** Creates a new Shoot. */
+  /** Creates a new Acquire target. */
 
-  public CheckForValidTarget(LimeLight ll, RevTiltSubsystem tilt, RevTurretSubsystem turret, RawContoursV2 rcv2) {
+  public AcquireTarget(LimeLight ll, RevTiltSubsystem tilt, RevTurretSubsystem turret, RawContoursV2 rcv2,
+      RevShooterSubsystem shooter) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
@@ -46,9 +51,21 @@ public class CheckForValidTarget extends SequentialCommandGroup {
 
             () -> ll.getBoundingBoxHeightInX2ZoomRange()),
 
-        new ConditionalCommand(new GetNumberOfContourValues(rcv2), new FindTargetFail("No Target"),
+        new ConditionalCommand(new GetNumberOfContourValues(rcv2), new FindTargetFail("No Target", ll),
 
-            () -> ll.getBoundingBoxHeightInNoZoomRange()));
+            () -> ll.getBoundingBoxHeightInNoZoomRange()),
+
+        new PositionTurretToVision(turret, ll, ll.getdegRotationToTarget()),
+
+        new TurretWaitForStop(turret),
+
+        new CalculateTarget(rcv2),
+
+        new PositionTurret(turret, rcv2.targetAngle), new TurretWaitForStop(turret),
+
+        new CalculateAndShoot(rcv2, tilt, turret, ll, shooter)
+
+    );
 
   }
 }

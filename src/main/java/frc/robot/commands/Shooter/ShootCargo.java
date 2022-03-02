@@ -46,7 +46,7 @@ public class ShootCargo extends CommandBase {
   public boolean robotStoppedFor1Sec;
 
   public ShootCargo(RevShooterSubsystem shooter, RevTiltSubsystem tilt, RevTurretSubsystem turret, LimeLight limelight,
-      CargoTransportSubsystem transport,Compressor compressor, double time) {
+      CargoTransportSubsystem transport, Compressor compressor, double time) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_transport = transport;
@@ -70,6 +70,7 @@ public class ShootCargo extends CommandBase {
     m_transport.cargoAvailable = false;
 
     m_transport.cargosShot = 0;
+
     shotStartTime = 0;
 
     m_limelight.setLEDMode(LedMode.kpipeLine);
@@ -82,14 +83,17 @@ public class ShootCargo extends CommandBase {
   @Override
   public void execute() {
 
-  //  robotStoppedFor1Sec = m_drive.robotStoppedForOneSecond;
+    // robotStoppedFor1Sec = m_drive.robotStoppedForOneSecond;
 
     inAuto = DriverStation.isAutonomous();
 
     okToShoot = (m_limelight.getVertOnTarget(m_tilt.tiltVisionTolerance)
-        && m_limelight.getHorOnTarget(m_turret.turretVisionTolerance)) ;
 
-    if (m_shooter.atSpeed() && m_transport.topRollersAtSpeed && okToShoot && robotStoppedFor1Sec || m_shooter.isShooting) {
+        && m_limelight.getHorOnTarget(m_turret.turretVisionTolerance));
+
+    if (m_shooter.atSpeed() && m_transport.topRollersAtSpeed && okToShoot && robotStoppedFor1Sec
+
+    || m_shooter.isShooting) {
 
       m_shooter.isShooting = true;
 
@@ -111,10 +115,13 @@ public class ShootCargo extends CommandBase {
 
     m_shooter.okToShoot = m_shooter.isShooting && (inAuto || !m_shooter.shootOne);
 
-    // getNextCargo = m_shooter.okToShoot && !m_shooter.shotInProgress && !m_transport.cargoAvailable
-    //     && m_transport.rollersAtSpeed && m_transport.getCargoAtShoot() && m_shooter.atSpeed();
+    // getNextCargo = m_shooter.okToShoot && !m_shooter.shotInProgress &&
+    // !m_transport.cargoAvailable
+    // && m_transport.rollersAtSpeed && m_transport.getCargoAtShoot() &&
+    // m_shooter.atSpeed();
 
     if (getNextCargo || cargoReleased) {
+
       releaseOneCargo();
     }
 
@@ -123,10 +130,9 @@ public class ShootCargo extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_transport.cargoAvailable=false;
-  
-    
-   // m_compressor.enableAnalog(minPressure, maxPressure);
+    m_transport.cargoAvailable = false;
+
+    // m_compressor.enableAnalog(minPressure, maxPressure);
     m_shooter.shotInProgress = false;
 
     m_shooter.isShooting = false;

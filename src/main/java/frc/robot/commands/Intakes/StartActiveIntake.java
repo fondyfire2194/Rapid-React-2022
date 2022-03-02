@@ -5,22 +5,32 @@
 package frc.robot.commands.Intakes;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 
 public class StartActiveIntake extends CommandBase {
 
   private IntakesSubsystem m_intake;
 
+  private CargoTransportSubsystem m_transport;
+
   private double m_speed;
 
-  public StartActiveIntake(IntakesSubsystem intake, double speed) {
-    m_intake = intake;
+  private double m_rollerSpeed;
 
-    m_speed = speed;
+  private boolean twoCargoOnBoard;
+
+  public StartActiveIntake(IntakesSubsystem intake, double iSpeed, CargoTransportSubsystem transport, double rSpeed) {
+    m_intake = intake;
+    m_transport = transport;
+    m_speed = iSpeed;
+    m_rollerSpeed = rSpeed;
     addRequirements(m_intake);
   }
 
   public void initialize() {
+
+    m_transport.configLowerCurrentLimit(5, 100,true);
 
   }
 
@@ -28,30 +38,37 @@ public class StartActiveIntake extends CommandBase {
 
   public void execute() {
 
-    if (m_intake.useFrontIntake) {
+    if (!twoCargoOnBoard) {
 
-      m_intake.runFrontIntakeMotor(m_speed);
+      m_transport.intakeLowerRollerMotor(m_rollerSpeed);
 
-      m_intake.lowerFrontArm();
+      if (m_intake.useFrontIntake) {
 
-    } else {
+        m_intake.runFrontIntakeMotor(m_speed);
 
-      m_intake.runRearIntakeMotor(m_speed);
-      
-      m_intake.lowerRearArm();
+        m_intake.lowerFrontArm();
+
+      } else {
+
+        m_intake.runRearIntakeMotor(m_speed);
+
+        m_intake.lowerRearArm();
+      }
+
     }
 
   }
 
   @Override
   public void end(boolean interrupted) {
-    
+
     m_intake.stopFrontIntakeMotor();
     m_intake.raiseFrontArm();
 
     m_intake.stopRearIntakeMotor();
     m_intake.raiseRearArm();
 
+    m_transport.configLowerCurrentLimit(50, 1000, true);
 
   }
 

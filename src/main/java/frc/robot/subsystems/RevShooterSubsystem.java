@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -16,6 +17,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,10 +47,10 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double cameraCalculatedSpeed;
     public double pset, iset, dset, ffset, izset;
     public boolean useCameraSpeed;
-    public boolean useSetupEntry=true;
-
+    public boolean useSetupEntry = true;
 
     public FFCSVLogger logger = new FFCSVLogger();
+    
     public FFCSVLogger hubLogger = new FFCSVLogger();
 
     public boolean startShooter;
@@ -105,6 +107,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double adjustedCameraMPS;
     public double driverThrottleValue;
     public boolean useProgramSpeed;
+    public boolean useDriverSpeed;
     public double programSpeed;
     public String[] speedSource = { "Program", "Camera", "Driver", "Setup" };
     public String activeSpeedSource = "Program";
@@ -118,6 +121,8 @@ public class RevShooterSubsystem extends SubsystemBase {
     public boolean log;
     public boolean endHubFile;
     public SimpleCSVLogger distCSVLogger = new SimpleCSVLogger();
+    public NetworkTableEntry shooterSpeed;
+    public boolean wrongCargoColor;
 
     public RevShooterSubsystem() {
 
@@ -139,6 +144,14 @@ public class RevShooterSubsystem extends SubsystemBase {
         // Set motors to brake mode for faster stop
         Arrays.asList(mLeftMotor, mRightMotor)
                 .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
+
+        
+            shooterSpeed = Shuffleboard.getTab("SetupShooter").add("ShooterSpeed",
+                    3).withWidget("Number Slider")
+                    .withPosition(0, 3).withSize(4, 1).withProperties(Map.of("Min", 500, "Max",
+                            3500))
+                    .getEntry();
+        
 
         tuneGains();
 
@@ -168,16 +181,10 @@ public class RevShooterSubsystem extends SubsystemBase {
 
         checkTune();
 
-     
-            if (useSetupEntry)
-                requiredRPM = Pref.getPref("shRPM");
-        
-        
+        if (useSetupEntry)
 
-        if (cameraCalculatedSpeed < 12 || cameraCalculatedSpeed > 40) {
-            useCameraSpeed = false;
-            useProgramSpeed = true;
-        }
+            requiredRPM = shooterSpeed.getDouble(20);
+            
 
         SmartDashboard.putString("LeftFaults", "SS");// faultAsBitString());
 

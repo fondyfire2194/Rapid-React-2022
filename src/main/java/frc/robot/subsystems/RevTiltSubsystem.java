@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.Map;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -87,13 +86,11 @@ public class RevTiltSubsystem extends SubsystemBase {
     public double driverAdjustAngle;
     public double driverAdjustDistance;
     public double adjustMeters = .16;// 6"
-    public NetworkTableEntry setupVertOffset;
 
     public double testLockFromThrottle;
 
     public double tiltSetupOffset;
 
-    public boolean useSetupVertOffset;
     public double testVerticalOffset;
     public boolean endTiltFile;
     public SimpleCSVLogger tiltLogger;
@@ -167,10 +164,7 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         setSoftwareLimits();
 
-        if (Pref.getPref("IsMatch") == 0.) {
-            setupVertOffset = Shuffleboard.getTab("SetupShooter").add("SetVerOffset", 0).withWidget("Number Slider")
-                    .withPosition(4, 3).withSize(2, 1).withProperties(Map.of("Min", -10, "Max", 10)).getEntry();
-        }
+   
     }
 
     @Override
@@ -185,11 +179,6 @@ public class RevTiltSubsystem extends SubsystemBase {
         if (faultSeen != 0)
             faultSeen = getFaults();
 
-        if (useSetupVertOffset) {
-            testVerticalOffset = 0;// setupVertOffset.getDouble(0);
-        } else {
-            testVerticalOffset = 0;
-        }
 
         SmartDashboard.putNumber("TIMTRGETT", m_motor.getAppliedOutput());
 

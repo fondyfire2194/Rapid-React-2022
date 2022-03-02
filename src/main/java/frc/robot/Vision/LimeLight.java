@@ -12,6 +12,7 @@ import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.Snapshot;
 import frc.robot.Vision.LimelightControlMode.StreamType;
+import frc.robot.commands.Vision.UseVision;
 
 /**
  * Limelight Class was started by Corey Applegate of Team 3244 Granite City

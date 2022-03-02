@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CargoTransportSubsystem;
 
-public class RunBottomRoller extends CommandBase {
+public class RunLowerRoller extends CommandBase {
   /** Creates a new RunRollers. */
   private final CargoTransportSubsystem m_transport;
   private double rollerStartTime;
   private final double speed = .5;
 
-  public RunBottomRoller(CargoTransportSubsystem transport) {
+  public RunLowerRoller(CargoTransportSubsystem transport) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_transport = transport;
   }

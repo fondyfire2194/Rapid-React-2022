@@ -217,7 +217,7 @@ public class RobotContainer {
             // m_turret.setDefaultCommand(new TurretJog(m_turret, () ->
             // setupGamepad.getRawAxis(0) / 5, setupGamepad));
 
-            isMatch = Pref.getPref("IsMatch") == 1.;
+            isMatch =false;// Pref.getPref("IsMatch") == 1.;
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intakes, m_climber, m_trajectory, isMatch);
@@ -264,7 +264,7 @@ public class RobotContainer {
              * 
              */
 
-            new JoystickButton(m_driverController, 2).whileHeld(new StartActiveIntake(m_intakes, .75));
+            new JoystickButton(m_driverController, 2).whileHeld(new StartActiveIntake(m_intakes, .75, m_transport, .25));
 
             new JoystickButton(m_driverController, 1)
 

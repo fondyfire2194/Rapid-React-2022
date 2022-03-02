@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.CargoTransport.HoldCargo;
 import frc.robot.commands.CargoTransport.ReleaseCargo;
-import frc.robot.commands.CargoTransport.RunBottomRoller;
+import frc.robot.commands.CargoTransport.RunLowerRoller;
 import frc.robot.commands.CargoTransport.RunTopRoller;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.CargoTransport.StopTopRoller;
@@ -33,7 +33,7 @@ import frc.robot.commands.RobotDrive.PickupMoveVelocity;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.StopRobot;
-
+import frc.robot.commands.Shooter.ChooseShooterSpeedSource;
 import frc.robot.commands.Shooter.ClearShFaults;
 import frc.robot.commands.Shooter.EndShootLog;
 import frc.robot.commands.Shooter.RunShooter;
@@ -41,12 +41,10 @@ import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Tilt.ClearFaults;
 import frc.robot.commands.Tilt.PositionTilt;
-import frc.robot.commands.Tilt.PositionTiltToVision;
 import frc.robot.commands.Tilt.StopTilt;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Turret.ClearTurFaults;
 import frc.robot.commands.Turret.PositionTurret;
-import frc.robot.commands.Turret.PositionTurretToVision;
 import frc.robot.commands.Turret.ResetTurretAngle;
 import frc.robot.commands.Turret.StopTurret;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -142,11 +140,7 @@ public class SetUpOI {
                         turretCommands.add("Position To -10", new PositionTurret(turret, -10));//
 
                         turretCommands.add("Position To 10", new PositionTurret(turret, 10));
-                        turretCommands.add("PosToVis +10", new PositionTurretToVision(turret,
-                                        limelight, 10));
-                        turretCommands.add("PosToVis-10", new PositionTurretToVision(turret,
-                                        limelight, -10));
-
+ 
                         turretCommands.add("StopTurret", new StopTurret(turret));
                         turretCommands.add("ClearFaults", new ClearTurFaults(turret));
                         turretCommands.add("Cmd", turret);
@@ -247,10 +241,6 @@ public class SetUpOI {
 
                         tiltCommands.add("Position To 15", new PositionTilt(tilt, 15));
                         tiltCommands.add("Position To 5", new PositionTilt(tilt, 5));
-                        tiltCommands.add("PosToVis + ", new PositionTiltToVision(tilt, limelight, 10));
-
-                        tiltCommands.add("PosToVis -",
-                                        new PositionTiltToVision(tilt, limelight, tilt.tiltMinAngle));
                         tiltCommands.add("PositionToSwitch", new TiltMoveToReverseLimit(tilt));
                         tiltCommands.add("StopTilt", new StopTilt(tilt));
                         tiltCommands.add("ClearFaults", new ClearFaults(tilt));
@@ -354,7 +344,8 @@ public class SetUpOI {
                         shooterCommands.add("EndLog", new EndShootLog(shooter));
 
                         shooterCommands.add("RunAllShooters", new RunShooter(shooter));
-                        
+                        shooterCommands.add("UseSpeedSlider", new ChooseShooterSpeedSource(shooter, tilt, turret, 3));
+                       
                         ShuffleboardLayout shooterValues = Shuffleboard.getTab("SetupShooter")
                                         .getLayout("ShooterValues", BuiltInLayouts.kList).withPosition(2, 0)
                                         .withSize(2, 3).withProperties(Map.of("Label position", "LEFT")); // labels
@@ -411,7 +402,7 @@ public class SetUpOI {
                                         .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels
 
                         transportValues.add("StartTopRoller", new RunTopRoller(transport));
-                        transportValues.add("StartBottomRoller", new RunBottomRoller(transport));
+                        transportValues.add("StartBottomRoller", new RunLowerRoller(transport));
                         transportValues.add("StopTopRoller", new StopTopRoller(transport));
                         transportValues.add("StopLowerRoller", new StopLowerRoller(transport));                       
 

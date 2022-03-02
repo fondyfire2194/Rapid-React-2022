@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.commands.AutoCommands.Common.GetTargetCenter;
 import frc.robot.commands.AutoCommands.Common.AllRetPu;
 import frc.robot.commands.AutoCommands.Common.GetNumberOfContourValues;
 import frc.robot.commands.AutoCommands.Common.LowerShoot;
@@ -34,8 +33,7 @@ public class AllRetPuShoot extends SequentialCommandGroup {
 
        new GetNumberOfContourValues(rcv2),
 
-        new GetTargetCenter(ll, turret, tilt, rcv2,  data),
-
+       
         new ConditionalCommand(
 
             new UpperShoot(turret, tilt, ll, shooter, transport, compressor, data),

@@ -49,6 +49,8 @@ public class IntakesSubsystem extends SubsystemBase {
 
   private double cargoDetectedVolts = 2.75;
 
+public boolean twoCargoOnBoard;
+
 
 
   public IntakesSubsystem() {

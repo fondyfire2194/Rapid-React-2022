@@ -21,7 +21,7 @@ import frc.robot.Vision.SetNoZoomValues;
 import frc.robot.Vision.VisionReferenceTarget;
 import frc.robot.commands.AutoCommands.Common.CalculateTarget;
 import frc.robot.commands.AutoCommands.Common.CalculateTestTarget;
-import frc.robot.commands.AutoCommands.Common.CheckForValidTarget;
+import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.AutoCommands.Common.GetNumberOfContourValues;
 import frc.robot.commands.AutoCommands.Common.GetVisionValues;
 import frc.robot.subsystems.RevShooterSubsystem;
@@ -67,7 +67,7 @@ public class HubVisionShuffleboard {
 
                         //contourDist.add("GetVisionData", new GetVisionValues(rcv2));
 
-                        contourDist.add("Get11", new GetNumberOfContourValues(rcv2));
+                        contourDist.add("Get6", new GetNumberOfContourValues(rcv2));
 
                         contourDist.add("CalcTestTarget", new CalculateTestTarget(vrt));
 
@@ -77,7 +77,7 @@ public class HubVisionShuffleboard {
 
                         contourDist.add("Set2XZoom", new Set2XZoomValues(rcv2, ll));
                 
-                        contourDist.add("CheckValidTarget", new CheckForValidTarget(ll, tilt, turret, rcv2));
+                        contourDist.add("AcquireTarget", new AcquireTarget(ll, tilt, turret, rcv2, shooter));
 
 
                         contourPX.addString("LtoRMedArea", () -> rcv2.getLCRMedianArea());

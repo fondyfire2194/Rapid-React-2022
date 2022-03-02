@@ -5,25 +5,30 @@
 package frc.robot.commands.Turret;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Vision.LimeLight;
 import frc.robot.subsystems.RevTurretSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ToggleTurretUseVision extends InstantCommand {
+public class SetTurretUseVision extends InstantCommand {
   private RevTurretSubsystem m_turret;
 
-  public ToggleTurretUseVision(RevTurretSubsystem turret) {
+  private LimeLight m_ll;
+
+  private boolean m_state;
+
+  public SetTurretUseVision(RevTurretSubsystem turret, LimeLight ll, boolean state) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_turret = turret;
+    m_ll = ll;
+    m_state = state;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (m_turret.turretUseVision)
-      m_turret.turretUseVision = false;
-    else
-      m_turret.turretUseVision = true;
+    m_turret.turretUseVision = m_state;
+    m_ll.useVision = m_state;
   }
 }

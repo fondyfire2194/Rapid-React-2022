@@ -67,7 +67,6 @@ public class Robot extends TimedRobot {
 
     allianceColorBlue = getAllianceColor();
 
-
     RotateLimelight90.init();
     if (m_robotContainer.isMatch)
       Shuffleboard.selectTab("Pre-Round");
@@ -121,6 +120,19 @@ public class Robot extends TimedRobot {
     loopCtr++;
 
     SmartDashboard.putNumber("LPCTRA", loopCtr);
+
+    m_robotContainer.m_intakes.twoCargoOnBoard = m_robotContainer.m_transport.getCargoAtShoot()
+
+        && (m_robotContainer.m_intakes.getCargoAtFront() || m_robotContainer.m_intakes.getCargoAtRear());
+
+    m_robotContainer.m_transport.cargoAvailable = m_robotContainer.m_transport.getCargoAtShoot()
+
+        || m_robotContainer.m_intakes.getCargoAtFront() || m_robotContainer.m_intakes.getCargoAtRear();
+
+    m_robotContainer.m_shooter.wrongCargoColor = getAllianceColor() && !m_robotContainer.m_transport.getCargoIsBlue()
+        || !getAllianceColor() && !m_robotContainer.m_transport.getCargoIsRed();
+    ;
+
   }
 
   /**
@@ -156,8 +168,6 @@ public class Robot extends TimedRobot {
 
     if (RobotBase.isReal())
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
-
-     
 
     Shuffleboard.selectTab("Competition");
 
@@ -272,9 +282,7 @@ public class Robot extends TimedRobot {
     if (RobotBase.isReal() && !m_robotContainer.m_tilt.positionResetDone)
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
 
-     m_robotContainer.m_limelight.useVision = false;
-
-    
+    m_robotContainer.m_limelight.useVision = false;
 
   }
 

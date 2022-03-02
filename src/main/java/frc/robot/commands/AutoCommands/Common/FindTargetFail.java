@@ -7,8 +7,10 @@ package frc.robot.commands.AutoCommands.Common;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
+import frc.robot.commands.RobotDrive.PickupMove;
 import frc.robot.subsystems.RevTiltSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -16,10 +18,11 @@ import frc.robot.subsystems.RevTiltSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class FindTargetFail extends InstantCommand {
   String m_message;
-
-  public FindTargetFail(String message) {
+private LimeLight m_ll;
+  public FindTargetFail(String message,LimeLight ll) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_message = message;
+    m_ll=ll;
   }
 
   // Called when the command is initially scheduled.
@@ -27,6 +30,9 @@ public class FindTargetFail extends InstantCommand {
   public void initialize() {
 
     SmartDashboard.putString("Message", m_message);
+
+    m_ll.setPipeline(PipelinesConstants.ledsOffPipeline);
+    
     super.cancel();
     
   }
