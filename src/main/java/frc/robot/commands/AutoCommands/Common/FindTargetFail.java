@@ -5,13 +5,9 @@
 package frc.robot.commands.AutoCommands.Common;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
-import frc.robot.Vision.RawContoursV2;
-import frc.robot.commands.RobotDrive.PickupMove;
-import frc.robot.subsystems.RevTiltSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

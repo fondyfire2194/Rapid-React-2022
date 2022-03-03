@@ -53,12 +53,12 @@ public class Pref {
 
     // Tilt Lock
 
-    prefDict.put("TiLkP", 8.);
-    prefDict.put("TiLkI", .001);
-    prefDict.put("TiLkD", 0.5);
-    prefDict.put("TiLkIZ", 0.8);
-    prefDict.put("tiLTune", 0.);
-    prefDict.put("TiltLockAdd", 0.);
+    // prefDict.put("TiLkP", 8.);
+    // prefDict.put("TiLkI", .001);
+    // prefDict.put("TiLkD", 0.5);
+    // prefDict.put("TiLkIZ", 0.8);
+    // prefDict.put("tiLTune", 0.);
+    // prefDict.put("TiltLockAdd", 0.);
 
 
 
@@ -123,11 +123,8 @@ public class Pref {
     
     prefDict.put("HubTgtGn", 10.);
 
-    // Set to 1 before power up to log
-    prefDict.put("LogTilt", 0.);
-    prefDict.put("LogTurret", 0.);
-    prefDict.put("LogShoot", 0.);
-    prefDict.put("LogHub", 0.);
+    
+   
 
     // Shuffleboard
 

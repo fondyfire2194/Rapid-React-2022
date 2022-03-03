@@ -27,7 +27,6 @@ import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StopIntakeMotors;
 import frc.robot.commands.RobotDrive.ClearRobFaults;
-import frc.robot.commands.RobotDrive.EndDriveLog;
 import frc.robot.commands.RobotDrive.PickupMove;
 import frc.robot.commands.RobotDrive.PickupMoveVelocity;
 import frc.robot.commands.RobotDrive.ResetEncoders;
@@ -35,7 +34,6 @@ import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.StopRobot;
 import frc.robot.commands.Shooter.ChooseShooterSpeedSource;
 import frc.robot.commands.Shooter.ClearShFaults;
-import frc.robot.commands.Shooter.EndShootLog;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Shooter.StopShoot;
@@ -318,8 +316,7 @@ public class SetUpOI {
                                                         compressor, 0));
                         shooterCommands.add("ClearFaults", new ClearShFaults(shooter));
                         shooterCommands.add("Cmd", shooter);
-                        shooterCommands.add("EndLog", new EndShootLog(shooter));
-
+ 
                         shooterCommands.add("RunAllShooters", new RunShooter(shooter));
                         shooterCommands.add("UseSpeedSlider", new ChooseShooterSpeedSource(shooter, tilt, turret, 3));
                        
@@ -442,7 +439,7 @@ public class SetUpOI {
                         robotCommands.add("To 0", new PickupMove(drive,intake, 0, .5));
                         robotCommands.add("Cmd", drive);
 
-                        robotCommands.add("EndLog", new EndDriveLog(drive));
+        
 
                         ShuffleboardLayout robotValues = Shuffleboard.getTab("SetupRobot")
                                         .getLayout("RobotValues", BuiltInLayouts.kList).withPosition(2, 0)

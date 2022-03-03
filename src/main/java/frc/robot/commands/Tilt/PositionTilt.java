@@ -18,7 +18,6 @@ public class PositionTilt extends CommandBase {
 
   private boolean endIt;
 
-  private double motorDegrees;
 
   public PositionTilt(RevTiltSubsystem tilt, double endpoint) {
     m_tilt = tilt;
@@ -51,6 +50,7 @@ public class PositionTilt extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     if (loopCtr > 10 && !endIt)
+    
       m_tilt.targetAngle = m_tilt.getAngle();
 
   }

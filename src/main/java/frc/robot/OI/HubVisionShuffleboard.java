@@ -101,15 +101,13 @@ public class HubVisionShuffleboard {
                                         .getLayout("bullseye", BuiltInLayouts.kList).withPosition(8, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "TOP")); // labels)
 
-                        // targetValues.add("StartLog",
-                        // new LogHubTarget(as, getTarget, tilt, turret, ll));
-                        // targetValues.add("StopLog", new EndHubLog(as));
-
-                //        targetValues.addNumber("AreaAngle", () -> rcv2.targetAngle);
-                 //       targetValues.addNumber("AreaX", () -> rcv2.targetValue);
+                
+                        targetValues.addNumber("AreaX", () -> rcv2.targetValue);
+                        targetValues.addNumber("AreaAngle", () -> rcv2.targetAngle);
+                     
                         targetValues.addNumber("WeightedX", () -> rcv2.weightedTargetValue);
                         targetValues.addNumber("WeightedAngle", () -> rcv2.weightedTargetAngle);
-                //        targetValues.addNumber("TargetAngle2", () -> rcv2.targetAngle2);
+                        
 
                 }
 

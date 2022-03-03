@@ -6,18 +6,16 @@ package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Vision.LimeLight;
-import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
-public class WaitTiltTurretLocked extends CommandBase {
+public class WaitTurretLocked extends CommandBase {
   /** Creates a new WaitTiltTurretLocked. */
-  private RevTiltSubsystem m_tilt;
   private RevTurretSubsystem m_turret;
   private LimeLight m_limelight;
 
-  public WaitTiltTurretLocked(RevTiltSubsystem tilt, RevTurretSubsystem turret, LimeLight limelight) {
+  public WaitTurretLocked( RevTurretSubsystem turret, LimeLight limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_tilt = tilt;
+    
     m_turret = turret;
     m_limelight = limelight;
   }

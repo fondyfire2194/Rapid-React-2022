@@ -36,7 +36,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Pref;
-import frc.robot.SimpleCSVLogger;
 import frc.robot.Sim.CANEncoderSim;
 
 public class RevDrivetrain extends SubsystemBase {
@@ -98,13 +97,6 @@ public class RevDrivetrain extends SubsystemBase {
     public boolean leftBurnOK;
     public boolean rightBurnOK;
 
-    public SimpleCSVLogger driveLogger;
-
-    public boolean driveLogInProgress;
-
-    public boolean logDriveItems;
-
-    public boolean endDriveFile;
 
     private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts,
             DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter);
@@ -168,7 +160,6 @@ public class RevDrivetrain extends SubsystemBase {
 
         mDrive.setSafetyEnabled(false);
 
-        driveLogger = new SimpleCSVLogger();
 
         tuneGains();
 

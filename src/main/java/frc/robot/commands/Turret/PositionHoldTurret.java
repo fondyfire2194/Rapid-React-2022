@@ -20,7 +20,6 @@ package frc.robot.commands.Turret;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Vision.LimeLight;
-import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
 public class PositionHoldTurret extends CommandBase {

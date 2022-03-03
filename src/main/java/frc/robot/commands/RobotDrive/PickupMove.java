@@ -52,11 +52,6 @@ public class PickupMove extends CommandBase {
 
     currentSpeed = m_speed;
 
-    if (DriverStation.isTeleopEnabled()) {
-
-      m_drive.logDriveItems = true;
-    }
-
     m_drive.resetGyro();
 
   }
@@ -89,10 +84,6 @@ public class PickupMove extends CommandBase {
 
       useSpeed = -useSpeed;
 
-   
-
-   
-
     m_drive.arcadeDrive(useSpeed, -yawInUse);
 
   }
@@ -102,7 +93,7 @@ public class PickupMove extends CommandBase {
   public void end(boolean interrupted) {
     currentSpeed = 0;
     m_drive.arcadeDrive(0, 0);
-    m_drive.logDriveItems = false;
+  
   }
 
   // Returns true when the command should end.

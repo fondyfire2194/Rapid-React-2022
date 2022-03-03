@@ -8,6 +8,12 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -23,7 +29,6 @@ import frc.robot.Vision.RotateLimelight90;
 import frc.robot.commands.AutoCommands.AllRetPuShoot;
 import frc.robot.commands.AutoCommands.PUS3;
 import frc.robot.commands.AutoCommands.Taxi;
-import frc.robot.commands.Shooter.SetLogItemsState;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Vision.SetUpLimelightForDriver;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -32,7 +37,6 @@ import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
-import edu.wpi.first.wpilibj.Compressor;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -45,8 +49,6 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private int autoChoice;
 
-  private double canCheckWait;
-
   public RobotContainer m_robotContainer;
   private boolean autoHasRun;
   private double m_startDelay;
@@ -54,7 +56,9 @@ public class Robot extends TimedRobot {
   public double timeToStart;
   int tst;
   private int loopCtr;
-  private boolean allianceColorBlue;
+  BooleanLogEntry rrBooleanLog;
+  DoubleLogEntry rrDoubleLog;
+  StringLogEntry rrStringLog;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -63,25 +67,24 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
+    // Starts recording to data log
+    DataLogManager.start();
+
+    // Set up custom log entries
+    DataLog log = DataLogManager.getLog();
+    rrBooleanLog = new BooleanLogEntry(log, "/my/boolean");
+    rrDoubleLog = new DoubleLogEntry(log, "/my/double");
+    rrStringLog = new StringLogEntry(log, "/my/string");
+
     m_robotContainer = new RobotContainer();
 
-    allianceColorBlue = getAllianceColor();
+    getAllianceColor();
 
     RotateLimelight90.init();
+
     if (m_robotContainer.isMatch)
+
       Shuffleboard.selectTab("Pre-Round");
-
-    // if (Pref.getPref("LogTilt") == 1.)
-    // new LogTiltData(m_robotContainer.m_tilt,
-    // m_robotContainer.m_limelight).schedule(true);
-
-    // if (Pref.getPref("LogTurret") == 1.)
-    // new LogTurretData(m_robotContainer.m_turret,
-    // m_robotContainer.m_limelight).schedule(true);
-
-    // if (Pref.getPref("LogShoot") == 1.)
-    // new LogShootData(m_robotContainer.m_shooter, m_robotContainer.m_transport,
-    // null).schedule(true);
 
   }
 
@@ -105,7 +108,12 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     // m_robotContainer.m_setup.checkLimits();
-
+    if (tst >= 298) {
+      // Only log when necessary
+      rrBooleanLog.append(true);
+      rrDoubleLog.append(3.5);
+      rrStringLog.append("wow!");
+    }
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
     // SmartDashboard.putNumber("thr",m_robotContainer.m_driverController.getThrottle());
     SmartDashboard.putNumber("thr1", m_robotContainer.getThrottle());
@@ -178,9 +186,7 @@ public class Robot extends TimedRobot {
 
     autoChoice = 0;// m_robotContainer.m_setup.autoChooser.getSelected();
 
-    new SetLogItemsState(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_turret, true)
-        .schedule();
-
+  
     LimeLight ll = m_robotContainer.m_limelight;
     RevTiltSubsystem tilt = m_robotContainer.m_tilt;
     RevTurretSubsystem turret = m_robotContainer.m_turret;

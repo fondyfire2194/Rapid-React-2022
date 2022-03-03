@@ -299,8 +299,6 @@ public final class Constants {
 
    }
 
-   public static boolean logTilt;
-   public static boolean logShoot;
-   public static boolean logTurret;
+   
    public static double kRobotPeriod = .02;
 }

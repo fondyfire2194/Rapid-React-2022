@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.TiltConstants;
 import frc.robot.Pref;
-import frc.robot.SimpleCSVLogger;
+
 
 public class RevTiltSubsystem extends SubsystemBase {
 
@@ -52,7 +52,7 @@ public class RevTiltSubsystem extends SubsystemBase {
     public boolean validTargetSeen;
     public double adjustedVerticalError;
     private final static double pivotDistance = 10.5;// inches
-    public boolean tiltLogInProgress;
+
     private final double[] pinDistances = { 2.1, 3.0842519685, 4.068503937, 5.0527559055, 6.037007874, 7.0212598425,
             8.005511811 };
 
@@ -87,8 +87,7 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     public double testVerticalOffset;
     public boolean endTiltFile;
-    public SimpleCSVLogger tiltLogger;
-    public boolean logTiltItems;
+
     public double positionError;
     public double correctedEndpoint;
     public double visionErrorDifference;
@@ -138,8 +137,6 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
         m_reverseLimit.enableLimitSwitch(true);
-
-        tiltLogger = new SimpleCSVLogger();
 
         if (RobotBase.isReal() && m_reverseLimit.isPressed()) {
             resetAngle();

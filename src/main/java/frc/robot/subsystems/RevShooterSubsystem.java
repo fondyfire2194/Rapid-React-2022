@@ -22,9 +22,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
-import frc.robot.FFCSVLogger;
 import frc.robot.Pref;
-import frc.robot.SimpleCSVLogger;
+
 
 public class RevShooterSubsystem extends SubsystemBase {
 
@@ -49,23 +48,12 @@ public class RevShooterSubsystem extends SubsystemBase {
     public boolean useCameraSpeed;
     public boolean useSetupEntry = true;
 
-    public FFCSVLogger logger = new FFCSVLogger();
-    
-    public FFCSVLogger hubLogger = new FFCSVLogger();
 
     public boolean startShooter;
 
     public int teleopSetupIndex = 5;
-    public String[] teleopSetupPosition = new String[] { "InitLineStraightOn", "ShieldGenerator",
-            "TrenchFrontOfControlPanel", "Trench Behind Control Panel", "Low Goal ", "Not Chosen ", " " };
-
+ 
     public double teleopSetupShooterSpeed;
-
-    public SimpleCSVLogger shootLogger;
-
-    public SimpleCSVLogger shootSetupLogger;
-
-    public boolean logSetup;
 
     public boolean shotInProgress;
 
@@ -96,12 +84,9 @@ public class RevShooterSubsystem extends SubsystemBase {
     public boolean endShootFile;
     public boolean isShooting;
 
-    public boolean shootLogInProgress;
+  
     public double testVertOffset;
-    public int itemsLogged;
-    public boolean logShooterItems;
 
-    public boolean logSetupFileOpen;
     public boolean okToShoot;
 
     public double adjustedCameraMPS;
@@ -117,10 +102,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double maxRPM = 4500;
     public double minRPM = 100;
     public double shootCargosRunning;
-    public boolean hubLogInProgress;
-    public boolean log;
-    public boolean endHubFile;
-    public SimpleCSVLogger distCSVLogger = new SimpleCSVLogger();
+ 
     public NetworkTableEntry shooterSpeed;
     public boolean wrongCargoColor;
 

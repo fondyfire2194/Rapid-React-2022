@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.subsystems.CargoTransportSubsystem;
-import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
@@ -63,7 +62,6 @@ public class ShootCargo extends CommandBase {
   @Override
   public void initialize() {
     m_shooter.shootCargosRunning = 1.;
-    m_shooter.logShooterItems = true;
     m_shooter.shootTime = m_time;
     m_compressor.disable();
     m_shooter.isShooting = false;

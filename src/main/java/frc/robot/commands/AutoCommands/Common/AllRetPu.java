@@ -6,7 +6,6 @@ package frc.robot.commands.AutoCommands.Common;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.FieldMap;
 import frc.robot.Pref;
 import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;

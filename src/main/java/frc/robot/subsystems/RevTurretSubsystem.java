@@ -23,11 +23,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Pref;
-import frc.robot.SimpleCSVLogger;
-
 
 /**
- * 21:1 gearing 
+ * 21:1 gearing
  * 
  * 222 to 18 gear to pinion
  * 
@@ -43,15 +41,17 @@ public class RevTurretSubsystem extends SubsystemBase {
     private static final double DEG_PER_MOTOR_REV = TurretConstants.TURRET_DEG_PER_MOTOR_REV;
     private static final int SMART_MOTION_SLOT = 1;
     public final int POSITION_SLOT = 2;
-   // public final int VELOCITY_SLOT = 0;
+    // public final int VELOCITY_SLOT = 0;
 
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
     public double lastkP, lastkI, lastkD, lastkIz, lastkFF, lastkMaxOutput, lastkMinOutput, lastmaxRPM, lastmaxVel,
             lastminVel, lastmaxAcc, lastallowedErr;
 
-    // public double kPv, kIv, kDv, kIzv, kFFv, maxRPMv, maxVelv, minVelv, maxAccv, allowedErrv;
-    // public double lastkPv, lastkIv, lastkDv, lastkIzv, lastkFFv, lastkMaxOutputv, lastmaxRPMv, lastmaxVelv, lastmv,
-    //         lastmaxAccv, lastallowedErrv;
+    // public double kPv, kIv, kDv, kIzv, kFFv, maxRPMv, maxVelv, minVelv, maxAccv,
+    // allowedErrv;
+    // public double lastkPv, lastkIv, lastkDv, lastkIzv, lastkFFv, lastkMaxOutputv,
+    // lastmaxRPMv, lastmaxVelv, lastmv,
+    // lastmaxAccv, lastallowedErrv;
 
     private final CANSparkMax m_motor; // NOPMD
     private final RelativeEncoder mEncoder;
@@ -63,7 +63,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     public double targetHorizontalOffset;
     public double pset, iset, dset, ffset, izset, maxAccset, maxVelset;
     public double psetv, isetv, dsetv, ffsetv, izsetv;
-    public double lpset, liset, ldset, lizset; 
+    public double lpset, liset, ldset, lizset;
 
     public boolean validTargetSeen;
     public double adjustedCameraError;
@@ -96,10 +96,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     public double correctedEndpoint;
     public double visionErrorDifference;
     public double programRunning;// 1-hold 2 position 3 vision
-    public boolean endTurretFile;
-    public SimpleCSVLogger turretLogger;
-    public boolean logTurretItems;
-    public boolean turretLogInProgress;
+
     public double turretVisionTolerance = 1;
     public double testLockFromThrottle;
     public boolean testLock;
@@ -121,7 +118,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         aimCenter();
         setFF_MaxOuts();
         tuneMMGains();
-  //      tuneVelGains();
+        // tuneVelGains();
         getMMGains();
         setTurretLockGains();
         getLockGains();
@@ -143,7 +140,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         // .withPosition(6, 3).withSize(2, 1).withProperties(Map.of("Min", -5, "Max",
         // 5)).getEntry();
         // }
-        turretLogger = new SimpleCSVLogger();
+     
     }
 
     @Override
@@ -218,7 +215,6 @@ public class RevTurretSubsystem extends SubsystemBase {
         lockPIDOut = m_turretLockController.calculate(cameraError, 0);
 
         runAtVelocity(lockPIDOut);
-
 
         targetAngle = getAngle();
     }
@@ -330,7 +326,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     public void runAtVelocity(double speed) {
         SmartDashboard.putNumber("PIDATRUN", speed);
         targetAngle = getAngle();
-        mPidController.setReference(speed, ControlType.kVelocity,SMART_MOTION_SLOT );
+        mPidController.setReference(speed, ControlType.kVelocity, SMART_MOTION_SLOT);
     }
 
     public double getIaccum() {
@@ -377,40 +373,41 @@ public class RevTurretSubsystem extends SubsystemBase {
         }
     }
 
-    // public void calibratePIDV(final double p, final double i, final double d, final double kIz, final double allE,
-    //         int slotNumber) {
+    // public void calibratePIDV(final double p, final double i, final double d,
+    // final double kIz, final double allE,
+    // int slotNumber) {
 
-    //     if (p != lastkPv) {
-    //         mPidController.setP(p, slotNumber);
-    //         lastkPv = mPidController.getP(slotNumber);
+    // if (p != lastkPv) {
+    // mPidController.setP(p, slotNumber);
+    // lastkPv = mPidController.getP(slotNumber);
 
-    //     }
-    //     if (i != lastkIv) {
-    //         mPidController.setI(i, slotNumber);
-    //         lastkIv = mPidController.getI(slotNumber);
-    //     }
+    // }
+    // if (i != lastkIv) {
+    // mPidController.setI(i, slotNumber);
+    // lastkIv = mPidController.getI(slotNumber);
+    // }
 
-    //     if (d != lastkDv) {
-    //         mPidController.setD(d, slotNumber);
-    //         lastkDv = mPidController.getD(slotNumber);
-    //     }
+    // if (d != lastkDv) {
+    // mPidController.setD(d, slotNumber);
+    // lastkDv = mPidController.getD(slotNumber);
+    // }
 
-    //     if (kIz != lastkIzv) {
-    //         mPidController.setIZone(kIz, slotNumber);
-    //         lastkIzv = mPidController.getIZone(slotNumber);
-    //     }
+    // if (kIz != lastkIzv) {
+    // mPidController.setIZone(kIz, slotNumber);
+    // lastkIzv = mPidController.getIZone(slotNumber);
+    // }
 
     // }
 
     private void setFF_MaxOuts() {
         kFF = .0002;
-//        kFFv = .001;
+        // kFFv = .001;
         kMinOutput = -.5;
         kMaxOutput = .5;
         mPidController.setOutputRange(kMinOutput, kMaxOutput, SMART_MOTION_SLOT);
-//        mPidController.setOutputRange(kMinOutput, kMaxOutput, VELOCITY_SLOT);
+        // mPidController.setOutputRange(kMinOutput, kMaxOutput, VELOCITY_SLOT);
         mPidController.setFF(kFF, SMART_MOTION_SLOT);
- //       mPidController.setFF(kFFv, VELOCITY_SLOT);
+        // mPidController.setFF(kFFv, VELOCITY_SLOT);
 
     }
 
@@ -429,13 +426,13 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     // private void tuneVelGains() {
 
-    //     double p = Pref.getPref("tURKpv");
-    //     double i = Pref.getPref("tURKiv");
-    //     double d = Pref.getPref("tURKdv");
-    //     double iz = Pref.getPref("tURKizv");
+    // double p = Pref.getPref("tURKpv");
+    // double i = Pref.getPref("tURKiv");
+    // double d = Pref.getPref("tURKdv");
+    // double iz = Pref.getPref("tURKizv");
 
-    //     allowedErrv = .1;
-    //     calibratePIDV(p, i, d, iz, allowedErrv, VELOCITY_SLOT);
+    // allowedErrv = .1;
+    // calibratePIDV(p, i, d, iz, allowedErrv, VELOCITY_SLOT);
     // }
 
     private void setTurretLockGains() {
@@ -466,13 +463,13 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         // if (tuneOnv && !lastTuneOnv) {
 
-        //     tuneVelGains();
-            
-        //     lastTuneOnv = true;
+        // tuneVelGains();
+
+        // lastTuneOnv = true;
         // }
 
         // if (lastTuneOnv)
-        //     lastTuneOnv = tuneOnv;
+        // lastTuneOnv = tuneOnv;
 
         // lock controller
 
