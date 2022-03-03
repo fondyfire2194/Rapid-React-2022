@@ -209,17 +209,7 @@ public class SetUpOI {
                         turretGains.addNumber("MaxAcc", () -> turret.maxAccset);
                         turretGains.addNumber("MaxV", () -> turret.maxVelset);
 
-                        ShuffleboardLayout turretVGains = Shuffleboard.getTab("SetupTurret")
-
-                                        .getLayout("VelGains", BuiltInLayouts.kList).withPosition(7, 0).withSize(1, 1)
-                                        .withProperties(Map.of("Label position", "LEFT"));
-
-                        turretVGains.addNumber("FF", () -> turret.ffsetv);
-                        turretVGains.addNumber("P", () -> turret.psetv);
-                        turretVGains.addNumber("I", () -> turret.isetv);
-                        turretVGains.addNumber("D", () -> turret.dsetv);
-                        turretVGains.addNumber("IZ", () -> turret.izsetv);
-
+ 
                         ShuffleboardLayout turretLockGains = Shuffleboard.getTab("SetupTurret")
                                         .getLayout("LockGains", BuiltInLayouts.kList)
                                         .withPosition(6, 1).withSize(1, 1)
@@ -251,30 +241,29 @@ public class SetUpOI {
                                         .getLayout("TiltValues", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4)
                                         .withProperties(Map.of("Label position", "LEFT")); // labels for
 
-                        tiltValues.addNumber("TICameraAngle", () -> tilt.getAngle());
+                        tiltValues.addNumber("TIAngle", () -> tilt.getAngle());
                         tiltValues.addNumber("TITgt", () -> tilt.targetAngle);
                         tiltValues.addNumber("PCT", () -> tilt.getOut());
                         tiltValues.addNumber("Amps", () -> tilt.getAmps());
                         tiltValues.addNumber("Speed", () -> tilt.getSpeed());
-                        tiltValues.addNumber("Vision Offset", () -> tilt.targetVerticalOffset);
+                        // tiltValues.addNumber("Vision Offset", () -> tilt.targetVerticalOffset);
                         tiltValues.addNumber("AdjTarget", () -> tilt.adjustedVerticalError);
-                        tiltValues.addNumber("Vision Error", () -> limelight.getdegVerticalToTarget());
-                        tiltValues.addNumber("MotorDeg", () -> tilt.getMotorDegrees());
-                        tiltValues.addNumber("MotorTarget", () -> tilt.motorEndpointDegrees);
+                        // tiltValues.addNumber("Vision Error", () -> limelight.getdegVerticalToTarget());
+
                         tiltValues.addNumber("DriverOffset", () -> tilt.driverVerticalOffsetDegrees);
-                        tiltValues.addNumber("LockError", () -> tilt.tiltLockController.getPositionError());
+                        // tiltValues.addNumber("LockError", () -> tilt.tiltLockController.getPositionError());
 
-                        ShuffleboardLayout tiltValues3 = Shuffleboard.getTab("SetupTilt")
-                                        .getLayout("PIDValues", BuiltInLayouts.kList).withPosition(4, 0).withSize(2, 2)
-                                        .withProperties(Map.of("Label position", "LEFT"));
+                        // ShuffleboardLayout tiltValues3 = Shuffleboard.getTab("SetupTilt")
+                        //                 .getLayout("PIDValues", BuiltInLayouts.kList).withPosition(4, 0).withSize(2, 2)
+                        //                 .withProperties(Map.of("Label position", "LEFT"));
 
-                        tiltValues3.addNumber("IAccum", () -> tilt.getIaccum());
+                        // tiltValues3.addNumber("IAccum", () -> tilt.getIaccum());
 
-                        tiltValues3.addNumber("LockOutput", () -> tilt.lockPIDOut);
-                        tiltValues3.addNumber("LockError", () -> tilt.tiltLockController.getPositionError());
-                        tiltValues3.addBoolean(("LockController"), () -> tilt.validTargetSeen);
-                        tiltValues3.addBoolean("LockOnTarget", () -> tilt.getLockAtTarget());
-                        tiltValues3.addBoolean("ValTgt", () -> tilt.validTargetSeen);
+                        // tiltValues3.addNumber("LockOutput", () -> tilt.lockPIDOut);
+                        // tiltValues3.addNumber("LockError", () -> tilt.tiltLockController.getPositionError());
+                        // tiltValues3.addBoolean(("LockController"), () -> tilt.validTargetSeen);
+                        // tiltValues3.addBoolean("LockOnTarget", () -> tilt.getLockAtTarget());
+                        // tiltValues3.addBoolean("ValTgt", () -> tilt.validTargetSeen);
 
                         ShuffleboardLayout tiltValues2 = Shuffleboard.getTab("SetupTilt")
                                         .getLayout("States", BuiltInLayouts.kGrid).withPosition(4, 2).withSize(3, 2)
@@ -291,9 +280,7 @@ public class SetUpOI {
                         tiltValues2.addBoolean("+SWLimit", () -> tilt.onPlusSoftwareLimit());
                         tiltValues2.addBoolean("-SWLimit", () -> tilt.onMinusSoftwareLimit());
                         tiltValues2.addBoolean("SWLimitEn", () -> tilt.getSoftwareLimitsEnabled());
-                        tiltValues2.addBoolean("TargetVertOK",
-                                        () -> limelight.getVertOnTarget(tilt.tiltVisionTolerance));
-
+                
                         ShuffleboardLayout tiltGains = Shuffleboard.getTab("SetupTilt")
 
                                         .getLayout("MMGains", BuiltInLayouts.kList).withPosition(6, 0).withSize(1, 1)
@@ -306,26 +293,16 @@ public class SetUpOI {
                         tiltGains.addNumber("IZ", () -> tilt.izset);
                         tiltGains.addNumber("MaxAcc", () -> tilt.maxAccset);
                         tiltGains.addNumber("MaxV", () -> tilt.maxVelset);
-                        ShuffleboardLayout tiltVGains = Shuffleboard.getTab("SetupTilt")
 
-                                        .getLayout("VelGains", BuiltInLayouts.kList).withPosition(7, 0).withSize(1, 1)
-                                        .withProperties(Map.of("Label position", "LEFT")); // labels
+                        // ShuffleboardLayout tiltLockGains = Shuffleboard.getTab("SetupTilt")
 
-                        tiltVGains.addNumber("FF", () -> tilt.ffsetv);
-                        tiltVGains.addNumber("P", () -> tilt.psetv);
-                        tiltVGains.addNumber("I", () -> tilt.isetv);
-                        tiltVGains.addNumber("D", () -> tilt.dsetv);
-                        tiltVGains.addNumber("IZ", () -> tilt.izsetv);
+                        //                 .getLayout("LockGains", BuiltInLayouts.kList).withPosition(6, 1).withSize(1, 1)
+                        //                 .withProperties(Map.of("Label position", "LEFT"));
 
-                        ShuffleboardLayout tiltLockGains = Shuffleboard.getTab("SetupTilt")
-
-                                        .getLayout("LockGains", BuiltInLayouts.kList).withPosition(6, 1).withSize(1, 1)
-                                        .withProperties(Map.of("Label position", "LEFT"));
-
-                        tiltLockGains.addNumber("LP", () -> tilt.lpset);
-                        tiltLockGains.addNumber("LI", () -> tilt.liset);
-                        tiltLockGains.addNumber("LD", () -> tilt.ldset);
-                        tiltLockGains.addNumber("LIZ", () -> tilt.lizset);
+                        // tiltLockGains.addNumber("LP", () -> tilt.lpset);
+                        // tiltLockGains.addNumber("LI", () -> tilt.liset);
+                        // tiltLockGains.addNumber("LD", () -> tilt.ldset);
+                        // tiltLockGains.addNumber("LIZ", () -> tilt.lizset);
 
                 }
 

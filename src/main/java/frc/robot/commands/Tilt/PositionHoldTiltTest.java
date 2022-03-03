@@ -44,23 +44,16 @@ public class PositionHoldTiltTest extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
     SmartDashboard.putBoolean("TTiL", m_tilt.testLock);
 
-    m_tilt.motorEndpointDegrees = m_tilt.tiltMaxAngle - m_tilt.targetAngle;
-
+  
     if (!m_tilt.testLock) {
 
-      m_tilt.goToPositionMotionMagic(m_tilt.motorEndpointDegrees);
+      m_tilt.goToPositionMotionMagic(m_tilt.targetAngle);
     }
 
-    else {
-      
-      m_tilt.lockTiltToThrottle(m_tilt.testLockFromThrottle * 2);
-
-      SmartDashboard.putNumber("TTILFRTH", m_tilt.testLockFromThrottle);
-
-      m_tilt.targetAngle = m_tilt.getAngle();
-    }
+   
   }
 
   // Called once the command ends or is interrupted.

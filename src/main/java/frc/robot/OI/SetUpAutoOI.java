@@ -99,8 +99,7 @@ public class SetUpAutoOI {
                                         .getLayout("ShootConditions", BuiltInLayouts.kGrid).withPosition(1, 0)
                                         .withSize(2, 2).withProperties(Map.of("Label position", "TOP"));
 
-                        competition.addBoolean("TiltOnTarget",
-                                        () -> ll.getVertOnTarget(tilt.tiltVisionTolerance));
+ 
                         competition.addBoolean("TurretOnTarget",
                                         () -> ll.getHorOnTarget(turret.turretVisionTolerance));
                         competition.addBoolean("ShooterAtSpeed", () -> shooter.atSpeed());

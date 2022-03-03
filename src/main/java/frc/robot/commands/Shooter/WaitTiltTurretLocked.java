@@ -41,8 +41,8 @@ public class WaitTiltTurretLocked extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    return m_tilt.validTargetSeen && m_limelight.getVertOnTarget(m_tilt.tiltVisionTolerance)
+    return
 
-        && m_turret.validTargetSeen && m_limelight.getHorOnTarget(m_turret.turretVisionTolerance);
+    m_turret.validTargetSeen && m_limelight.getHorOnTarget(m_turret.turretVisionTolerance);
   }
 }

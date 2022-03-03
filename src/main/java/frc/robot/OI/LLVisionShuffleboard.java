@@ -113,9 +113,6 @@ public class LLVisionShuffleboard {
 
                         visionBools.addBoolean("Connected", () -> ll.isConnected());
 
-                        visionBools.addBoolean("TargetVertOK",
-                                        () -> ll.getVertOnTarget(tilt.tiltVisionTolerance));
-
                         visionBools.addBoolean("TargetHorOK",
                                         () -> ll.getHorOnTarget(turret.turretVisionTolerance));
 

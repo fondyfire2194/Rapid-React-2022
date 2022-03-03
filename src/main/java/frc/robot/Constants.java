@@ -64,11 +64,11 @@ public final class Constants {
       public static final int CLIMBER_RATCHET_1 = 6;
       public static final int CLIMBER_RATCHET_2 = 7;
 
-      public static final int FRONT_INTAKE_1 = 2;
-      public static final int FRONT_INTAKE_2 = 3;
+      public static final int FRONT_INTAKE_1 = 3;
+      public static final int FRONT_INTAKE_2 = 2;
 
-      public static final int REAR_INTAKE_1 = 0;
-      public static final int REAR_INTAKE_2 = 1;
+      public static final int REAR_INTAKE_1 = 1;
+      public static final int REAR_INTAKE_2 = 0;
 
    }
 
@@ -200,25 +200,17 @@ public final class Constants {
 
       public static final double TILT_MIN_ANGLE = 1;
 
-      public static final double TILT_MAX_ANGLE = 31.5;
+       public static final double TILT_MAX_ANGLE = 11;
 
-      public static final double TILT_CLOSE_ANGLE = 22;
+      public static double leadScrewPitch = Units.metersToInches(0.004);
 
-      public static final double TILT_MIDFIELD_ANGLE = 12;
+      public static double tiltArmLength = 12.375 ;
 
-      public  double TILT_HEIGHT = Units.inchesToMeters(26);
+      public static double motorGearRatio = 20;
 
-      public static double  maxAngleChange = TILT_MAX_ANGLE - TILT_MIN_ANGLE;
+      public static double anglePerScrewRev = Units.radiansToDegrees(Math.atan(leadScrewPitch/tiltArmLength));
 
-      public static double maxLeadscrewTurns = 6.0;
-
-      public static double maxMotorTurns = 120;
-
-      public static double tiltRange = TILT_MAX_ANGLE - TILT_MIN_ANGLE;
-
-      public static final double TILT_MID_ANGLE = TILT_MIN_ANGLE + ((TILT_MAX_ANGLE - TILT_MIN_ANGLE) / 2);
- 
-      public static double tiltDegreesPerRev = maxAngleChange / maxMotorTurns;// 30/120 = .25 degrees per rev
+      public static double tiltDegreesPerRev = anglePerScrewRev / motorGearRatio;
    }
 
    public static class TurretConstants{
@@ -286,7 +278,7 @@ public final class Constants {
 
       public static final double heightDifference = hubTargetHeight - CAMERA_HEIGHT;
  
-      public static final double CAMERA_BASE_ANGLE = 128.;
+      public static final double CAMERA_ANGLE = 128.;
 
    }
 

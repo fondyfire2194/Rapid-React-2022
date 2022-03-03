@@ -174,7 +174,7 @@ public class RobotContainer {
       public RobotContainer() {
 
             // Preferences.removeAll();
-            //  Pref.deleteUnused();
+              Pref.deleteUnused();
             // Pref.addMissing();
             m_drive = new RevDrivetrain();
             m_transport = new CargoTransportSubsystem();
@@ -274,24 +274,24 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 5).whenPressed(new RunShooter(m_shooter))
                         .whenPressed(new RunTopRoller(m_transport));
 
-            new JoystickButton(m_driverController, 3).whenPressed(new StopShoot(m_shooter, m_transport))
-                        .whenPressed(new StopRollers(m_transport))
-                        .whenPressed(new SetUpLimelightForNoVision(m_limelight))
-                        .whenPressed(new PositionTurret(m_turret, 0))
-                        .whenReleased(new PositionTilt(m_tilt, m_tilt.tiltMaxAngle));
+            // new JoystickButton(m_driverController, 3).whenPressed(new StopShoot(m_shooter, m_transport))
+            //             .whenPressed(new StopRollers(m_transport))
+            //             .whenPressed(new SetUpLimelightForNoVision(m_limelight))
+            //             .whenPressed(new PositionTurret(m_turret, 0))
+            //             .whenReleased(new PositionTilt(m_tilt, m_tilt.tiltMaxAngle));
 
-            new JoystickButton(m_driverController, 4).whenPressed(new PositionTilt(m_tilt, m_tilt.tiltMaxAngle))
-                        .whenPressed(new PositionTurret(m_turret, 0))
-                        .whenPressed(new SetUpLimelightForNoVision(m_limelight));
+            // new JoystickButton(m_driverController, 4).whenPressed(new PositionTilt(m_tilt, m_tilt.tiltMaxAngle))
+            //             .whenPressed(new PositionTurret(m_turret, 0))
+            //             .whenPressed(new SetUpLimelightForNoVision(m_limelight));
 
             // new JoystickButton(m_driverController, 6).
 
-            new JoystickButton(m_driverController, 7).whileHeld(new PositionTilt(m_tilt, m_tilt.tiltMinAngle))
-                        .whenPressed(new PositionTurret(m_turret, 0))
-                        .whileHeld(new SetUpLimelightForDriver(m_limelight))
-                        .whenReleased(new PositionTilt(m_tilt, m_tilt.tiltMaxAngle))
-                        .whenReleased(new SetVisionMode(m_limelight))
-                        .whenReleased(new SetUpLimelightForNoVision(m_limelight));
+            // new JoystickButton(m_driverController, 7).whileHeld(new PositionTilt(m_tilt, m_tilt.tiltMinAngle))
+            //             .whenPressed(new PositionTurret(m_turret, 0))
+            //             .whileHeld(new SetUpLimelightForDriver(m_limelight))
+            //             .whenReleased(new PositionTilt(m_tilt, m_tilt.tiltMaxAngle))
+            //             .whenReleased(new SetVisionMode(m_limelight))
+            //             .whenReleased(new SetUpLimelightForNoVision(m_limelight));
 
              new JoystickButton(m_driverController, 8).whenPressed(new ToggleActiveIntake(m_intakes));
 

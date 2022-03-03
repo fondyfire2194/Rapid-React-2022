@@ -44,7 +44,7 @@ public class DriveToFinalTarget extends CommandBase {
     leftContourArea = m_rcv2.getLeftArea();
     rightContourArea = m_rcv2.getRightArea();
 
-    if (m_turret.getLockAtTarget() && m_tilt.getLockAtTarget()) {
+    if (m_turret.getLockAtTarget()) {
       if (m_turret.getAngle() >= 0) {
 
         driveForward = m_turret.getAngle() > 0 && leftContourArea > rightContourArea ||

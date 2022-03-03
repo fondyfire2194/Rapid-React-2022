@@ -25,7 +25,7 @@ public class CalculateAndShoot extends SequentialCommandGroup {
 
         new CalculateTargetDistance(ll, rcv2, tilt, turret, shooter),
         
-        new CalculateSpeedAndTiltFromDistance(shooter, tilt)
+        new SelectSpeedAndTiltByDistance()
 
     );
   }

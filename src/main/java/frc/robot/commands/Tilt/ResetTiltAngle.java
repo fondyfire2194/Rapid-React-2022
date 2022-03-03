@@ -32,7 +32,7 @@ public class ResetTiltAngle extends CommandBase {
     public void execute() {
         loopCtr++;
         m_tilt.resetAngle();
-        m_tilt.targetAngle = TiltConstants.TILT_MAX_ANGLE;
+        m_tilt.targetAngle = 0;
         if (RobotBase.isReal())
             m_tilt.setSoftwareLimits();
     }

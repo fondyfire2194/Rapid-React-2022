@@ -12,7 +12,6 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.PositionTurretToVision;
-import frc.robot.commands.Turret.SetTurretUseVision;
 import frc.robot.commands.Turret.TurretWaitForStop;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
 import frc.robot.subsystems.RevShooterSubsystem;
@@ -57,7 +56,7 @@ public class AcquireTarget extends SequentialCommandGroup {
 
         new PositionTurretToVision(turret, ll, ll.getdegRotationToTarget()),
 
-        new TurretWaitForStop(turret),
+        new TurretWaitForStop(turret), new GetNumberOfContourValues(rcv2),
 
         new CalculateTarget(rcv2),
 
