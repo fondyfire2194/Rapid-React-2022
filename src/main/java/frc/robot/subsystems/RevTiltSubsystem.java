@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.TiltConstants;
 import frc.robot.Pref;
+import frc.robot.Robot;
 
 
 public class RevTiltSubsystem extends SubsystemBase {
@@ -51,11 +52,7 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     public boolean validTargetSeen;
     public double adjustedVerticalError;
-    private final static double pivotDistance = 10.5;// inches
-
-    private final double[] pinDistances = { 2.1, 3.0842519685, 4.068503937, 5.0527559055, 6.037007874, 7.0212598425,
-            8.005511811 };
-
+    
     public final double degreesPerRev = TiltConstants.tiltDegreesPerRev;// degrees per motor turn
     public final double tiltMinAngle = TiltConstants.TILT_MIN_ANGLE;
 
@@ -154,7 +151,7 @@ public class RevTiltSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        SmartDashboard.putNumber("degPerRev", degreesPerRev);
+      //  SmartDashboard.putNumber("degPerRev", degreesPerRev);
         checkTune();
 
         if (RobotBase.isReal() && DriverStation.isDisabled())
@@ -193,7 +190,6 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     public void moveManually(double speed) {
         targetAngle = getAngle();
-
         if (RobotBase.isReal())
             m_motor.set(speed);
         else
@@ -207,51 +203,19 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     }
 
-    public void positionTilt(double motorDegrees, int slotNumber) {
-        mPidController.setReference(motorDegrees, ControlType.kPosition, slotNumber);
+    public void positionTilt(double degrees, int slotNumber) {
+        mPidController.setReference(degrees, ControlType.kPosition, slotNumber);
 
     }
 
-    public void goToPositionMotionMagic(double motorDegrees) {
+    public void goToPositionMotionMagic(double degrees) {
 
         // convert angle to motor turns
 
-        mPidController.setReference(motorDegrees, ControlType.kSmartMotion, SMART_MOTION_SLOT);
+        mPidController.setReference(degrees, ControlType.kSmartMotion, SMART_MOTION_SLOT);
     }
 
-    // public void lockTiltToVision(double cameraError) {
-    // lockPIDOut = tiltLockController.calculate(cameraError, 0);
-
-    // runAtVelocity(lockPIDOut);
-
-    // targetAngle = getAngle();
-    // }
-
-    // public void lockTiltToThrottle(double throttleError) {
-    // SmartDashboard.putNumber("TTHERR", throttleError);
-    // lockPIDOut = tiltLockController.calculate(throttleError, 0);
-    // SmartDashboard.putNumber("PIDL OUT", lockPIDOut);
-    // SmartDashboard.putNumber("PIDL Err", tiltLockController.getPositionError());
-    // runAtVelocity(lockPIDOut);
-    // targetAngle = getAngle();
-    // }
-
-    // public double getLockControllerOutput(double cameraError) {
-    // return tiltLockController.calculate(cameraError, 0);
-    // }
-
-    // public void lockWithLockController(double cameraError) {
-    // m_motor.set(tiltLockController.calculate(cameraError, 0));
-    // }
-
-    // public double getLockPositionError() {
-    // return tiltLockController.getPositionError();
-    // }
-
-    // public boolean getLockAtTarget() {
-    // return tiltLockController.atSetpoint();
-    // }
-
+  
     public void resetAngle() {
         mEncoder.setPosition(0);
         targetAngle = 0;
@@ -367,28 +331,7 @@ public class RevTiltSubsystem extends SubsystemBase {
         driverVerticalOffsetMeters = 0;
     }
 
-    /**
-     * The angle should be governed by angle =(2*(ASIN(distance between
-     * pins/2)/10.5)) this will be in radians.
-     * 
-     * 
-     * @return
-     */
-    // public double calculateTiltAngle() {
-    // // separate angle into integer and remainder
-
-    // int lsTurns = (int) getMotorDegrees() / 20;
-    // double rem = getMotorDegrees() / 40 - (double) lsTurns;
-
-    // // get angle from looking up pin distance table and interpolating for
-    // // remainder
-    // double pinDistance = pinDistances[lsTurns] + (pinDistances[lsTurns + 1] -
-    // pinDistances[lsTurns]) * rem;
-    // // SmartDashboard.putNumber("PInDist", pinDistance);
-    // double valRads = 2 * Math.asin(pinDistance / (2 * pivotDistance));
-    // return cameraBaseAngle + Math.toDegrees(valRads);
-    // }
-
+  
     public void calibratePID(final double p, final double i, final double d, final double kIz, final double allE,
             int slotNumber) {
         if (p != lastkP) {
@@ -433,47 +376,16 @@ public class RevTiltSubsystem extends SubsystemBase {
         }
     }
 
-    // public void calibratePIDV(final double p, final double i, final double d,
-    // final double kIz, double allE,
-    // int slotNumber) {
-    // if (p != lastkPv) {
-    // mPidController.setP(p, slotNumber);
-    // lastkPv = mPidController.getP(slotNumber);
-
-    // }
-    // if (i != lastkIv) {
-    // mPidController.setI(i, slotNumber);
-    // lastkIv = i;
-    // }
-
-    // if (d != lastkDv) {
-    // mPidController.setD(d, slotNumber);
-    // lastkDv = d;
-    // }
-
-    // if (kIz != lastkIzv) {
-    // mPidController.setIZone(kIz, slotNumber);
-    // lastkIzv = kIz;
-    // }
-
-    // if (kMinOutputv != lastkMinOutputv || kMaxOutputv != lastkMaxOutputv) {
-    // mPidController.setOutputRange(kMinOutputv, kMaxOutputv, slotNumber);
-    // lastkMinOutputv = kMinOutputv;
-    // lastkMaxOutputv = kMaxOutputv;
-    // }
-
-    // }
-
-    private void setFF_MaxOuts() {
-        kFF = .0004;// 10000 rpm = 10000 * .25 deg per rev= 2500 1/2500 = .0004
- //       kFFv = 0.00;
+     private void setFF_MaxOuts() {
+         
+        kFF = .0167;// 10000 rpm = (10000/60) * .03645 = 60  1/60 = .0167
         kMinOutput = -.5;
         kMaxOutput = .6;
 
         mPidController.setFF(kFF, SMART_MOTION_SLOT);
-        // mPidController.setFF(kFFv, VELOCITY_SLOT);
+ 
         mPidController.setOutputRange(kMinOutput, kMaxOutput, SMART_MOTION_SLOT);
-        // mPidController.setOutputRange(kMinOutput, kMaxOutput, VELOCITY_SLOT);
+ 
     }
 
     private void tuneMMGains() {
@@ -489,17 +401,6 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     }
 
-    // private void tuneVelGains() {
-    // double p = Pref.getPref("tIKpv");
-    // double i = Pref.getPref("tIKiv");
-    // double d = Pref.getPref("tIKdv");
-    // double iz = Pref.getPref("tIKizv");
-    // maxVel = Pref.getPref("tIMaxVv");
-    // maxAcc = Pref.getPref("tIMaxAv");
-
-    // allowedErrv = .01;
-    // calibratePIDV(p, i, d, iz, allowedErrv, VELOCITY_SLOT);
-    // }
 
     private void checkTune() {
 
@@ -514,23 +415,6 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         if (lastTuneOn)
             lastTuneOn = tuneOn;
-
-        // vel controller
-        // tuneOnv = Pref.getPref("tITunev") == 1. && tiltMotorConnected;
-
-        // if (tuneOnv && !lastTuneOnv) {
-
-        // tuneVelGains();
-        // getVelGains();
-        // lastTuneOnv = true;
-        // }
-
-        // if (lastTuneOnv)
-        // lastTuneOnv = tuneOnv;
-
-        // Lock controller
-
-        lockTuneOn = Pref.getPref("tiLTune") != 0.;
 
     }
 

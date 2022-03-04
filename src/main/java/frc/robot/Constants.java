@@ -169,58 +169,61 @@ public final class Constants {
    public static class HoodedShooterConstants {
 
       public static final double MAX_SHOOTER_RPM = 5700;
-      
-   }
-      /**
-       * Tilt axis is a leadscrew driven through a 14T to 28T or 2:1 belt and a 10:1
-       * gearbox = 20:1
-       * 
-       * The tilt has a mechanical base angle of around 60 degrees and a max angle of
-       * around 90
-       * 
-       * Accurate angle calculations for target distance purposes are done based on
-       * the tilt mechanical design
-       * 
-       * 
-       * 
-       * The calculated angle will be used for position display and closed loop
-       * purposed. The shoot angle counts down as the hood moves up. The angle is
-       * preset to max and the encoder is set to 0 on the bottom switch. Then the
-       * encoder is subtracted from max so as it increases the angle decreases.
-       * 
-       * It is pretty much linear with turns.
-       * 
-       * Leadscrew has 122/20 or 6.1 turns from bottom limit switch
-       * 
-       * 
-       */
-   
 
-   public static class TiltConstants{
+   }
+
+   /**
+    * Tilt axis is a leadscrew driven through a 14T to 28T or 2:1 belt and a 10:1
+    * gearbox = 20:1
+    * 
+    * The tilt has a mechanical base angle of around 60 degrees and a max angle of
+    * around 90
+    * 
+    * Accurate angle calculations for target distance purposes are done based on
+    * the tilt mechanical design
+    * 
+    * 
+    * 
+    * The calculated angle will be used for position display and closed loop
+    * purposed. The shoot angle counts down as the hood moves up. The angle is
+    * preset to max and the encoder is set to 0 on the bottom switch. Then the
+    * encoder is subtracted from max so as it increases the angle decreases.
+    * 
+    * It is pretty much linear with turns.
+    * 
+    * Leadscrew has 122/20 or 6.1 turns from bottom limit switch
+    * 
+    * 
+    */
+
+   public static class TiltConstants {
 
       public static final double TILT_MIN_ANGLE = 1;
 
-       public static final double TILT_MAX_ANGLE = 11;
+      public static final double TILT_MAX_ANGLE = 11;
 
       public static double leadScrewPitch = Units.metersToInches(0.004);
 
-      public static double tiltArmLength = 12.375 ;
-
+      public static double tiltArmLength = 12.375;
+//lsp/tal = .15748/12.375 = .01272
       public static double motorGearRatio = 20;
-
-      public static double anglePerScrewRev = Units.radiansToDegrees(Math.atan(leadScrewPitch/tiltArmLength));
-
+//    atan .1272 = .7288
+      public static double anglePerScrewRev = Units.radiansToDegrees(Math.atan(leadScrewPitch / tiltArmLength));
+//.03645
       public static double tiltDegreesPerRev = anglePerScrewRev / motorGearRatio;
    }
 
-   public static class TurretConstants{
+   public static class TurretConstants {
       /**
        * 21 revs of turret motor turns an 18 tooth pinion one time There are 222 teeth
-       * in 360 degrees, so 1 tooth = 360/222 = 1.6216 degrees So 18 teeth = 18 * 1.6216
+       * in 360 degrees, so 1 tooth = 360/222 = 1.6216 degrees So 18 teeth = 18 *
+       * 1.6216
        * = 28.189 degrees and one motor rev is 1.38996 degrees
        * 
-       * At 6000 motor rpm = 100 rps the turret rotates at 1.421 * 100 = 142 deg per
-       * With end to end travel of 200 degrees = 200/142 = 1.4 second
+       * At 10,000 motor rpm = 170 rps the turret rotates at 1.421 * 170 = 242 deg per sec
+       * ff = 1/ max deg per sec = 1/242 = .004
+       * 
+       * With end to end travel of 100 degrees = 100/142 = .7 second
        * 
        * 
        * 
@@ -228,10 +231,10 @@ public final class Constants {
 
       public static final double TURRET_MAX_ANGLE = 55;
 
-      public static final double TURRET_MIN_ANGLE = -45;
+      public static final double TURRET_MIN_ANGLE = -55;
 
       public static final double TURRET_DEG_PER_MOTOR_REV = 1.38996;
-   
+
    }
 
    public static final class IntakeConstants {
@@ -270,6 +273,7 @@ public final class Constants {
    public static final class FieldConstants {
 
       public static final double fieldWidth = Units.inchesToMeters(323);
+
       public static final double fieldLength = Units.inchesToMeters(626.25);
 
       public static final double hubTargetHeight = Units.inchesToMeters(626.25);
@@ -277,7 +281,7 @@ public final class Constants {
       public static final double CAMERA_HEIGHT = Units.inchesToMeters(90.);
 
       public static final double heightDifference = hubTargetHeight - CAMERA_HEIGHT;
- 
+
       public static final double CAMERA_ANGLE = 128.;
 
    }
@@ -290,15 +294,13 @@ public final class Constants {
       public static final int driverPipeline = 4;
       public static final int ledsOffPipeline = 8;
 
-
       public static final double noZoomMinBoundingBoxHeight = 3;
-      
+
       public static final double noZoomMaxBoundingBoxHeight = 10;
-     
+
       public static final double x2ZoomMinBoundingBoxHeight = 8;
 
    }
 
-   
    public static double kRobotPeriod = .02;
 }

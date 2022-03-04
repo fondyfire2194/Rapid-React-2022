@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
   int tst;
   private int loopCtr;
   BooleanLogEntry rrBooleanLog;
-  DoubleLogEntry rrDoubleLog;
+  public DoubleLogEntry rrDoubleLog;
   StringLogEntry rrStringLog;
 
   /**
@@ -161,11 +161,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
 
-    // run can check on switch
-    // if (m_robotContainer.m_setup.runCan.getBoolean(false)) {
-    // m_robotContainer.m_setup.checkCANDevices();
-    // m_robotContainer.m_setup.runCan.setBoolean(false);
-    // }
   }
 
   public void autonomousInit() {

@@ -16,7 +16,7 @@ public class TiltJogVelocity extends CommandBase {
 
   private final RevTiltSubsystem m_tilt;
   private final Supplier<Double> m_xaxisSpeedSupplier;
-  private double maxSpeed = 45;
+  private double maxSpeed = 100;
   private XboxController m_controller;
 
   public TiltJogVelocity(RevTiltSubsystem tilt, Supplier<Double> xaxisSpeedSupplier, XboxController controller) {

@@ -373,41 +373,12 @@ public class RevTurretSubsystem extends SubsystemBase {
         }
     }
 
-    // public void calibratePIDV(final double p, final double i, final double d,
-    // final double kIz, final double allE,
-    // int slotNumber) {
-
-    // if (p != lastkPv) {
-    // mPidController.setP(p, slotNumber);
-    // lastkPv = mPidController.getP(slotNumber);
-
-    // }
-    // if (i != lastkIv) {
-    // mPidController.setI(i, slotNumber);
-    // lastkIv = mPidController.getI(slotNumber);
-    // }
-
-    // if (d != lastkDv) {
-    // mPidController.setD(d, slotNumber);
-    // lastkDv = mPidController.getD(slotNumber);
-    // }
-
-    // if (kIz != lastkIzv) {
-    // mPidController.setIZone(kIz, slotNumber);
-    // lastkIzv = mPidController.getIZone(slotNumber);
-    // }
-
-    // }
-
     private void setFF_MaxOuts() {
-        kFF = .0002;
-        // kFFv = .001;
+        kFF = .004; //see Turret Constants
         kMinOutput = -.5;
         kMaxOutput = .5;
         mPidController.setOutputRange(kMinOutput, kMaxOutput, SMART_MOTION_SLOT);
-        // mPidController.setOutputRange(kMinOutput, kMaxOutput, VELOCITY_SLOT);
         mPidController.setFF(kFF, SMART_MOTION_SLOT);
-        // mPidController.setFF(kFFv, VELOCITY_SLOT);
 
     }
 
@@ -423,17 +394,6 @@ public class RevTurretSubsystem extends SubsystemBase {
         calibratePID(p, i, d, iz, SMART_MOTION_SLOT);
 
     }
-
-    // private void tuneVelGains() {
-
-    // double p = Pref.getPref("tURKpv");
-    // double i = Pref.getPref("tURKiv");
-    // double d = Pref.getPref("tURKdv");
-    // double iz = Pref.getPref("tURKizv");
-
-    // allowedErrv = .1;
-    // calibratePIDV(p, i, d, iz, allowedErrv, VELOCITY_SLOT);
-    // }
 
     private void setTurretLockGains() {
 
@@ -458,19 +418,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         if (lastTuneOn)
             lastTuneOn = tuneOn;
 
-        // vel controller
-        // tuneOnv = Pref.getPref("tURTunev") == 1. && turretMotorConnected;
-
-        // if (tuneOnv && !lastTuneOnv) {
-
-        // tuneVelGains();
-
-        // lastTuneOnv = true;
-        // }
-
-        // if (lastTuneOnv)
-        // lastTuneOnv = tuneOnv;
-
+    
         // lock controller
 
         lockTuneOn = Pref.getPref("tuLTune") != 0.;
