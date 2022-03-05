@@ -5,16 +5,17 @@
 package frc.robot.commands.Intakes;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Robot;
 import frc.robot.subsystems.IntakesSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ToggleActiveIntake extends InstantCommand {
-  IntakesSubsystem m_intake;
+public class SetLaunchpadPipeline extends InstantCommand {
+  private IntakesSubsystem m_intake;
 
-  public ToggleActiveIntake(IntakesSubsystem intake) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public SetLaunchpadPipeline(IntakesSubsystem intake) {
+    // Use addRequirements here to declare subsystem dependencies.
     m_intake = intake;
   }
 
@@ -22,6 +23,18 @@ public class ToggleActiveIntake extends InstantCommand {
   @Override
   public void initialize() {
 
-    m_intake.toggleActiveIntake();
+    if (Robot.getAllianceColorBlue()) {
+
+      m_intake.activePipeline=m_intake.blueLaunchpadPipeline;
+
+    }
+
+    else{
+
+       m_intake.activePipeline=m_intake.redLaunchpadPipeline;
+ 
+    }
+
+   m_intake.frontCamera.setPipelineIndex(m_intake.activePipeline);
   }
 }

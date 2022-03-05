@@ -98,7 +98,7 @@ public final class Constants {
       // max speed = .4788 *(5700 /(60 *10.2 )) = 4.5 mps (14.5 fps)
       public static double WHEEL_DIAMETER = .1524;// 6"
       public static double WHEEL_CIRCUMFERENCE = .4788;// meters
-      public static double METERS_PER_MOTOR_REV = 0.0467;// pi * diameter /geaar ratio
+      public static double METERS_PER_MOTOR_REV = 0.0467;// pi * diameter /gear ratio
       // .0467 *5700/60 = 4.4 mps
       public static double NEO550_COUNTS_PER_REV = 4096;// not used
       public static double DRIVE_GEAR_RATIO = 10.25;

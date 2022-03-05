@@ -32,19 +32,19 @@ import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.VisionReferenceTarget;
 import frc.robot.commands.CargoTransport.ReleaseCargo;
-import frc.robot.commands.CargoTransport.RunTopRoller;
 import frc.robot.commands.Climber.ClimberArm;
 import frc.robot.commands.Climber.RunClimber;
 import frc.robot.commands.Intakes.RunActiveIntakeMotor;
+import frc.robot.commands.Intakes.SetFrontIntakeActive;
+import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StartActiveIntake;
 import frc.robot.commands.Intakes.StopIntakeMotors;
-import frc.robot.commands.Intakes.ToggleActiveIntake;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.ArcadeDriveVelocity;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
+import frc.robot.commands.RobotDrive.DriveToCargo;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
-import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Tilt.TiltJog;
 import frc.robot.commands.Tilt.TiltJogVelocity;
@@ -255,8 +255,7 @@ public class RobotContainer {
                         .whileHeld(new ShootCargo(m_shooter, m_tilt, m_turret,
                                     m_limelight, m_transport, m_compressor, 100));
 
-            new JoystickButton(m_driverController, 5).whenPressed(new RunShooter(m_shooter))
-                        .whenPressed(new RunTopRoller(m_transport));
+            new JoystickButton(m_driverController, 5).whenPressed(new SetFrontIntakeActive(m_intakes));
 
             // new JoystickButton(m_driverController, 3).whenPressed(new
             // StopShoot(m_shooter, m_transport))
@@ -280,15 +279,15 @@ public class RobotContainer {
             // .whenReleased(new SetVisionMode(m_limelight))
             // .whenReleased(new SetUpLimelightForNoVision(m_limelight));
 
-            new JoystickButton(m_driverController, 8).whenPressed(new ToggleActiveIntake(m_intakes));
+            new JoystickButton(m_driverController, 8).whenPressed(new SetRearIntakeActive(m_intakes));
 
-            // new JoystickButton(m_driverController, 9)
+            new JoystickButton(m_driverController, 9).whileHeld(getDriveToCargoCommand());
 
             // new JoystickButton(m_driverController, 11).
 
             // Hold to shoot all
             new JoystickButton(m_driverController, 12).whileHeld(() -> m_shooter.shootAll())
-                        .whenReleased(() -> m_shooter.shootOne());
+                       .whenReleased(() -> m_shooter.shootOne());
 
             driverUpButton.whenPressed(() -> m_tilt.aimHigher());
 
@@ -408,6 +407,11 @@ public class RobotContainer {
 
       public Command getDriveStraightCommand() {
             return new DriveStraightJoystick(m_drive, () -> -m_driverController.getY());
+
+      }
+
+      public Command getDriveToCargoCommand() {
+            return new DriveToCargo(m_drive, () -> -m_driverController.getY(), m_intakes);
 
       }
 

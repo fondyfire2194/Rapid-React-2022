@@ -24,7 +24,9 @@ import frc.robot.commands.CargoTransport.StopTopRoller;
 import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
 import frc.robot.commands.Intakes.RunActiveIntakeMotor;
+import frc.robot.commands.Intakes.SetCargoPipeline;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
+import frc.robot.commands.Intakes.SetLaunchpadPipeline;
 import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StopIntakeMotors;
 import frc.robot.commands.Intakes.ToggleFrontIntakeCam;
@@ -134,6 +136,8 @@ public class SetUpOI {
                         frontActions.addNumber("TargetArea",
                                         () -> intake.getFrontArea());
                         frontActions.add("ToggleCamMode", new ToggleFrontIntakeCam(intake));
+                        frontActions.add("SetCargoPipeline", new SetCargoPipeline(intake));
+                        frontActions.add("SetLaunchpadPipeline", new SetLaunchpadPipeline(intake));
 
                 }
 

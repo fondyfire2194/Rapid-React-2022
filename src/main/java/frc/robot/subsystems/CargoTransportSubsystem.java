@@ -133,7 +133,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   public boolean getAllianceBlue() {
-    return Robot.getAllianceColor();
+    return Robot.getAllianceColorBlue();
   }
 
   public boolean getCargoAllianceMatch() {

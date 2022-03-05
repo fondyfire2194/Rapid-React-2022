@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.SolenoidConstants;
@@ -43,8 +44,8 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public int redCargoPipeline = 0;
   public int blueCargoPipeline = 1;
-  public int redLauchPadPipeline = 2;
-  public int blueLaunchPadPipeline = 3;
+  public int redLaunchpadPipeline = 2;
+  public int blueLaunchpadPipeline = 3;
 
   public int activePipeline = redCargoPipeline;
 
@@ -71,7 +72,7 @@ public class IntakesSubsystem extends SubsystemBase {
 
     rearIntakeCargoDetect = new AnalogInput(2);
 
-    frontCamera.setPipelineIndex(0);
+    frontCamera.setPipelineIndex(redCargoPipeline);
 
   }
 
@@ -86,10 +87,12 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public void setFrontActive() {
     useFrontIntake = true;
+    Shuffleboard.selectTab("FrontIntakeCamera");
   }
 
   public void setRearActive() {
     useFrontIntake = false;
+    Shuffleboard.selectTab("RearIntakeCamera");
   }
 
   @Override
@@ -246,9 +249,18 @@ public class IntakesSubsystem extends SubsystemBase {
       return getRearMotor();
   }
 
+  public double getActiveYaw() {
+    double temp = 0;
+    if (useFrontIntake)
+      temp = getFrontYaw();
+    return temp;
+
+  }
+
   public double getFrontYaw() {
 
     double temp = 0;
+
     if (frontCamera.getLatestResult().hasTargets()) {
 
       temp = frontCamera.getLatestResult().getBestTarget().getYaw();

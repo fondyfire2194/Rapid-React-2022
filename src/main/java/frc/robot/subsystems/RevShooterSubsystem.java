@@ -104,7 +104,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double shootCargosRunning;
  
     public NetworkTableEntry shooterSpeed;
-    public boolean wrongCargoColor;
+    public boolean correctCargoColor;
 
     public RevShooterSubsystem() {
 

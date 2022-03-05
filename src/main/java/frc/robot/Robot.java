@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer = new RobotContainer();
 
-    getAllianceColor();
+    getAllianceColorBlue();
 
     RotateLimelight90.init();
 
@@ -139,8 +139,8 @@ public class Robot extends TimedRobot {
 
         || m_robotContainer.m_intakes.getCargoAtFront() || m_robotContainer.m_intakes.getCargoAtRear();
 
-    m_robotContainer.m_shooter.wrongCargoColor = getAllianceColor() && !m_robotContainer.m_transport.getCargoIsBlue()
-        || !getAllianceColor() && !m_robotContainer.m_transport.getCargoIsRed();
+    m_robotContainer.m_shooter.correctCargoColor = getAllianceColorBlue() ^m_robotContainer.m_transport.getCargoIsBlue();
+        
     ;
 
   }
@@ -320,7 +320,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_drive.resetPose(pose);
   }
 
-  public static boolean getAllianceColor() {
+  public static boolean getAllianceColorBlue() {
 
     return DriverStation.getAlliance() == Alliance.Blue;
   }
