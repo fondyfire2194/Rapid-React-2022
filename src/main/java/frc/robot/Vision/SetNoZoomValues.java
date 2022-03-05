@@ -36,6 +36,7 @@ public class SetNoZoomValues extends InstantCommand {
       m_rcv2.activeVFOV = m_rcv2.NO_ZOOM_CAMERA_HFOV;
 
     } else {
+      
       m_rcv2.active_IMG_WIDTH = m_rcv2.NO_ZOOM_IMG_WIDTH;
       m_rcv2.active_IMG_WIDTH = m_rcv2.NO_ZOOM_IMG_HEIGHT;
 

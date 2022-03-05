@@ -36,6 +36,7 @@ public class Set2XZoomValues extends InstantCommand {
       m_rcv2.activeVFOV = m_rcv2.ZOOM_CAMERA_HFOV;
 
     } else {
+      
       m_rcv2.active_IMG_WIDTH = m_rcv2.ZOOM_IMG_WIDTH;
       m_rcv2.active_IMG_WIDTH = m_rcv2.ZOOM_IMG_HEIGHT;
 

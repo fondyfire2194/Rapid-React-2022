@@ -56,9 +56,9 @@ public class Robot extends TimedRobot {
   public double timeToStart;
   int tst;
   private int loopCtr;
-  BooleanLogEntry rrBooleanLog;
-  public DoubleLogEntry rrDoubleLog;
-  StringLogEntry rrStringLog;
+  public static BooleanLogEntry rrBooleanLog;
+  public static DoubleLogEntry rrDoubleLog;
+  public static StringLogEntry rrStringLog;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -114,6 +114,8 @@ public class Robot extends TimedRobot {
       rrDoubleLog.append(3.5);
       rrStringLog.append("wow!");
     }
+
+   SmartDashboard.putBoolean("FMSConn", m_robotContainer.isMatch);
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
     // SmartDashboard.putNumber("thr",m_robotContainer.m_driverController.getThrottle());
     SmartDashboard.putNumber("thr1", m_robotContainer.getThrottle());
@@ -181,7 +183,6 @@ public class Robot extends TimedRobot {
 
     autoChoice = 0;// m_robotContainer.m_setup.autoChooser.getSelected();
 
-  
     LimeLight ll = m_robotContainer.m_limelight;
     RevTiltSubsystem tilt = m_robotContainer.m_tilt;
     RevTurretSubsystem turret = m_robotContainer.m_turret;
@@ -322,6 +323,11 @@ public class Robot extends TimedRobot {
   public static boolean getAllianceColor() {
 
     return DriverStation.getAlliance() == Alliance.Blue;
+  }
+
+  public static boolean getFMConnected() {
+
+    return DriverStation.isFMSAttached();
   }
 
 }

@@ -7,6 +7,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.wpilibj.AnalogInput;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -34,14 +37,16 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public boolean rearIntakeMotorConnected;
 
+  public PhotonCamera frontCamera = new PhotonCamera("FrontCam");
+
+  public String[] pipelineNames = { "RedCargo", "BlueCargo", "RedLaunchpad", "BlueLaunchpad" };
+
   public int redCargoPipeline = 0;
   public int blueCargoPipeline = 1;
   public int redLauchPadPipeline = 2;
   public int blueLaunchPadPipeline = 3;
 
-  public int activeCargoPipeline = redCargoPipeline;
-  
-  public int activeLaunchPadPipeline = redLauchPadPipeline;
+  public int activePipeline = redCargoPipeline;
 
   private AnalogInput frontIntakeCargoDetect;
 
@@ -49,9 +54,7 @@ public class IntakesSubsystem extends SubsystemBase {
 
   private double cargoDetectedVolts = 2.75;
 
-public boolean twoCargoOnBoard;
-
-
+  public boolean twoCargoOnBoard;
 
   public IntakesSubsystem() {
 
@@ -68,7 +71,8 @@ public boolean twoCargoOnBoard;
 
     rearIntakeCargoDetect = new AnalogInput(2);
 
-    
+    frontCamera.setPipelineIndex(0);
+
   }
 
   public void toggleActiveIntake() {
@@ -91,6 +95,10 @@ public boolean twoCargoOnBoard;
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (frontCamera.getPipelineIndex() < 0) {
+      activePipeline = 0;
+    } else
+      activePipeline = frontCamera.getPipelineIndex();
   }
 
   public boolean getCargoAtFront() {
@@ -238,10 +246,40 @@ public boolean twoCargoOnBoard;
       return getRearMotor();
   }
 
- 
+  public double getFrontYaw() {
 
-  
-  
+    double temp = 0;
+    if (frontCamera.getLatestResult().hasTargets()) {
 
-  
+      temp = frontCamera.getLatestResult().getBestTarget().getYaw();
+    }
+
+    return temp;
+
+  }
+
+  public double getFrontPitch() {
+
+    double temp = 0;
+    if (frontCamera.getLatestResult().hasTargets()) {
+
+      temp = frontCamera.getLatestResult().getBestTarget().getPitch();
+    }
+
+    return temp;
+
+  }
+
+  public double getFrontArea() {
+
+    double temp = 0;
+    if (frontCamera.getLatestResult().hasTargets()) {
+
+      temp = frontCamera.getLatestResult().getBestTarget().getArea();
+    }
+
+    return temp;
+
+  }
+
 }

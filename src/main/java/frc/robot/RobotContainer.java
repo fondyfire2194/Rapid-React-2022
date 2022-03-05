@@ -162,14 +162,13 @@ public class RobotContainer {
        * The container for the robot. Contains subsysems, OI devices, and commands.
        */
       public RobotContainer() {
-
+            isMatch = Robot.getFMConnected();
             // Preferences.removeAll();
-              Pref.deleteUnused();
-            // Pref.addMissing();
+            Pref.deleteUnused();
+            Pref.addMissing();
             m_drive = new RevDrivetrain();
             m_transport = new CargoTransportSubsystem();
-            // m_rearIntake = new RearIntakeSubsystem();
-            // m_frontIntake = new FrontIntakeSubsystem();
+
             m_intakes = new IntakesSubsystem();
 
             m_shooter = new RevShooterSubsystem();
@@ -191,33 +190,27 @@ public class RobotContainer {
 
             m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
-            // m_autoFactory = new AutoFactory(m_shooter, m_turret, m_tilt, m_transport,
-            // m_robotDrive, m_limelight,
-            // m_compressor, m_intake);
-
             m_trajectory = new FondyFireTrajectory(m_drive);
 
-            //m_tilt.setDefaultCommand(new PositionHoldTilt(m_tilt,
-                       // m_limelight));
+            // m_tilt.setDefaultCommand(new PositionHoldTilt(m_tilt,
+            // m_limelight));
             // // m_tilt.setDefaultCommand(new PositionHoldTiltTest(m_tilt));
 
-          //  m_turret.setDefaultCommand(new PositionHoldTurret(m_turret,
-                      //  m_limelight));
+            // m_turret.setDefaultCommand(new PositionHoldTurret(m_turret,
+            // m_limelight));
 
             // m_turret.setDefaultCommand(new TurretJog(m_turret, () ->
             // setupGamepad.getRawAxis(0) / 5, setupGamepad));
-
-            isMatch =false;// Pref.getPref("IsMatch") == 1.;
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intakes, m_climber, m_trajectory, isMatch);
 
             m_autoOi = new SetUpAutoOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
-                        m_intakes, m_climber, m_trajectory, m_rCV2,  isMatch);
+                        m_intakes, m_climber, m_trajectory, m_rCV2, isMatch);
 
             m_hvis = new HubVisionShuffleboard(m_limelight, m_rCV2, m_vrt, m_turret, m_tilt, m_shooter, isMatch);
 
-            m_llVis = new LLVisionShuffleboard(m_limelight, m_rCV2,m_turret, m_tilt, m_shooter, isMatch);
+            m_llVis = new LLVisionShuffleboard(m_limelight, m_rCV2, m_turret, m_tilt, m_shooter, isMatch);
 
             m_drive.setDefaultCommand(getArcadeDriveCommand());
 
@@ -254,7 +247,8 @@ public class RobotContainer {
              * 
              */
 
-            new JoystickButton(m_driverController, 2).whileHeld(new StartActiveIntake(m_intakes, .75, m_transport, .25));
+            new JoystickButton(m_driverController, 2)
+                        .whileHeld(new StartActiveIntake(m_intakes, .75, m_transport, .25));
 
             new JoystickButton(m_driverController, 1)
 
@@ -264,26 +258,29 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 5).whenPressed(new RunShooter(m_shooter))
                         .whenPressed(new RunTopRoller(m_transport));
 
-            // new JoystickButton(m_driverController, 3).whenPressed(new StopShoot(m_shooter, m_transport))
-            //             .whenPressed(new StopRollers(m_transport))
-            //             .whenPressed(new SetUpLimelightForNoVision(m_limelight))
-            //             .whenPressed(new PositionTurret(m_turret, 0))
-            //             .whenReleased(new PositionTilt(m_tilt, m_tilt.tiltMaxAngle));
+            // new JoystickButton(m_driverController, 3).whenPressed(new
+            // StopShoot(m_shooter, m_transport))
+            // .whenPressed(new StopRollers(m_transport))
+            // .whenPressed(new SetUpLimelightForNoVision(m_limelight))
+            // .whenPressed(new PositionTurret(m_turret, 0))
+            // .whenReleased(new PositionTilt(m_tilt, m_tilt.tiltMaxAngle));
 
-            // new JoystickButton(m_driverController, 4).whenPressed(new PositionTilt(m_tilt, m_tilt.tiltMaxAngle))
-            //             .whenPressed(new PositionTurret(m_turret, 0))
-            //             .whenPressed(new SetUpLimelightForNoVision(m_limelight));
+            // new JoystickButton(m_driverController, 4).whenPressed(new
+            // PositionTilt(m_tilt, m_tilt.tiltMaxAngle))
+            // .whenPressed(new PositionTurret(m_turret, 0))
+            // .whenPressed(new SetUpLimelightForNoVision(m_limelight));
 
             // new JoystickButton(m_driverController, 6).
 
-            // new JoystickButton(m_driverController, 7).whileHeld(new PositionTilt(m_tilt, m_tilt.tiltMinAngle))
-            //             .whenPressed(new PositionTurret(m_turret, 0))
-            //             .whileHeld(new SetUpLimelightForDriver(m_limelight))
-            //             .whenReleased(new PositionTilt(m_tilt, m_tilt.tiltMaxAngle))
-            //             .whenReleased(new SetVisionMode(m_limelight))
-            //             .whenReleased(new SetUpLimelightForNoVision(m_limelight));
+            // new JoystickButton(m_driverController, 7).whileHeld(new PositionTilt(m_tilt,
+            // m_tilt.tiltMinAngle))
+            // .whenPressed(new PositionTurret(m_turret, 0))
+            // .whileHeld(new SetUpLimelightForDriver(m_limelight))
+            // .whenReleased(new PositionTilt(m_tilt, m_tilt.tiltMaxAngle))
+            // .whenReleased(new SetVisionMode(m_limelight))
+            // .whenReleased(new SetUpLimelightForNoVision(m_limelight));
 
-             new JoystickButton(m_driverController, 8).whenPressed(new ToggleActiveIntake(m_intakes));
+            new JoystickButton(m_driverController, 8).whenPressed(new ToggleActiveIntake(m_intakes));
 
             // new JoystickButton(m_driverController, 9)
 
@@ -359,9 +356,9 @@ public class RobotContainer {
             // new PositionTurretToVision(m_turret, m_limelight, -32)));
 
             // setupUpButton.whileHeld(() -> m_transport.runTopRollerMotor(.5))
-            //             .whileHeld(() -> m_transport.runLowerRollerMotor(.5))
-            //             .whenReleased(() -> m_transport.stopTopRollerMotor())
-            //             .whenReleased(() -> m_transport.stopLowerRollerMotor());
+            // .whileHeld(() -> m_transport.runLowerRollerMotor(.5))
+            // .whenReleased(() -> m_transport.stopTopRollerMotor())
+            // .whenReleased(() -> m_transport.stopLowerRollerMotor());
 
             setupLeftButton.whenPressed(new ReleaseCargo(m_transport));
 
