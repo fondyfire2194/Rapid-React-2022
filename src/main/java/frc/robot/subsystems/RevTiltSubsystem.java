@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.TiltConstants;
 import frc.robot.Pref;
-import frc.robot.Robot;
 
 
 public class RevTiltSubsystem extends SubsystemBase {
@@ -98,7 +97,8 @@ public class RevTiltSubsystem extends SubsystemBase {
     public boolean tiltUseVision;;
     public double tiltOffsetAdder;
     public double tiltOffsetChange;
-    public double cameraCalculatedTiltOffset;
+    public double cameraCalculatedTiltPosition;
+    public double presetPosition;
 
     /** 
      * 
@@ -203,8 +203,8 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     }
 
-    public void positionTilt(double degrees, int slotNumber) {
-        mPidController.setReference(degrees, ControlType.kPosition, slotNumber);
+    public void positionTilt(double degrees) {
+        mPidController.setReference(degrees, ControlType.kPosition,SMART_MOTION_SLOT);
 
     }
 

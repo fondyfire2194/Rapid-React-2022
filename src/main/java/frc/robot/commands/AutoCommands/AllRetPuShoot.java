@@ -13,7 +13,7 @@ import frc.robot.commands.AutoCommands.Common.AllRetPu;
 import frc.robot.commands.AutoCommands.Common.GetNumberOfContourValues;
 import frc.robot.commands.AutoCommands.Common.LowerShoot;
 import frc.robot.commands.AutoCommands.Common.UpperShoot;
-
+import frc.robot.commands.Shooter.AutoRunShooter;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -29,16 +29,16 @@ public class AllRetPuShoot extends SequentialCommandGroup {
       CargoTransportSubsystem transport, Compressor compressor,double[] data) {
     
 
-    addCommands(new AllRetPu(intake, drive, turret, tilt, data),
+    addCommands(new AllRetPu(intake, drive, turret, tilt, transport, data),
 
        new GetNumberOfContourValues(rcv2),
 
        
         new ConditionalCommand(
 
-            new UpperShoot(turret, tilt, ll, shooter, transport, compressor, data),
+            new AutoRunShooter(shooter),
 
-            new LowerShoot(turret, tilt, ll, shooter, transport, compressor, data),
+            new LowerShoot(turret, tilt, ll, shooter, transport, intake, compressor, data),
 
             () -> rcv2.isFound));
 

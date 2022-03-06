@@ -86,7 +86,8 @@ public class Pref {
 
     // Intake
 
-    prefDict.put("IntSp", 0.75);
+    prefDict.put("IntakeSpeed", 0.75);
+    prefDict.put("LowerSpeed", 200.);
 
     // camera
 

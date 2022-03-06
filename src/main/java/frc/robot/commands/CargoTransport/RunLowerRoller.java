@@ -29,7 +29,7 @@ public class RunLowerRoller extends CommandBase {
   @Override
   public void execute() {
   
-    m_transport.runLowerRollerMotor(m_rpm);
+    m_transport.runLowerAtVelocity();
     
   }
 

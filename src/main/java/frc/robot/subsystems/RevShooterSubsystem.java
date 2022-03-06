@@ -17,8 +17,8 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
@@ -31,6 +31,12 @@ public class RevShooterSubsystem extends SubsystemBase {
     private final RelativeEncoder mEncoder;
     private final RelativeEncoder mRightEncoder;
     private final SparkMaxPIDController mPidController;
+
+    private final CANSparkMax m_topRollerMotor;
+    public boolean topRollerMotorConnected;
+    public boolean haltTopRollerMotor;
+    private SparkMaxPIDController m_topPID;
+    private RelativeEncoder m_topEncoder;
 
     public double requiredRPMLast;
     public double requiredRPM;
@@ -93,17 +99,18 @@ public class RevShooterSubsystem extends SubsystemBase {
     public boolean useProgramSpeed;
     public boolean useDriverSpeed;
     public double programSpeed;
-    public String[] speedSource = { "Program", "Camera", "Driver", "Setup" };
-    public String activeSpeedSource = "Program";
+
     public double shooterRPMAdder;
     public double shooterRPMChange;
-    public double cameraCalculatedTiltOffset;
+    public double cameraCalculatedTiltPosition;
     public double maxRPM = 4500;
     public double minRPM = 100;
     public double shootCargosRunning;
 
     public NetworkTableEntry shooterSpeed;
     public boolean correctCargoColor;
+    private double topRequiredRPM;
+    public double presetRPM;
 
     public RevShooterSubsystem() {
 
@@ -120,10 +127,21 @@ public class RevShooterSubsystem extends SubsystemBase {
         mRightMotor.restoreFactoryDefaults();
         mRightMotor.follow(mLeftMotor, true);
 
-        Arrays.asList(mLeftMotor, mRightMotor).forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
+        m_topRollerMotor = new CANSparkMax(CANConstants.TOP_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
+        m_topPID = m_topRollerMotor.getPIDController();
+        m_topEncoder = m_topRollerMotor.getEncoder();
+        m_topEncoder.setPositionConversionFactor(36);
+        m_topEncoder.setVelocityConversionFactor(36);
+        m_topRollerMotor.restoreFactoryDefaults();
+        m_topRollerMotor.setInverted(true);
+        setTopRollerBrakeOn(true);
+        calibrateTopPID();
+
+        Arrays.asList(mLeftMotor, mRightMotor, m_topRollerMotor)
+                .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
 
         // Set motors to brake mode for faster stop
-        Arrays.asList(mLeftMotor, mRightMotor)
+        Arrays.asList(mLeftMotor, mRightMotor, m_topRollerMotor)
                 .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
 
         shooterSpeed = Shuffleboard.getTab("SetupShooter").add("ShooterSpeed",
@@ -160,10 +178,6 @@ public class RevShooterSubsystem extends SubsystemBase {
 
         checkTune();
 
-        if (useSetupEntry)
-
-            requiredRPM = shooterSpeed.getDouble(20);
-
         SmartDashboard.putString("LeftFaults", "SS");// faultAsBitString());
 
     }
@@ -195,9 +209,19 @@ public class RevShooterSubsystem extends SubsystemBase {
         return 20 + driverThrottleValue * 20;
     }
 
-    public void runShooter() {
-        requiredRPM += shooterRPMAdder;
-        spinAtRPM(-requiredRPM);
+    public void runShooter(double rpm) {
+
+        spinAtRPM(-rpm);
+    }
+
+    public void runShooterFromCamera() {
+        runTopAtVelocity(cameraCalculatedSpeed / 3);
+        spinAtRPM(cameraCalculatedSpeed);
+    }
+
+    public void runShooterFromPresetPositionSpeed() {
+        runTopAtVelocity(presetRPM);
+        spinAtRPM(cameraCalculatedSpeed);
     }
 
     public void moveManually(double speed) {
@@ -211,7 +235,9 @@ public class RevShooterSubsystem extends SubsystemBase {
     public boolean checkCAN() {
         leftMotorConnected = mLeftMotor.getFirmwareVersion() != 0;
         rightMotorConnected = mRightMotor.getFirmwareVersion() != 0;
-        allConnected = leftMotorConnected && rightMotorConnected;
+        topRollerMotorConnected = m_topRollerMotor.getFirmwareVersion() != -1;
+
+        allConnected = leftMotorConnected && rightMotorConnected && topRollerMotorConnected;
         return allConnected;
     }
 
@@ -245,9 +271,11 @@ public class RevShooterSubsystem extends SubsystemBase {
         if (RobotBase.isReal()) {
             mLeftMotor.stopMotor();
             mRightMotor.stopMotor();
+            m_topRollerMotor.stopMotor();
         } else {
             mLeftMotor.setVoltage(0);
             mRightMotor.setVoltage(0);
+            m_topRollerMotor.setVoltage(0);
         }
         startShooter = false;
     }
@@ -343,29 +371,63 @@ public class RevShooterSubsystem extends SubsystemBase {
         return pdp.getTemperature();
     }
 
-    // public double calculateMPSFromDistance(double distance) {
+    public void setTopRollerBrakeOn(boolean on) {
+        if (on) {
+            m_topRollerMotor.setIdleMode(IdleMode.kBrake);
+        } else {
+            m_topRollerMotor.setIdleMode(IdleMode.kCoast);
+        }
+    }
 
-    // double temp = 0;
-    // /**
-    // * The arrays have distances at which speed step changes
-    // *
-    // *
-    // */
-    // int distanceLength = speedBreakMeters.length;
-    // double minimumDistance = speedBreakMeters[0];
-    // double maximumDistance = speedBreakMeters[distanceLength - 1];
+    public void runTopAtVelocity(double rpm) {
 
-    // double pu;
-    // double speedRange;
-    // double unitAdder;
-    // double distanceRange;
+        m_topPID.setReference(rpm, ControlType.kVelocity, 0);
+    }
 
-    // if (distance < minimumDistance)
-    // distance = minimumDistance;
-    // if (distance > maximumDistance)
-    // distance = maximumDistance;
+    public boolean getTopRollerAtSpeed() {
+        return Math.abs(topRequiredRPM + getTopRPM()) < (topRequiredRPM * .05);// getrpm is -
+    }
 
-    // }
+    public double getTopRPM() {
+        return m_topEncoder.getVelocity();
+    }
+
+    public double getTopRoller() {
+        return m_topRollerMotor.get();
+    }
+
+    public void stopTopRoller() {
+        m_topRollerMotor.stopMotor();
+    }
+
+    public double getTopRollerMotorAmps() {
+        return m_topRollerMotor.getOutputCurrent();
+    }
+
+    public void calibrateTopPID() {
+        double p = 0.001;
+        double i = 0;
+        double d = 0;
+        double f = 1 / 760;
+        double kIz = 0;
+        double acc = 1;
+
+        m_topPID.setP(p, 0);
+
+        m_topPID.setI(i, 0);
+
+        m_topPID.setD(d, 0);
+
+        m_topPID.setFF(f, 0);
+
+        m_topPID.setIZone(kIz, 0);
+
+        m_topPID.setOutputRange(-0.5, 0.5, 0);
+
+        m_topRollerMotor.setClosedLoopRampRate(acc);
+
+    }
+
     private void tuneGains() {
         fixedSettings();
         double f = Pref.getPref("sHff");// 5700 rpm = 95 rps = 95 * .638 =

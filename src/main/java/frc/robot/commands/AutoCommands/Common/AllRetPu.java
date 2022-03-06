@@ -15,6 +15,7 @@ import frc.robot.commands.Intakes.StopActiveIntake;
 import frc.robot.commands.RobotDrive.PickupMove;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
+import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevTiltSubsystem;
@@ -22,12 +23,12 @@ import frc.robot.subsystems.RevTurretSubsystem;
 
 public class AllRetPu extends SequentialCommandGroup {
 
-  double intakeSpeed = Pref.getPref("IntSp");
+  double intakeSpeed = Pref.getPref("IntakeSpeed");
   double pickUpRate = Pref.getPref("dRPur");
 
   /** Creates a new LRetPuShoot. */
   public AllRetPu(IntakesSubsystem intake, RevDrivetrain drive, RevTurretSubsystem turret, RevTiltSubsystem tilt,
-      double[] data) {
+      CargoTransportSubsystem transport, double[] data) {
     // Use addRequirements() here to declare subsystem dependencies.
     double tiltAngle = data[0];
     double turretAngle = data[1];
@@ -37,7 +38,7 @@ public class AllRetPu extends SequentialCommandGroup {
 
         new ParallelCommandGroup(new ResetEncoders(drive), new ResetGyro(drive),
 
-            new PickupMove(drive, intake,driveToPosition, pickUpRate),
+            new PickupMove(drive, intake, driveToPosition, pickUpRate),
 
             new PrepositionTiltAndTurret(tilt, turret, tiltAngle, turretAngle))
 
@@ -45,9 +46,9 @@ public class AllRetPu extends SequentialCommandGroup {
 
                     new ActiveIntakeArmLower(intake),
 
-                    new RunActiveIntakeMotor(intake, intakeSpeed)),
+                    new RunActiveIntakeMotor(intake, transport),
 
-        new ParallelCommandGroup(new StopActiveIntake(intake), new ActiveIntakeArmRaise(intake)));
+                    new ParallelCommandGroup(new StopActiveIntake(intake), new ActiveIntakeArmRaise(intake))));
 
   }
 

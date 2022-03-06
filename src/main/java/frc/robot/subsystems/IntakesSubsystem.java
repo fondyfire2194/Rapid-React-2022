@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Pref;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.SolenoidConstants;
 
@@ -33,9 +34,6 @@ public class IntakesSubsystem extends SubsystemBase {
   public boolean frontIntakeMotorConnected;
 
   public boolean rearIntakeMotorConnected;
-
-  // public UsbCamera frontIntakeCamera;// = new UsbCamera("FrInCam", 0);
-  // public UsbCamera rearIntakeCamera;// = new UsbCamera("RearInCam", 1);
 
   private AnalogInput frontIntakeCargoDetect;
 
@@ -59,7 +57,6 @@ public class IntakesSubsystem extends SubsystemBase {
     frontIntakeCargoDetect = new AnalogInput(1);
     rearIntakeCargoDetect = new AnalogInput(2);
 
- 
   }
 
   public void toggleActiveIntake() {
@@ -79,6 +76,13 @@ public class IntakesSubsystem extends SubsystemBase {
   public void setRearActive() {
     useFrontIntake = false;
     Shuffleboard.selectTab("RearIntakeCamera");
+  }
+
+  public void lowerActiveArm() {
+    if (useFrontIntake)
+      lowerFrontArm();
+    else
+      lowerRearArm();
   }
 
   @Override
@@ -101,7 +105,8 @@ public class IntakesSubsystem extends SubsystemBase {
 
   }
 
-  public void runFrontIntakeMotor(double speed) {
+  public void runFrontIntakeMotor() {
+    double speed = Pref.getPref("IntakeSpeed");
     m_frontIntakeMotor.set(ControlMode.PercentOutput, speed);
   }
 
@@ -155,8 +160,22 @@ public class IntakesSubsystem extends SubsystemBase {
 
   }
 
-  public void runRearIntakeMotor(double speed) {
+  public void runRearIntakeMotor() {
+    double speed = Pref.getPref("IntakeSpeed");
     m_rearIntakeMotor.set(ControlMode.PercentOutput, speed);
+  }
+
+  public void runActiveIntakeMotor() {
+
+    if (useFrontIntake) {
+
+      runFrontIntakeMotor();
+
+    } else {
+
+      runRearIntakeMotor();
+    }
+
   }
 
   public void stopRearIntakeMotor() {

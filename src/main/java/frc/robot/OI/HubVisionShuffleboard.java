@@ -80,7 +80,7 @@ public class HubVisionShuffleboard {
 
                         contourDist.add("Set2XZoom", new Set2XZoomValues(rcv2, ll));
                 
-                        contourDist.add("AcquireTarget", new AcquireTarget(ll, tilt, turret, rcv2, shooter, null, null));
+                        contourDist.add("AcquireTarget", new AcquireTarget(ll, tilt, turret, rcv2, shooter, null, null, compressor));
 
                         contourDist.add("Calculate", new CalculateTargetDistance(ll, rcv2, tilt, turret, shooter));
                         

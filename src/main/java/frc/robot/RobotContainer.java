@@ -31,20 +31,19 @@ import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.VisionReferenceTarget;
-import frc.robot.commands.CargoTransport.ReleaseCargo;
 import frc.robot.commands.Climber.ClimberArm;
 import frc.robot.commands.Climber.RunClimber;
 import frc.robot.commands.Intakes.RunActiveIntakeMotor;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StartActiveIntake;
+import frc.robot.commands.Intakes.StopActiveIntake;
 import frc.robot.commands.Intakes.StopIntakeMotors;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.ArcadeDriveVelocity;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
-import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Tilt.TiltJog;
 import frc.robot.commands.Tilt.TiltJogVelocity;
 import frc.robot.commands.Tilt.TiltWaitForStop;
@@ -207,7 +206,8 @@ public class RobotContainer {
             m_autoOi = new SetUpAutoOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
                         m_intakes, m_climber, m_trajectory, m_rCV2, isMatch);
 
-            m_hvis = new HubVisionShuffleboard(m_limelight, m_rCV2, m_vrt, m_turret, m_tilt, m_shooter, isMatch, m_transport, m_compressor);
+            m_hvis = new HubVisionShuffleboard(m_limelight, m_rCV2, m_vrt, m_turret, m_tilt, m_shooter, isMatch,
+                        m_transport, m_compressor);
 
             m_llVis = new LLVisionShuffleboard(m_limelight, m_rCV2, m_turret, m_tilt, m_shooter, isMatch);
 
@@ -247,12 +247,13 @@ public class RobotContainer {
              */
 
             new JoystickButton(m_driverController, 2)
-                        .whileHeld(new StartActiveIntake(m_intakes, .75, m_transport, .25));
+                        .whileHeld(new StartActiveIntake(m_intakes, m_transport))
+                        .whenReleased(new StopActiveIntake(m_intakes));
 
-            new JoystickButton(m_driverController, 1)
+            // new JoystickButton(m_driverController, 1)
 
-                        .whileHeld(new ShootCargo(m_shooter, m_tilt, m_turret,
-                                    m_limelight, m_transport, m_compressor, 100));
+            // .whileHeld(new ShootOneCargo(m_shooter, m_tilt, m_turret,
+            // m_limelight, m_transport, m_compressor, 100));
 
             new JoystickButton(m_driverController, 5).whenPressed(new SetFrontIntakeActive(m_intakes));
 
@@ -280,13 +281,13 @@ public class RobotContainer {
 
             new JoystickButton(m_driverController, 8).whenPressed(new SetRearIntakeActive(m_intakes));
 
-          //  new JoystickButton(m_driverController, 9)
+            // new JoystickButton(m_driverController, 9)
 
             // new JoystickButton(m_driverController, 11).
 
             // Hold to shoot all
             new JoystickButton(m_driverController, 12).whileHeld(() -> m_shooter.shootAll())
-                       .whenReleased(() -> m_shooter.shootOne());
+                        .whenReleased(() -> m_shooter.shootOne());
 
             driverUpButton.whenPressed(() -> m_tilt.aimHigher());
 
@@ -358,7 +359,7 @@ public class RobotContainer {
             // .whenReleased(() -> m_transport.stopTopRollerMotor())
             // .whenReleased(() -> m_transport.stopLowerRollerMotor());
 
-            setupLeftButton.whenPressed(new ReleaseCargo(m_transport));
+            // setupLeftButton.whenPressed(
 
             setupX.whileHeld(getJogTiltVelocityCommand(setupGamepad))
                         .whileHeld(getJogTurretVelocityCommand(setupGamepad)).whenReleased(new TiltWaitForStop(m_tilt))
@@ -367,7 +368,7 @@ public class RobotContainer {
             setupY.whileHeld(getJogTiltCommand(setupGamepad)).whileHeld(getJogTurretCommand(setupGamepad))
                         .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));
 
-            setupA.whileHeld(new RunActiveIntakeMotor(m_intakes, .75))
+            setupA.whileHeld(new RunActiveIntakeMotor(m_intakes, m_transport))
                         .whenReleased(new StopIntakeMotors(m_intakes));
 
             // setupLeftStick.
@@ -408,7 +409,6 @@ public class RobotContainer {
             return new DriveStraightJoystick(m_drive, () -> -m_driverController.getY());
 
       }
-  
 
       public Command getJogTurretCommand(XboxController gamepad) {
             return new TurretJog(m_turret, () -> gamepad.getRawAxis(0) / 10, gamepad);

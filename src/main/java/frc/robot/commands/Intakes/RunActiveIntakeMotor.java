@@ -5,16 +5,18 @@
 package frc.robot.commands.Intakes;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 
 public class RunActiveIntakeMotor extends CommandBase {
 
   private IntakesSubsystem m_intake;
-  private double m_speed;
+  private CargoTransportSubsystem m_transport;
 
-  public RunActiveIntakeMotor(IntakesSubsystem intake, double speed) {
+  public RunActiveIntakeMotor(IntakesSubsystem intake, CargoTransportSubsystem transport) {
     m_intake = intake;
-    m_speed = speed;
+    m_transport = transport;
+
     addRequirements(m_intake);
   }
 
@@ -26,19 +28,18 @@ public class RunActiveIntakeMotor extends CommandBase {
 
   public void execute() {
 
-    if (m_intake.useFrontIntake)
+    m_intake.runActiveIntakeMotor();
 
-      m_intake.runFrontIntakeMotor(m_speed);
-
-    else {
-
-      m_intake.runRearIntakeMotor(m_speed);
-    }
+    m_transport.intakeLowerRollerMotor();
 
   }
 
   @Override
   public void end(boolean interrupted) {
+    m_intake.stopFrontIntakeMotor();
+    m_intake.stopRearIntakeMotor();
+    m_transport.stopLowerRoller();
+
   }
 
   // Returns true when the command should end.

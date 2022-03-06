@@ -6,30 +6,27 @@ package frc.robot.commands.CargoTransport;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CargoTransportSubsystem;
+import frc.robot.subsystems.IntakesSubsystem;
 
-public class HoldCargo extends CommandBase {
-  /** Creates a new MoveCargoArm. */
-  private final CargoTransportSubsystem m_transport;
+public class PositionLowerRoller extends CommandBase {
+  /** Creates a new PositionLowerRoller. */
+  private CargoTransportSubsystem m_transport;
 
-  private int loopCr;
-
-  public HoldCargo(CargoTransportSubsystem transport) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public PositionLowerRoller(CargoTransportSubsystem transport) {
     m_transport = transport;
-
-  };
+    // Use addRequirements() here to declare subsystem dependencies.
+  }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    loopCr = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    loopCr++;
 
+    m_transport.positionLowerRoller(22);
   }
 
   // Called once the command ends or is interrupted.
@@ -40,6 +37,6 @@ public class HoldCargo extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return loopCr > 0;
+    return false;
   }
 }

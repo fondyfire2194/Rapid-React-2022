@@ -11,17 +11,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
 import frc.robot.subsystems.RevShooterSubsystem;
 
-public class RunShooter extends CommandBase {
+public class AutoRunShooter extends CommandBase {
   /**
    * Creates a new StartShooter.
    */
   private RevShooterSubsystem m_shooter;
-  private double m_rpm;
 
-  public RunShooter(RevShooterSubsystem shooter, double rpm) {
+  public AutoRunShooter(RevShooterSubsystem shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
-    m_rpm=rpm;
+
     addRequirements(m_shooter);
   }
 
@@ -35,9 +34,9 @@ public class RunShooter extends CommandBase {
   @Override
   public void execute() {
 
-      m_shooter.runShooter(m_rpm);
+      m_shooter.runShooter(m_shooter.cameraCalculatedSpeed);
       
-      m_shooter.runTopAtVelocity(m_rpm/3);
+      m_shooter.runTopAtVelocity(m_shooter.cameraCalculatedSpeed/3);
   
   }
 

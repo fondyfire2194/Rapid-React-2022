@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
+import frc.robot.Pref;
 import frc.robot.RevColorSensor;
 import frc.robot.Robot;
 
@@ -27,32 +28,20 @@ public class CargoTransportSubsystem extends SubsystemBase {
    * Creates a new CargoTransport.
    */
 
-  private final CANSparkMax m_topRollerMotor;
+  // private final CANSparkMax m_topRollerMotor;
   private final CANSparkMax m_lowerRollerMotor;
 
-  public boolean topRollerMotorConnected;
+  // public boolean topRollerMotorConnected;
   public boolean lowerRollerMotorConnected;
 
-  public boolean haltTopRollerMotor;
+  // public boolean haltTopRollerMotor;
   public boolean haltLowerRollerMotor;
 
   public boolean allConnected;
 
-  // private AnalogInput CargoBlockLeft;// wait to go into shoot position
-
-  
-  public double cargoPassTime = .25;
- 
-  
-  public int cargosShot;
-
-  public boolean leftArmDown;
-
   public boolean noCargoAtShooterForOneSecond;
 
   private double noCargoAtShooterTime;
-
-  public boolean cargoAvailable = true;
 
   private double CargoTravelTime = 1;
 
@@ -65,48 +54,39 @@ public class CargoTransportSubsystem extends SubsystemBase {
   private RevColorSensor rcs = new RevColorSensor(cargoAtShootsensor);
 
   private SparkMaxPIDController m_lowerPID;
-  private SparkMaxPIDController m_topPID;
+  // private SparkMaxPIDController m_topPID;
 
   private RelativeEncoder m_lowerEncoder;
-  private RelativeEncoder m_topEncoder;
+  // private RelativeEncoder m_topEncoder;
 
-  public double topRequiredRPM;
+  // public double topRequiredRPM;
   public double lowerRequiredRPM;
+  public boolean lowerRollerPositioning;
 
   public CargoTransportSubsystem() {
 
-    m_topRollerMotor = new CANSparkMax(CANConstants.TOP_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
     m_lowerRollerMotor = new CANSparkMax(CANConstants.LOWER_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-    m_topPID = m_topRollerMotor.getPIDController();
     m_lowerPID = m_lowerRollerMotor.getPIDController();
 
-    m_topEncoder = m_topRollerMotor.getEncoder();
     m_lowerEncoder = m_lowerRollerMotor.getEncoder();
 
-    m_topEncoder.setPositionConversionFactor(36);
     m_lowerEncoder.setPositionConversionFactor(36);
 
-    m_topEncoder.setVelocityConversionFactor(36);
     m_lowerEncoder.setVelocityConversionFactor(36);
 
-    m_topRollerMotor.restoreFactoryDefaults();
     m_lowerRollerMotor.restoreFactoryDefaults();
 
-    m_topRollerMotor.setInverted(true);
     m_lowerRollerMotor.setInverted(true);
 
     m_lowerRollerMotor.setSmartCurrentLimit(10, 20);
 
-    m_topRollerMotor.setIdleMode(IdleMode.kBrake);
-
     m_lowerRollerMotor.setIdleMode(IdleMode.kBrake);
 
-    setTopRollerBrakeOn(true);
     setLowerRollerBrakeOn(true);
 
     calibrateLowerPID();
-    calibrateTopPID();
+
   }
 
   @Override
@@ -134,21 +114,14 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean checkCAN() {
 
-    topRollerMotorConnected = m_topRollerMotor.getFirmwareVersion() != -1;
     lowerRollerMotorConnected = m_lowerRollerMotor.getFirmwareVersion() != -1;
-    allConnected = topRollerMotorConnected
-        && lowerRollerMotorConnected;
 
-    return topRollerMotorConnected && lowerRollerMotorConnected;
+    return lowerRollerMotorConnected;
 
   }
 
-  public void setTopRollerBrakeOn(boolean on) {
-    if (on) {
-      m_topRollerMotor.setIdleMode(IdleMode.kBrake);
-    } else {
-      m_topRollerMotor.setIdleMode(IdleMode.kCoast);
-    }
+  public void positionLowerRoller(double distance) {
+    m_lowerPID.setReference(distance, ControlType.kPosition, 1);
   }
 
   public void setLowerRollerBrakeOn(boolean on) {
@@ -182,52 +155,32 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   }
 
-  public void intakeLowerRollerMotor(double speed) {
+  public void intakeLowerRollerMotor() {
 
     if (!getCargoAtShoot()) {
 
-      runLowerRollerMotor(speed);
+      runLowerAtVelocity();
+    }
+
+    else {
+
+      stopLowerRoller();
 
     }
 
   }
 
-  public void runTopAtVelocity(double speed) {
-
-    m_topPID.setReference(speed, ControlType.kVelocity, 0);
-  }
-
-  public void moveManually(double speed) {
-
-  }
-
-  public void runLowerAtVelocity(double speed) {
-
-    m_topPID.setReference(speed, ControlType.kVelocity, 0);
-  }
-
-  public boolean getTopRollerAtSpeed() {
-    return Math.abs(topRequiredRPM + getTopRPM()) < (topRequiredRPM * .05);// getmps is -
+  public void runLowerAtVelocity() {
+    double speed = Pref.getPref("LowerSpeed");
+    m_lowerPID.setReference(speed, ControlType.kVelocity, 0);
   }
 
   public boolean getLowerRollerAtSpeed() {
     return Math.abs(lowerRequiredRPM + getLowerRPM()) < (lowerRequiredRPM * .05);// getmps is -
   }
 
-  public double getTopRPM() {
-    return m_topEncoder.getVelocity();
-  }
-
   public double getLowerRPM() {
     return m_lowerEncoder.getVelocity();
-  }
-
-  public double getTopRoller() {
-    return m_topRollerMotor.get();
-  }
-
-  public void stopTopRollerMotor() {
-    m_topRollerMotor.set(0);
   }
 
   public void runLowerRollerMotor(double speed) {
@@ -240,14 +193,6 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public void stopLowerRoller() {
     m_lowerRollerMotor.stopMotor();
-  }
-
-  public void stopTopRoller() {
-    m_topRollerMotor.stopMotor();
-  }
-
-  public double getTopRollerMotorAmps() {
-    return m_topRollerMotor.getOutputCurrent();
   }
 
   public double getLowerRollerMotorAmps() {
@@ -265,29 +210,29 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   }
 
-  public void calibrateTopPID() {
-    double p = 0.001;
-    double i = 0;
-    double d = 0;
-    double f = 1 / 760;
-    double kIz = 0;
-    double acc = 1;
+  // public void calibrateTopPID() {
+  // double p = 0.001;
+  // double i = 0;
+  // double d = 0;
+  // double f = 1 / 760;
+  // double kIz = 0;
+  // double acc = 1;
 
-    m_topPID.setP(p, 0);
+  // m_topPID.setP(p, 0);
 
-    m_topPID.setI(i, 0);
+  // m_topPID.setI(i, 0);
 
-    m_topPID.setD(d, 0);
+  // m_topPID.setD(d, 0);
 
-    m_topPID.setFF(f, 0);
+  // m_topPID.setFF(f, 0);
 
-    m_topPID.setIZone(kIz, 0);
+  // m_topPID.setIZone(kIz, 0);
 
-    m_topPID.setOutputRange(-0.5, 0.5, 0);
+  // m_topPID.setOutputRange(-0.5, 0.5, 0);
 
-    m_topRollerMotor.setClosedLoopRampRate(acc);
+  // m_topRollerMotor.setClosedLoopRampRate(acc);
 
-  }
+  // }
 
   public void calibrateLowerPID() {
     double p = 0.001;
@@ -311,6 +256,11 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     m_lowerRollerMotor.setClosedLoopRampRate(acc);
 
+  }
+
+  public void releaseCargo() {
+    
+      positionLowerRoller(10);
   }
 
 }

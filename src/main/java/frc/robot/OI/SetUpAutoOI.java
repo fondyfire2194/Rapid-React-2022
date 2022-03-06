@@ -8,7 +8,6 @@ import java.util.Map;
 
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -16,14 +15,11 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.FieldMap;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.AutoCommands.AllRetPuShoot;
 import frc.robot.commands.AutoCommands.DoNothing;
 import frc.robot.commands.AutoCommands.Taxi;
-import frc.robot.commands.CargoTransport.HoldCargo;
-import frc.robot.commands.CargoTransport.ReleaseCargo;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.Turret.ResetTurretAngle;
@@ -103,7 +99,7 @@ public class SetUpAutoOI {
                                         () -> ll.getHorOnTarget(turret.turretVisionTolerance));
                         competition.addBoolean("ShooterAtSpeed", () -> shooter.atSpeed());
                         competition.addBoolean("Use Vision", () -> ll.useVision);
-                        competition.addBoolean("TopRollersAtSpeed", () -> transport.getTopRollerAtSpeed());
+                        competition.addBoolean("TopRollersAtSpeed", () -> shooter.getTopRollerAtSpeed());
 
                         LLFeed = new HttpCamera("Limelight", "http://limelight.local:5800/stream.mjpg");
                         ShuffleboardTab driverDisplayTab = Shuffleboard.getTab("Competition");
@@ -134,10 +130,7 @@ public class SetUpAutoOI {
                                         .getLayout("Misc2", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4)
                                         .withProperties(Map.of("Label position", "LEFT"));
 
-                        misComp1.add("Hold Cargo", new HoldCargo(transport));
-
-                        misComp1.add("Release Cargo", new ReleaseCargo(transport));
-
+                
                         // misComp1.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
 
                         ShuffleboardLayout misComp2 = Shuffleboard.getTab("CompetitionMisc")
@@ -146,7 +139,7 @@ public class SetUpAutoOI {
 
                         misComp2.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
                         misComp2.addNumber("CameraCalcSpeed", () -> shooter.cameraCalculatedSpeed);
-                        misComp2.addNumber("CameraCalcTilt", () -> tilt.cameraCalculatedTiltOffset);
+                        misComp2.addNumber("CameraCalcTilt", () -> tilt.cameraCalculatedTiltPosition);
                         misComp2.add("Reset Enc", new ResetEncoders(drive));
                         misComp2.add("Reset Gyro", new ResetGyro(drive));
                         misComp2.addNumber("LeftMeters", () -> drive.getLeftDistance());
@@ -160,7 +153,7 @@ public class SetUpAutoOI {
                         // misComp3.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
                         misComp3.addBoolean("No CargoAtShoot", () -> transport.noCargoAtShooterForOneSecond);
 
-                        misComp3.addBoolean("CargoAvailable", () -> transport.cargoAvailable);
+                        misComp3.addBoolean("CargoAvailable", () -> transport.getCargoAtShoot());
 
                         misComp3.addBoolean("IsShooting", () -> shooter.isShooting);
 

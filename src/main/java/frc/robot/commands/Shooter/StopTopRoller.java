@@ -2,45 +2,49 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.CargoTransport;
+package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CargoTransportSubsystem;
+import frc.robot.subsystems.RevShooterSubsystem;
 
-public class StopRollers extends CommandBase {
+public class StopTopRoller extends CommandBase {
   /** Creates a new RunRollers. */
-  private final CargoTransportSubsystem m_transport;
+  private final RevShooterSubsystem m_shooter;
+  private double rollerStopTime;
+  private final double speed = .75;
 
-  public StopRollers(CargoTransportSubsystem transport) {
+  public StopTopRoller(RevShooterSubsystem shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_transport = transport;
+    m_shooter=shooter;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
- 
+    rollerStopTime = Timer.getFPGATimestamp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    m_transport.stopLowerRoller();
-    m_transport.stopTopRoller();
+    m_shooter.stopTopRoller();
+    m_shooter.haltTopRollerMotor=true;
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_shooter.haltTopRollerMotor = false;
 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(m_transport.getLowerRPM()) < 100 && Math.abs(m_transport.getTopRPM()) < 100;
+    return Math.abs(m_shooter.getTopRPM()) < 100;
   }
 }

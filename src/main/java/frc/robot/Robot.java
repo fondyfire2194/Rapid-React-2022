@@ -131,18 +131,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("LPCTRA", loopCtr);
 
-    m_robotContainer.m_intakes.twoCargoOnBoard = m_robotContainer.m_transport.getCargoAtShoot()
-
-        && (m_robotContainer.m_intakes.getCargoAtFront() || m_robotContainer.m_intakes.getCargoAtRear());
-
-    m_robotContainer.m_transport.cargoAvailable = m_robotContainer.m_transport.getCargoAtShoot()
-
-        || m_robotContainer.m_intakes.getCargoAtFront() || m_robotContainer.m_intakes.getCargoAtRear();
-
-    m_robotContainer.m_shooter.correctCargoColor = getAllianceColorBlue() ^m_robotContainer.m_transport.getCargoIsBlue();
-        
-    ;
-
   }
 
   /**

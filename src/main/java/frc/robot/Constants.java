@@ -48,10 +48,10 @@ public final class Constants {
 
       // talons
 
-      public static final int REAR_INTAKE_MOTOR = 10;
+      public static final int REAR_INTAKE_MOTOR = 14;//10;
       public static final int FRONT_INTAKE_MOTOR = 13;
 
-      public static final int TOP_ROLLER = 14;
+      public static final int TOP_ROLLER = 10;//14;
       public static final int LOWER_ROLLER = 12;
 
       public static final int CLIMB_MOTOR = 15;

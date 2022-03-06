@@ -9,34 +9,35 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.Shooter.ShootCargo;
+import frc.robot.commands.Shooter.AutoRunShooter;
+import frc.robot.commands.Shooter.AutoShootCargo;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.subsystems.CargoTransportSubsystem;
+import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
 public class LowerShoot extends SequentialCommandGroup {
 
-
   /** Creates a new LRetPuShoot. */
   public LowerShoot(RevTurretSubsystem turret, RevTiltSubsystem tilt,
       LimeLight ll, RevShooterSubsystem shooter,
-      CargoTransportSubsystem transport, Compressor comp, double[] data) {
+      CargoTransportSubsystem transport, IntakesSubsystem intake, Compressor comp, double[] data) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     double lowerTiltAngle = data[4];
     double lowerTurretAngle = data[5];
     double lowerRPM = data[6];
-    
+
     addCommands(
 
         new ParallelCommandGroup(new PositionTilt(tilt, lowerTiltAngle), new PositionTurret(turret, lowerTurretAngle)),
 
-        new StartAllShooter(shooter, transport, lowerRPM),
+        new AutoRunShooter(shooter),
 
-        new ShootCargo(shooter, tilt, turret, ll, transport, comp, 6));
+        new AutoShootCargo(shooter, transport, intake));
 
   }
 

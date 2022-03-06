@@ -10,17 +10,16 @@ import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
 
-public class ShootCargo extends CommandBase {
+public class AutoShootCargo extends CommandBase {
   /** Creates a new ShootCargo. */
   private RevShooterSubsystem m_shooter;
   private CargoTransportSubsystem m_transport;
   private IntakesSubsystem m_intake;
+  private double m_startTime;
   private boolean frontIntakeStarted;
   private boolean rearIntakeStarted;
-  private double m_startTime = 0;
- 
 
-  public ShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport, IntakesSubsystem intake) {
+  public AutoShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport, IntakesSubsystem intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_transport = transport;
@@ -32,18 +31,16 @@ public class ShootCargo extends CommandBase {
   @Override
   public void initialize() {
 
-    frontIntakeStarted = false;
-
-    rearIntakeStarted = false;
-
     m_startTime = Timer.getFPGATimestamp();
+    frontIntakeStarted = false;
+    rearIntakeStarted = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    m_shooter.runShooterFromPresetPositionSpeed();
+    m_shooter.runShooterFromCamera();
 
     if (m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed()) {
 
@@ -60,12 +57,16 @@ public class ShootCargo extends CommandBase {
       rearIntakeStarted = true;
       m_startTime = Timer.getFPGATimestamp();
       m_intake.runRearIntakeMotor();
+      m_shooter.stop();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_intake.stopFrontIntakeMotor();
+    m_intake.stopRearIntakeMotor();
+    m_transport.stopLowerRoller();
 
   }
 

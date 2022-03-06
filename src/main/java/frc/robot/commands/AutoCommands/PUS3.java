@@ -29,7 +29,7 @@ public class PUS3 extends SequentialCommandGroup {
       CargoTransportSubsystem transport, Compressor compressor, double[] data) {
     
 
-    addCommands(new AllRetPu(intake, drive, turret, tilt, data),
+    addCommands(new AllRetPu(intake, drive, turret, tilt, transport, data),
 
         new GetNumberOfContourValues(rcv2),
 
@@ -37,9 +37,9 @@ public class PUS3 extends SequentialCommandGroup {
 
         new ConditionalCommand(
 
-            new UpperShoot(turret, tilt, ll, shooter, transport, compressor, data),
+            new UpperShoot(turret, tilt, ll, shooter, transport, intake, compressor, data),
 
-            new LowerShoot(turret, tilt, ll, shooter, transport, compressor, data),
+            new LowerShoot(turret, tilt, ll, shooter, transport, intake, compressor, data),
 
             () -> rcv2.isFound));
 
