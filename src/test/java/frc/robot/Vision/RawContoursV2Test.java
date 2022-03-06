@@ -2,6 +2,7 @@ package frc.robot.Vision;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -16,6 +17,11 @@ public class RawContoursV2Test {
 
 	// other possible related test classes
 	//GetAreaTXData
+
+	@BeforeAll
+	static public void beforeAll() {
+		MockDash.IS_PRINT=false;
+	}
 
 
 	@Test
@@ -148,23 +154,19 @@ public class RawContoursV2Test {
 	}
 
 	@Test
-	public void testGetTargetAngle() {
+	public void testGetTargetAnglePortrait() {
 		// SETUP
 		RawContoursV2.cameraAt90 = true; // horizontal orientation, x is from 1 to 240
 		rcv2 = new RawContoursV2(limelight);
 		// the SmartDashboard needs to be mocked during tests
-		rcv2.dash = new MockDash(false);
+		rcv2.dash = new MockDash();
 
 		// TEST
-		// center point in vertical is 120
+		// in portrait orientation center point is 120 for zoom and 720/2
+		int center = RawContoursV2.NO_ZOOM_IMG_HEIGHT/2;
+		int pxOffCenter = 60;
 
-//		for (int x=1; x<=240; x++) {
-//			System.out.println(rcv2.getTargetAngle(x));
-//		}
-		int center = 120;
-		int pxOffCenter = 31;
-
-		double targetAngleToCenterFromRight = rcv2.getTargetAngle(center+pxOffCenter);
+		double targetAngleToCenterFromRight = rcv2.getTargetAngle(center+(pxOffCenter-1));
 		// When the image is to the right of center then this is a left turn to target
 
 		double targetAngleToCenterFromLeft = rcv2.getTargetAngle(center-pxOffCenter);
@@ -172,9 +174,37 @@ public class RawContoursV2Test {
 
 		// CONFIRM
 		double delta = 0.05;
-		double expectedTurnForLeft  = 13.7;// this is a guess
+		double expectedTurnForLeft  = - pxOffCenter * 0.0335 * 2;// this is a guess
 		assertEquals(expectedTurnForLeft, targetAngleToCenterFromLeft, delta);
-		double expectedTurnForRight = -expectedTurnForLeft;
+		double expectedTurnForRight = - expectedTurnForLeft;
+		assertEquals(expectedTurnForRight, targetAngleToCenterFromRight, delta);
+	}
+
+	@Test
+	public void testGetTargetAngleLandscape() {
+		// SETUP
+		RawContoursV2.cameraAt90 = false; // horizontal orientation, x is from 1 to 240
+		rcv2 = new RawContoursV2(limelight);
+		// the SmartDashboard needs to be mocked during tests
+		rcv2.dash = new MockDash();
+
+		// TEST
+		// in landscape orientation center point is 120 for zoom and 720/2
+		int center = RawContoursV2.NO_ZOOM_IMG_WIDTH/2;
+		int pxOffCenter = 1;
+
+		// somewhere we are not taking a
+		double targetAngleToCenterFromRight = rcv2.getTargetAngle(center+(pxOffCenter-1));
+		// When the image is to the right of center then this is a left turn to target
+
+		double targetAngleToCenterFromLeft = rcv2.getTargetAngle(center-pxOffCenter);
+		// When the image is to the left of center then this is a right turn to target
+
+		// CONFIRM
+		double delta = 0.05;
+		double expectedTurnForLeft  = - pxOffCenter * 0.0342 * 2;// this is a guess
+		assertEquals(expectedTurnForLeft, targetAngleToCenterFromLeft, delta);
+		double expectedTurnForRight = - expectedTurnForLeft;
 		assertEquals(expectedTurnForRight, targetAngleToCenterFromRight, delta);
 	}
 }
@@ -182,7 +212,9 @@ public class RawContoursV2Test {
 
 
 class MockDash extends SmartDashboard {
-	boolean isPrintIt = true;
+	static boolean IS_PRINT = true;
+
+	boolean isPrintIt = IS_PRINT;
 
 	public MockDash() {
 	}

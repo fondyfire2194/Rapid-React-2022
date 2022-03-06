@@ -514,21 +514,13 @@ public class RawContoursV2 {
         double xAsNx = xCoordsToVP(xValue);
         dash.putNumber("taxsvpval", xAsNx);
 
-        double temp = 0;
+        double x = xAsNx * active_vpw / 2f;
 
-        double x = 0;
-        double nx = 0;
-        double ax = 0;// rads
+        double ax = Math.atan2(1f, x);
 
-        nx = xAsNx;
+        double temp = Units.radiansToDegrees(ax);
 
-        x = nx * (active_vpw / 2);
-
-        ax = Math.atan2(1, x);
-
-        temp = Units.radiansToDegrees(ax);
-
-        temp -= 90;
+        temp -= 90f;
 
         return -temp;
     }
