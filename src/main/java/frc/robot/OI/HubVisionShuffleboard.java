@@ -7,6 +7,7 @@ package frc.robot.OI;
 import java.util.Map;
 
 import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -24,6 +25,8 @@ import frc.robot.commands.AutoCommands.Common.CalculateTestTarget;
 import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.AutoCommands.Common.GetNumberOfContourValues;
 import frc.robot.commands.AutoCommands.Common.GetVisionValues;
+import frc.robot.commands.Vision.CalculateTargetDistance;
+import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
@@ -35,7 +38,7 @@ public class HubVisionShuffleboard {
 
         public HubVisionShuffleboard(LimeLight ll, RawContoursV2 rcv2,
                         VisionReferenceTarget vrt, RevTurretSubsystem turret,
-                        RevTiltSubsystem tilt, RevShooterSubsystem shooter, boolean isMatch) {
+                        RevTiltSubsystem tilt, RevShooterSubsystem shooter, boolean isMatch, CargoTransportSubsystem transport, Compressor compressor) {
 
                 // /**
                 // *
@@ -77,9 +80,10 @@ public class HubVisionShuffleboard {
 
                         contourDist.add("Set2XZoom", new Set2XZoomValues(rcv2, ll));
                 
-                        contourDist.add("AcquireTarget", new AcquireTarget(ll, tilt, turret, rcv2, shooter));
+                        contourDist.add("AcquireTarget", new AcquireTarget(ll, tilt, turret, rcv2, shooter, null, null));
 
-
+                        contourDist.add("Calculate", new CalculateTargetDistance(ll, rcv2, tilt, turret, shooter));
+                        
                         contourPX.addString("LtoRMedArea", () -> rcv2.getLCRMedianArea());
 
                         ShuffleboardLayout testContourPX = Shuffleboard.getTab("HubVision")

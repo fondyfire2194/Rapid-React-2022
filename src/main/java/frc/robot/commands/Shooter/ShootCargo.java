@@ -89,7 +89,7 @@ public class ShootCargo extends CommandBase {
 
          m_limelight.getHorOnTarget(m_turret.turretVisionTolerance);
 
-    if (m_shooter.atSpeed() && m_transport.topRollersAtSpeed && okToShoot && robotStoppedFor1Sec
+    if (m_shooter.atSpeed() && m_transport.getTopRollerAtSpeed() && okToShoot && robotStoppedFor1Sec
 
     || m_shooter.isShooting) {
 

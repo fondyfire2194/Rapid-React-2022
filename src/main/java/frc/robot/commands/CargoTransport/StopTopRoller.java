@@ -30,19 +30,20 @@ public class StopTopRoller extends CommandBase {
   public void execute() {
 
     m_transport.stopTopRollerMotor();
-    m_transport.haltTopRollers=true;
+    m_transport.haltTopRollerMotor=true;
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_transport.haltTopRollerMotor = false;
 
-    
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Timer.getFPGATimestamp() > rollerStopTime + .05;
+    return Math.abs(m_transport.getTopRPM()) < 100;
   }
 }

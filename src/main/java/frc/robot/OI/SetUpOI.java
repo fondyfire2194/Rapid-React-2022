@@ -6,7 +6,9 @@ package frc.robot.OI;
 
 import java.util.Map;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -24,12 +26,9 @@ import frc.robot.commands.CargoTransport.StopTopRoller;
 import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
 import frc.robot.commands.Intakes.RunActiveIntakeMotor;
-import frc.robot.commands.Intakes.SetCargoPipeline;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
-import frc.robot.commands.Intakes.SetLaunchpadPipeline;
 import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StopIntakeMotors;
-import frc.robot.commands.Intakes.ToggleFrontIntakeCam;
 import frc.robot.commands.RobotDrive.ClearRobFaults;
 import frc.robot.commands.RobotDrive.PickupMove;
 import frc.robot.commands.RobotDrive.PickupMoveVelocity;
@@ -71,8 +70,6 @@ public class SetUpOI {
         private boolean showIntake = true;
 
         public double timeToStart;
-        private HttpCamera frontFeed;
-        private HttpCamera rearFeed;
 
         public SetUpOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
@@ -101,7 +98,6 @@ public class SetUpOI {
                         intakeActions.add("ArmLower", new ActiveIntakeArmLower(intake));
                         intakeActions.add("Run Motor", new RunActiveIntakeMotor(intake, .75));
                         intakeActions.add("Stop Motor", new StopIntakeMotors(intake));
-                        intakeActions.add("ToggleCameraDrMode", new ToggleFrontIntakeCam(intake));
 
                         ShuffleboardLayout intakeValues = Shuffleboard.getTab("Intake")
                                         .getLayout("IntakeValues", BuiltInLayouts.kList).withPosition(2, 2)
@@ -113,31 +109,19 @@ public class SetUpOI {
                         intakeValues.addNumber("Motor CMD", () -> intake.getActiveMotor());
 
                         ShuffleboardTab frontFeed = Shuffleboard.getTab("FrontIntakeCamera");
-                        HttpCamera FCFeed = new HttpCamera("FrontCam-output",
-                                        "http://10.21.94.12:1182/stream.mjpg");
 
-                        frontFeed.add("FrontCam-output", FCFeed).withWidget(BuiltInWidgets.kCameraStream)
+                        UsbCamera frontIntakeCamera = CameraServer.startAutomaticCapture("FrontCam", 0);
+
+                        frontFeed.add("FrontCamera", frontIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
                                         .withPosition(2, 0).withSize(6, 4)
-                                        .withProperties(Map.of("Show Crosshair", false, "Show Controls", true));
+                                        .withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
-                        ShuffleboardLayout frontActions = Shuffleboard.getTab("FrontIntakeCamera")
+                        ShuffleboardTab rearFeed = Shuffleboard.getTab("RearIntakeCamera");
+                        UsbCamera rearIntakeCamera = CameraServer.startAutomaticCapture("RearCam", 1);
 
-                                        .getLayout("CameraActions", BuiltInLayouts.kList).withPosition(0, 0)
-
-                                        .withSize(2, 5).withProperties(Map.of("Label position", "TOP"));
-
-                        frontActions.addBoolean("DRMode", () -> intake.frontCamera.getDriverMode());
-                        frontActions.addBoolean("HasTargets", () -> intake.frontCamera.getLatestResult().hasTargets());
-                        frontActions.addString("ActivePipeline", () -> intake.pipelineNames[intake.activePipeline]);
-                        frontActions.addNumber("TargetYaw",
-                                        () -> intake.getFrontYaw());
-                        frontActions.addNumber("TargetPitch",
-                                        () -> intake.getFrontPitch());
-                        frontActions.addNumber("TargetArea",
-                                        () -> intake.getFrontArea());
-                        frontActions.add("ToggleCamMode", new ToggleFrontIntakeCam(intake));
-                        frontActions.add("SetCargoPipeline", new SetCargoPipeline(intake));
-                        frontActions.add("SetLaunchpadPipeline", new SetLaunchpadPipeline(intake));
+                        rearFeed.add("RearCamera", rearIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
+                                        .withPosition(2, 0).withSize(6, 4)
+                                        .withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
                 }
 
@@ -239,9 +223,9 @@ public class SetUpOI {
                                         .getLayout("Tilt", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4)
                                         .withProperties(Map.of("Label position", "LEFT")); //
 
-                        // tiltCommands.add("Position To 25", new PositionTilt(tilt, 25));
+                        tiltCommands.add("Position To 10", new PositionTilt(tilt, 10));
 
-                        tiltCommands.add("Position To 15", new PositionTilt(tilt, 15));
+                        tiltCommands.add("Position To 14", new PositionTilt(tilt, 13));
                         tiltCommands.add("Position To 5", new PositionTilt(tilt, 5));
                         tiltCommands.add("PositionToSwitch", new TiltMoveToReverseLimit(tilt));
                         tiltCommands.add("StopTilt", new StopTilt(tilt));
@@ -365,8 +349,8 @@ public class SetUpOI {
                                         .getLayout("TransportValues", BuiltInLayouts.kList).withPosition(0, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels
 
-                        transportValues.add("StartTopRoller", new RunTopRoller(transport));
-                        transportValues.add("StartBottomRoller", new RunLowerRoller(transport));
+                        transportValues.add("StartTopRoller", new RunTopRoller(transport, 700));
+                        transportValues.add("StartBottomRoller", new RunLowerRoller(transport, 500));
                         transportValues.add("StopTopRoller", new StopTopRoller(transport));
                         transportValues.add("StopLowerRoller", new StopLowerRoller(transport));
 
@@ -389,8 +373,8 @@ public class SetUpOI {
                                         .getLayout("TransportStates", BuiltInLayouts.kGrid).withPosition(4, 0)
                                         .withSize(2, 2).withProperties(Map.of("Label position", "TOP")); // label
 
-                        transportValues1.addBoolean("TopRollersAtSpeed", () -> transport.topRollersAtSpeed);
-                        transportValues1.addBoolean("LowerRollerAtSpeed", () -> transport.lowerRollerAtSpeed);
+                        transportValues1.addBoolean("TopRollersAtSpeed", () -> transport.getTopRollerAtSpeed());
+                        transportValues1.addBoolean("LowerRollerAtSpeed", () -> transport.getLowerRollerAtSpeed());
 
                         transportValues1.addBoolean("TopRollerConnected (12)",
                                         () -> transport.topRollerMotorConnected);

@@ -121,11 +121,11 @@ public class LLVisionShuffleboard {
 
                         LLFeed = new HttpCamera("Rotated", "http://roboRIO-2194-FRC.local/stream.mjpg");
 
-                        ShuffleboardTab visionFeed = Shuffleboard.getTab("LLVision");
+                        // ShuffleboardTab visionFeed = Shuffleboard.getTab("LLVision");
 
-                        visionFeed.add("Rotated", LLFeed).withWidget(BuiltInWidgets.kCameraStream)
-                                        .withPosition(6, 0).withSize(3, 2)
-                                        .withProperties(Map.of("Show Crosshair", false, "Show Controls", true));
+                        // visionFeed.add("FrontCam","http://").withWidget(BuiltInWidgets.kCameraStream)
+                        //                 .withPosition(6, 0).withSize(3, 2)
+                        //                 .withProperties(Map.of("Show Crosshair", false, "Show Controls", true));
 
                 }
 

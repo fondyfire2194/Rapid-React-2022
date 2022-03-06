@@ -42,8 +42,6 @@ public class Pref {
     prefDict.put("tIMaxA", 150.);// deg per min/sec
     prefDict.put("tITune", 0.);
 
- 
-
     // Turret smart motion
     prefDict.put("tURKp", .00015);
     prefDict.put("tURKi", .0001);
@@ -53,9 +51,8 @@ public class Pref {
     prefDict.put("tURMaxA", 500.);// deg/sec motor
     prefDict.put("tURTune", 0.);
 
- 
     // Turret Lock
-
+    prefDict.put("tURKff", .002);
     prefDict.put("TuLkP", 16.0);
     prefDict.put("TuLkI", .001);
     prefDict.put("TuLkD", 0.);
@@ -64,7 +61,7 @@ public class Pref {
 
     // shooter velocity
 
-    prefDict.put("sHff", .00018);// =1/maxRPM = 1/(5700 
+    prefDict.put("sHff", .00018);// =1/maxRPM = 1/(5700
     prefDict.put("sHkp", .0);
     prefDict.put("sHkI", 0.);
     prefDict.put("sHkd", 0.);
@@ -87,17 +84,13 @@ public class Pref {
 
     prefDict.put("dRPur", 0.5);
 
-    //Intake
+    // Intake
 
     prefDict.put("IntSp", 0.75);
 
     // camera
 
-    
     prefDict.put("HubTgtGn", 10.);
-
-    
-   
 
     // Shuffleboard
 

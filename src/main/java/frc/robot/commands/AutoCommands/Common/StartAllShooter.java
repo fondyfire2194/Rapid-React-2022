@@ -19,9 +19,10 @@ public class StartAllShooter extends SequentialCommandGroup {
   public StartAllShooter(RevShooterSubsystem shooter, CargoTransportSubsystem transport, double delay) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    
     addCommands(
 
-        new ParallelCommandGroup(new RunShooter(shooter), new RunTopRoller(transport))
+        new ParallelCommandGroup(new RunShooter(shooter), new RunTopRoller(transport, 500))
 
     );
   }

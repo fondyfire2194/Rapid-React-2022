@@ -4,16 +4,22 @@
 
 package frc.robot.commands.AutoCommands.Common;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.PipelinesConstants;
 
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
+import frc.robot.commands.Shooter.ShootCargo;
+import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.PositionTurretToVision;
 import frc.robot.commands.Turret.TurretWaitForStop;
+import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
+import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
@@ -26,7 +32,7 @@ public class AcquireTarget extends SequentialCommandGroup {
   /** Creates a new Acquire target. */
 
   public AcquireTarget(LimeLight ll, RevTiltSubsystem tilt, RevTurretSubsystem turret, RawContoursV2 rcv2,
-      RevShooterSubsystem shooter) {
+      RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
@@ -62,7 +68,12 @@ public class AcquireTarget extends SequentialCommandGroup {
 
         new PositionTurret(turret, rcv2.targetAngle), new TurretWaitForStop(turret),
 
-        new CalculateAndShoot(rcv2, tilt, turret, ll, shooter)
+        new CalculateTargetDistance(ll, rcv2, tilt, turret, shooter), new SelectSpeedAndTiltByDistance(shooter, tilt),
+  
+        new ParallelCommandGroup(new PositionTilt(tilt, tilt.cameraCalculatedTiltOffset),
+            new StartAllShooter(shooter, transport, 0.1)),
+   
+            new ShootCargo(shooter, tilt, turret, ll, transport, compressor, 3)
 
     );
 

@@ -140,7 +140,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         // .withPosition(6, 3).withSize(2, 1).withProperties(Map.of("Min", -5, "Max",
         // 5)).getEntry();
         // }
-     
+
     }
 
     @Override
@@ -334,7 +334,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     public void calibratePID(final double p, final double i, final double d, final double kIz, int slotNumber) {
-
+        mPidController.setFF(kFF, SMART_MOTION_SLOT);
         if (p != lastkP) {
             mPidController.setP(p, slotNumber);
             lastkP = mPidController.getP(slotNumber);
@@ -374,7 +374,6 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     private void setFF_MaxOuts() {
-        kFF = .004; //see Turret Constants
         kMinOutput = -.5;
         kMaxOutput = .5;
         mPidController.setOutputRange(kMinOutput, kMaxOutput, SMART_MOTION_SLOT);
@@ -383,7 +382,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     private void tuneMMGains() {
-
+        kFF = Pref.getPref("tURKff");
         double p = Pref.getPref("tURKp");
         double i = Pref.getPref("tURKi");
         double d = Pref.getPref("tURKd");
@@ -418,7 +417,6 @@ public class RevTurretSubsystem extends SubsystemBase {
         if (lastTuneOn)
             lastTuneOn = tuneOn;
 
-    
         // lock controller
 
         lockTuneOn = Pref.getPref("tuLTune") != 0.;

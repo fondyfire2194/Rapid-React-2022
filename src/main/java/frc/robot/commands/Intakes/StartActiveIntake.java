@@ -20,6 +20,8 @@ public class StartActiveIntake extends CommandBase {
 
   private boolean twoCargoOnBoard;
 
+  private boolean cargoAtLowerRoller;
+
   public StartActiveIntake(IntakesSubsystem intake, double iSpeed, CargoTransportSubsystem transport, double rSpeed) {
     m_intake = intake;
     m_transport = transport;
@@ -30,7 +32,7 @@ public class StartActiveIntake extends CommandBase {
 
   public void initialize() {
 
-    m_transport.configLowerCurrentLimit(5, 100,true);
+    // m_transport.configLowerCurrentLimit(5, 100,true);
 
   }
 
@@ -38,23 +40,29 @@ public class StartActiveIntake extends CommandBase {
 
   public void execute() {
 
-    if (!twoCargoOnBoard) {
+    if (!cargoAtLowerRoller) {
 
-      m_transport.intakeLowerRollerMotor(m_rollerSpeed);
+      int speed = 200;
 
-      if (m_intake.useFrontIntake) {
+      m_transport.runLowerAtVelocity(speed);
 
-        m_intake.runFrontIntakeMotor(m_speed);
+    } else {
 
-        m_intake.lowerFrontArm();
 
-      } else {
+      m_transport.stopLowerRoller();
+    }
 
-        m_intake.runRearIntakeMotor(m_speed);
+    if (m_intake.useFrontIntake) {
 
-        m_intake.lowerRearArm();
-      }
+      m_intake.runFrontIntakeMotor(m_speed);
 
+      m_intake.lowerFrontArm();
+
+    } else {
+
+      m_intake.runRearIntakeMotor(m_speed);
+
+      m_intake.lowerRearArm();
     }
 
   }
@@ -62,13 +70,18 @@ public class StartActiveIntake extends CommandBase {
   @Override
   public void end(boolean interrupted) {
 
+
     m_intake.stopFrontIntakeMotor();
     m_intake.raiseFrontArm();
 
     m_intake.stopRearIntakeMotor();
     m_intake.raiseRearArm();
 
-    m_transport.configLowerCurrentLimit(50, 1000, true);
+    m_transport.stopLowerRoller();
+
+    m_transport.haltLowerRollerMotor=true;
+
+    // m_transport.configLowerCurrentLimit(50, 1000, true);
 
   }
 

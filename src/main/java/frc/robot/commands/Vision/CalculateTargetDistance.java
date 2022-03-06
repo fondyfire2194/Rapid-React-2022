@@ -73,11 +73,11 @@ public class CalculateTargetDistance extends CommandBase {
 
       double tanAngleSum = Math.tan((Math.toRadians(m_cameraVerticalError + cameraAngle)));
 
-      m_shooter.calculatedCameraDistance = FieldConstants.heightDifference / tanAngleSum;
+      //m_shooter.calculatedCameraDistance = FieldConstants.heightDifference / tanAngleSum;
 
-      m_shooter.calculatedCameraDistance = FieldConstants.heightDifference
+      m_shooter.calculatedCameraDistance = (int) Math.round(FieldConstants.heightDifference
         
-      / (Math.tan(m_rcv2.getCenterTxAngle() * Math.cos(m_rcv2.getCenterTyAngle())));
+      / (Math.tan(m_rcv2.getCenterTxAngle() * Math.cos(m_rcv2.getCenterTyAngle()))));
 
       m_tilt.driverAdjustAngle = Math.toDegrees(Math.atan(m_tilt.adjustMeters / m_shooter.calculatedCameraDistance));
 

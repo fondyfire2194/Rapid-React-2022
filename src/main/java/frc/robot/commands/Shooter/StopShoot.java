@@ -30,7 +30,8 @@ public class StopShoot extends InstantCommand {
   @Override
   public void initialize() {
   //  m_transport.stopBelts();
-    m_transport.stopRollers();
+    m_transport.stopTopRoller();
+    m_transport.stopLowerRoller();
     m_shooter.stop();
   }
 }

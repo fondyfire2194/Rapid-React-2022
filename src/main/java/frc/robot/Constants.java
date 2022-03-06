@@ -200,7 +200,7 @@ public final class Constants {
 
       public static final double TILT_MIN_ANGLE = 1;
 
-      public static final double TILT_MAX_ANGLE = 11;
+      public static final double TILT_MAX_ANGLE = 15;
 
       public static double leadScrewPitch = Units.metersToInches(0.004);
 
@@ -276,9 +276,9 @@ public final class Constants {
 
       public static final double fieldLength = Units.inchesToMeters(626.25);
 
-      public static final double hubTargetHeight = Units.inchesToMeters(626.25);
+      public static final double hubTargetHeight = 626.25 / 12;
 
-      public static final double CAMERA_HEIGHT = Units.inchesToMeters(90.);
+      public static final double CAMERA_HEIGHT = 90. / 12;
 
       public static final double heightDifference = hubTargetHeight - CAMERA_HEIGHT;
 

@@ -42,7 +42,6 @@ import frc.robot.commands.Intakes.StopIntakeMotors;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.ArcadeDriveVelocity;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
-import frc.robot.commands.RobotDrive.DriveToCargo;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
 import frc.robot.commands.Shooter.ShootCargo;
@@ -208,7 +207,7 @@ public class RobotContainer {
             m_autoOi = new SetUpAutoOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
                         m_intakes, m_climber, m_trajectory, m_rCV2, isMatch);
 
-            m_hvis = new HubVisionShuffleboard(m_limelight, m_rCV2, m_vrt, m_turret, m_tilt, m_shooter, isMatch);
+            m_hvis = new HubVisionShuffleboard(m_limelight, m_rCV2, m_vrt, m_turret, m_tilt, m_shooter, isMatch, m_transport, m_compressor);
 
             m_llVis = new LLVisionShuffleboard(m_limelight, m_rCV2, m_turret, m_tilt, m_shooter, isMatch);
 
@@ -281,7 +280,7 @@ public class RobotContainer {
 
             new JoystickButton(m_driverController, 8).whenPressed(new SetRearIntakeActive(m_intakes));
 
-            new JoystickButton(m_driverController, 9).whileHeld(getDriveToCargoCommand());
+          //  new JoystickButton(m_driverController, 9)
 
             // new JoystickButton(m_driverController, 11).
 
@@ -409,11 +408,7 @@ public class RobotContainer {
             return new DriveStraightJoystick(m_drive, () -> -m_driverController.getY());
 
       }
-
-      public Command getDriveToCargoCommand() {
-            return new DriveToCargo(m_drive, () -> -m_driverController.getY(), m_intakes);
-
-      }
+  
 
       public Command getJogTurretCommand(XboxController gamepad) {
             return new TurretJog(m_turret, () -> gamepad.getRawAxis(0) / 10, gamepad);

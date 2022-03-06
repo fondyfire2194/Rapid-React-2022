@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Pref;
 
-
 public class RevShooterSubsystem extends SubsystemBase {
 
     public final CANSparkMax mLeftMotor; // NOPMD
@@ -48,11 +47,10 @@ public class RevShooterSubsystem extends SubsystemBase {
     public boolean useCameraSpeed;
     public boolean useSetupEntry = true;
 
-
     public boolean startShooter;
 
     public int teleopSetupIndex = 5;
- 
+
     public double teleopSetupShooterSpeed;
 
     public boolean shotInProgress;
@@ -61,13 +59,15 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     private final int VELOCITY_SLOT = 0;
 
-    public double[] tiltAngleFromCamerDistance = new double[] { 25, 30, 35, 40, 45, 25, 30, 35, 40, 45 };
+    public double[] tiltAngleFromCamerDistance = new double[] { 0.6, 1.2, 1.8, 2.4, 3, 3.6, 4.2, 4.8, 5.4, 6, 6.6, 7.2,
+            7.8, 8.4, 9, 9.6, 10.2, 10.8, 11.4, 12, 12.6, 13.2, 13.8, 14.4, 15 };
 
-    public double[] rpmFromCameraDistance = new double[] { 25, 30, 35, 40, 45, 25, 30, 35, 40, 45 };
+    public double[] rpmFromCameraDistance = new double[] { 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400,
+            2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900 };
 
     public double startDistance;
 
-    public double calculatedCameraDistance;
+    public int calculatedCameraDistance;
 
     public boolean tuneOn = false;
     public boolean lastTuneOn;
@@ -84,7 +84,6 @@ public class RevShooterSubsystem extends SubsystemBase {
     public boolean endShootFile;
     public boolean isShooting;
 
-  
     public double testVertOffset;
 
     public boolean okToShoot;
@@ -102,7 +101,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double maxRPM = 4500;
     public double minRPM = 100;
     public double shootCargosRunning;
- 
+
     public NetworkTableEntry shooterSpeed;
     public boolean correctCargoColor;
 
@@ -127,13 +126,11 @@ public class RevShooterSubsystem extends SubsystemBase {
         Arrays.asList(mLeftMotor, mRightMotor)
                 .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
 
-        
-            shooterSpeed = Shuffleboard.getTab("SetupShooter").add("ShooterSpeed",
-                    3).withWidget("Number Slider")
-                    .withPosition(0, 3).withSize(4, 1).withProperties(Map.of("Min", 500, "Max",
-                            3500))
-                    .getEntry();
-        
+        shooterSpeed = Shuffleboard.getTab("SetupShooter").add("ShooterSpeed",
+                3).withWidget("Number Slider")
+                .withPosition(0, 3).withSize(4, 1).withProperties(Map.of("Min", 500, "Max",
+                        3500))
+                .getEntry();
 
         tuneGains();
 
@@ -166,7 +163,6 @@ public class RevShooterSubsystem extends SubsystemBase {
         if (useSetupEntry)
 
             requiredRPM = shooterSpeed.getDouble(20);
-            
 
         SmartDashboard.putString("LeftFaults", "SS");// faultAsBitString());
 
