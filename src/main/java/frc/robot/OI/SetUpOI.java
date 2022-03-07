@@ -8,6 +8,7 @@ import java.util.Map;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -32,10 +33,7 @@ import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.StopRobot;
 import frc.robot.commands.Shooter.ClearShFaults;
 import frc.robot.commands.Shooter.RunShooter;
-import frc.robot.commands.Shooter.AutoShootCargo;
 import frc.robot.commands.Shooter.StopShoot;
-import frc.robot.commands.Shooter.StopShooter;
-import frc.robot.commands.Shooter.StopTopRoller;
 import frc.robot.commands.Tilt.ClearFaults;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Tilt.StopTilt;
@@ -104,22 +102,13 @@ public class SetUpOI {
                         intakeValues.addNumber("Motor Amps", () -> intake.getActiveMotorAmps());
                         intakeValues.addNumber("Motor CMD", () -> intake.getActiveMotor());
 
-                        ShuffleboardTab frontFeed = Shuffleboard.getTab("FrontIntakeCamera");
+                         ShuffleboardTab frontFeed = Shuffleboard.getTab("FrontIntakeCam");
 
-                        UsbCamera frontIntakeCamera = CameraServer.startAutomaticCapture("FrontCam", 0);
-
-                        frontFeed.add("FrontCamera", frontIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
-                                        .withPosition(2, 0).withSize(6, 4)
-                                        .withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
-
-                        ShuffleboardTab rearFeed = Shuffleboard.getTab("RearIntakeCamera");
-                        UsbCamera rearIntakeCamera = CameraServer.startAutomaticCapture("RearCam", 1);
-
-                        rearFeed.add("RearCamera", rearIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
-                                        .withPosition(2, 0).withSize(6, 4)
-                                        .withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
-
-                }
+   
+                       
+                         ShuffleboardTab rearFeed = Shuffleboard.getTab("RearIntakeCamera");
+ 
+                 }
 
                 if (showTurret && !isMatch) {
 
@@ -355,18 +344,13 @@ public class SetUpOI {
                         transportValues.addNumber("RearRollerOut", () -> transport.getLowerRoller());
                         transportValues.add("Cmd", transport);
 
-                        ShuffleboardLayout transportCargoArm = Shuffleboard.getTab("SetupTransport")
-                                        .getLayout("TransportCargoArm", BuiltInLayouts.kList).withPosition(2, 0)
-                                        .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels
-
-
                         ShuffleboardLayout transportValues1 = Shuffleboard.getTab("SetupTransport")
                                         .getLayout("TransportStates", BuiltInLayouts.kGrid).withPosition(4, 0)
                                         .withSize(2, 2).withProperties(Map.of("Label position", "TOP")); // label
 
-                                         transportValues1.addBoolean("LowerRollerAtSpeed", () -> transport.getLowerRollerAtSpeed());
+                        transportValues1.addBoolean("LowerRollerAtSpeed", () -> transport.getLowerRollerAtSpeed());
 
-                       transportValues1.addBoolean("LowerRollerConnected (14)",
+                        transportValues1.addBoolean("LowerRollerConnected (14)",
                                         () -> transport.lowerRollerMotorConnected);
 
                 }
@@ -469,7 +453,8 @@ public class SetUpOI {
                         canBus.addBoolean("TurretConnected (8)", () -> turret.turretMotorConnected);
                         canBus.addBoolean("TiltConnected (9)", () -> tilt.tiltMotorConnected);
                         // canBus.addBoolean("LeftShooterConnected (6)
-                        //canBus.addBoolean("TopRollerConnected (12)", () -> transport.topRollerMotorConnected);
+                        // canBus.addBoolean("TopRollerConnected (12)", () ->
+                        // transport.topRollerMotorConnected);
                         canBus.addBoolean("LowerRollerConnected(14)", () -> transport.lowerRollerMotorConnected);
                         canBus.addBoolean("LDR1Connected  (2)", () -> drive.leftLeadConnected);
 

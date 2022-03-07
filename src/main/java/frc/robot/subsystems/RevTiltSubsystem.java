@@ -82,7 +82,6 @@ public class RevTiltSubsystem extends SubsystemBase {
     public double tiltSetupOffset;
 
     public double testVerticalOffset;
-    public boolean endTiltFile;
 
     public double positionError;
     public double correctedEndpoint;
@@ -145,13 +144,13 @@ public class RevTiltSubsystem extends SubsystemBase {
         }
 
         setSoftwareLimits();
-
+        SmartDashboard.putNumber("TIdegPerRev", degreesPerRev);
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-      //  SmartDashboard.putNumber("degPerRev", degreesPerRev);
+     
         checkTune();
 
         if (RobotBase.isReal() && DriverStation.isDisabled())
@@ -378,7 +377,7 @@ public class RevTiltSubsystem extends SubsystemBase {
 
      private void setFF_MaxOuts() {
          
-        kFF = .0167;// 10000 rpm = (10000/60) * .03645 = 60  1/60 = .0167
+        kFF = .0167;// 10,000 rpm = (10000/60) * .03645 = 6.0  1/6.0 = .167
         kMinOutput = -.5;
         kMaxOutput = .6;
 
@@ -428,14 +427,5 @@ public class RevTiltSubsystem extends SubsystemBase {
         maxVelset = mPidController.getSmartMotionMaxVelocity(SMART_MOTION_SLOT);
 
     }
-
-    // public void getVelGains() {
-    // ffsetv = mPidController.getFF(VELOCITY_SLOT);
-    // psetv = mPidController.getP(VELOCITY_SLOT);
-    // isetv = mPidController.getI(VELOCITY_SLOT);
-    // dsetv = mPidController.getD(VELOCITY_SLOT);
-    // izsetv = mPidController.getIZone(VELOCITY_SLOT);
-
-    // }
 
 }

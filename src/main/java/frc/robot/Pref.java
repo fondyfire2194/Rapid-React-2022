@@ -33,26 +33,28 @@ public class Pref {
   static {
 
     // Tilt smart motion
-
+    prefDict.put("tIKff", .017);
     prefDict.put("tIKp", .001);
     prefDict.put("tIKi", .001);
     prefDict.put("tIKd", 0.);
     prefDict.put("tIKiz", 2.);
-    prefDict.put("tIMaxV", 550.);// 1000 deg per min
-    prefDict.put("tIMaxA", 150.);// deg per min/sec
+    prefDict.put("tIMaxV", 550.);//  deg per sec
+    prefDict.put("tIMaxA", 150.);// deg per sec/sec
     prefDict.put("tITune", 0.);
 
     // Turret smart motion
-    prefDict.put("tURKp", .00015);
-    prefDict.put("tURKi", .0001);
-    prefDict.put("tURKd", .0002);
+    
+    prefDict.put("tURKff", .0004);
+    prefDict.put("tURKp", .000025);
+    prefDict.put("tURKi", .000025);
+    prefDict.put("tURKd", .000);
     prefDict.put("tURKiz", 1.);
-    prefDict.put("tURMaxV", 250.);// deg/sec motor
-    prefDict.put("tURMaxA", 500.);// deg/sec motor
+    prefDict.put("tURMaxV", 550.);// deg/sec
+    prefDict.put("tURMaxA", 250.);// deg/sec
     prefDict.put("tURTune", 0.);
 
     // Turret Lock
-    prefDict.put("tURKff", .002);
+   
     prefDict.put("TuLkP", 16.0);
     prefDict.put("TuLkI", .001);
     prefDict.put("TuLkD", 0.);
@@ -87,7 +89,7 @@ public class Pref {
     // Intake
 
     prefDict.put("IntakeSpeed", 0.75);
-    prefDict.put("LowerSpeed", 200.);
+    prefDict.put("LowerRollerSpeed", 200.);
 
     // camera
 

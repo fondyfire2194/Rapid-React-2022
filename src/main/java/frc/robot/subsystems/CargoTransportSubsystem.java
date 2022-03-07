@@ -171,7 +171,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   public void runLowerAtVelocity() {
-    double speed = Pref.getPref("LowerSpeed");
+    double speed = Pref.getPref("LowerRollerSpeed");
     m_lowerPID.setReference(speed, ControlType.kVelocity, 0);
   }
 

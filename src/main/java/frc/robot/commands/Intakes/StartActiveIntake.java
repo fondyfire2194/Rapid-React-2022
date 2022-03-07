@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Intakes;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -49,6 +50,8 @@ public class StartActiveIntake extends CommandBase {
     m_intake.raiseRearArm();
 
     m_transport.stopLowerRoller();
+
+    Shuffleboard.selectTab("Intake");
 
 
   }

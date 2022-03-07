@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
+import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.AutoCommands.Common.AllRetPu;
 import frc.robot.commands.AutoCommands.Common.GetNumberOfContourValues;
 import frc.robot.commands.AutoCommands.Common.LowerShoot;
@@ -26,14 +27,12 @@ public class AllRetPuShoot extends SequentialCommandGroup {
   /** Creates a new LRetPuShoot. */
   public AllRetPuShoot(IntakesSubsystem intake, RevDrivetrain drive, RevTurretSubsystem turret, RevTiltSubsystem tilt,
       LimeLight ll, RevShooterSubsystem shooter, RawContoursV2 rcv2,
-      CargoTransportSubsystem transport, Compressor compressor,double[] data) {
-    
+      CargoTransportSubsystem transport, Compressor compressor, double[] data) {
 
     addCommands(new AllRetPu(intake, drive, turret, tilt, transport, data),
 
-       new GetNumberOfContourValues(rcv2),
+        new AcquireTarget(ll, tilt, turret, rcv2, shooter, transport, intake, compressor),
 
-       
         new ConditionalCommand(
 
             new AutoRunShooter(shooter),

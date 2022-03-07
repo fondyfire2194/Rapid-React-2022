@@ -8,23 +8,18 @@ import java.util.Map;
 
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.Set2XZoomValues;
 import frc.robot.Vision.SetNoZoomValues;
 import frc.robot.Vision.VisionReferenceTarget;
+import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.AutoCommands.Common.CalculateTarget;
 import frc.robot.commands.AutoCommands.Common.CalculateTestTarget;
-import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.AutoCommands.Common.GetNumberOfContourValues;
-import frc.robot.commands.AutoCommands.Common.GetVisionValues;
 import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;

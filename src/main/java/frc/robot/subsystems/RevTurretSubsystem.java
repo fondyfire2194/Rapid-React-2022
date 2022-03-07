@@ -118,7 +118,6 @@ public class RevTurretSubsystem extends SubsystemBase {
         aimCenter();
         setFF_MaxOuts();
         tuneMMGains();
-        // tuneVelGains();
         getMMGains();
         setTurretLockGains();
         getLockGains();
@@ -134,12 +133,8 @@ public class RevTurretSubsystem extends SubsystemBase {
         if (RobotBase.isSimulation()) {
             REVPhysicsSim.getInstance().addSparkMax(m_motor, DCMotor.getNeo550(1));
         }
-        // if (Pref.getPref("IsMatch") == 0.) {
-        // setupHorOffset = Shuffleboard.getTab("SetupTurret").add("SetupHorOffset",
-        // 0).withWidget("Number Slider")
-        // .withPosition(6, 3).withSize(2, 1).withProperties(Map.of("Min", -5, "Max",
-        // 5)).getEntry();
-        // }
+       
+        SmartDashboard.putNumber("TUdegPerRev", DEG_PER_MOTOR_REV);
 
     }
 
@@ -382,11 +377,11 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     private void tuneMMGains() {
-        kFF = Pref.getPref("tURKff");
+        kFF = Pref.getPref("tURKff");// 10,000/60 rps* 1.39 = 231. and 1/237 = .004
         double p = Pref.getPref("tURKp");
         double i = Pref.getPref("tURKi");
         double d = Pref.getPref("tURKd");
-        double iz = Pref.getPref("tURKiz");
+        double iz = Pref.getPref("tURKiz"); 
         maxVel = Pref.getPref("tURMaxV");
         maxAcc = Pref.getPref("tURMaxA");
         allowedErr = .1;

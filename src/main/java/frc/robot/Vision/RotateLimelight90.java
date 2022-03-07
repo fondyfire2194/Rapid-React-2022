@@ -9,11 +9,11 @@ import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.wpilibj.TimedRobot;
+
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.core.Core;
-
 
 /**
  * This is a demo program showing the use of OpenCV to do vision processing. The
@@ -30,10 +30,7 @@ public class RotateLimelight90 extends TimedRobot {
     public static void init() {
         m_visionThread = new Thread(
                 () -> {
-                    // // Get the UsbCamera from CameraServer
-                    // UsbCamera camera = CameraServer.startAutomaticCapture();
-                    // // Set the resolution
-                    // camera.setResolution(320, 240);
+
                     HttpCamera httpCamera = new HttpCamera("CoprocessorCamera",
                             "http://10.21.94.11:5800/video/stream.mjpg");
                     CameraServer.addCamera(httpCamera);
@@ -90,10 +87,10 @@ public class RotateLimelight90 extends TimedRobot {
                                     rotPoint, angle, 1);
 
                             // Apply Affine Transformation
-                             Imgproc.warpAffine(src, dst, rotMat, src.size(),
+                            Imgproc.warpAffine(src, dst, rotMat, src.size(),
                                     Imgproc.WARP_INVERSE_MAP);
                             // Imgproc.warpAffine(src, dst, rotMat, src.size()
-                            //         );
+                            // );
 
                             // If counterclockwise rotation is required use
                             // following: Imgproc.warpAffine(src, dst,
