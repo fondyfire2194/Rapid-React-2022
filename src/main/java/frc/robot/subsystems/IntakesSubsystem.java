@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Pref;
 import frc.robot.Constants.CANConstants;
@@ -39,7 +40,7 @@ public class IntakesSubsystem extends SubsystemBase {
 
   private AnalogInput rearIntakeCargoDetect;// next to be released for shooting
 
-  private double cargoDetectedVolts = 2.75;
+  private double cargoDetectedVolts = 2.;
 
   public boolean twoCargoOnBoard;
 
@@ -54,8 +55,8 @@ public class IntakesSubsystem extends SubsystemBase {
 
     raiseFrontArm();
 
-    frontIntakeCargoDetect = new AnalogInput(1);
-    rearIntakeCargoDetect = new AnalogInput(2);
+    frontIntakeCargoDetect = new AnalogInput(2);
+    rearIntakeCargoDetect = new AnalogInput(3);
 
   }
 
@@ -70,12 +71,10 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public void setFrontActive() {
     useFrontIntake = true;
-    Shuffleboard.selectTab("FrontIntakeCamera");
   }
 
   public void setRearActive() {
     useFrontIntake = false;
-    Shuffleboard.selectTab("RearIntakeCamera");
   }
 
   public void lowerActiveArm() {
@@ -88,6 +87,9 @@ public class IntakesSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    SmartDashboard.putNumber("FCDV", frontIntakeCargoDetect.getVoltage());
+    SmartDashboard.putNumber("RCDV", rearIntakeCargoDetect.getVoltage());
   }
 
   public boolean getCargoAtFront() {
@@ -106,7 +108,7 @@ public class IntakesSubsystem extends SubsystemBase {
   }
 
   public void runFrontIntakeMotor() {
-    double speed = Pref.getPref("IntakeSpeed");
+    double speed = -Pref.getPref("IntakeSpeed");
     m_frontIntakeMotor.set(ControlMode.PercentOutput, speed);
   }
 

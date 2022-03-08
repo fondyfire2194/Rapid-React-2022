@@ -21,16 +21,18 @@ public class ShootHighFromUnderHub extends SequentialCommandGroup {
   private double tiltAngle = 1;
   private double shootrpm = 1244;
 
-  public ShootHighFromUnderHub(RevShooterSubsystem shooter,RevTiltSubsystem tilt,CargoTransportSubsystem transport, IntakesSubsystem intake) {
+  public ShootHighFromUnderHub(RevShooterSubsystem shooter, RevTiltSubsystem tilt, CargoTransportSubsystem transport,
+      IntakesSubsystem intake) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    shooter.presetRPM=1244;
     
-    addCommands(new ParallelCommandGroup(new PositionTilt(tilt, tiltAngle),
-  
-    new RunShooter(shooter, shooter.presetRPM)),
+    shooter.presetRPM = 1244;
 
-    new ShootCargo(shooter, transport, intake));
-  
+    addCommands(new ParallelCommandGroup(new PositionTilt(tilt, tiltAngle),
+
+        new RunShooter(shooter, shooter.presetRPM)),
+
+        new ShootCargo(shooter, 2, transport, intake));
+
   }
 }

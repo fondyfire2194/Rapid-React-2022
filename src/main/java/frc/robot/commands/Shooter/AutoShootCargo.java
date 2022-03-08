@@ -40,7 +40,7 @@ public class AutoShootCargo extends CommandBase {
   @Override
   public void execute() {
 
-    m_shooter.runShooterFromCamera();
+    m_shooter.runShooter(m_shooter.cameraCalculatedSpeed);
 
     if (m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed()) {
 

@@ -28,13 +28,10 @@ public class CargoTransportSubsystem extends SubsystemBase {
    * Creates a new CargoTransport.
    */
 
-  // private final CANSparkMax m_topRollerMotor;
   private final CANSparkMax m_lowerRollerMotor;
 
-  // public boolean topRollerMotorConnected;
   public boolean lowerRollerMotorConnected;
 
-  // public boolean haltTopRollerMotor;
   public boolean haltLowerRollerMotor;
 
   public boolean allConnected;
@@ -49,19 +46,23 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public ColorSensorV3 cargoAtShootsensor = new ColorSensorV3(i2cPort);
 
-  private int cargoSensedLevel = 180;
+  private int cargoSensedLevel = 800;
+
+  public final int VELOCITY_SLOT = 0;
+  private static final int SMART_MOTION_SLOT = 1;
+  public final int POSITION_SLOT = 2;
 
   private RevColorSensor rcs = new RevColorSensor(cargoAtShootsensor);
 
   private SparkMaxPIDController m_lowerPID;
-  // private SparkMaxPIDController m_topPID;
 
   private RelativeEncoder m_lowerEncoder;
-  // private RelativeEncoder m_topEncoder;
 
-  // public double topRequiredRPM;
   public double lowerRequiredRPM;
+
   public boolean lowerRollerPositioning;
+
+  private double m_startTime;
 
   public CargoTransportSubsystem() {
 
@@ -71,15 +72,15 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     m_lowerEncoder = m_lowerRollerMotor.getEncoder();
 
-    m_lowerEncoder.setPositionConversionFactor(36);
-
-    m_lowerEncoder.setVelocityConversionFactor(36);
-
     m_lowerRollerMotor.restoreFactoryDefaults();
 
-    m_lowerRollerMotor.setInverted(true);
+    m_lowerEncoder.setPositionConversionFactor(.1);
 
-    m_lowerRollerMotor.setSmartCurrentLimit(10, 20);
+    m_lowerEncoder.setVelocityConversionFactor(.1);
+
+    m_lowerRollerMotor.setInverted(false);
+
+    // m_lowerRollerMotor.setSmartCurrentLimit(50, 50);
 
     m_lowerRollerMotor.setIdleMode(IdleMode.kBrake);
 
@@ -101,6 +102,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
     }
 
     if (!getCargoAtShoot() && noCargoAtShooterTime == 0) {
+
       noCargoAtShooterTime = Timer.getFPGATimestamp();
     }
 
@@ -121,7 +123,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   public void positionLowerRoller(double distance) {
-    m_lowerPID.setReference(distance, ControlType.kPosition, 1);
+    m_lowerPID.setReference(distance, ControlType.kPosition, VELOCITY_SLOT);
   }
 
   public void setLowerRollerBrakeOn(boolean on) {
@@ -160,6 +162,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
     if (!getCargoAtShoot()) {
 
       runLowerAtVelocity();
+
     }
 
     else {
@@ -171,20 +174,24 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   public void runLowerAtVelocity() {
+
     double speed = Pref.getPref("LowerRollerSpeed");
-    m_lowerPID.setReference(speed, ControlType.kVelocity, 0);
+
+    m_lowerPID.setReference(speed, ControlType.kVelocity, VELOCITY_SLOT);
   }
 
   public boolean getLowerRollerAtSpeed() {
+
     return Math.abs(lowerRequiredRPM + getLowerRPM()) < (lowerRequiredRPM * .05);// getmps is -
   }
 
   public double getLowerRPM() {
+
     return m_lowerEncoder.getVelocity();
   }
 
   public void runLowerRollerMotor(double speed) {
-    m_lowerRollerMotor.set(-speed);
+    m_lowerRollerMotor.set(speed);
   }
 
   public double getLowerRoller() {
@@ -210,57 +217,35 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   }
 
-  // public void calibrateTopPID() {
-  // double p = 0.001;
-  // double i = 0;
-  // double d = 0;
-  // double f = 1 / 760;
-  // double kIz = 0;
-  // double acc = 1;
-
-  // m_topPID.setP(p, 0);
-
-  // m_topPID.setI(i, 0);
-
-  // m_topPID.setD(d, 0);
-
-  // m_topPID.setFF(f, 0);
-
-  // m_topPID.setIZone(kIz, 0);
-
-  // m_topPID.setOutputRange(-0.5, 0.5, 0);
-
-  // m_topRollerMotor.setClosedLoopRampRate(acc);
-
-  // }
-
   public void calibrateLowerPID() {
     double p = 0.001;
     double i = 0;
     double d = 0;
-    double f = 1 / 760;
+    double f = .001;// 1/1000 (10,000 rpm through 10:1 gearig)
     double kIz = 0;
-    double acc = 1;
+    double acc = 1000;
 
-    m_lowerPID.setP(p, 0);
+    m_lowerPID.setP(p, VELOCITY_SLOT);
 
-    m_lowerPID.setI(i, 0);
+    m_lowerPID.setI(i, VELOCITY_SLOT);
 
-    m_lowerPID.setD(d, 0);
+    m_lowerPID.setD(d, VELOCITY_SLOT);
 
-    m_lowerPID.setFF(f, 0);
+    m_lowerPID.setFF(f, VELOCITY_SLOT);
 
-    m_lowerPID.setIZone(kIz, 0);
+    m_lowerPID.setIZone(kIz, VELOCITY_SLOT);
 
-    m_lowerPID.setOutputRange(-0.5, 0.5, 0);
+    m_lowerPID.setOutputRange(-0.5, 0.5, VELOCITY_SLOT);
 
     m_lowerRollerMotor.setClosedLoopRampRate(acc);
 
   }
 
   public void releaseCargo() {
+
+    if (getCargoAtShoot())
     
-      positionLowerRoller(10);
+      runLowerAtVelocity();
   }
 
 }

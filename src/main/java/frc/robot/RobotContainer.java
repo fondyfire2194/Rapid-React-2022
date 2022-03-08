@@ -32,6 +32,7 @@ import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.VisionReferenceTarget;
+import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Climber.ClimberArm;
 import frc.robot.commands.Climber.RunClimber;
 import frc.robot.commands.Intakes.RunActiveIntakeMotor;
@@ -43,8 +44,11 @@ import frc.robot.commands.Intakes.StopIntakeMotors;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.ArcadeDriveVelocity;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
+import frc.robot.commands.Shooter.AutoShootCargo;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
+import frc.robot.commands.Shooter.ShootCargo;
+import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Tilt.TiltJog;
 import frc.robot.commands.Tilt.TiltJogVelocity;
 import frc.robot.commands.Tilt.TiltWaitForStop;
@@ -190,7 +194,7 @@ public class RobotContainer {
             m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
             m_trajectory = new FondyFireTrajectory(m_drive);
-
+            // m_transport.setDefaultCommand(new StopLowerRoller(m_transport));
             // m_tilt.setDefaultCommand(new PositionHoldTilt(m_tilt,
             // m_limelight));
             // // m_tilt.setDefaultCommand(new PositionHoldTiltTest(m_tilt));
@@ -253,14 +257,12 @@ public class RobotContainer {
 
             // new JoystickButton(m_driverController, 1)
 
-            // .whileHeld(new ShootOneCargo(m_shooter, m_tilt, m_turret,
-            // m_limelight, m_transport, m_compressor, 100));
+            // .whenPressed(new AutoShootCargo(m_shooter, m_transport, m_intakes));
 
-            new JoystickButton(m_driverController, 5).whenPressed(new SetFrontIntakeActive(m_intakes));
+            new JoystickButton(m_driverController, 12).whenPressed(new SetFrontIntakeActive(m_intakes));
 
-            // new JoystickButton(m_driverController, 3).whenPressed(new
-            // StopShoot(m_shooter, m_transport))
-            // .whenPressed(new StopRollers(m_transport))
+            new JoystickButton(m_driverController, 3).whenPressed(new StopShoot(m_shooter, m_transport))
+                        .whenPressed(new StopLowerRoller(m_transport));
             // .whenPressed(new SetUpLimelightForNoVision(m_limelight))
             // .whenPressed(new PositionTurret(m_turret, 0))
             // .whenReleased(new PositionTilt(m_tilt, m_tilt.tiltMaxAngle));
@@ -280,7 +282,7 @@ public class RobotContainer {
             // .whenReleased(new SetVisionMode(m_limelight))
             // .whenReleased(new SetUpLimelightForNoVision(m_limelight));
 
-            new JoystickButton(m_driverController, 8).whenPressed(new SetRearIntakeActive(m_intakes));
+            new JoystickButton(m_driverController, 10).whenPressed(new SetRearIntakeActive(m_intakes));
 
             // new JoystickButton(m_driverController, 9)
 

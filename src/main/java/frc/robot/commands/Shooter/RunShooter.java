@@ -37,7 +37,6 @@ public class RunShooter extends CommandBase {
 
       m_shooter.runShooter(m_rpm);
       
-      m_shooter.runTopAtVelocity(m_rpm/3);
   
   }
 

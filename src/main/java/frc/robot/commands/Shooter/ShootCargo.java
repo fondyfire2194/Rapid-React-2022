@@ -14,17 +14,20 @@ public class ShootCargo extends CommandBase {
   /** Creates a new ShootCargo. */
   private RevShooterSubsystem m_shooter;
   private CargoTransportSubsystem m_transport;
+  private int m_speedSource;
   private IntakesSubsystem m_intake;
   private boolean frontIntakeStarted;
   private boolean rearIntakeStarted;
   private double m_startTime = 0;
- 
+  private double m_rpm;
 
-  public ShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport, IntakesSubsystem intake) {
+  public ShootCargo(RevShooterSubsystem shooter, int speedSource, CargoTransportSubsystem transport,
+      IntakesSubsystem intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_transport = transport;
     m_intake = intake;
+    m_speedSource = speedSource;
     addRequirements(shooter);
   }
 
@@ -37,13 +40,38 @@ public class ShootCargo extends CommandBase {
     rearIntakeStarted = false;
 
     m_startTime = Timer.getFPGATimestamp();
+
+    switch (m_speedSource) {
+
+      case 0:
+        m_rpm = m_shooter.shooterSpeed.getDouble(500);
+
+        break;
+
+      case 1:
+
+        m_rpm = m_shooter.cameraCalculatedSpeed;
+
+        break;
+
+      case 2:
+      
+        m_rpm = m_shooter.presetRPM;
+
+        break;
+
+      default:
+        break;
+
+    }
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    m_shooter.runShooterFromPresetPositionSpeed();
+    m_shooter.runShooter(m_rpm);
 
     if (m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed()) {
 

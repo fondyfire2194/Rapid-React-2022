@@ -16,12 +16,13 @@ public class RunLowerRoller extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     m_transport = transport;
     m_rpm = rpm;
+    addRequirements(m_transport);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  
+  m_transport.haltLowerRollerMotor=false;
   
   }
 
@@ -43,6 +44,6 @@ public class RunLowerRoller extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_transport.haltLowerRollerMotor;
+    return false;
   }
 }

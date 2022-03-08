@@ -8,8 +8,9 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
-
+import com.revrobotics.SparkMaxLimitSwitch.Type;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -41,7 +42,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     private static final double DEG_PER_MOTOR_REV = TurretConstants.TURRET_DEG_PER_MOTOR_REV;
     private static final int SMART_MOTION_SLOT = 1;
     public final int POSITION_SLOT = 2;
-    // public final int VELOCITY_SLOT = 0;
+    //  public final int VELOCITY_SLOT = 0;
 
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
     public double lastkP, lastkI, lastkD, lastkIz, lastkFF, lastkMaxOutput, lastkMinOutput, lastmaxRPM, lastmaxVel,
@@ -57,7 +58,9 @@ public class RevTurretSubsystem extends SubsystemBase {
     private final RelativeEncoder mEncoder;
     public final SparkMaxPIDController mPidController;
     public final PIDController m_turretLockController = new PIDController(.03, 0, 0);
-
+    public SparkMaxLimitSwitch m_reverseLimit;
+    public SparkMaxLimitSwitch m_forwardLimit;
+    
     public double targetAngle;
     private double inPositionBandwidth = 2;
     public double targetHorizontalOffset;
@@ -134,6 +137,12 @@ public class RevTurretSubsystem extends SubsystemBase {
             REVPhysicsSim.getInstance().addSparkMax(m_motor, DCMotor.getNeo550(1));
         }
        
+        m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
+        m_reverseLimit.enableLimitSwitch(true);
+
+        m_forwardLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
+        m_forwardLimit.enableLimitSwitch(true);
+
         SmartDashboard.putNumber("TUdegPerRev", DEG_PER_MOTOR_REV);
 
     }
@@ -281,6 +290,14 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     public boolean onMinusSoftwareLimit() {
         return m_motor.getFault(FaultID.kSoftLimitRev);
+    }
+
+    public boolean onMinusHardwareLimit() {
+        return m_motor.getFault(FaultID.kHardLimitRev);
+    }
+
+    public boolean onPlusHardwareLimit() {
+        return m_motor.getFault(FaultID.kHardLimitFwd);
     }
 
     public void aimFurtherLeft() {

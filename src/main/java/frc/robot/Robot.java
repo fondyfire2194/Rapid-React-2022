@@ -82,9 +82,9 @@ public class Robot extends TimedRobot {
 
     RotateLimelight90.init();
 
-    if (m_robotContainer.isMatch)
+   // if (m_robotContainer.isMatch)
 
-      Shuffleboard.selectTab("Pre-Round");
+     // Shuffleboard.selectTab("Pre-Round");
 
   }
 
@@ -162,7 +162,7 @@ public class Robot extends TimedRobot {
     if (RobotBase.isReal())
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
 
-    Shuffleboard.selectTab("Competition");
+   // Shuffleboard.selectTab("Competition");
 
     Shuffleboard.startRecording();
     // get delay time

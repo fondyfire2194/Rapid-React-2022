@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RevDrivetrain;
 
-public class PickupMoveVelocity extends CommandBase {
+public class PositionMove extends CommandBase {
   /** Creates a new PickupMove. */
   private final RevDrivetrain m_drive;
   private double m_endpoint;
@@ -41,7 +41,7 @@ public class PickupMoveVelocity extends CommandBase {
   private boolean currentDirection;
   private double accelDistance;
 
-  public PickupMoveVelocity(RevDrivetrain drive, double endpoint, double speed) {
+  public PositionMove(RevDrivetrain drive, double endpoint, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = drive;
     m_endpoint = endpoint;

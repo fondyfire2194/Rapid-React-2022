@@ -12,9 +12,10 @@ import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
 import frc.robot.commands.Intakes.RunActiveIntakeMotor;
 import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StopActiveIntake;
-import frc.robot.commands.RobotDrive.PickupMove;
+import frc.robot.commands.RobotDrive.PositionMove;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
+import frc.robot.commands.RobotDrive.TurnToAngleProfiled;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -38,7 +39,7 @@ public class AllRetPu extends SequentialCommandGroup {
 
         new ParallelCommandGroup(new ResetEncoders(drive), new ResetGyro(drive),
 
-            new PickupMove(drive, intake, driveToPosition, pickUpRate),
+            new PositionMove(drive, driveToPosition, pickUpRate),
 
             new PrepositionTiltAndTurret(tilt, turret, tiltAngle, turretAngle))
 
@@ -46,9 +47,9 @@ public class AllRetPu extends SequentialCommandGroup {
 
                     new ActiveIntakeArmLower(intake),
 
-                    new RunActiveIntakeMotor(intake, transport),
+                    new RunActiveIntakeMotor(intake, transport)),
 
-                    new ParallelCommandGroup(new StopActiveIntake(intake), new ActiveIntakeArmRaise(intake))));
+        new ParallelCommandGroup(new StopActiveIntake(intake), new ActiveIntakeArmRaise(intake)));
 
   }
 
