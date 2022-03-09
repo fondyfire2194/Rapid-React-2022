@@ -25,14 +25,16 @@ public class ShootHighFromUnderHub extends SequentialCommandGroup {
       IntakesSubsystem intake) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+
     
-    shooter.presetRPM = 1244;
 
     addCommands(new ParallelCommandGroup(new PositionTilt(tilt, tiltAngle),
 
-        new RunShooter(shooter, shooter.presetRPM)),
+        new SetShootSpeedSource(shooter, 2),
 
-        new ShootCargo(shooter, 2, transport, intake));
+        new RunShooter(shooter)),
+
+        new ShootCargo(shooter, transport, intake));
 
   }
 }

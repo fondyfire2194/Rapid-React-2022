@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.CargoTransport.RunLowerRoller;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
@@ -32,9 +33,12 @@ import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.StopRobot;
 import frc.robot.commands.Shooter.ClearShFaults;
 import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.RunTopRoller;
+import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Tilt.ClearFaults;
+import frc.robot.commands.Tilt.PositionIncrementTilt;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Tilt.StopTilt;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
@@ -75,7 +79,7 @@ public class SetUpOI {
 
                         ShuffleboardLayout intakeSelect = Shuffleboard.getTab("Intake")
                                         .getLayout("IntakeSelect", BuiltInLayouts.kList).withPosition(0, 0)
-                                        .withSize(2, 4).withProperties(Map.of("Label position", "TOP"));
+                                        .withSize(1, 4).withProperties(Map.of("Label position", "TOP"));
 
                         intakeSelect.add("Select Front", new SetFrontIntakeActive(intake));
                         intakeSelect.add("Select Rear", new SetRearIntakeActive(intake));
@@ -85,8 +89,8 @@ public class SetUpOI {
                         intakeSelect.addBoolean("RearConnected", () -> intake.rearIntakeMotorConnected);
 
                         ShuffleboardLayout intakeActions = Shuffleboard.getTab("Intake")
-                                        .getLayout("IntakeActions", BuiltInLayouts.kList).withPosition(2, 0)
-                                        .withSize(2, 2).withProperties(Map.of("Label position", "TOP"));
+                                        .getLayout("IntakeActions", BuiltInLayouts.kList).withPosition(1, 0)
+                                        .withSize(1, 4).withProperties(Map.of("Label position", "TOP"));
 
                         intakeActions.add("ArmRaise", new ActiveIntakeArmRaise(intake));
                         intakeActions.add("ArmLower", new ActiveIntakeArmLower(intake));
@@ -94,8 +98,8 @@ public class SetUpOI {
                         intakeActions.add("Stop Motor", new StopIntakeMotors(intake));
 
                         ShuffleboardLayout intakeValues = Shuffleboard.getTab("Intake")
-                                        .getLayout("IntakeValues", BuiltInLayouts.kList).withPosition(2, 2)
-                                        .withSize(2, 3).withProperties(Map.of("Label position", "TOP"));
+                                        .getLayout("IntakeValues", BuiltInLayouts.kList).withPosition(3, 0)
+                                        .withSize(1, 4).withProperties(Map.of("Label position", "TOP"));
 
                         intakeValues.addBoolean("Arm Up", () -> intake.getActiveArmRaised());
                         intakeValues.addBoolean("Arm Down", () -> intake.getActiveArmLowered());
@@ -115,9 +119,9 @@ public class SetUpOI {
                         turretCommands.add("Reset to 0", new ResetTurretAngle(turret));
                         turretCommands.add("Position To 0", new PositionTurret(turret, 0));//
                         // degrees
-                        turretCommands.add("Position To -10", new PositionTurret(turret, -10));//
+                        turretCommands.add("Position To -20", new PositionTurret(turret, -20));//
 
-                        turretCommands.add("Position To 10", new PositionTurret(turret, 10));
+                        turretCommands.add("Position To 20", new PositionTurret(turret, 20));
 
                         turretCommands.add("StopTurret", new StopTurret(turret));
                         turretCommands.add("ClearFaults", new ClearTurFaults(turret));
@@ -203,13 +207,19 @@ public class SetUpOI {
                 if (showTilt && !isMatch) {
 
                         ShuffleboardLayout tiltCommands = Shuffleboard.getTab("SetupTilt")
-                                        .getLayout("Tilt", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4)
+                                        .getLayout("Tilt", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 5)
                                         .withProperties(Map.of("Label position", "LEFT")); //
 
                         tiltCommands.add("Position To 10", new PositionTilt(tilt, 10));
 
-                        tiltCommands.add("Position To 14", new PositionTilt(tilt, 13));
+                        tiltCommands.add("Position To 14", new PositionTilt(tilt, 14));
+
                         tiltCommands.add("Position To 5", new PositionTilt(tilt, 5));
+
+                        tiltCommands.add("Inc_Position +1 Deg", new PositionIncrementTilt(tilt, 1));
+
+                        tiltCommands.add("Inc_Position -1 Deg", new PositionIncrementTilt(tilt, -1));
+
                         tiltCommands.add("PositionToSwitch", new TiltMoveToReverseLimit(tilt));
                         tiltCommands.add("StopTilt", new StopTilt(tilt));
                         tiltCommands.add("ClearFaults", new ClearFaults(tilt));
@@ -273,40 +283,43 @@ public class SetUpOI {
                         shooterCommands.add("Stop Shoot", new StopShoot(shooter, transport));
 
                         shooterCommands.add("Shoot",
-                                        new ShootCargo(shooter, 0, transport, intake));
+                                        new ShootCargo(shooter, transport, intake));
                         shooterCommands.add("ClearFaults", new ClearShFaults(shooter));
                         shooterCommands.add("Cmd", shooter);
 
                         shooterCommands.add("RunShooterFromSlider",
-                                        new RunShooter(shooter, shooter.shooterSpeed.getDouble(500)));
+                                        new SequentialCommandGroup(new SetShootSpeedSource(shooter, 0),
+                                                        new RunShooter(shooter)));
+
+                        shooterCommands.add("RunTopRoll", new RunTopRoller(shooter, 1500));
 
                         ShuffleboardLayout shooterValues = Shuffleboard.getTab("SetupShooter")
                                         .getLayout("ShooterValues", BuiltInLayouts.kList).withPosition(2, 0)
                                         .withSize(2, 3).withProperties(Map.of("Label position", "LEFT")); // labels
 
-                        shooterValues.addNumber("RPM", () -> shooter.getRPM());
+                        shooterValues.addNumber(" ActualRPM", () -> shooter.getRPM());
+                        shooterValues.addNumber("Target RPM", () -> shooter.requiredRPM);
+                        shooterValues.addNumber("TopRollerRPM", () -> shooter.getTopRPM());
+                        shooterValues.addNumber("TopTargetRPM", () -> shooter.topRequiredRPM);
+
                         shooterValues.addNumber("Left PCT", () -> shooter.getLeftPctOut());
                         shooterValues.addNumber("LeftAmps", () -> shooter.getLeftAmps());
 
                         shooterValues.addNumber("RightAmps", () -> shooter.getRightAmps());
-                        shooterValues.addNumber("SpeedCommand RPM", () -> shooter.requiredRPM);
                         shooterValues.addNumber("LeftFaults", () -> shooter.getLeftFaults());
                         shooterValues.addNumber("RightFaults", () -> shooter.getRightFaults());
+                        shooterValues.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
 
                         ShuffleboardLayout shooterValues1 = Shuffleboard.getTab("SetupShooter")
 
                                         .getLayout("ShooterValues1", BuiltInLayouts.kList).withPosition(4, 0)
                                         .withSize(2, 3).withProperties(Map.of("Label position", "LEFT"));
 
-                        shooterValues1.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
-
                         shooterValues1.addBoolean("ShooterAtSpeed", () -> shooter.atSpeed());
                         shooterValues1.addBoolean("TopRollerAtSpeed", () -> shooter.getTopRollerAtSpeed());
 
                         shooterValues1.addBoolean("TuneOn", () -> (shooter.tuneOn && shooter.lastTuneOn));
                         shooterValues1.addBoolean("BothConnected(6,7)", () -> shooter.allConnected);
-                        shooterValues1.addBoolean("DriverOKShoot", () -> shooter.driverOKShoot);
-                        shooterValues1.addBoolean("ShootOne", () -> shooter.shootOne);
                         shooterValues1.addBoolean("Use Slider", () -> shooter.useSpeedSlider);
 
                         ShuffleboardLayout shooterValues2 = Shuffleboard.getTab("SetupShooter")
@@ -326,27 +339,27 @@ public class SetUpOI {
 
                         ShuffleboardLayout transportValues = Shuffleboard.getTab("SetupTransport")
                                         .getLayout("TransportValues", BuiltInLayouts.kList).withPosition(0, 0)
-                                        .withSize(2, 5).withProperties(Map.of("Label position", "LEFT")); // labels
+                                        .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels
 
-                        transportValues.add("StartLowerRoller", new RunLowerRoller(transport, 500));
-                        transportValues.add("StopLowerRoller", new StopLowerRoller(transport));
+                        transportValues.add("StartLowRoll", new RunLowerRoller(transport, 500));
+                        transportValues.add("StopLowRoll", new StopLowerRoller(transport));
 
-                        transportValues.addNumber("LowerRollerRPM", () -> transport.getLowerRPM());
-                        transportValues.addNumber("LowerRollerAmps", () -> transport.getLowerRollerMotorAmps());
-                        transportValues.addNumber("LowerRollerOut", () -> transport.getLowerRoller());
+                        transportValues.addNumber("LowRollRPM", () -> transport.getLowerRPM());
+                        transportValues.addNumber("LowRollCMDRPM", () -> transport.lowerRequiredRPM);
+                        transportValues.addNumber("LowRollAmps", () -> transport.getLowerRollerMotorAmps());
+                        transportValues.addNumber("LowRollOut", () -> transport.getLowerRoller());
                         transportValues.add("Cmd", transport);
-                        transportValues.addBoolean("BlueCargo", () -> transport.getCargoIsBlue());
-                        transportValues.addBoolean("RedCargo", () -> transport.getCargoIsRed());
-                        transportValues.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
+                        transportValues.addBoolean("LowerRollerAtSpeed", () -> transport.getLowerRollerAtSpeed());
 
                         ShuffleboardLayout transportValues1 = Shuffleboard.getTab("SetupTransport")
-                                        .getLayout("TransportStates", BuiltInLayouts.kGrid).withPosition(4, 0)
-                                        .withSize(2, 2).withProperties(Map.of("Label position", "TOP")); // label
-
-                        transportValues1.addBoolean("LowerRollerAtSpeed", () -> transport.getLowerRollerAtSpeed());
+                                        .getLayout("TransportStates", BuiltInLayouts.kGrid).withPosition(2, 0)
+                                        .withSize(2, 4).withProperties(Map.of("Label position", "TOP")); // label
 
                         transportValues1.addBoolean("LowerRollerConnected (14)",
                                         () -> transport.lowerRollerMotorConnected);
+                        transportValues1.addBoolean("BlueCargo", () -> transport.getCargoIsBlue());
+                        transportValues1.addBoolean("RedCargo", () -> transport.getCargoIsRed());
+                        transportValues1.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
 
                 }
 
@@ -377,7 +390,7 @@ public class SetUpOI {
                         robotCommands.add("To -4(3)", new PositionMove(drive, -4, 3));
                         robotCommands.add("To -4(1)", new PositionMove(drive, -4, 1));
                         robotCommands.add("To 0(1)", new PositionMove(drive, 0, 1));
-                        robotCommands.add("To 0", new PositionMove(drive,  0, .5));
+                        robotCommands.add("To 0", new PositionMove(drive, 0, .5));
                         robotCommands.add("Cmd", drive);
 
                         ShuffleboardLayout robotValues = Shuffleboard.getTab("SetupRobot")

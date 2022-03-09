@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -17,6 +18,7 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Pref;
@@ -45,6 +47,8 @@ public class CargoTransportSubsystem extends SubsystemBase {
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
 
   public ColorSensorV3 cargoAtShootsensor = new ColorSensorV3(i2cPort);
+
+  private AnalogInput atShootCargoDetect;
 
   private int cargoSensedLevel = 800;
 
@@ -88,11 +92,15 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     calibrateLowerPID();
 
+    atShootCargoDetect = new AnalogInput(1);
+
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    SmartDashboard.putNumber("CARSGVOL", atShootCargoDetect.getAverageVoltage());
 
     if (getCargoAtShoot()) {
 
@@ -153,15 +161,17 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean getCargoAtShoot() {
 
-    return cargoAtShootsensor.getProximity() > cargoSensedLevel;
+    return atShootCargoDetect.getVoltage() > 2;
 
   }
 
-  public void intakeLowerRollerMotor() {
+  // return cargoAtShootsensor.getProximity() > cargoSensedLevel;
+
+  public void intakeLowerRollerMotor(double rpm) {
 
     if (!getCargoAtShoot()) {
 
-      runLowerAtVelocity();
+      runLowerAtVelocity(rpm);
 
     }
 
@@ -173,11 +183,11 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   }
 
-  public void runLowerAtVelocity() {
+  public void runLowerAtVelocity(double rpm) {
 
-    double speed = Pref.getPref("LowerRollerSpeed");
+    lowerRequiredRPM = rpm;
 
-    m_lowerPID.setReference(speed, ControlType.kVelocity, VELOCITY_SLOT);
+    m_lowerPID.setReference(rpm, ControlType.kVelocity, VELOCITY_SLOT);
   }
 
   public boolean getLowerRollerAtSpeed() {
@@ -199,6 +209,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   public void stopLowerRoller() {
+    lowerRequiredRPM = 0;
     m_lowerRollerMotor.stopMotor();
   }
 
@@ -218,7 +229,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   public void calibrateLowerPID() {
-    double p = 0.001;
+    double p = Pref.getPref("Rollers_kP");
     double i = 0;
     double d = 0;
     double f = .001;// 1/1000 (10,000 rpm through 10:1 gearig)
@@ -241,11 +252,11 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   }
 
-  public void releaseCargo() {
+  public void releaseCargo(double rpm) {
 
     if (getCargoAtShoot())
-    
-      runLowerAtVelocity();
+
+      runLowerAtVelocity(rpm);
   }
 
 }

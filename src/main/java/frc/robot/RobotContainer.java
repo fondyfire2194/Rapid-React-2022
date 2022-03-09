@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
@@ -32,6 +33,7 @@ import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.VisionReferenceTarget;
+import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Climber.ClimberArm;
 import frc.robot.commands.Climber.RunClimber;
@@ -44,10 +46,10 @@ import frc.robot.commands.Intakes.StopIntakeMotors;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.ArcadeDriveVelocity;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
-import frc.robot.commands.Shooter.AutoShootCargo;
+import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
-import frc.robot.commands.Shooter.ShootCargo;
+import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Tilt.TiltJog;
 import frc.robot.commands.Tilt.TiltJogVelocity;
@@ -251,13 +253,22 @@ public class RobotContainer {
              * 
              */
 
-            new JoystickButton(m_driverController, 2)
+            new JoystickButton(m_driverController, 1)
+
                         .whileHeld(new StartActiveIntake(m_intakes, m_transport))
+
                         .whenReleased(new StopActiveIntake(m_intakes));
 
-            // new JoystickButton(m_driverController, 1)
+            new JoystickButton(m_driverController, 2)
 
-            // .whenPressed(new AutoShootCargo(m_shooter, m_transport, m_intakes));
+                        .whenPressed(new SequentialCommandGroup(
+
+                                    new AcquireTarget(m_limelight, m_tilt, m_turret, m_rCV2, m_shooter, m_transport,
+                                                m_intakes, m_compressor),
+
+                                    new SetShootSpeedSource(m_shooter, 1),
+
+                                    new ShootCargo(m_shooter, m_transport, m_intakes)));
 
             new JoystickButton(m_driverController, 12).whenPressed(new SetFrontIntakeActive(m_intakes));
 

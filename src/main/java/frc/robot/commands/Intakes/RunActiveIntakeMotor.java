@@ -5,6 +5,7 @@
 package frc.robot.commands.Intakes;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Pref;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 
@@ -12,6 +13,8 @@ public class RunActiveIntakeMotor extends CommandBase {
 
   private IntakesSubsystem m_intake;
   private CargoTransportSubsystem m_transport;
+
+  private double lr_rpm;
 
   public RunActiveIntakeMotor(IntakesSubsystem intake, CargoTransportSubsystem transport) {
     m_intake = intake;
@@ -21,7 +24,8 @@ public class RunActiveIntakeMotor extends CommandBase {
   }
 
   public void initialize() {
-
+    
+    lr_rpm = Pref.getPref("LowRollIntakeRPM");
   }
 
   @Override
@@ -30,7 +34,7 @@ public class RunActiveIntakeMotor extends CommandBase {
 
     m_intake.runActiveIntakeMotor();
 
-    m_transport.intakeLowerRollerMotor();
+    m_transport.intakeLowerRollerMotor(lr_rpm);
 
   }
 

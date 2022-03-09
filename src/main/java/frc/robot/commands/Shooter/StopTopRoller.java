@@ -4,26 +4,23 @@
 
 package frc.robot.commands.Shooter;
 
-import edu.wpi.first.wpilibj.Timer;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
 
 public class StopTopRoller extends CommandBase {
   /** Creates a new RunRollers. */
   private final RevShooterSubsystem m_shooter;
-  private double rollerStopTime;
-  private final double speed = .75;
 
   public StopTopRoller(RevShooterSubsystem shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_shooter=shooter;
+    m_shooter = shooter;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    rollerStopTime = Timer.getFPGATimestamp();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,7 +28,7 @@ public class StopTopRoller extends CommandBase {
   public void execute() {
 
     m_shooter.stopTopRoller();
-    m_shooter.haltTopRollerMotor=true;
+    m_shooter.haltTopRollerMotor = true;
 
   }
 
@@ -45,6 +42,6 @@ public class StopTopRoller extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(m_shooter.getTopRPM()) < 100;
+    return Math.abs(m_shooter.getTopRPM()) < 10;
   }
 }

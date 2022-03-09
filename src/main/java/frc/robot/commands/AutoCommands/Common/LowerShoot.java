@@ -9,8 +9,9 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.Shooter.AutoRunShooter;
-import frc.robot.commands.Shooter.AutoShootCargo;
+import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.SetShootSpeedSource;
+import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -35,9 +36,11 @@ public class LowerShoot extends SequentialCommandGroup {
 
         new ParallelCommandGroup(new PositionTilt(tilt, lowerTiltAngle), new PositionTurret(turret, lowerTurretAngle)),
 
-        new AutoRunShooter(shooter),
+        new SetShootSpeedSource(shooter, 2),
 
-        new AutoShootCargo(shooter, transport, intake));
+        new RunShooter(shooter),
+
+        new ShootCargo(shooter, transport, intake));
 
   }
 

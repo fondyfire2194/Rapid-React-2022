@@ -109,8 +109,9 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public NetworkTableEntry shooterSpeed;
     public boolean correctCargoColor;
-    private double topRequiredRPM;
+    public double topRequiredRPM;
     public double presetRPM = 1750;
+    public int shootSpeedSource;
 
     public RevShooterSubsystem() {
 
@@ -121,8 +122,10 @@ public class RevShooterSubsystem extends SubsystemBase {
         mRightEncoder = mRightMotor.getEncoder();
         mPidController = mLeftMotor.getPIDController();
         mLeftMotor.restoreFactoryDefaults();
+        mLeftMotor.setInverted(true);
         mLeftMotor.setOpenLoopRampRate(5.);
         mLeftMotor.setClosedLoopRampRate(3.);
+        mLeftMotor.enableVoltageCompensation(12);
 
         mRightMotor.restoreFactoryDefaults();
         mRightMotor.follow(mLeftMotor, true);
@@ -135,7 +138,6 @@ public class RevShooterSubsystem extends SubsystemBase {
         m_topRollerMotor.restoreFactoryDefaults();
         m_topRollerMotor.setInverted(false);
         setTopRollerBrakeOn(true);
-        calibrateTopPID();
 
         Arrays.asList(mLeftMotor, mRightMotor, m_topRollerMotor)
                 .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
@@ -154,6 +156,8 @@ public class RevShooterSubsystem extends SubsystemBase {
 
         getGains();
 
+        calibrateTopPID();
+
         requiredRPM = 2500;
 
         shootOne = false;
@@ -163,10 +167,12 @@ public class RevShooterSubsystem extends SubsystemBase {
         if (RobotBase.isReal()) {
 
             mEncoder.setPositionConversionFactor(1);
-            mEncoder.setVelocityConversionFactor(1 / 60);
+
+            mEncoder.setVelocityConversionFactor(1);
         }
 
         if (RobotBase.isSimulation()) {
+
             REVPhysicsSim.getInstance().addSparkMax(mLeftMotor, DCMotor.getNEO(2));
         }
 
@@ -194,40 +200,18 @@ public class RevShooterSubsystem extends SubsystemBase {
         mRightMotor.close();
     }
 
-    public void spinAtRpm(double rpm) {
+    public void spinAtRPM(double rpm) {
         requiredRPM = rpm;
         mPidController.setReference(rpm, ControlType.kVelocity, VELOCITY_SLOT);
 
     }
 
-    public void spinAtRPM(double rpm) {
-        mPidController.setReference(rpm, ControlType.kVelocity, VELOCITY_SLOT);
+    public void runShooter_Roller(double rpm) {
 
+        spinAtRPM(rpm);
+
+        runTopAtVelocity(rpm);
     }
-
-    public double getDriverRPM() {
-        return 20 + driverThrottleValue * 20;
-    }
-
-    public void runShooter(double rpm) {
-        spinAtRPM(-rpm);
-        runTopAtVelocity(rpm / 3);
-    }
-
-    // public void runShooterSlider() {
-    //     double rpmSet = shooterSpeed.getDouble(500);
-    //     spinAtRPM(rpmSet);
-    // }
-
-    // public void runShooterFromCamera() {
-    //     runTopAtVelocity(cameraCalculatedSpeed / 3);
-    //     spinAtRPM(cameraCalculatedSpeed);
-    // }
-
-    // public void runShooterFromPresetPositionSpeed() {
-    //     runTopAtVelocity(presetRPM);
-    //     spinAtRPM(cameraCalculatedSpeed);
-    // }
 
     public void moveManually(double speed) {
         if (RobotBase.isReal())
@@ -252,7 +236,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public boolean atSpeed() {
 
-        return Math.abs(requiredRPM + getRPM()) < (requiredRPM * .05);// getmps is -
+        return Math.abs(requiredRPM - getRPM()) < (requiredRPM * .05);// getrpm is -
 
     }
 
@@ -283,6 +267,23 @@ public class RevShooterSubsystem extends SubsystemBase {
             m_topRollerMotor.setVoltage(0);
         }
         startShooter = false;
+    }
+
+    public double getSpeedSource() {
+
+        switch (shootSpeedSource) {
+            case 0:
+                useSpeedSlider = true;
+                return shooterSpeed.getDouble(500);
+            case 1:
+                return cameraCalculatedSpeed;
+            case 2:
+                return presetRPM;
+            default:
+                return 500;
+
+        }
+
     }
 
     public double getLeftPctOut() {
@@ -386,11 +387,13 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public void runTopAtVelocity(double rpm) {
 
-        m_topPID.setReference(rpm, ControlType.kVelocity, 0);
+        topRequiredRPM = rpm;
+
+        m_topPID.setReference(rpm, ControlType.kVelocity, VELOCITY_SLOT);
     }
 
     public boolean getTopRollerAtSpeed() {
-        return Math.abs(topRequiredRPM + getTopRPM()) < (topRequiredRPM * .05);// getrpm is -
+        return Math.abs(topRequiredRPM - getTopRPM()) < (topRequiredRPM * .15);// getrpm is -
     }
 
     public double getTopRPM() {
@@ -410,10 +413,10 @@ public class RevShooterSubsystem extends SubsystemBase {
     }
 
     public void calibrateTopPID() {
-        double p = 0.001;
+        double p = 0;// Pref.getPref("Rollers_kP");
         double i = 0;
-        double d = 0;
-        double f = .001;// 1/1000 (10,000 rpm through 10:1 gearig)
+        double d = 0;// Pref.getPref("Rollers_kD");
+        double f = .001;// 1/1000 (10,000 rpm through 10:1 gearing)
         double kIz = 0;
         double acc = 1000;
 
@@ -449,7 +452,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     private void fixedSettings() {
 
         kMaxOutput = 1;
-        kMinOutput = -1;
+        kMinOutput = 0;
 
     }
 
@@ -468,6 +471,7 @@ public class RevShooterSubsystem extends SubsystemBase {
         if (tuneOn && !lastTuneOn) {
             tuneGains();
             getGains();
+            calibrateTopPID();
             lastTuneOn = true;
         }
         if (lastTuneOn)

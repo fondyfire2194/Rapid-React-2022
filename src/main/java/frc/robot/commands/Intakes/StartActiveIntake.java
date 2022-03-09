@@ -6,6 +6,7 @@ package frc.robot.commands.Intakes;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Pref;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 
@@ -14,13 +15,15 @@ public class StartActiveIntake extends CommandBase {
   private IntakesSubsystem m_intake;
 
   private CargoTransportSubsystem m_transport;
-
+  private double lr_rpm;
 
   public StartActiveIntake(IntakesSubsystem intake, CargoTransportSubsystem transport) {
     m_intake = intake;
     m_transport = transport;
 
     addRequirements(m_intake);
+
+    lr_rpm = Pref.getPref("LowRollIntakeRPM");
   }
 
   public void initialize() {
@@ -35,7 +38,7 @@ public class StartActiveIntake extends CommandBase {
 
     m_intake.runActiveIntakeMotor();
 
-    m_transport.intakeLowerRollerMotor();
+  
   }
 
   @Override
@@ -52,7 +55,6 @@ public class StartActiveIntake extends CommandBase {
     m_transport.stopLowerRoller();
 
     Shuffleboard.selectTab("Intake");
-
 
   }
 

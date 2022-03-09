@@ -22,7 +22,7 @@ import frc.robot.commands.RobotDrive.PositionMove;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.TurnToAngleProfiled;
-import frc.robot.commands.Shooter.AutoRunShooter;
+import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -69,7 +69,7 @@ public class PUS3_ThirdCargo extends SequentialCommandGroup {
 
             new ConditionalCommand(
 
-                new AutoRunShooter(shooter),
+                new RunShooter(shooter),
 
                 new LowerShoot(turret, tilt, ll, shooter, transport, intake, compressor, data),
 

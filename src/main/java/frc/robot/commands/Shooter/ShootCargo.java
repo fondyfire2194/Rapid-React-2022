@@ -6,6 +6,7 @@ package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Pref;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
@@ -21,13 +22,13 @@ public class ShootCargo extends CommandBase {
   private double m_startTime = 0;
   private double m_rpm;
 
-  public ShootCargo(RevShooterSubsystem shooter, int speedSource, CargoTransportSubsystem transport,
+  public ShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
       IntakesSubsystem intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_transport = transport;
     m_intake = intake;
-    m_speedSource = speedSource;
+
     addRequirements(shooter);
   }
 
@@ -41,41 +42,24 @@ public class ShootCargo extends CommandBase {
 
     m_startTime = Timer.getFPGATimestamp();
 
-    switch (m_speedSource) {
-
-      case 0:
-        m_rpm = m_shooter.shooterSpeed.getDouble(500);
-
-        break;
-
-      case 1:
-
-        m_rpm = m_shooter.cameraCalculatedSpeed;
-
-        break;
-
-      case 2:
-      
-        m_rpm = m_shooter.presetRPM;
-
-        break;
-
-      default:
-        break;
-
-    }
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    m_shooter.runShooter(m_rpm);
+    // allow on the fly changes in manual mode for setup
 
-    if (m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed()) {
+    m_rpm = m_shooter.getSpeedSource();
 
-      m_transport.releaseCargo();
+    m_shooter.runShooter_Roller(m_rpm);
+
+    if (m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed())
+
+    {
+      double rl_rpm = Pref.getPref("LowRollReleaseRPM");
+
+      m_transport.releaseCargo(rl_rpm);
     }
 
     if (!m_transport.getCargoAtShoot() && (m_intake.getCargoAtFront() || frontIntakeStarted)) {
@@ -94,7 +78,9 @@ public class ShootCargo extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    m_shooter.useSpeedSlider = false;
+    m_shooter.stopTopRoller();
+    m_shooter.stop();
   }
 
   // Returns true when the command should end.

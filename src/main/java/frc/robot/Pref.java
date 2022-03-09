@@ -38,12 +38,12 @@ public class Pref {
     prefDict.put("tIKi", .001);
     prefDict.put("tIKd", 0.);
     prefDict.put("tIKiz", 2.);
-    prefDict.put("tIMaxV", 550.);//  deg per sec
+    prefDict.put("tIMaxV", 550.);// deg per sec
     prefDict.put("tIMaxA", 150.);// deg per sec/sec
     prefDict.put("tITune", 0.);
 
     // Turret smart motion
-    
+
     prefDict.put("tURKff", .0004);
     prefDict.put("tURKp", .000025);
     prefDict.put("tURKi", .000025);
@@ -54,7 +54,7 @@ public class Pref {
     prefDict.put("tURTune", 0.);
 
     // Turret Lock
-   
+
     prefDict.put("TuLkP", 16.0);
     prefDict.put("TuLkI", .001);
     prefDict.put("TuLkD", 0.);
@@ -88,8 +88,15 @@ public class Pref {
 
     // Intake
 
-    prefDict.put("IntakeSpeed",0.75);
-    prefDict.put("LowerRollerSpeed", 500.);
+    prefDict.put("IntakeSpeed", 0.75);
+
+    prefDict.put("LowRollIntakeRPM", 750.);
+
+    prefDict.put("LowRollReleaseRPM", 500.);
+
+    prefDict.put("Rollers_kP", .001);
+  
+    prefDict.put("Rollers_kD", .01);
 
 
     // camera

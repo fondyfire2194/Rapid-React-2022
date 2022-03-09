@@ -202,11 +202,6 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     }
 
-    public void positionTilt(double degrees) {
-        mPidController.setReference(degrees, ControlType.kPosition,SMART_MOTION_SLOT);
-
-    }
-
     public void goToPositionMotionMagic(double degrees) {
 
         // convert angle to motor turns
