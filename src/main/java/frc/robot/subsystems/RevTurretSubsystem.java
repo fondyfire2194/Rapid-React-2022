@@ -197,10 +197,6 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     }
 
-    public void positionTurret(double angle, int slotNumber) {
-        mPidController.setReference(angle, ControlType.kPosition, slotNumber);
-
-    }
 
     public double getTargetHorOffset() {
         return targetHorizontalOffset;
@@ -394,15 +390,16 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     private void tuneMMGains() {
-        kFF = Pref.getPref("tURKff");// 10,000/60 rps* 1.39 = 231. and 1/237 = .004
+        kFF = 0;//Pref.getPref("tURKff");// 10,000/60 rps* 1.39 = 231. and 1/237 = .004
         double p = Pref.getPref("tURKp");
         double i = Pref.getPref("tURKi");
         double d = Pref.getPref("tURKd");
         double iz = Pref.getPref("tURKiz"); 
-        maxVel = Pref.getPref("tURMaxV");
-        maxAcc = Pref.getPref("tURMaxA");
+        kMinOutput = -.5;
+        kMaxOutput = .5;
+        mPidController.setOutputRange(kMinOutput, kMaxOutput, POSITION_SLOT);
         allowedErr = .1;
-        calibratePID(p, i, d, iz, SMART_MOTION_SLOT);
+        calibratePID(p, i, d, iz, POSITION_SLOT);
 
     }
 
@@ -454,13 +451,12 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     public void getMMGains() {
-        ffset = mPidController.getFF(SMART_MOTION_SLOT);
-        pset = mPidController.getP(SMART_MOTION_SLOT);
-        iset = mPidController.getI(SMART_MOTION_SLOT);
-        dset = mPidController.getD(SMART_MOTION_SLOT);
-        izset = mPidController.getIZone(SMART_MOTION_SLOT);
-        maxAccset = mPidController.getSmartMotionMaxAccel(SMART_MOTION_SLOT);
-        maxVelset = mPidController.getSmartMotionMaxVelocity(SMART_MOTION_SLOT);
+        ffset = mPidController.getFF(POSITION_SLOT);
+        pset = mPidController.getP(POSITION_SLOT);
+        iset = mPidController.getI(POSITION_SLOT);
+        dset = mPidController.getD(POSITION_SLOT);
+        izset = mPidController.getIZone(POSITION_SLOT);
+      
     }
 
     public void getLockGains() {

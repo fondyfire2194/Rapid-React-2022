@@ -21,7 +21,6 @@ import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.TiltConstants;
 import frc.robot.Pref;
 
-
 public class RevTiltSubsystem extends SubsystemBase {
 
     // public final int VELOCITY_SLOT = 0;
@@ -32,9 +31,11 @@ public class RevTiltSubsystem extends SubsystemBase {
     public double lastkP, lastkI, lastkD, lastkIz, lastkFF, lastkMaxOutput, lastkMinOutput, lastmaxRPM, lastmaxVel,
             lastminVel, lastmaxAcc, lastallowedErr;
 
-    // public double kPv, kIv, kDv, kIzv, kFFv, kMaxOutputv, kMinOutputv, maxRPMv, maxVelv, minVelv, maxAccv, allowedErrv;
-    // public double lastkPv, lastkIv, lastkDv, lastkIzv, lastkFFv, lastkMaxOutputv, lastkMinOutputv, lastmaxRPMv,
-    //         lastmaxVelv, lastmv, lastmaxAccv, lastallowedErrv;
+    // public double kPv, kIv, kDv, kIzv, kFFv, kMaxOutputv, kMinOutputv, maxRPMv,
+    // maxVelv, minVelv, maxAccv, allowedErrv;
+    // public double lastkPv, lastkIv, lastkDv, lastkIzv, lastkFFv, lastkMaxOutputv,
+    // lastkMinOutputv, lastmaxRPMv,
+    // lastmaxVelv, lastmv, lastmaxAccv, lastallowedErrv;
 
     public final CANSparkMax m_motor; // NOPMD
     private final RelativeEncoder mEncoder;
@@ -51,7 +52,7 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     public boolean validTargetSeen;
     public double adjustedVerticalError;
-    
+
     public final double degreesPerRev = TiltConstants.tiltDegreesPerRev;// degrees per motor turn
     public final double tiltMinAngle = TiltConstants.TILT_MIN_ANGLE;
 
@@ -150,7 +151,7 @@ public class RevTiltSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-     
+
         checkTune();
 
         if (RobotBase.isReal() && DriverStation.isDisabled())
@@ -196,9 +197,9 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     }
 
-    public void goToPosition(double motorTurns) {
+    public void goToPosition(double degrees) {
         if (RobotBase.isReal())
-            mPidController.setReference(motorTurns, ControlType.kPosition);
+            mPidController.setReference(degrees, ControlType.kPosition, POSITION_SLOT);
 
     }
 
@@ -209,7 +210,6 @@ public class RevTiltSubsystem extends SubsystemBase {
         mPidController.setReference(degrees, ControlType.kSmartMotion, SMART_MOTION_SLOT);
     }
 
-  
     public void resetAngle() {
         mEncoder.setPosition(0);
         targetAngle = 0;
@@ -325,7 +325,6 @@ public class RevTiltSubsystem extends SubsystemBase {
         driverVerticalOffsetMeters = 0;
     }
 
-  
     public void calibratePID(final double p, final double i, final double d, final double kIz, final double allE,
             int slotNumber) {
         if (p != lastkP) {
@@ -352,34 +351,19 @@ public class RevTiltSubsystem extends SubsystemBase {
             lastkMinOutput = kMinOutput;
             lastkMaxOutput = kMaxOutput;
         }
-        if (slotNumber == SMART_MOTION_SLOT) {
-            if (lastmaxAcc != maxAcc) {
-                mPidController.setSmartMotionMaxAccel(maxAcc, slotNumber);
-                lastmaxAcc = maxAcc;
-            }
 
-            if (lastmaxVel != maxVel) {
-                mPidController.setSmartMotionMaxVelocity(maxAcc, slotNumber);
-                lastmaxVel = maxVel;
-            }
-
-            if (lastallowedErr != allE) {
-                mPidController.setSmartMotionAllowedClosedLoopError(allE, slotNumber);
-                lastallowedErr = allE;
-            }
-        }
     }
 
-     private void setFF_MaxOuts() {
-         
-        kFF = .0167;// 10,000 rpm = (10000/60) * .03645 = 6.0  1/6.0 = .167
+    private void setFF_MaxOuts() {
+
+        kFF = 0;// 10,000 rpm = (10000/60) * .03645 = 6.0 1/6.0 = .167
         kMinOutput = -.5;
         kMaxOutput = .6;
 
-        mPidController.setFF(kFF, SMART_MOTION_SLOT);
- 
-        mPidController.setOutputRange(kMinOutput, kMaxOutput, SMART_MOTION_SLOT);
- 
+        mPidController.setFF(kFF, POSITION_SLOT);
+
+        mPidController.setOutputRange(kMinOutput, kMaxOutput, POSITION_SLOT);
+
     }
 
     private void tuneMMGains() {
@@ -388,13 +372,14 @@ public class RevTiltSubsystem extends SubsystemBase {
         double i = Pref.getPref("tIKi");
         double d = Pref.getPref("tIKd");
         double iz = Pref.getPref("tIKiz");
-        maxVel = Pref.getPref("tIMaxV");
-        maxAcc = Pref.getPref("tIMaxA");
         allowedErr = .01;
-        calibratePID(p, i, d, iz, allowedErr, SMART_MOTION_SLOT);
+        kMinOutput = -.5;
+        kMaxOutput = .5;
+        mPidController.setOutputRange(kMinOutput, kMaxOutput, POSITION_SLOT);
+
+        calibratePID(p, i, d, iz, allowedErr, POSITION_SLOT);
 
     }
-
 
     private void checkTune() {
 
@@ -413,13 +398,13 @@ public class RevTiltSubsystem extends SubsystemBase {
     }
 
     public void getMMGains() {
-        ffset = mPidController.getFF(SMART_MOTION_SLOT);
-        pset = mPidController.getP(SMART_MOTION_SLOT);
-        iset = mPidController.getI(SMART_MOTION_SLOT);
-        dset = mPidController.getD(SMART_MOTION_SLOT);
-        izset = mPidController.getIZone(SMART_MOTION_SLOT);
-        maxAccset = mPidController.getSmartMotionMaxAccel(SMART_MOTION_SLOT);
-        maxVelset = mPidController.getSmartMotionMaxVelocity(SMART_MOTION_SLOT);
+        ffset = mPidController.getFF(POSITION_SLOT);
+        pset = mPidController.getP(POSITION_SLOT);
+        iset = mPidController.getI(POSITION_SLOT);
+        dset = mPidController.getD(POSITION_SLOT);
+        izset = mPidController.getIZone(POSITION_SLOT);
+        maxAccset = mPidController.getSmartMotionMaxAccel(POSITION_SLOT);
+        maxVelset = mPidController.getSmartMotionMaxVelocity(POSITION_SLOT);
 
     }
 

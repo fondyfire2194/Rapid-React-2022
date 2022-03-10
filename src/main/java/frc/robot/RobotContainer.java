@@ -169,8 +169,8 @@ public class RobotContainer {
       public RobotContainer() {
             isMatch = Robot.getFMConnected();
             // Preferences.removeAll();
-            Pref.deleteUnused();
-            Pref.addMissing();
+            // Pref.deleteUnused();
+            // Pref.addMissing();
             m_drive = new RevDrivetrain();
             m_transport = new CargoTransportSubsystem();
 

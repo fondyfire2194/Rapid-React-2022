@@ -192,7 +192,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean getLowerRollerAtSpeed() {
 
-    return Math.abs(lowerRequiredRPM + getLowerRPM()) < (lowerRequiredRPM * .05);// getmps is -
+    return Math.abs(lowerRequiredRPM - getLowerRPM()) < (lowerRequiredRPM * .05);// getmps is -
   }
 
   public double getLowerRPM() {
@@ -231,10 +231,10 @@ public class CargoTransportSubsystem extends SubsystemBase {
   public void calibrateLowerPID() {
     double p = Pref.getPref("Rollers_kP");
     double i = 0;
-    double d = 0;
-    double f = .001;// 1/1000 (10,000 rpm through 10:1 gearig)
+    double d = Pref.getPref("Rollers_kD");
+    double f = .0009;// 1/1000 (10,000 rpm through 10:1 gearing)
     double kIz = 0;
-    double acc = 1000;
+    double acc = .5;
 
     m_lowerPID.setP(p, VELOCITY_SLOT);
 

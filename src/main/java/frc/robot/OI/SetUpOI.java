@@ -37,6 +37,7 @@ import frc.robot.commands.Shooter.RunTopRoller;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Shooter.StopShoot;
+import frc.robot.commands.Shooter.StopTopRoller;
 import frc.robot.commands.Tilt.ClearFaults;
 import frc.robot.commands.Tilt.PositionIncrementTilt;
 import frc.robot.commands.Tilt.PositionTilt;
@@ -98,7 +99,7 @@ public class SetUpOI {
                         intakeActions.add("Stop Motor", new StopIntakeMotors(intake));
 
                         ShuffleboardLayout intakeValues = Shuffleboard.getTab("Intake")
-                                        .getLayout("IntakeValues", BuiltInLayouts.kList).withPosition(3, 0)
+                                        .getLayout("IntakeValues", BuiltInLayouts.kList).withPosition(2, 0)
                                         .withSize(1, 4).withProperties(Map.of("Label position", "TOP"));
 
                         intakeValues.addBoolean("Arm Up", () -> intake.getActiveArmRaised());
@@ -291,7 +292,8 @@ public class SetUpOI {
                                         new SequentialCommandGroup(new SetShootSpeedSource(shooter, 0),
                                                         new RunShooter(shooter)));
 
-                        shooterCommands.add("RunTopRoll", new RunTopRoller(shooter, 1500));
+                        shooterCommands.add("RunTopRoll", new RunTopRoller(shooter, 750));
+                        shooterCommands.add("StopTopRoll", new StopTopRoller(shooter));
 
                         ShuffleboardLayout shooterValues = Shuffleboard.getTab("SetupShooter")
                                         .getLayout("ShooterValues", BuiltInLayouts.kList).withPosition(2, 0)

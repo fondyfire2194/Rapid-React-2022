@@ -112,6 +112,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double topRequiredRPM;
     public double presetRPM = 1750;
     public int shootSpeedSource;
+    public boolean haltTopRoller;
 
     public RevShooterSubsystem() {
 
@@ -133,9 +134,10 @@ public class RevShooterSubsystem extends SubsystemBase {
         m_topRollerMotor = new CANSparkMax(CANConstants.TOP_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
         m_topPID = m_topRollerMotor.getPIDController();
         m_topEncoder = m_topRollerMotor.getEncoder();
+        m_topRollerMotor.restoreFactoryDefaults();
         m_topEncoder.setPositionConversionFactor(.1);
         m_topEncoder.setVelocityConversionFactor(.1);
-        m_topRollerMotor.restoreFactoryDefaults();
+
         m_topRollerMotor.setInverted(false);
         setTopRollerBrakeOn(true);
 
@@ -185,7 +187,7 @@ public class RevShooterSubsystem extends SubsystemBase {
         checkTune();
 
         SmartDashboard.putString("LeftFaults", "SS");// faultAsBitString());
-
+        SmartDashboard.putNumber("TopEnc", m_topEncoder.getPosition());
     }
 
     @Override
@@ -413,12 +415,12 @@ public class RevShooterSubsystem extends SubsystemBase {
     }
 
     public void calibrateTopPID() {
-        double p = 0;// Pref.getPref("Rollers_kP");
+        double p = Pref.getPref("Rollers_kP");
         double i = 0;
-        double d = 0;// Pref.getPref("Rollers_kD");
-        double f = .001;// 1/1000 (10,000 rpm through 10:1 gearing)
+        double d = Pref.getPref("Rollers_kD");
+        double f = .0009;// 1/1000 (10,000 rpm through 10:1 gearing)
         double kIz = 0;
-        double acc = 1000;
+        double acc = .5;
 
         m_topPID.setP(p, VELOCITY_SLOT);
 

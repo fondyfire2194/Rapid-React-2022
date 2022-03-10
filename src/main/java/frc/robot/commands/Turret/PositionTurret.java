@@ -35,7 +35,7 @@ public class PositionTurret extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_turret.goToPositionMotionMagic(m_turret.targetAngle);
+    m_turret.goToPosition(m_turret.targetAngle);
     loopCtr++;
     endIt = m_turret.atTargetAngle() && loopCtr > 10 && Math.abs(m_turret.getSpeed()) < 1;// ||
                                                                                           // !m_tilt.positionResetDone;
