@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -44,11 +46,13 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public boolean twoCargoOnBoard;
 
+
   public IntakesSubsystem() {
 
     m_rearIntakeMotor.configFactoryDefault();
     m_rearIntakeMotor.setNeutralMode(NeutralMode.Brake);
     m_frontIntakeMotor.configFactoryDefault();
+    m_frontIntakeMotor.setInverted(true);
     m_frontIntakeMotor.setNeutralMode(NeutralMode.Brake);
 
     raiseRearArm();
@@ -61,7 +65,6 @@ public class IntakesSubsystem extends SubsystemBase {
   }
 
   public void toggleActiveIntake() {
-
     useFrontIntake = !useFrontIntake;
   }
 
@@ -108,6 +111,11 @@ public class IntakesSubsystem extends SubsystemBase {
   }
 
   public void runFrontIntakeMotor() {
+    double speed = Pref.getPref("IntakeSpeed");
+    m_frontIntakeMotor.set(ControlMode.PercentOutput, speed);
+  }
+
+  public void reverseFrontIntakeMotor() {
     double speed = -Pref.getPref("IntakeSpeed");
     m_frontIntakeMotor.set(ControlMode.PercentOutput, speed);
   }
@@ -164,6 +172,11 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public void runRearIntakeMotor() {
     double speed = Pref.getPref("IntakeSpeed");
+    m_rearIntakeMotor.set(ControlMode.PercentOutput, speed);
+  }
+
+  public void reverseRearIntakeMotor() {
+    double speed = -Pref.getPref("IntakeSpeed");
     m_rearIntakeMotor.set(ControlMode.PercentOutput, speed);
   }
 

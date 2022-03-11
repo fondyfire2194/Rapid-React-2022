@@ -208,7 +208,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     }
 
-    public void runShooter_Roller(double rpm) {
+    public void runShooterPlusRoller(double rpm) {
 
         spinAtRPM(rpm);
 

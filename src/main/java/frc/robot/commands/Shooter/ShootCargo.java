@@ -52,7 +52,7 @@ public class ShootCargo extends CommandBase {
 
     m_rpm = m_shooter.getSpeedSource();
 
-    m_shooter.runShooter_Roller(m_rpm);
+    m_shooter.runShooterPlusRoller(m_rpm);
 
     if (m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed())
 

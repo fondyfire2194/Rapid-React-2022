@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.Vision.RotateLimelight90;
 import frc.robot.commands.AutoCommands.AllRetPuShoot;
 import frc.robot.commands.AutoCommands.PUS3;
 import frc.robot.commands.AutoCommands.Taxi;
@@ -79,8 +78,6 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     getAllianceColorBlue();
-
-    RotateLimelight90.init();
 
    // if (m_robotContainer.isMatch)
 
@@ -179,7 +176,7 @@ public class Robot extends TimedRobot {
     RevShooterSubsystem shooter = m_robotContainer.m_shooter;
     RevDrivetrain drive = m_robotContainer.m_drive;
     CargoTransportSubsystem transport = m_robotContainer.m_transport;
-    IntakesSubsystem intake = m_robotContainer.m_intakes;
+    IntakesSubsystem intake = m_robotContainer.m_intake;
     RawContoursV2 rcv2 = m_robotContainer.m_rCV2;
     Compressor comp = m_robotContainer.m_compressor;
 
@@ -275,6 +272,8 @@ public class Robot extends TimedRobot {
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
 
     m_robotContainer.m_limelight.useVision = false;
+
+    m_robotContainer.m_intake.setFrontActive();
 
   }
 

@@ -8,13 +8,14 @@ import java.util.Map;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
@@ -39,8 +40,8 @@ import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Shooter.StopTopRoller;
 import frc.robot.commands.Tilt.ClearFaults;
-import frc.robot.commands.Tilt.PositionIncrementTilt;
 import frc.robot.commands.Tilt.PositionTilt;
+import frc.robot.commands.Tilt.PositionTiltToEntry;
 import frc.robot.commands.Tilt.StopTilt;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Turret.ClearTurFaults;
@@ -108,6 +109,22 @@ public class SetUpOI {
                         intakeValues.addNumber("Motor CMD", () -> intake.getActiveMotor());
                         intakeValues.addBoolean("CargoAtRearIn", () -> intake.getCargoAtRear());
                         intakeValues.addBoolean("CargoAtFrontIn", () -> intake.getCargoAtFront());
+
+                        UsbCamera frontIntakeCamera = CameraServer.startAutomaticCapture("FrontCam", 0);
+
+                        ShuffleboardTab frontFeed = Shuffleboard.getTab("FrontIntakeCamera");
+
+                        frontFeed.add("FrontCamera", frontIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
+                                        .withPosition(2, 0).withSize(6, 4)
+                                        .withProperties(Map.of("Show Crosshair", false, "Show Controls", true));
+
+                        ShuffleboardTab rearFeed = Shuffleboard.getTab("RearIntakeCamera");
+
+                        UsbCamera rearIntakeCamera = CameraServer.startAutomaticCapture("RearCam", 1);
+
+                        rearFeed.add("RearCamera", rearIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
+                                        .withPosition(2, 0).withSize(6, 4)
+                                        .withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
                 }
 
@@ -183,7 +200,7 @@ public class SetUpOI {
 
                         ShuffleboardLayout turretGains = Shuffleboard.getTab("SetupTurret")
 
-                                        .getLayout("MMGains", BuiltInLayouts.kList).withPosition(6, 0).withSize(1, 3)
+                                        .getLayout("PosGains", BuiltInLayouts.kList).withPosition(6, 0).withSize(1, 3)
                                         .withProperties(Map.of("Label position", "LEFT")); // labels
 
                         turretGains.addNumber("FF", () -> turret.ffset);
@@ -211,16 +228,7 @@ public class SetUpOI {
                                         .getLayout("Tilt", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 5)
                                         .withProperties(Map.of("Label position", "LEFT")); //
 
-                        tiltCommands.add("Position To 10", new PositionTilt(tilt, 10));
-
-                        tiltCommands.add("Position To 14", new PositionTilt(tilt, 14));
-
-                        tiltCommands.add("Position To 5", new PositionTilt(tilt, 5));
-
-                        tiltCommands.add("Inc_Position +1 Deg", new PositionIncrementTilt(tilt, 1));
-
-                        tiltCommands.add("Inc_Position -1 Deg", new PositionIncrementTilt(tilt, -1));
-
+                        tiltCommands.add("Position To Entry", new PositionTiltToEntry(tilt));
                         tiltCommands.add("PositionToSwitch", new TiltMoveToReverseLimit(tilt));
                         tiltCommands.add("StopTilt", new StopTilt(tilt));
                         tiltCommands.add("ClearFaults", new ClearFaults(tilt));
@@ -228,7 +236,7 @@ public class SetUpOI {
                         tiltCommands.addNumber("Faults", () -> tilt.faultSeen);
 
                         ShuffleboardLayout tiltValues = Shuffleboard.getTab("SetupTilt")
-                                        .getLayout("TiltValues", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4)
+                                        .getLayout("TiltValues", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 3)
                                         .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                         tiltValues.addNumber("TIAngle", () -> tilt.getAngle());
@@ -261,7 +269,7 @@ public class SetUpOI {
 
                         ShuffleboardLayout tiltGains = Shuffleboard.getTab("SetupTilt")
 
-                                        .getLayout("MMGains", BuiltInLayouts.kList).withPosition(7, 0).withSize(1, 3)
+                                        .getLayout("PosGains", BuiltInLayouts.kList).withPosition(7, 0).withSize(1, 3)
                                         .withProperties(Map.of("Label position", "LEFT"));
 
                         tiltGains.addNumber("FF", () -> tilt.ffset);

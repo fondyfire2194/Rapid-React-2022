@@ -9,8 +9,9 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
+import com.revrobotics.SparkMaxPIDController;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -120,8 +121,8 @@ public class RevTurretSubsystem extends SubsystemBase {
         mEncoder.setPosition(0);
         aimCenter();
         setFF_MaxOuts();
-        tuneMMGains();
-        getMMGains();
+        tunePosGains();
+        getPosGains();
         setTurretLockGains();
         getLockGains();
         m_turretLockController.setTolerance(.5);
@@ -140,7 +141,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
         m_reverseLimit.enableLimitSwitch(true);
 
-        m_forwardLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
+        m_forwardLimit = m_motor.getForwardLimitSwitch(Type.kNormallyClosed);
         m_forwardLimit.enableLimitSwitch(true);
 
         SmartDashboard.putNumber("TUdegPerRev", DEG_PER_MOTOR_REV);
@@ -389,7 +390,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     }
 
-    private void tuneMMGains() {
+    private void tunePosGains() {
         kFF = 0;//Pref.getPref("tURKff");// 10,000/60 rps* 1.39 = 231. and 1/237 = .004
         double p = Pref.getPref("tURKp");
         double i = Pref.getPref("tURKi");
@@ -418,8 +419,8 @@ public class RevTurretSubsystem extends SubsystemBase {
         tuneOn = Pref.getPref("tURTune") == 1. && turretMotorConnected;
 
         if (tuneOn && !lastTuneOn) {
-            tuneMMGains();
-            getMMGains();
+            tunePosGains();
+            getPosGains();
             lastTuneOn = true;
         }
 
@@ -450,7 +451,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         return m_motor.getFaults();
     }
 
-    public void getMMGains() {
+    public void getPosGains() {
         ffset = mPidController.getFF(POSITION_SLOT);
         pset = mPidController.getP(POSITION_SLOT);
         iset = mPidController.getI(POSITION_SLOT);

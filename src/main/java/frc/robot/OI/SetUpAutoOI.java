@@ -40,7 +40,7 @@ public class SetUpAutoOI {
         public SendableChooser<Command> autoChooser = new SendableChooser<>();
         public SendableChooser<Integer> startDelayChooser = new SendableChooser<>();
         private boolean showAuto;
-        private HttpCamera LLFeed;
+      //  private HttpCamera LLFeed;
 
         public SetUpAutoOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
@@ -101,13 +101,14 @@ public class SetUpAutoOI {
                         competition.addBoolean("Use Vision", () -> ll.useVision);
                         competition.addBoolean("TopRollersAtSpeed", () -> shooter.getTopRollerAtSpeed());
 
-                        LLFeed = new HttpCamera("Limelight", "http://limelight.local:5800/stream.mjpg");
-                        ShuffleboardTab driverDisplayTab = Shuffleboard.getTab("Competition");
-                        driverDisplayTab.add("Limelight", LLFeed).withWidget(BuiltInWidgets.kCameraStream)
-                                        .withPosition(3, 0).withSize(6, 5)
-                                        .withProperties(Map.of("Show Crosshair", true, "Show Controls", false));// specify
-                                                                                                                // widget
-                                                                                                                // properties
+                        // LLFeed = new HttpCamera("Limelight", "http://limelight.local:5800/stream.mjpg");
+                        // ShuffleboardTab driverDisplayTab = Shuffleboard.getTab("Competition");
+                        // driverDisplayTab.add("Limelight", LLFeed).withWidget(BuiltInWidgets.kCameraStream)
+                        //                 .withPosition(3, 0).withSize(6, 5)
+                        //                 .withProperties(Map.of("Show Crosshair", false,
+                        //                                 "Show Controls", true, "Rotation", 180));// specify
+                        //                                                                        // widget
+                                                                                               // properties
 
                         ShuffleboardLayout miscComp = Shuffleboard.getTab("CompetitionMisc")
                                         .getLayout("Misc1", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4)
@@ -130,7 +131,6 @@ public class SetUpAutoOI {
                                         .getLayout("Misc2", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4)
                                         .withProperties(Map.of("Label position", "LEFT"));
 
-                
                         // misComp1.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
 
                         ShuffleboardLayout misComp2 = Shuffleboard.getTab("CompetitionMisc")

@@ -190,6 +190,11 @@ public class CargoTransportSubsystem extends SubsystemBase {
     m_lowerPID.setReference(rpm, ControlType.kVelocity, VELOCITY_SLOT);
   }
 
+  public void reverseLowerRoller() {
+
+    m_lowerPID.setReference(500, ControlType.kVelocity, VELOCITY_SLOT);
+  }
+
   public boolean getLowerRollerAtSpeed() {
 
     return Math.abs(lowerRequiredRPM - getLowerRPM()) < (lowerRequiredRPM * .05);// getmps is -

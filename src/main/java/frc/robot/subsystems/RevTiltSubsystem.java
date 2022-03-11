@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.FaultID;
@@ -13,8 +15,13 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
@@ -99,6 +106,7 @@ public class RevTiltSubsystem extends SubsystemBase {
     public double tiltOffsetChange;
     public double cameraCalculatedTiltPosition;
     public double presetPosition;
+    public NetworkTableEntry tiltTarget;
 
     /** 
      * 
@@ -123,10 +131,10 @@ public class RevTiltSubsystem extends SubsystemBase {
         mEncoder.setVelocityConversionFactor(degreesPerRev / 60);
 
         setFF_MaxOuts();
-        tuneMMGains();
+        tunePosGains();
         // tuneVelGains();
 
-        getMMGains();
+        getPosGains();
         // getVelGains();
 
         resetAngle();
@@ -146,6 +154,13 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         setSoftwareLimits();
         SmartDashboard.putNumber("TIdegPerRev", degreesPerRev);
+
+        tiltTarget = Shuffleboard.getTab("SetupTilt")
+                .add("TargetDegrees", 0)
+                .withWidget(BuiltInWidgets.kTextView)
+                .withPosition(2, 3).withSize(2, 1)
+                .withProperties(Map.of("min", 0, "max", 14))
+                .getEntry();
     }
 
     @Override
@@ -366,7 +381,7 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     }
 
-    private void tuneMMGains() {
+    private void tunePosGains() {
 
         double p = Pref.getPref("tIKp");
         double i = Pref.getPref("tIKi");
@@ -387,8 +402,8 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         if (tuneOn && !lastTuneOn) {
 
-            tuneMMGains();
-            getMMGains();
+            tunePosGains();
+            getPosGains();
             lastTuneOn = true;
         }
 
@@ -397,7 +412,7 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     }
 
-    public void getMMGains() {
+    public void getPosGains() {
         ffset = mPidController.getFF(POSITION_SLOT);
         pset = mPidController.getP(POSITION_SLOT);
         iset = mPidController.getI(POSITION_SLOT);

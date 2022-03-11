@@ -36,7 +36,7 @@ public class RunShooter extends CommandBase {
   @Override
   public void execute() {
 
-    m_shooter.runShooter_Roller(m_rpm);
+    m_shooter.runShooterPlusRoller(m_rpm);
 
   }
 
