@@ -103,7 +103,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double shooterRPMAdder;
     public double shooterRPMChange;
     public double cameraCalculatedTiltPosition;
-    public double maxRPM = 4500;
+    public double maxRPM = 5500;
     public double minRPM = 100;
     public double shootCargosRunning;
 
@@ -150,8 +150,8 @@ public class RevShooterSubsystem extends SubsystemBase {
 
         shooterSpeed = Shuffleboard.getTab("SetupShooter").add("ShooterSpeed",
                 3).withWidget("Number Slider")
-                .withPosition(0, 3).withSize(4, 1).withProperties(Map.of("Min", 500, "Max",
-                        3500))
+                .withPosition(0, 4).withSize(4, 1).withProperties(Map.of("Min", 500, "Max",
+                        5500))
                 .getEntry();
 
         tuneGains();
@@ -215,6 +215,14 @@ public class RevShooterSubsystem extends SubsystemBase {
         runTopAtVelocity(rpm);
     }
 
+    public void reverseUpperRoller() {
+        runTopAtVelocity(-200);
+    }
+
+    public void stopUpperRoller() {
+        m_topRollerMotor.stopMotor();
+    }
+
     public void moveManually(double speed) {
         if (RobotBase.isReal())
             mLeftMotor.set(speed);
@@ -262,6 +270,7 @@ public class RevShooterSubsystem extends SubsystemBase {
         if (RobotBase.isReal()) {
             mLeftMotor.stopMotor();
             mRightMotor.stopMotor();
+            mLeftMotor.set(0);
             m_topRollerMotor.stopMotor();
         } else {
             mLeftMotor.setVoltage(0);
@@ -394,8 +403,8 @@ public class RevShooterSubsystem extends SubsystemBase {
         m_topPID.setReference(rpm, ControlType.kVelocity, VELOCITY_SLOT);
     }
 
-    public boolean getTopRollerAtSpeed() {
-        return Math.abs(topRequiredRPM - getTopRPM()) < (topRequiredRPM * .15);// getrpm is -
+    public boolean getTopRollerRunning() {
+        return Math.abs(getTopRPM()) > 250;// getrpm is -
     }
 
     public double getTopRPM() {

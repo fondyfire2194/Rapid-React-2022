@@ -13,7 +13,7 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Shooter.ShootCargo;
+import frc.robot.commands.Shooter.ShootTwoCargo;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.PositionTurretToVision;
@@ -82,7 +82,7 @@ public class AcquireTarget extends SequentialCommandGroup {
 
                                                 new RunShooter(shooter)),
 
-                                new ShootCargo(shooter, transport, intake)
+                                new ShootTwoCargo(shooter, transport, intake)
 
                 );
 

@@ -67,12 +67,12 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     // Starts recording to data log
-  //  DataLogManager.start();
+    DataLogManager.start();
 
     // Set up custom log entries
-    // DataLog log = DataLogManager.getLog();
+     DataLog log = DataLogManager.getLog();
     // rrBooleanLog = new BooleanLogEntry(log, "/my/boolean");
-    // rrDoubleLog = new DoubleLogEntry(log, "/my/double");
+     rrDoubleLog = new DoubleLogEntry(log, "/my/double");
     // rrStringLog = new StringLogEntry(log, "/my/string");
 
     m_robotContainer = new RobotContainer();
@@ -108,7 +108,8 @@ public class Robot extends TimedRobot {
     // if (tst >= 298) {
     //   // Only log when necessary
     //   rrBooleanLog.append(true);
-    //   rrDoubleLog.append(3.5);
+    
+      // rrDoubleLog.append(3.5);
     //   rrStringLog.append("wow!");
     // }
 
@@ -268,8 +269,8 @@ public class Robot extends TimedRobot {
 
     autoHasRun = false;
 
-    if (RobotBase.isReal() && !m_robotContainer.m_tilt.positionResetDone)
-      new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
+    // if (RobotBase.isReal() && !m_robotContainer.m_tilt.positionResetDone)
+    //   new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
 
     m_robotContainer.m_limelight.useVision = false;
 

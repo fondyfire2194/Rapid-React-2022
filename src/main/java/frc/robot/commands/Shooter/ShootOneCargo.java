@@ -6,23 +6,27 @@ package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Pref;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
 
-public class ShootCargo extends CommandBase {
+public class ShootOneCargo extends CommandBase {
   /** Creates a new ShootCargo. */
   private RevShooterSubsystem m_shooter;
   private CargoTransportSubsystem m_transport;
   private int m_speedSource;
   private IntakesSubsystem m_intake;
-  private boolean frontIntakeStarted;
-  private boolean rearIntakeStarted;
-  private double m_startTime = 0;
+  private boolean frontIntakeRunning;
+  private boolean rearIntakeRunning;
+
+  private boolean cargoAtShoot;
+  private boolean noCargoAtStart;
+
+  private boolean oneShot;
+
   private double m_rpm;
 
-  public ShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
+  public ShootOneCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
       IntakesSubsystem intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
@@ -36,11 +40,13 @@ public class ShootCargo extends CommandBase {
   @Override
   public void initialize() {
 
-    frontIntakeStarted = false;
+    frontIntakeRunning = false;
+    rearIntakeRunning = false;
 
-    rearIntakeStarted = false;
+    oneShot = false;
 
-    m_startTime = Timer.getFPGATimestamp();
+    m_intake.cargoAtBothIntakes = m_intake.getCargoAtFront() && m_intake.getCargoAtRear();
+    noCargoAtStart = !m_intake.getCargoAtFront() && !m_intake.getCargoAtRear() && !m_transport.getCargoAtShoot();
 
   }
 
@@ -48,47 +54,56 @@ public class ShootCargo extends CommandBase {
   @Override
   public void execute() {
 
-    // allow on the fly changes in manual mode for setup
+    cargoAtShoot = m_transport.getCargoAtShoot();
 
     m_rpm = m_shooter.getSpeedSource();
 
     m_shooter.runShooterPlusRoller(m_rpm);
 
-    if (m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed())
+    if ((!oneShot) && cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerRunning()) {
 
-    {
-      double rl_rpm = Pref.getPref("LowRollReleaseRPM");
+      m_transport.releaseCargo();
 
-      m_transport.releaseCargo(rl_rpm);
+      if (!cargoAtShoot) {
+        oneShot = true;
+      }
     }
 
-    if (!m_transport.getCargoAtShoot() && (m_intake.getCargoAtFront() || frontIntakeStarted)) {
-      frontIntakeStarted = true;
-      m_startTime = Timer.getFPGATimestamp();
+    if (!cargoAtShoot && (m_intake.getCargoAtFront() || frontIntakeRunning)) {
       m_intake.runFrontIntakeMotor();
+      m_transport.intakeLowerRollerMotor();
+      frontIntakeRunning = true;
     }
 
-    if (!m_transport.getCargoAtShoot() && (m_intake.getCargoAtRear() || rearIntakeStarted)) {
-      rearIntakeStarted = true;
-      m_startTime = Timer.getFPGATimestamp();
+    if (!cargoAtShoot && !frontIntakeRunning && (m_intake.getCargoAtRear() || rearIntakeRunning)) {
       m_intake.runRearIntakeMotor();
+      m_transport.intakeLowerRollerMotor();
+      rearIntakeRunning = true;
     }
+
+    if (frontIntakeRunning) {
+      frontIntakeRunning = !cargoAtShoot;
+    }
+    if (rearIntakeRunning) {
+      rearIntakeRunning = !cargoAtShoot;
+    }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_shooter.useSpeedSlider = false;
-    m_shooter.stopTopRoller();
     m_shooter.stop();
+    m_shooter.stopTopRoller();
+    m_transport.stopLowerRoller();
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
 
-    return (!frontIntakeStarted && !rearIntakeStarted) && (Timer.getFPGATimestamp() - m_startTime) > 1
-
-        || (frontIntakeStarted || rearIntakeStarted) && Timer.getFPGATimestamp() - m_startTime > 2;
+    return noCargoAtStart || (!frontIntakeRunning && !rearIntakeRunning && oneShot);
   }
 }

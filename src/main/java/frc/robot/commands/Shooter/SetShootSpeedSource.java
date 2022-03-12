@@ -18,6 +18,7 @@ public class SetShootSpeedSource extends InstantCommand {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_shootSource = shootSource;
+    m_shooter.useSpeedSlider=true;
   }
 
   // Called when the command is initially scheduled.

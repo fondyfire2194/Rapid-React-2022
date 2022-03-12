@@ -37,16 +37,14 @@ import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Climber.ClimberArm;
 import frc.robot.commands.Climber.RunClimber;
-import frc.robot.commands.Intakes.RunActiveIntakeMotor;
+import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Intakes.SetRearIntakeActive;
-import frc.robot.commands.Intakes.StartActiveIntake;
 import frc.robot.commands.Intakes.StopActiveIntake;
 import frc.robot.commands.Intakes.StopIntakeMotors;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.ArcadeDriveVelocity;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
-import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
@@ -207,6 +205,8 @@ public class RobotContainer {
             // m_turret.setDefaultCommand(new TurretJog(m_turret, () ->
             // setupGamepad.getRawAxis(0) / 5, setupGamepad));
 
+        //    m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
+
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intake, m_climber, m_trajectory, isMatch);
 
@@ -255,15 +255,15 @@ public class RobotContainer {
 
             new JoystickButton(m_driverController, 1)
 
-                        .whileHeld(new StartActiveIntake(m_intake, m_transport))
+                        .whileHeld(new RunActiveIntake(m_intake, m_transport))
 
                         .whenReleased(new StopActiveIntake(m_intake));
 
-            new JoystickButton(m_driverController, 2)
+            //  new JoystickButton(m_driverController, 2)
 
-                        .whileHeld(new ShootCargo(m_shooter, m_transport, m_intake));
+            //  .whileHeld(new ShootCargo(m_shooter, m_transport, m_intake));
 
-            // .whenPressed(new SequentialCommandGroup(
+            //  .whenPressed(new SequentialCommandGroup(
 
             // new AcquireTarget(m_limelight, m_tilt, m_turret, m_rCV2, m_shooter,
             // m_transport,
@@ -320,8 +320,9 @@ public class RobotContainer {
              * 
              */
 
-            codriverY.whileHeld(m_intake::lowerFrontArm)
+            codriverX.whileHeld(m_intake::lowerFrontArm)
                         .whileHeld(m_intake::reverseFrontIntakeMotor)
+
                         .whenReleased(m_intake::raiseFrontArm)
                         .whenReleased(m_intake::stopFrontIntakeMotor);
 
@@ -330,7 +331,11 @@ public class RobotContainer {
                         .whenReleased(m_intake::raiseRearArm)
                         .whenReleased(m_intake::stopRearIntakeMotor);
 
-            codriverA.whenPressed(m_transport::reverseLowerRoller);
+            codriverA.whileHeld(m_transport::reverseLowerRoller)
+                        .whenReleased((m_transport::stopLowerRoller));
+
+            codriverY.whileHeld(m_shooter::reverseUpperRoller)
+                        .whenReleased((m_shooter::stopUpperRoller));
 
             // codriverX.whenPressed(
 
@@ -386,7 +391,7 @@ public class RobotContainer {
             setupY.whileHeld(getJogTiltCommand(setupGamepad)).whileHeld(getJogTurretCommand(setupGamepad))
                         .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));
 
-            setupA.whileHeld(new RunActiveIntakeMotor(m_intake, m_transport))
+            setupA.whileHeld(new RunActiveIntake(m_intake, m_transport))
                         .whenReleased(new StopIntakeMotors(m_intake));
 
             // setupLeftStick.

@@ -50,7 +50,11 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   private AnalogInput atShootCargoDetect;
 
-  private int cargoSensedLevel = 800;
+  private double cargoAtShootVolts = 2.2;
+
+  private double cargoHasLeftShootVolts = 1.2;
+
+  private double cargoAtShootActiveVolts = cargoAtShootVolts;
 
   public final int VELOCITY_SLOT = 0;
   private static final int SMART_MOTION_SLOT = 1;
@@ -94,6 +98,8 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     atShootCargoDetect = new AnalogInput(1);
 
+    atShootCargoDetect.setAverageBits(12);
+
   }
 
   @Override
@@ -103,22 +109,10 @@ public class CargoTransportSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("CARSGVOL", atShootCargoDetect.getAverageVoltage());
 
     if (getCargoAtShoot()) {
-
-      noCargoAtShooterForOneSecond = false;
-
-      noCargoAtShooterTime = 0;
+      cargoAtShootActiveVolts = cargoHasLeftShootVolts;
     }
-
-    if (!getCargoAtShoot() && noCargoAtShooterTime == 0) {
-
-      noCargoAtShooterTime = Timer.getFPGATimestamp();
-    }
-
-    if (!getCargoAtShoot() && noCargoAtShooterTime != 0
-
-        && Timer.getFPGATimestamp() > noCargoAtShooterTime + CargoTravelTime) {
-
-      noCargoAtShooterForOneSecond = true;
+    if (!getCargoAtShoot()) {
+      cargoAtShootActiveVolts = cargoAtShootVolts;
     }
   }
 
@@ -127,6 +121,11 @@ public class CargoTransportSubsystem extends SubsystemBase {
     lowerRollerMotorConnected = m_lowerRollerMotor.getFirmwareVersion() != -1;
 
     return lowerRollerMotorConnected;
+
+  }
+
+  public void reverseLowRoller() {
+    m_lowerRollerMotor.set(-.2);
 
   }
 
@@ -155,19 +154,21 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   public boolean getCargoAllianceMatch() {
-    return getAllianceBlue() && getCargoAtShoot() && getCargoIsBlue()
-        || !getAllianceBlue() && getCargoAtShoot() && getCargoIsRed();
+
+    return getCargoAtShoot() && ((getAllianceBlue() && getCargoIsBlue())
+
+        || (!getAllianceBlue() && getCargoIsRed()));
   }
 
   public boolean getCargoAtShoot() {
 
-    return atShootCargoDetect.getVoltage() > 2;
+    return atShootCargoDetect.getAverageVoltage() > cargoAtShootActiveVolts;
 
   }
 
-  // return cargoAtShootsensor.getProximity() > cargoSensedLevel;
+  public void intakeLowerRollerMotor() {
 
-  public void intakeLowerRollerMotor(double rpm) {
+    double rpm = Pref.getPref("LowRollIntakeRPM");
 
     if (!getCargoAtShoot()) {
 
@@ -177,10 +178,20 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     else {
 
-      stopLowerRoller();
+      runLowerAtVelocity(0);
 
     }
 
+  }
+
+  public void releaseCargo() {
+
+    double rpm = Pref.getPref("LowRollReleaseRPM");
+
+    if (getCargoAtShoot()) {
+
+      runLowerAtVelocity(rpm);
+    }
   }
 
   public void runLowerAtVelocity(double rpm) {
@@ -192,7 +203,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public void reverseLowerRoller() {
 
-    m_lowerPID.setReference(500, ControlType.kVelocity, VELOCITY_SLOT);
+    m_lowerPID.setReference(-200, ControlType.kVelocity, VELOCITY_SLOT);
   }
 
   public boolean getLowerRollerAtSpeed() {
@@ -215,7 +226,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public void stopLowerRoller() {
     lowerRequiredRPM = 0;
-    m_lowerRollerMotor.stopMotor();
+    
   }
 
   public double getLowerRollerMotorAmps() {
@@ -255,13 +266,6 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     m_lowerRollerMotor.setClosedLoopRampRate(acc);
 
-  }
-
-  public void releaseCargo(double rpm) {
-
-    if (getCargoAtShoot())
-
-      runLowerAtVelocity(rpm);
   }
 
 }

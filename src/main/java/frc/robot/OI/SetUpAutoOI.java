@@ -99,7 +99,7 @@ public class SetUpAutoOI {
                                         () -> ll.getHorOnTarget(turret.turretVisionTolerance));
                         competition.addBoolean("ShooterAtSpeed", () -> shooter.atSpeed());
                         competition.addBoolean("Use Vision", () -> ll.useVision);
-                        competition.addBoolean("TopRollersAtSpeed", () -> shooter.getTopRollerAtSpeed());
+                        competition.addBoolean("TopRollerRunning", () -> shooter.getTopRollerRunning());
 
                         // LLFeed = new HttpCamera("Limelight", "http://limelight.local:5800/stream.mjpg");
                         // ShuffleboardTab driverDisplayTab = Shuffleboard.getTab("Competition");

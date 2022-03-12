@@ -15,7 +15,7 @@ import frc.robot.commands.AutoCommands.Common.LowerShoot;
 import frc.robot.commands.AutoCommands.Common.PrepositionTiltAndTurret;
 import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
-import frc.robot.commands.Intakes.RunActiveIntakeMotor;
+import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StopActiveIntake;
 import frc.robot.commands.RobotDrive.PositionMove;
@@ -61,7 +61,7 @@ public class PUS3_ThirdCargo extends SequentialCommandGroup {
 
                     new ActiveIntakeArmLower(intake),
 
-                    new RunActiveIntakeMotor(intake, transport)),
+                    new RunActiveIntake(intake, transport)),
 
         new ParallelCommandGroup(new StopActiveIntake(intake), new ActiveIntakeArmRaise(intake),
 

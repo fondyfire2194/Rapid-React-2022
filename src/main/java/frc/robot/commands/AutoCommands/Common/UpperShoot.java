@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Shooter.ShootCargo;
+import frc.robot.commands.Shooter.ShootTwoCargo;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
@@ -33,7 +33,7 @@ public class UpperShoot extends SequentialCommandGroup {
 
         new RunShooter(shooter),
 
-        new ShootCargo(shooter, transport, intake));
+        new ShootTwoCargo(shooter, transport, intake));
 
   }
 

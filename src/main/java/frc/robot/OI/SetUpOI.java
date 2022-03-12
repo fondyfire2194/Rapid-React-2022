@@ -23,7 +23,7 @@ import frc.robot.commands.CargoTransport.RunLowerRoller;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
-import frc.robot.commands.Intakes.RunActiveIntakeMotor;
+import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StopIntakeMotors;
@@ -36,7 +36,8 @@ import frc.robot.commands.Shooter.ClearShFaults;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.RunTopRoller;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Shooter.ShootCargo;
+import frc.robot.commands.Shooter.ShootOneCargo;
+import frc.robot.commands.Shooter.ShootTwoCargo;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Shooter.StopTopRoller;
 import frc.robot.commands.Tilt.ClearFaults;
@@ -96,7 +97,7 @@ public class SetUpOI {
 
                         intakeActions.add("ArmRaise", new ActiveIntakeArmRaise(intake));
                         intakeActions.add("ArmLower", new ActiveIntakeArmLower(intake));
-                        intakeActions.add("Run Motor", new RunActiveIntakeMotor(intake, transport));
+                        intakeActions.add("Run Motor", new RunActiveIntake(intake, transport));
                         intakeActions.add("Stop Motor", new StopIntakeMotors(intake));
 
                         ShuffleboardLayout intakeValues = Shuffleboard.getTab("Intake")
@@ -285,22 +286,26 @@ public class SetUpOI {
                 if (showShooter && !isMatch) {
 
                         ShuffleboardLayout shooterCommands = Shuffleboard.getTab("SetupShooter")
-                                        .getLayout("MAXRPM 3500", BuiltInLayouts.kList).withPosition(0, 0)
-                                        .withSize(2, 3)
+                                        .getLayout("MAXRPM 5500", BuiltInLayouts.kList).withPosition(0, 0)
+                                        .withSize(2, 4)
                                         .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                         shooterCommands.add("Stop Shoot", new StopShoot(shooter, transport));
+                        shooterCommands.add("Start Shoot", new RunShooter(shooter));
 
-                        shooterCommands.add("Shoot",
-                                        new ShootCargo(shooter, transport, intake));
+                        shooterCommands.add("ShootOne",
+                                        new ShootOneCargo(shooter, transport, intake));
+                        shooterCommands.add("ShootTwo",
+                                        new ShootTwoCargo(shooter, transport, intake));
+
                         shooterCommands.add("ClearFaults", new ClearShFaults(shooter));
                         shooterCommands.add("Cmd", shooter);
 
                         shooterCommands.add("RunShooterFromSlider",
-                                        new SequentialCommandGroup(new SetShootSpeedSource(shooter, 0),
-                                                        new RunShooter(shooter)));
+                                        new SetShootSpeedSource(shooter, 0));
 
                         shooterCommands.add("RunTopRoll", new RunTopRoller(shooter, 750));
+
                         shooterCommands.add("StopTopRoll", new StopTopRoller(shooter));
 
                         ShuffleboardLayout shooterValues = Shuffleboard.getTab("SetupShooter")
@@ -326,7 +331,7 @@ public class SetUpOI {
                                         .withSize(2, 3).withProperties(Map.of("Label position", "LEFT"));
 
                         shooterValues1.addBoolean("ShooterAtSpeed", () -> shooter.atSpeed());
-                        shooterValues1.addBoolean("TopRollerAtSpeed", () -> shooter.getTopRollerAtSpeed());
+                        shooterValues1.addBoolean("TopRollerRunning", () -> shooter.getTopRollerRunning());
 
                         shooterValues1.addBoolean("TuneOn", () -> (shooter.tuneOn && shooter.lastTuneOn));
                         shooterValues1.addBoolean("BothConnected(6,7)", () -> shooter.allConnected);
