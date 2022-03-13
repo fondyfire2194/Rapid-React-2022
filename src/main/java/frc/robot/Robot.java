@@ -25,10 +25,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.Vision.RotateLimelight90;
 import frc.robot.commands.AutoCommands.AllRetPuShoot;
 import frc.robot.commands.AutoCommands.PUS3;
-import frc.robot.commands.AutoCommands.Taxi;
+import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Vision.SetUpLimelightForDriver;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -71,20 +70,18 @@ public class Robot extends TimedRobot {
     DataLogManager.start();
 
     // Set up custom log entries
-    DataLog log = DataLogManager.getLog();
-    rrBooleanLog = new BooleanLogEntry(log, "/my/boolean");
-    rrDoubleLog = new DoubleLogEntry(log, "/my/double");
-    rrStringLog = new StringLogEntry(log, "/my/string");
+     DataLog log = DataLogManager.getLog();
+    // rrBooleanLog = new BooleanLogEntry(log, "/my/boolean");
+     rrDoubleLog = new DoubleLogEntry(log, "/my/double");
+    // rrStringLog = new StringLogEntry(log, "/my/string");
 
     m_robotContainer = new RobotContainer();
 
     getAllianceColorBlue();
 
-    RotateLimelight90.init();
+   // if (m_robotContainer.isMatch)
 
-    if (m_robotContainer.isMatch)
-
-      Shuffleboard.selectTab("Pre-Round");
+     // Shuffleboard.selectTab("Pre-Round");
 
   }
 
@@ -108,12 +105,13 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     // m_robotContainer.m_setup.checkLimits();
-    if (tst >= 298) {
-      // Only log when necessary
-      rrBooleanLog.append(true);
-      rrDoubleLog.append(3.5);
-      rrStringLog.append("wow!");
-    }
+    // if (tst >= 298) {
+    //   // Only log when necessary
+    //   rrBooleanLog.append(true);
+    
+      // rrDoubleLog.append(3.5);
+    //   rrStringLog.append("wow!");
+    // }
 
    SmartDashboard.putBoolean("FMSConn", m_robotContainer.isMatch);
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
@@ -138,6 +136,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+
+    CommandScheduler.getInstance().cancelAll();
     if (m_robotContainer.m_drive.isStopped()) {
       m_robotContainer.m_drive.setIdleMode(false);
     }
@@ -162,7 +162,7 @@ public class Robot extends TimedRobot {
     if (RobotBase.isReal())
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
 
-    Shuffleboard.selectTab("Competition");
+   // Shuffleboard.selectTab("Competition");
 
     Shuffleboard.startRecording();
     // get delay time
@@ -177,7 +177,7 @@ public class Robot extends TimedRobot {
     RevShooterSubsystem shooter = m_robotContainer.m_shooter;
     RevDrivetrain drive = m_robotContainer.m_drive;
     CargoTransportSubsystem transport = m_robotContainer.m_transport;
-    IntakesSubsystem intake = m_robotContainer.m_intakes;
+    IntakesSubsystem intake = m_robotContainer.m_intake;
     RawContoursV2 rcv2 = m_robotContainer.m_rCV2;
     Compressor comp = m_robotContainer.m_compressor;
 
@@ -185,7 +185,7 @@ public class Robot extends TimedRobot {
 
       case 0:// taxi start anywhere as agreed with other teams inside a tarmac facing in
 
-        m_autonomousCommand = new Taxi(m_robotContainer.m_drive, -(FieldMap.robotLength + 1));
+        m_autonomousCommand = new PositionStraight(m_robotContainer.m_drive, -1,.5);
 
         break;
 
@@ -269,10 +269,12 @@ public class Robot extends TimedRobot {
 
     autoHasRun = false;
 
-    if (RobotBase.isReal() && !m_robotContainer.m_tilt.positionResetDone)
-      new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
+    // if (RobotBase.isReal() && !m_robotContainer.m_tilt.positionResetDone)
+    //   new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
 
     m_robotContainer.m_limelight.useVision = false;
+
+    m_robotContainer.m_intake.setFrontActive();
 
   }
 

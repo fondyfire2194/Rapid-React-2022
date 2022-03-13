@@ -7,8 +7,9 @@ package frc.robot.commands.AutoCommands.Common;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.Shooter.AutoRunShooter;
-import frc.robot.commands.Shooter.AutoShootCargo;
+import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.SetShootSpeedSource;
+import frc.robot.commands.Shooter.ShootTwoCargo;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
@@ -16,21 +17,23 @@ import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
 public class UpperShoot extends SequentialCommandGroup {
-  
 
   /** Creates a new LRetPuShoot. */
   public UpperShoot(RevTurretSubsystem turret, RevTiltSubsystem tilt,
- 
-  LimeLight ll, RevShooterSubsystem shooter,
- 
-  CargoTransportSubsystem transport,IntakesSubsystem intake, Compressor comp, double[] data) {
-  
+
+      LimeLight ll, RevShooterSubsystem shooter,
+
+      CargoTransportSubsystem transport, IntakesSubsystem intake, Compressor comp, double[] data) {
+
     // Use addRequirements() here to declare subsystem dependencies.
- 
+
     double rpm = data[3];
 
-    addCommands(new AutoRunShooter(shooter),
-        new AutoShootCargo(shooter, transport, intake));
+    addCommands(new SetShootSpeedSource(shooter, shooter.shootSpeedSource),
+
+        new RunShooter(shooter),
+
+        new ShootTwoCargo(shooter, transport, intake));
 
   }
 

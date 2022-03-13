@@ -10,11 +10,11 @@ import frc.robot.subsystems.RevShooterSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ChangeShooterSpeed extends InstantCommand {
-  private final RevShooterSubsystem m_shooter;
+public class SetPresetRPM extends InstantCommand {
+  private RevShooterSubsystem m_shooter;
   private double m_rpm;
 
-  public ChangeShooterSpeed(RevShooterSubsystem shooter, double rpm) {
+  public SetPresetRPM(RevShooterSubsystem shooter, double rpm) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_rpm = rpm;
@@ -23,13 +23,6 @@ public class ChangeShooterSpeed extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooter.programSpeed += m_rpm;
-
-    if (m_shooter.programSpeed > m_shooter.maxRPM)
-      m_shooter.programSpeed = m_shooter.maxRPM;
-
-    if (m_shooter.programSpeed < m_shooter.minRPM)
-      m_shooter.programSpeed = m_shooter.minRPM;
-
+    m_shooter.presetRPM = m_rpm;
   }
 }

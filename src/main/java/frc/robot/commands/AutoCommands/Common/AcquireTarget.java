@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.commands.Shooter.AutoRunShooter;
-import frc.robot.commands.Shooter.AutoShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.SetShootSpeedSource;
+import frc.robot.commands.Shooter.ShootTwoCargo;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.PositionTurretToVision;
@@ -31,54 +31,60 @@ import frc.robot.subsystems.RevTurretSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AcquireTarget extends SequentialCommandGroup {
 
-  /** Creates a new Acquire target. */
+        /** Creates a new Acquire target. */
 
-  public AcquireTarget(LimeLight ll, RevTiltSubsystem tilt, RevTurretSubsystem turret, RawContoursV2 rcv2,
-      RevShooterSubsystem shooter, CargoTransportSubsystem transport, IntakesSubsystem intake, Compressor compressor) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+        public AcquireTarget(LimeLight ll, RevTiltSubsystem tilt, RevTurretSubsystem turret, RawContoursV2 rcv2,
+                        RevShooterSubsystem shooter, CargoTransportSubsystem transport, IntakesSubsystem intake,
+                        Compressor compressor) {
+                // Add your commands in the addCommands() call, e.g.
+                // addCommands(new FooCommand(), new BarCommand());
 
-    /**
-     * Camera is fixed so should see a target on either or possibly both no and 2x
-     * zoom
-     * Start with 2x and if no target or a target with bounding box height > set
-     * 
-     * value (tbd) then change to no zoom and check.
-     * 
-     * 
-     * 
-     * 
-     */
+                /**
+                 * Camera is fixed so should see a target on either or possibly both no and 2x
+                 * zoom
+                 * Start with 2x and if no target or a target with bounding box height > set
+                 * 
+                 * value (tbd) then change to no zoom and check.
+                 * 
+                 * 
+                 * 
+                 * 
+                 */
 
-    addCommands(new SetUpLimelightForTarget(ll, PipelinesConstants.x2ZoomPipeline, false),
+                addCommands(new SetUpLimelightForTarget(ll, PipelinesConstants.x2ZoomPipeline, false),
 
-        new ConditionalCommand(new GetNumberOfContourValues(rcv2),
+                                new ConditionalCommand(new GetVisionValues(rcv2),
 
-            new SetUpLimelightForTarget(ll, PipelinesConstants.noZoomPipeline, false),
+                                                new SetUpLimelightForTarget(ll, PipelinesConstants.noZoomPipeline,
+                                                                false),
 
-            () -> ll.getBoundingBoxHeightInX2ZoomRange()),
+                                                () -> ll.getBoundingBoxHeightInX2ZoomRange()),
 
-        new ConditionalCommand(new GetNumberOfContourValues(rcv2), new FindTargetFail("No Target", ll),
+                                new ConditionalCommand(new GetVisionValues(rcv2), new FindTargetFail("No Target", ll),
 
-            () -> ll.getBoundingBoxHeightInNoZoomRange()),
+                                                () -> ll.getBoundingBoxHeightInNoZoomRange()),
 
-        new PositionTurretToVision(turret, ll, ll.getdegRotationToTarget()),
+                                new PositionTurretToVision(turret, ll, ll.getdegRotationToTarget()),
 
-        new TurretWaitForStop(turret), new GetNumberOfContourValues(rcv2),
+                                new TurretWaitForStop(turret), new GetNumberOfContourValues(rcv2),
 
-        new CalculateTarget(rcv2),
+                                new CalculateTarget(rcv2),
 
-        new PositionTurret(turret, rcv2.targetAngle), new TurretWaitForStop(turret),
+                                new PositionTurret(turret, rcv2.targetAngle), new TurretWaitForStop(turret),
 
-        new CalculateTargetDistance(ll, rcv2, tilt, turret, shooter), new SelectSpeedAndTiltByDistance(shooter, tilt),
+                                new CalculateTargetDistance(ll, rcv2, tilt, turret, shooter),
 
-        new ParallelCommandGroup(new PositionTilt(tilt, tilt.cameraCalculatedTiltPosition),
+                                new SelectSpeedAndTiltByDistance(shooter, tilt),
 
-            new AutoRunShooter(shooter)),
+                                new ParallelCommandGroup(new PositionTilt(tilt, tilt.cameraCalculatedTiltPosition),
 
-        new AutoShootCargo(shooter, transport, intake)
+                                                new SetShootSpeedSource(shooter, 1),
 
-    );
+                                                new RunShooter(shooter)),
 
-  }
+                                new ShootTwoCargo(shooter, transport, intake)
+
+                );
+
+        }
 }

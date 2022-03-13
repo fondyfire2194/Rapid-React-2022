@@ -13,7 +13,7 @@ import frc.robot.commands.AutoCommands.Common.AllRetPu;
 import frc.robot.commands.AutoCommands.Common.GetNumberOfContourValues;
 import frc.robot.commands.AutoCommands.Common.LowerShoot;
 import frc.robot.commands.AutoCommands.Common.UpperShoot;
-
+import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -25,15 +25,14 @@ public class PUS3 extends SequentialCommandGroup {
 
   /** Creates a new LRetPuShoot. */
   public PUS3(IntakesSubsystem intake, RevDrivetrain drive, RevTurretSubsystem turret, RevTiltSubsystem tilt,
-      LimeLight ll, RevShooterSubsystem shooter, RawContoursV2 rcv2, 
+      LimeLight ll, RevShooterSubsystem shooter, RawContoursV2 rcv2,
       CargoTransportSubsystem transport, Compressor compressor, double[] data) {
-    
 
     addCommands(new AllRetPu(intake, drive, turret, tilt, transport, data),
 
         new GetNumberOfContourValues(rcv2),
 
-     //   new GetTargetCenter(ll, turret, tilt, rcv2,  data),
+        new SetShootSpeedSource(shooter, 2),
 
         new ConditionalCommand(
 

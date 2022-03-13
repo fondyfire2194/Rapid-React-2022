@@ -5,8 +5,6 @@
 package frc.robot.OI;
 
 import java.util.Map;
-import java.util.Set;
-
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -31,11 +29,9 @@ import frc.robot.subsystems.RevTurretSubsystem;
 /** Add your docs here. */
 public class LLVisionShuffleboard {
 
-        private HttpCamera LLFeed;
-
         private boolean m_showVision = true;
 
-        private int loopCtr;
+        HttpCamera LLFeed;
 
         public LLVisionShuffleboard(LimeLight ll, RawContoursV2 rCV2, RevTurretSubsystem turret,
                         RevTiltSubsystem tilt, RevShooterSubsystem shooter, boolean isMatch) {
@@ -119,16 +115,8 @@ public class LLVisionShuffleboard {
 
                         visionBools.addBoolean("Use Vision", () -> ll.useVision);
 
-                        LLFeed = new HttpCamera("Rotated", "http://roboRIO-2194-FRC.local/stream.mjpg");
-
-                        // ShuffleboardTab visionFeed = Shuffleboard.getTab("LLVision");
-
-                        // visionFeed.add("FrontCam","http://").withWidget(BuiltInWidgets.kCameraStream)
-                        //                 .withPosition(6, 0).withSize(3, 2)
-                        //                 .withProperties(Map.of("Show Crosshair", false, "Show Controls", true));
-
+                        
                 }
-
         }
 
 }

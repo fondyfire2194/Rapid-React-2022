@@ -8,15 +8,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 
-public class StartActiveIntake extends CommandBase {
+public class RunActiveIntake extends CommandBase {
 
   private IntakesSubsystem m_intake;
 
   private CargoTransportSubsystem m_transport;
 
+  private boolean stopActiveIntakeNow;
 
-  public StartActiveIntake(IntakesSubsystem intake, CargoTransportSubsystem transport) {
+  public RunActiveIntake(IntakesSubsystem intake, CargoTransportSubsystem transport) {
     m_intake = intake;
+
     m_transport = transport;
 
     addRequirements(m_intake);
@@ -24,6 +26,10 @@ public class StartActiveIntake extends CommandBase {
 
   public void initialize() {
 
+    stopActiveIntakeNow = false;
+
+    m_intake.setFrontCurrentLimit(20);
+    m_intake.setRearCurrentLimit(20);
   }
 
   @Override
@@ -32,24 +38,41 @@ public class StartActiveIntake extends CommandBase {
 
     m_intake.lowerActiveArm();
 
-    m_intake.runActiveIntakeMotor();
+    if (m_transport.getCargoAtShoot()) {
+
+      if (m_intake.useFrontIntake) {
+
+        stopActiveIntakeNow = m_intake.getCargoAtFront();
+
+        m_intake.setFrontCurrentLimit(10);
+
+      }
+      if (!m_intake.useFrontIntake) {
+
+        m_intake.setRearCurrentLimit(10);
+      }
+    }
+    if (stopActiveIntakeNow)
+    
+      m_intake.m_frontIntakeMotor.stopMotor();
+
+    if (!m_transport.getCargoAtShoot() || !m_intake.getCargoAtFront()) {
+    
+      if (!stopActiveIntakeNow)
+    
+      m_intake.runActiveIntakeMotor();
+    }
 
     m_transport.intakeLowerRollerMotor();
+
   }
 
   @Override
   public void end(boolean interrupted) {
-
     m_intake.stopFrontIntakeMotor();
-
-    m_intake.raiseFrontArm();
-
     m_intake.stopRearIntakeMotor();
-
-    m_intake.raiseRearArm();
-
     m_transport.stopLowerRoller();
-
+    stopActiveIntakeNow = false;
 
   }
 

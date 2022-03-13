@@ -16,33 +16,34 @@ public class RunLowerRoller extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     m_transport = transport;
     m_rpm = rpm;
+    addRequirements(m_transport);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  
-  
+    m_transport.haltLowerRollerMotor = false;
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-  
-    m_transport.runLowerAtVelocity();
-    
+
+    m_transport.runLowerAtVelocity(m_rpm);
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_transport.stopLowerRoller();
-   
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_transport.haltLowerRollerMotor;
+    return false;
   }
 }

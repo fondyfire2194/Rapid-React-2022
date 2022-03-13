@@ -7,14 +7,15 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Pref;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.SolenoidConstants;
+import frc.robot.Pref;
 
 public class IntakesSubsystem extends SubsystemBase {
   /** Creates a new Intakes. */
@@ -26,7 +27,7 @@ public class IntakesSubsystem extends SubsystemBase {
   public final DoubleSolenoid m_rearIntakeArm = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
       SolenoidConstants.REAR_INTAKE_1, SolenoidConstants.REAR_INTAKE_2);
 
-  private final WPI_TalonSRX m_frontIntakeMotor = new WPI_TalonSRX(CANConstants.FRONT_INTAKE_MOTOR);
+  public final WPI_TalonSRX m_frontIntakeMotor = new WPI_TalonSRX(CANConstants.FRONT_INTAKE_MOTOR);
 
   public final DoubleSolenoid m_frontIntakeArm = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
       SolenoidConstants.FRONT_INTAKE_1, SolenoidConstants.FRONT_INTAKE_2);
@@ -39,28 +40,34 @@ public class IntakesSubsystem extends SubsystemBase {
 
   private AnalogInput rearIntakeCargoDetect;// next to be released for shooting
 
-  private double cargoDetectedVolts = 2.75;
+  private double cargoDetectedVolts = 1.2;
 
   public boolean twoCargoOnBoard;
 
+public boolean cargoAtBothIntakes;
+
+
   public IntakesSubsystem() {
+   m_frontIntakeMotor.configFactoryDefault();
 
     m_rearIntakeMotor.configFactoryDefault();
+
     m_rearIntakeMotor.setNeutralMode(NeutralMode.Brake);
-    m_frontIntakeMotor.configFactoryDefault();
+ 
+    m_frontIntakeMotor.setInverted(true);
+
     m_frontIntakeMotor.setNeutralMode(NeutralMode.Brake);
 
     raiseRearArm();
 
     raiseFrontArm();
 
-    frontIntakeCargoDetect = new AnalogInput(1);
-    rearIntakeCargoDetect = new AnalogInput(2);
+    frontIntakeCargoDetect = new AnalogInput(2);
+    rearIntakeCargoDetect = new AnalogInput(3);
 
   }
 
   public void toggleActiveIntake() {
-
     useFrontIntake = !useFrontIntake;
   }
 
@@ -70,12 +77,10 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public void setFrontActive() {
     useFrontIntake = true;
-    Shuffleboard.selectTab("FrontIntakeCamera");
   }
 
   public void setRearActive() {
     useFrontIntake = false;
-    Shuffleboard.selectTab("RearIntakeCamera");
   }
 
   public void lowerActiveArm() {
@@ -84,10 +89,16 @@ public class IntakesSubsystem extends SubsystemBase {
     else
       lowerRearArm();
   }
-
+ 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    SmartDashboard.putNumber("FCDV", frontIntakeCargoDetect.getVoltage());
+    SmartDashboard.putNumber("RCDV", rearIntakeCargoDetect.getVoltage());
+ 
+ 
+ 
   }
 
   public boolean getCargoAtFront() {
@@ -107,6 +118,11 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public void runFrontIntakeMotor() {
     double speed = Pref.getPref("IntakeSpeed");
+    m_frontIntakeMotor.set(ControlMode.PercentOutput, speed);
+  }
+
+  public void reverseFrontIntakeMotor() {
+    double speed = -Pref.getPref("IntakeSpeed");
     m_frontIntakeMotor.set(ControlMode.PercentOutput, speed);
   }
 
@@ -165,6 +181,11 @@ public class IntakesSubsystem extends SubsystemBase {
     m_rearIntakeMotor.set(ControlMode.PercentOutput, speed);
   }
 
+  public void reverseRearIntakeMotor() {
+    double speed = -Pref.getPref("IntakeSpeed");
+    m_rearIntakeMotor.set(ControlMode.PercentOutput, speed);
+  }
+
   public void runActiveIntakeMotor() {
 
     if (useFrontIntake) {
@@ -177,6 +198,7 @@ public class IntakesSubsystem extends SubsystemBase {
     }
 
   }
+
 
   public void stopRearIntakeMotor() {
     m_rearIntakeMotor.set(ControlMode.PercentOutput, 0);
@@ -250,4 +272,12 @@ public class IntakesSubsystem extends SubsystemBase {
       return getRearMotor();
   }
 
+  public void setFrontCurrentLimit(int amps) {
+    m_frontIntakeMotor.configPeakCurrentLimit(amps);
+  }
+
+  public void setRearCurrentLimit(int amps) {
+    m_rearIntakeMotor.configPeakCurrentLimit(amps);
+  }
+  
 }

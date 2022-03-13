@@ -39,7 +39,7 @@ public class JogShooterVelocity extends CommandBase {
     if (Math.abs(m_xaxisSpeedSupplier.get()) < .1)
       m_shooter.moveManually(0);
     else
-      m_shooter.spinAtRpm(m_xaxisSpeedSupplier.get()*4000);
+      m_shooter.spinAtRPM(m_xaxisSpeedSupplier.get() * 4000);
   }
 
   // Called once the command ends or is interrupted.

@@ -9,11 +9,13 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
+import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.AutoCommands.Common.AllRetPu;
 import frc.robot.commands.AutoCommands.Common.GetNumberOfContourValues;
 import frc.robot.commands.AutoCommands.Common.LowerShoot;
 import frc.robot.commands.AutoCommands.Common.UpperShoot;
-import frc.robot.commands.Shooter.AutoRunShooter;
+import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -26,17 +28,17 @@ public class AllRetPuShoot extends SequentialCommandGroup {
   /** Creates a new LRetPuShoot. */
   public AllRetPuShoot(IntakesSubsystem intake, RevDrivetrain drive, RevTurretSubsystem turret, RevTiltSubsystem tilt,
       LimeLight ll, RevShooterSubsystem shooter, RawContoursV2 rcv2,
-      CargoTransportSubsystem transport, Compressor compressor,double[] data) {
-    
+      CargoTransportSubsystem transport, Compressor compressor, double[] data) {
 
     addCommands(new AllRetPu(intake, drive, turret, tilt, transport, data),
 
-       new GetNumberOfContourValues(rcv2),
+        new AcquireTarget(ll, tilt, turret, rcv2, shooter, transport, intake, compressor),
 
-       
+        new SetShootSpeedSource(shooter, 2),
+
         new ConditionalCommand(
 
-            new AutoRunShooter(shooter),
+            new RunShooter(shooter),
 
             new LowerShoot(turret, tilt, ll, shooter, transport, intake, compressor, data),
 

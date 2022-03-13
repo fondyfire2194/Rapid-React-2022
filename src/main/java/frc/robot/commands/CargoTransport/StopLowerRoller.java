@@ -15,6 +15,7 @@ public class StopLowerRoller extends CommandBase {
   public StopLowerRoller(CargoTransportSubsystem transport) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_transport = transport;
+    addRequirements(m_transport);
   }
 
   // Called when the command is initially scheduled.
@@ -34,7 +35,7 @@ public class StopLowerRoller extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+m_transport.haltLowerRollerMotor=false;
   }
 
   // Returns true when the command should end.

@@ -28,5 +28,6 @@ public class StopShooter extends InstantCommand {
   public void initialize() {
 
     m_shooter.stop();
+    
   }
 }

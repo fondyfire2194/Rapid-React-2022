@@ -8,6 +8,8 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.VecBuilder;
@@ -41,7 +43,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     private static final double DEG_PER_MOTOR_REV = TurretConstants.TURRET_DEG_PER_MOTOR_REV;
     private static final int SMART_MOTION_SLOT = 1;
     public final int POSITION_SLOT = 2;
-    // public final int VELOCITY_SLOT = 0;
+    //  public final int VELOCITY_SLOT = 0;
 
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
     public double lastkP, lastkI, lastkD, lastkIz, lastkFF, lastkMaxOutput, lastkMinOutput, lastmaxRPM, lastmaxVel,
@@ -57,7 +59,9 @@ public class RevTurretSubsystem extends SubsystemBase {
     private final RelativeEncoder mEncoder;
     public final SparkMaxPIDController mPidController;
     public final PIDController m_turretLockController = new PIDController(.03, 0, 0);
-
+    public SparkMaxLimitSwitch m_reverseLimit;
+    public SparkMaxLimitSwitch m_forwardLimit;
+    
     public double targetAngle;
     private double inPositionBandwidth = 2;
     public double targetHorizontalOffset;
@@ -117,9 +121,8 @@ public class RevTurretSubsystem extends SubsystemBase {
         mEncoder.setPosition(0);
         aimCenter();
         setFF_MaxOuts();
-        tuneMMGains();
-        // tuneVelGains();
-        getMMGains();
+        tunePosGains();
+        getPosGains();
         setTurretLockGains();
         getLockGains();
         m_turretLockController.setTolerance(.5);
@@ -134,12 +137,14 @@ public class RevTurretSubsystem extends SubsystemBase {
         if (RobotBase.isSimulation()) {
             REVPhysicsSim.getInstance().addSparkMax(m_motor, DCMotor.getNeo550(1));
         }
-        // if (Pref.getPref("IsMatch") == 0.) {
-        // setupHorOffset = Shuffleboard.getTab("SetupTurret").add("SetupHorOffset",
-        // 0).withWidget("Number Slider")
-        // .withPosition(6, 3).withSize(2, 1).withProperties(Map.of("Min", -5, "Max",
-        // 5)).getEntry();
-        // }
+       
+        m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
+        m_reverseLimit.enableLimitSwitch(true);
+
+        m_forwardLimit = m_motor.getForwardLimitSwitch(Type.kNormallyClosed);
+        m_forwardLimit.enableLimitSwitch(true);
+
+        SmartDashboard.putNumber("TUdegPerRev", DEG_PER_MOTOR_REV);
 
     }
 
@@ -193,10 +198,6 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     }
 
-    public void positionTurret(double angle, int slotNumber) {
-        mPidController.setReference(angle, ControlType.kPosition, slotNumber);
-
-    }
 
     public double getTargetHorOffset() {
         return targetHorizontalOffset;
@@ -286,6 +287,14 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     public boolean onMinusSoftwareLimit() {
         return m_motor.getFault(FaultID.kSoftLimitRev);
+    }
+
+    public boolean onMinusHardwareLimit() {
+        return m_motor.getFault(FaultID.kHardLimitRev);
+    }
+
+    public boolean onPlusHardwareLimit() {
+        return m_motor.getFault(FaultID.kHardLimitFwd);
     }
 
     public void aimFurtherLeft() {
@@ -381,16 +390,17 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     }
 
-    private void tuneMMGains() {
-        kFF = Pref.getPref("tURKff");
+    private void tunePosGains() {
+        kFF = 0;//Pref.getPref("tURKff");// 10,000/60 rps* 1.39 = 231. and 1/237 = .004
         double p = Pref.getPref("tURKp");
         double i = Pref.getPref("tURKi");
         double d = Pref.getPref("tURKd");
-        double iz = Pref.getPref("tURKiz");
-        maxVel = Pref.getPref("tURMaxV");
-        maxAcc = Pref.getPref("tURMaxA");
+        double iz = Pref.getPref("tURKiz"); 
+        kMinOutput = -.5;
+        kMaxOutput = .5;
+        mPidController.setOutputRange(kMinOutput, kMaxOutput, POSITION_SLOT);
         allowedErr = .1;
-        calibratePID(p, i, d, iz, SMART_MOTION_SLOT);
+        calibratePID(p, i, d, iz, POSITION_SLOT);
 
     }
 
@@ -409,8 +419,8 @@ public class RevTurretSubsystem extends SubsystemBase {
         tuneOn = Pref.getPref("tURTune") == 1. && turretMotorConnected;
 
         if (tuneOn && !lastTuneOn) {
-            tuneMMGains();
-            getMMGains();
+            tunePosGains();
+            getPosGains();
             lastTuneOn = true;
         }
 
@@ -441,14 +451,13 @@ public class RevTurretSubsystem extends SubsystemBase {
         return m_motor.getFaults();
     }
 
-    public void getMMGains() {
-        ffset = mPidController.getFF(SMART_MOTION_SLOT);
-        pset = mPidController.getP(SMART_MOTION_SLOT);
-        iset = mPidController.getI(SMART_MOTION_SLOT);
-        dset = mPidController.getD(SMART_MOTION_SLOT);
-        izset = mPidController.getIZone(SMART_MOTION_SLOT);
-        maxAccset = mPidController.getSmartMotionMaxAccel(SMART_MOTION_SLOT);
-        maxVelset = mPidController.getSmartMotionMaxVelocity(SMART_MOTION_SLOT);
+    public void getPosGains() {
+        ffset = mPidController.getFF(POSITION_SLOT);
+        pset = mPidController.getP(POSITION_SLOT);
+        iset = mPidController.getI(POSITION_SLOT);
+        dset = mPidController.getD(POSITION_SLOT);
+        izset = mPidController.getIZone(POSITION_SLOT);
+      
     }
 
     public void getLockGains() {

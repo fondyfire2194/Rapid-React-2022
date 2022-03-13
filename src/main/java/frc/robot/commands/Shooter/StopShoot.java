@@ -29,9 +29,10 @@ public class StopShoot extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  
+m_shooter.startShooter=false;
+    m_shooter.stop();
     m_shooter.stopTopRoller();
     m_transport.stopLowerRoller();
-    m_shooter.stop();
+
   }
 }

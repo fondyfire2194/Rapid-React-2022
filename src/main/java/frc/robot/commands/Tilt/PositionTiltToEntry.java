@@ -7,30 +7,37 @@ package frc.robot.commands.Tilt;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RevTiltSubsystem;
 
-public class PositionTilt extends CommandBase {
+public class PositionTiltToEntry extends CommandBase {
   /** Creates a new PositionTilt. */
 
   private final RevTiltSubsystem m_tilt;
 
   private int loopCtr;
 
-  private double m_endpoint;
-
   private boolean endIt;
 
-  public PositionTilt(RevTiltSubsystem tilt, double endpoint) {
+  public PositionTiltToEntry(RevTiltSubsystem tilt) {
     m_tilt = tilt;
-    m_endpoint = endpoint;
+
     addRequirements(m_tilt);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
     m_tilt.programRunning = 2;
 
-    m_tilt.targetAngle = m_endpoint;
+    m_tilt.targetAngle = m_tilt.tiltTarget.getDouble(0);
 
+    if (m_tilt.targetAngle < 0) {
+      m_tilt.targetAngle = 0;
+      m_tilt.tiltTarget.setNumber(0);
+    }
+    if (m_tilt.targetAngle > 14) {
+      m_tilt.targetAngle = 14;
+      m_tilt.tiltTarget.setNumber(14);
+    }
     loopCtr = 0;
 
   }
@@ -39,8 +46,6 @@ public class PositionTilt extends CommandBase {
   @Override
   public void execute() {
     loopCtr++;
-
-    // m_tilt.goToPositionMotionMagic(m_tilt.targetAngle);
 
     m_tilt.goToPosition(m_tilt.targetAngle);
 
