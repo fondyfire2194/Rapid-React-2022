@@ -92,7 +92,6 @@ public class RevDrivetrain extends SubsystemBase {
     public boolean leftBurnOK;
     public boolean rightBurnOK;
 
-
     private PIDController mleftPID = new PIDController(kP, kI, kD);
     private PIDController mrightPID = new PIDController(kP, kI, kD);
 
@@ -298,6 +297,13 @@ public class RevDrivetrain extends SubsystemBase {
     public double[] driveDistance(double endPosition) {
 
         double[] temp = { 0, 0 };
+        double ival = kI;
+        if (Math.abs(endPosition - getLeftDistance()) > kIz) {
+            ival = 0;
+            mleftPID.setI(ival);
+            mrightPID.setI(ival);
+
+        }
         temp[0] = mleftPID.calculate(getLeftDistance(), endPosition);
         temp[1] = mrightPID.calculate(getRightDistance(), endPosition);
 
@@ -308,19 +314,12 @@ public class RevDrivetrain extends SubsystemBase {
 
     public void driveLeftSide(double value) {
         double batteryVolts = RobotController.getBatteryVoltage();
-        if (value > .5)
-            value = .5;
-        if (value < -.5)
-            value = -.5;
+
         mLeadLeft.setVoltage(value * batteryVolts);
     }
 
     public void driveRightSide(double value) {
         double batteryVolts = RobotController.getBatteryVoltage();
-        if (value > .5)
-            value = .5;
-        if (value < -.5)
-            value = -.5;
         mLeadRight.setVoltage(value * batteryVolts);
     }
 
@@ -459,12 +458,10 @@ public class RevDrivetrain extends SubsystemBase {
         }
     }
 
-
     public double getMatchTime() {
         return DriverStation.getMatchTime();
     }
 
-  
     public void close() {
         mLeadLeft.close();
         mFollowerLeft.close();
@@ -478,7 +475,8 @@ public class RevDrivetrain extends SubsystemBase {
         kI = Pref.getPref("dRKi");
         kD = Pref.getPref("dRKd");
 
-     
+        kIz = Pref.getPref("dRKiz");
+
         mleftPID.setP(kP);
         mleftPID.setI(kI);
         mleftPID.setD(kD);

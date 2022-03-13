@@ -12,6 +12,8 @@ public class PositionStraight extends CommandBase {
   /** Creates a new PositionStraight. */
   private RevDrivetrain m_drive;
   private double m_endpoint;
+  private double m_max;
+  private double m_min;
   private double m_startAngle;
   private double leftOut;
   private double rightOut;
@@ -20,6 +22,8 @@ public class PositionStraight extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = drive;
     m_endpoint = endPoint;
+    m_max = max;
+
     addRequirements(m_drive);
   }
 
@@ -27,6 +31,7 @@ public class PositionStraight extends CommandBase {
   @Override
   public void initialize() {
     m_startAngle = m_drive.getYaw();
+    m_min = -m_max;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,13 +39,24 @@ public class PositionStraight extends CommandBase {
   public void execute() {
 
     leftOut = m_drive.driveDistance(m_endpoint)[0];
+
     rightOut = m_drive.driveDistance(m_endpoint)[1];
 
     double yawError = m_drive.getYaw() - m_startAngle;
 
-    double yawCorrection = yawError * Pref.getPref("drstkp");
+    double yawCorrection = yawError * Pref.getPref("dRStKp");
 
-    m_drive.driveLeftSide(leftOut + yawCorrection);
+    if (leftOut > m_max)
+      leftOut = m_max;
+    if (leftOut < m_min)
+      leftOut = m_min;
+
+    if (rightOut > m_max)
+      rightOut = m_max;
+    if (rightOut < m_min)
+      rightOut = m_min;
+
+    m_drive.driveLeftSide(leftOut - yawCorrection);
 
     m_drive.driveRightSide(rightOut + yawCorrection);
 
