@@ -5,18 +5,17 @@
 package frc.robot.OI;
 
 import java.util.Map;
+
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
-import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
+import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.Vision.LimelightCamMode;
 import frc.robot.commands.Vision.LimelightLeds;
 import frc.robot.commands.Vision.LimelightSetPipeline;

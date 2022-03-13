@@ -59,8 +59,6 @@ public class PUS3_ThirdCargo extends SequentialCommandGroup {
 
                 .deadlineWith(new SetRearIntakeActive(intake),
 
-                    new ActiveIntakeArmLower(intake),
-
                     new RunActiveIntake(intake, transport)),
 
         new ParallelCommandGroup(new StopActiveIntake(intake), new ActiveIntakeArmRaise(intake),

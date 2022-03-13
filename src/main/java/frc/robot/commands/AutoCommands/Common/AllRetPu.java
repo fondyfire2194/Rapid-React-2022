@@ -7,8 +7,6 @@ package frc.robot.commands.AutoCommands.Common;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Pref;
-import frc.robot.commands.Intakes.ActiveIntakeArmLower;
-import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StopActiveIntake;

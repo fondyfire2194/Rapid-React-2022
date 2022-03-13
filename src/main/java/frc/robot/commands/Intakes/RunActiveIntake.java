@@ -17,6 +17,7 @@ public class RunActiveIntake extends CommandBase {
   private boolean stopActiveIntakeNow;
 
   public RunActiveIntake(IntakesSubsystem intake, CargoTransportSubsystem transport) {
+ 
     m_intake = intake;
 
     m_transport = transport;
@@ -29,7 +30,9 @@ public class RunActiveIntake extends CommandBase {
     stopActiveIntakeNow = false;
 
     m_intake.setFrontCurrentLimit(20);
+
     m_intake.setRearCurrentLimit(20);
+
   }
 
   @Override
@@ -47,20 +50,27 @@ public class RunActiveIntake extends CommandBase {
         m_intake.setFrontCurrentLimit(10);
 
       }
+
       if (!m_intake.useFrontIntake) {
+
+        stopActiveIntakeNow = m_intake.getCargoAtRear();
 
         m_intake.setRearCurrentLimit(10);
       }
     }
-    if (stopActiveIntakeNow)
-    
+
+    if (stopActiveIntakeNow) {
+
       m_intake.m_frontIntakeMotor.stopMotor();
 
+      m_intake.m_rearIntakeMotor.stopMotor();
+    }
+
     if (!m_transport.getCargoAtShoot() || !m_intake.getCargoAtFront()) {
-    
+
       if (!stopActiveIntakeNow)
-    
-      m_intake.runActiveIntakeMotor();
+
+        m_intake.runActiveIntakeMotor();
     }
 
     m_transport.intakeLowerRollerMotor();

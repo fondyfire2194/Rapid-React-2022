@@ -7,7 +7,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -16,8 +15,8 @@ import com.revrobotics.ColorSensorV3;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
@@ -39,10 +38,6 @@ public class CargoTransportSubsystem extends SubsystemBase {
   public boolean allConnected;
 
   public boolean noCargoAtShooterForOneSecond;
-
-  private double noCargoAtShooterTime;
-
-  private double CargoTravelTime = 1;
 
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
 
@@ -88,8 +83,6 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     m_lowerRollerMotor.setInverted(false);
 
-    // m_lowerRollerMotor.setSmartCurrentLimit(50, 50);
-
     m_lowerRollerMotor.setIdleMode(IdleMode.kBrake);
 
     setLowerRollerBrakeOn(true);
@@ -109,9 +102,11 @@ public class CargoTransportSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("CARSGVOL", atShootCargoDetect.getAverageVoltage());
 
     if (getCargoAtShoot()) {
+
       cargoAtShootActiveVolts = cargoHasLeftShootVolts;
     }
     if (!getCargoAtShoot()) {
+
       cargoAtShootActiveVolts = cargoAtShootVolts;
     }
   }
@@ -125,6 +120,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   public void reverseLowRoller() {
+    
     m_lowerRollerMotor.set(-.2);
 
   }
@@ -226,7 +222,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public void stopLowerRoller() {
     lowerRequiredRPM = 0;
-    
+
   }
 
   public double getLowerRollerMotorAmps() {

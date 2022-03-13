@@ -6,7 +6,6 @@ package frc.robot.commands.CargoTransport;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CargoTransportSubsystem;
-import frc.robot.subsystems.IntakesSubsystem;
 
 public class PositionLowerRoller extends CommandBase {
   /** Creates a new PositionLowerRoller. */

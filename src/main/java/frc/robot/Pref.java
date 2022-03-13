@@ -92,7 +92,9 @@ public class Pref {
 
     prefDict.put("LowRollIntakeRPM", 750.);
 
-    prefDict.put("LowRollReleaseRPM", 500.);
+    prefDict.put("LowRollReleaseRPM", 500.);  
+
+    prefDict.put("TopRollShootRPM", 500.);
 
     prefDict.put("Rollers_kP", .0008);
   
