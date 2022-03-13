@@ -12,10 +12,9 @@ import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StopActiveIntake;
-import frc.robot.commands.RobotDrive.PositionMove;
+import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
-import frc.robot.commands.RobotDrive.TurnToAngleProfiled;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -24,7 +23,7 @@ import frc.robot.subsystems.RevTurretSubsystem;
 
 public class AllRetPu extends SequentialCommandGroup {
 
-  double intakeSpeed = Pref.getPref("IntakeSpeed");
+  // double intakeSpeed = Pref.getPref("IntakeSpeed");
   double pickUpRate = Pref.getPref("dRPur");
 
   /** Creates a new LRetPuShoot. */
@@ -33,23 +32,22 @@ public class AllRetPu extends SequentialCommandGroup {
     // Use addRequirements() here to declare subsystem dependencies.
     double tiltAngle = data[0];
     double turretAngle = data[1];
-    double driveToPosition = data[2];
+    double drivePickupPosition = data[2];
+    double driveForwardPosition = data[3];
 
     addCommands(
 
-        new ParallelCommandGroup(new ResetEncoders(drive), new ResetGyro(drive),
+        new ParallelCommandGroup(new ResetEncoders(drive), new ResetGyro(drive)),
 
-            new PositionMove(drive, driveToPosition, pickUpRate),
-
-            new PrepositionTiltAndTurret(tilt, turret, tiltAngle, turretAngle))
+            new ParallelCommandGroup(new PrepositionTiltAndTurret(tilt, turret, tiltAngle, turretAngle),
+            
+            new PositionStraight(drive, drivePickupPosition, pickUpRate))
 
                 .deadlineWith(new SetRearIntakeActive(intake),
 
-                    new ActiveIntakeArmLower(intake),
-
                     new RunActiveIntake(intake, transport)),
 
-        new ParallelCommandGroup(new StopActiveIntake(intake), new ActiveIntakeArmRaise(intake)));
+        new StopActiveIntake(intake));
 
   }
 

@@ -19,7 +19,7 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.AutoCommands.AllRetPuShoot;
 import frc.robot.commands.AutoCommands.DoNothing;
-import frc.robot.commands.AutoCommands.Taxi;
+import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.Turret.ResetTurretAngle;
@@ -40,6 +40,7 @@ public class SetUpAutoOI {
         public SendableChooser<Command> autoChooser = new SendableChooser<>();
         public SendableChooser<Integer> startDelayChooser = new SendableChooser<>();
         private boolean showAuto;
+        double rate =.5;
       //  private HttpCamera LLFeed;
 
         public SetUpAutoOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
@@ -65,7 +66,7 @@ public class SetUpAutoOI {
 
                         autoChooser.setDefaultOption("Do Nothing", new DoNothing());
 
-                        autoChooser.addOption("Taxi", new Taxi(drive, distance));
+                        autoChooser.addOption("Taxi", new PositionStraight(drive, distance, rate));
 
                         autoChooser.addOption("Left Tarmac Retract Pickup Shoot",
                                         new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,

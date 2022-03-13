@@ -27,7 +27,7 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.AutoCommands.AllRetPuShoot;
 import frc.robot.commands.AutoCommands.PUS3;
-import frc.robot.commands.AutoCommands.Taxi;
+import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Vision.SetUpLimelightForDriver;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -185,7 +185,7 @@ public class Robot extends TimedRobot {
 
       case 0:// taxi start anywhere as agreed with other teams inside a tarmac facing in
 
-        m_autonomousCommand = new Taxi(m_robotContainer.m_drive, -(FieldMap.robotLength + 1));
+        m_autonomousCommand = new PositionStraight(m_robotContainer.m_drive, -1,.5);
 
         break;
 

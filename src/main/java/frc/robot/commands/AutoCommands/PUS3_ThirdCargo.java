@@ -18,7 +18,7 @@ import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StopActiveIntake;
-import frc.robot.commands.RobotDrive.PositionMove;
+import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.TurnToAngleProfiled;
@@ -45,7 +45,7 @@ public class PUS3_ThirdCargo extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     final double angleToThirdCargo = 22;
     final double distanceToThirdCargo = 11;
-    final double pickUpSpeed = 3;
+    final double pickUpSpeed = .5;
     final double tiltAngle = 5;
     final double turretAngle = 0;
 
@@ -53,7 +53,7 @@ public class PUS3_ThirdCargo extends SequentialCommandGroup {
 
         new ParallelCommandGroup(new ResetEncoders(drive), new ResetGyro(drive),
 
-            new PositionMove(drive, distanceToThirdCargo, pickUpSpeed),
+            new PositionStraight(drive, distanceToThirdCargo, pickUpSpeed),
 
             new PrepositionTiltAndTurret(tilt, turret, tiltAngle, turretAngle))
 

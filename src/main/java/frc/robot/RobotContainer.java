@@ -43,7 +43,6 @@ import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StopActiveIntake;
 import frc.robot.commands.Intakes.StopIntakeMotors;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
-import frc.robot.commands.RobotDrive.ArcadeDriveVelocity;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
@@ -423,10 +422,6 @@ public class RobotContainer {
             return new ArcadeDrive(m_drive, () -> -m_driverController.getY(), () -> m_driverController.getTwist());
       }
 
-      public Command getArcadeDriveVelocityCommand() {
-            return new ArcadeDriveVelocity(m_drive, () -> -m_driverController.getY(),
-                        () -> m_driverController.getTwist());
-      }
 
       public Command getDriveStraightCommand() {
             return new DriveStraightJoystick(m_drive, () -> -m_driverController.getY());

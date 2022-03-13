@@ -16,6 +16,7 @@ public class RunShooter extends CommandBase {
    * Creates a new StartShooter.
    */
   private RevShooterSubsystem m_shooter;
+  
   private double m_rpm;
 
   public RunShooter(RevShooterSubsystem shooter) {

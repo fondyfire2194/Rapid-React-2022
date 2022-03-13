@@ -28,7 +28,7 @@ import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StopIntakeMotors;
 import frc.robot.commands.RobotDrive.ClearRobFaults;
-import frc.robot.commands.RobotDrive.PositionMove;
+import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.StopRobot;
@@ -401,11 +401,11 @@ public class SetUpOI {
 
                         robotCommands.add("ClearFaults", new ClearRobFaults(drive));
                         robotCommands.add("Stop Robot", new StopRobot(drive));
-                        robotCommands.add("To -4(2)", new PositionMove(drive, -4, 2));
-                        robotCommands.add("To -4(3)", new PositionMove(drive, -4, 3));
-                        robotCommands.add("To -4(1)", new PositionMove(drive, -4, 1));
-                        robotCommands.add("To 0(1)", new PositionMove(drive, 0, 1));
-                        robotCommands.add("To 0", new PositionMove(drive, 0, .5));
+                        robotCommands.add("To -4(2)", new PositionStraight(drive, -4, .5));
+                        robotCommands.add("To -4(3)", new PositionStraight(drive, -4, .5));
+                        robotCommands.add("To -4(1)", new PositionStraight(drive, -4, .5));
+                        robotCommands.add("To 0(1)", new PositionStraight(drive, 0, .5));
+                        robotCommands.add("To 0", new PositionStraight(drive, 0,.5));
                         robotCommands.add("Cmd", drive);
 
                         ShuffleboardLayout robotValues = Shuffleboard.getTab("SetupRobot")

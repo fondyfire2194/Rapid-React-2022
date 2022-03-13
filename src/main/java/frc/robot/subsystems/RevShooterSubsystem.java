@@ -212,7 +212,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
         spinAtRPM(rpm);
 
-        runTopAtVelocity(rpm);
+        runTopAtVelocity(750);
     }
 
     public void reverseUpperRoller() {

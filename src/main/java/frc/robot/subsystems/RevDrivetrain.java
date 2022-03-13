@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.Arrays;
 
-//import com.kauailabs.navx.frc.AHRS;
-
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -14,6 +12,7 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -51,8 +50,8 @@ public class RevDrivetrain extends SubsystemBase {
     public final RelativeEncoder mRightEncoder;
     public final RelativeEncoder mLeftEncoder;
 
-    private final SparkMaxPIDController mLeftPidController;
-    private final SparkMaxPIDController mRightPidController;
+    // private final SparkMaxPIDController mLeftPidController;
+    // private final SparkMaxPIDController mRightPidController;
 
     private final AHRS mGyro;
 
@@ -74,15 +73,11 @@ public class RevDrivetrain extends SubsystemBase {
 
     public double startDistance;
 
-    private int SMART_MOTION_SLOT = 0;
+    // private int SMART_MOTION_SLOT = 0;
 
-    private int VELOCITY_SLOT = 1;
+    // private int VELOCITY_SLOT = 1;
 
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxVel, minVel, maxAcc, allowedErr;
-
-    public double lastkP, lastkp, lastkI, lastkD, lastkIz, lastkFF, lastkMaxOutput, lastkMinOutput, lastMaxVel,
-            lastMinVel, lastMaxAcc, lastAllowedErr;
-    // start NetworkTables
 
     public boolean tuneOn = false;
     public boolean lastTuneOn;
@@ -97,6 +92,9 @@ public class RevDrivetrain extends SubsystemBase {
     public boolean leftBurnOK;
     public boolean rightBurnOK;
 
+
+    private PIDController mleftPID = new PIDController(kP, kI, kD);
+    private PIDController mrightPID = new PIDController(kP, kI, kD);
 
     private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts,
             DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter);
@@ -137,9 +135,6 @@ public class RevDrivetrain extends SubsystemBase {
         m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
 
-        mLeftPidController = mLeadLeft.getPIDController();
-        mRightPidController = mLeadRight.getPIDController();
-
         mLeftEncoder.setPosition(0);
         mRightEncoder.setPosition(0);
         leftTargetPosition = 0;
@@ -159,7 +154,6 @@ public class RevDrivetrain extends SubsystemBase {
         mDrive = new DifferentialDrive(mLeadLeft, mLeadRight);
 
         mDrive.setSafetyEnabled(false);
-
 
         tuneGains();
 
@@ -184,10 +178,10 @@ public class RevDrivetrain extends SubsystemBase {
             // return Stream.of(motorIDs).map(m -> new CANEncoderSim(m,
             // invert)).toArray(CANEncoderSim[]::new);
 
-            // CANSparkMaxWithSim mLeftMotorSim = new CANSparkMaxWithSim(CANConstants.DRIVETRAIN_LEFT_MASTER,
-            //         CANSparkMaxLowLevel.MotorType.kBrushless);
-            
-          
+            // CANSparkMaxWithSim mLeftMotorSim = new
+            // CANSparkMaxWithSim(CANConstants.DRIVETRAIN_LEFT_MASTER,
+            // CANSparkMaxLowLevel.MotorType.kBrushless);
+
             m_leftEncodersSim = new CANEncoderSim(mLeadLeft.getDeviceId(), false);
             m_rightEncodersSim = new CANEncoderSim(mLeadRight.getDeviceId(), false);
 
@@ -301,31 +295,40 @@ public class RevDrivetrain extends SubsystemBase {
         mDrive.feed();
     }
 
-    public void smartVelocityControlMetersPerSec(double leftVelocityMetersPerSec, double rightVelocityMetersPerSec) {
-        mLeftPidController.setReference(leftVelocityMetersPerSec, ControlType.kVelocity, VELOCITY_SLOT);
-        mRightPidController.setReference(rightVelocityMetersPerSec, ControlType.kVelocity, VELOCITY_SLOT);
+    public double[] driveDistance(double endPosition) {
+
+        double[] temp = { 0, 0 };
+        temp[0] = mleftPID.calculate(getLeftDistance(), endPosition);
+        temp[1] = mrightPID.calculate(getRightDistance(), endPosition);
+
         mDrive.feed();
+
+        return temp;
     }
 
-    public void driveDistance(double leftPosition, double rightPosition) {
-        mLeftPidController.setReference(leftPosition, ControlType.kSmartMotion, SMART_MOTION_SLOT);
-        mRightPidController.setReference(rightPosition, ControlType.kSmartMotion, SMART_MOTION_SLOT);
-        mDrive.feed();
+    public void driveLeftSide(double value) {
+        double batteryVolts = RobotController.getBatteryVoltage();
+        if (value > .5)
+            value = .5;
+        if (value < -.5)
+            value = -.5;
+        mLeadLeft.setVoltage(value * batteryVolts);
+    }
+
+    public void driveRightSide(double value) {
+        double batteryVolts = RobotController.getBatteryVoltage();
+        if (value > .5)
+            value = .5;
+        if (value < -.5)
+            value = -.5;
+        mLeadRight.setVoltage(value * batteryVolts);
     }
 
     public void resetPID() {
-        mLeftPidController.setIAccum(0);
-        mRightPidController.setIAccum(0);
+        mleftPID.reset();
+        mrightPID.reset();
     }
 
-    public void positionDistance(double leftPosition, double rightPosition) {
-
-        mLeftPidController.setReference(leftPosition, ControlType.kPosition, SMART_MOTION_SLOT);
-        mRightPidController.setReference(rightPosition, ControlType.kPosition, SMART_MOTION_SLOT);
-        mDrive.feed();
-    }
-
-    
     public void resetEncoders() {
         if (RobotBase.isReal()) {
             mLeftEncoder.setPosition(0);
@@ -440,23 +443,6 @@ public class RevDrivetrain extends SubsystemBase {
 
     }
 
-    /**
-     * Attempts to follow the given drive states using offboard PID.
-     *
-     * @param left  The left wheel state.
-     * @param right The right wheel state.
-     */
-    public void setDriveStates(TrapezoidProfile.State left, TrapezoidProfile.State right) {
-
-        mLeftPidController.setReference(left.position, ControlType.kPosition);
-
-        m_feedforward.calculate(left.velocity);
-
-        mRightPidController.setReference(right.position, ControlType.kPosition);
-
-        m_feedforward.calculate(right.velocity);
-    }
-
     public void setIdleMode(boolean brake) {
         if (brake) {
 
@@ -473,31 +459,12 @@ public class RevDrivetrain extends SubsystemBase {
         }
     }
 
-    public void setMaxVel(double maxVel) {
-
-        mLeftPidController.setSmartMotionMaxVelocity(maxVel, SMART_MOTION_SLOT);
-        mRightPidController.setSmartMotionMaxVelocity(maxVel, SMART_MOTION_SLOT);
-    }
 
     public double getMatchTime() {
         return DriverStation.getMatchTime();
     }
 
-    private void setVGains() {
-        mLeftPidController.setFF(kFF, VELOCITY_SLOT);
-        mRightPidController.setFF(kFF, VELOCITY_SLOT);
-
-        mLeftPidController.setP(kP, VELOCITY_SLOT);
-        mRightPidController.setP(kP, VELOCITY_SLOT);
-
-        mLeftPidController.setI(kI, VELOCITY_SLOT);
-        mRightPidController.setI(kI, VELOCITY_SLOT);
-
-        mLeftPidController.setD(kD, VELOCITY_SLOT);
-        mRightPidController.setD(kD, VELOCITY_SLOT);
-
-    }
-
+  
     public void close() {
         mLeadLeft.close();
         mFollowerLeft.close();
@@ -511,19 +478,22 @@ public class RevDrivetrain extends SubsystemBase {
         kI = Pref.getPref("dRKi");
         kD = Pref.getPref("dRKd");
 
-        kIz = Pref.getPref("dRKiz");
-        kFF = Pref.getPref("dRKff");// 90 rps * .0467 = 4.2 meters per second. 1/4.2 = .238 kff
+     
+        mleftPID.setP(kP);
+        mleftPID.setI(kI);
+        mleftPID.setD(kD);
 
-        setVGains();
-        getGains();
+        mrightPID.setP(kP);
+        mrightPID.setI(kI);
+        mrightPID.setD(kD);
 
     }
 
     private void getGains() {
-        ffset = mLeftPidController.getFF(VELOCITY_SLOT);
-        pset = mLeftPidController.getP(VELOCITY_SLOT);
-        rffset = mRightPidController.getFF(VELOCITY_SLOT);
-        rpset = mRightPidController.getP(VELOCITY_SLOT);
+
+        pset = mleftPID.getP();
+        dset = mleftPID.getD();
+        iset = mleftPID.getI();
 
     }
 

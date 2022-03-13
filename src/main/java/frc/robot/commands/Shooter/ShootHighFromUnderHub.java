@@ -18,8 +18,8 @@ import frc.robot.subsystems.RevTiltSubsystem;
 public class ShootHighFromUnderHub extends SequentialCommandGroup {
   /** Creates a new ShootHighFromUnderHub. */
 
-  private double tiltAngle = 1;
-  private double shootrpm = 1244;
+  private double tiltAngle = 2;
+  private double shootrpm = 3500;
 
   public ShootHighFromUnderHub(RevShooterSubsystem shooter, RevTiltSubsystem tilt, CargoTransportSubsystem transport,
       IntakesSubsystem intake) {
@@ -28,7 +28,7 @@ public class ShootHighFromUnderHub extends SequentialCommandGroup {
 
     addCommands(new ParallelCommandGroup(new PositionTilt(tilt, tiltAngle),
 
-        new SetShootSpeedSource(shooter, 2),
+        new SetShootSpeedSource(shooter, 2), new SetPresetRPM(shooter, shootrpm),
 
         new RunShooter(shooter)),
 
