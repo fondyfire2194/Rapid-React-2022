@@ -63,6 +63,7 @@ public boolean cargoAtBothIntakes;
     raiseFrontArm();
 
     frontIntakeCargoDetect = new AnalogInput(2);
+    
     rearIntakeCargoDetect = new AnalogInput(3);
 
   }

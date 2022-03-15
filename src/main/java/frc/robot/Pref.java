@@ -84,21 +84,23 @@ public class Pref {
 
     prefDict.put("dRTune", 0.);
 
-    prefDict.put("dRPur", 0.5);
+    prefDict.put("dRPur", 0.35);
 
     // Intake
 
     prefDict.put("IntakeSpeed", 0.75);
 
-    prefDict.put("LowRollIntakeRPM", 750.);
+    prefDict.put("LowRollIntakeRPM", 250.);
 
     prefDict.put("LowRollReleaseRPM", 500.);  
 
-    prefDict.put("TopRollShootRPM", 500.);
+    prefDict.put("TopRollShootRPM", 950.);
 
     prefDict.put("Rollers_kP", .0008);
   
     prefDict.put("Rollers_kD", .015);
+
+    prefDict.put("CargoDetectValue",1000.);
 
 
     // camera

@@ -5,41 +5,47 @@
 package frc.robot.commands.CargoTransport;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Pref;
 import frc.robot.subsystems.CargoTransportSubsystem;
 
-public class StopLowerRoller extends CommandBase {
+public class RunLowerRollerIntake extends CommandBase {
   /** Creates a new RunRollers. */
   private final CargoTransportSubsystem m_transport;
+  private boolean latchCargoAtShoot;
 
-  public StopLowerRoller(CargoTransportSubsystem transport) {
+  public RunLowerRollerIntake(CargoTransportSubsystem transport) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_transport = transport;
+
     addRequirements(m_transport);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    m_transport.haltLowerRollerMotor = false;
+    latchCargoAtShoot = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_transport.haltLowerRollerMotor = true;
-    m_transport.stopLowerRoller();
+    
+    m_transport.runLowerAtVelocity(Pref.getPref("LowRollIntakeRPM"));
 
+    latchCargoAtShoot = m_transport.getCargoAtShoot() || m_transport.getCargoIsBlue() || m_transport.getCargoIsRed();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_transport.haltLowerRollerMotor = false;
+    m_transport.stopLowerRoller();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return latchCargoAtShoot;
+
   }
 }

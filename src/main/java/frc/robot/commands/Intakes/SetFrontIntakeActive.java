@@ -11,17 +11,22 @@ import frc.robot.subsystems.IntakesSubsystem;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class SetFrontIntakeActive extends InstantCommand {
-  IntakesSubsystem m_intake;
 
-  public SetFrontIntakeActive(IntakesSubsystem intake) {
+  private IntakesSubsystem m_intake;
+  private boolean m_on;
+
+  public SetFrontIntakeActive(IntakesSubsystem intake, boolean on) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_intake = intake;
+    m_on = on;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-    m_intake.setFrontActive();
+    if (m_on)
+      m_intake.setFrontActive();
+    else
+      m_intake.setRearActive();
   }
 }

@@ -39,12 +39,6 @@ public class HubVisionShuffleboard {
                         RevTiltSubsystem tilt, RevShooterSubsystem shooter, boolean isMatch,
                         CargoTransportSubsystem transport, Compressor compressor) {
 
-                // /**
-                // *
-                // * Vision
-                // * && !isMatch
-                // */
-
                 if (true) {
 
                         ShuffleboardLayout contourPX = Shuffleboard.getTab("HubVision")
@@ -112,10 +106,10 @@ public class HubVisionShuffleboard {
 
                 }
 
-                // if (RobotBase.isReal()){// && !isMatch) {
+                
                 HttpCamera llght = new HttpCamera("CoprocessorCamera",
                                 "http://10.21.94.11:5800/stream.mjpg");
-                // CameraServer.addCamera(llght);
+
 
                 ShuffleboardTab llFeed = Shuffleboard.getTab("HubVision");
 

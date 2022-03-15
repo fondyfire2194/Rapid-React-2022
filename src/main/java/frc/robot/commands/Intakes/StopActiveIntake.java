@@ -10,7 +10,8 @@ import frc.robot.subsystems.IntakesSubsystem;
 public class StopActiveIntake extends CommandBase {
 
   private IntakesSubsystem m_intake;
- 
+
+  private int loopctr;
 
   public StopActiveIntake(IntakesSubsystem intake) {
     m_intake = intake;
@@ -19,37 +20,36 @@ public class StopActiveIntake extends CommandBase {
   }
 
   public void initialize() {
-
+    loopctr = 0;
   }
 
   @Override
 
-  public void execute() {  
-
-      m_intake.stopFrontIntakeMotor();
-      m_intake.raiseFrontArm();
-
-      m_intake.stopRearIntakeMotor();
-      m_intake.raiseRearArm();
-   
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    
+  public void execute() {
+    loopctr++;
     m_intake.stopFrontIntakeMotor();
     m_intake.raiseFrontArm();
 
     m_intake.stopRearIntakeMotor();
     m_intake.raiseRearArm();
 
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+
+    m_intake.stopFrontIntakeMotor();
+    m_intake.raiseFrontArm();
+
+    m_intake.stopRearIntakeMotor();
+    m_intake.raiseRearArm();
 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
 
   }
 }

@@ -403,8 +403,8 @@ public class RevShooterSubsystem extends SubsystemBase {
         m_topPID.setReference(rpm, ControlType.kVelocity, VELOCITY_SLOT);
     }
 
-    public boolean getTopRollerRunning() {
-        return Math.abs(getTopRPM()) > 250;// getrpm is -
+    public boolean getTopRollerAtSpeed() {
+        return Math.abs(topRequiredRPM - getTopRPM()) < topRequiredRPM / 5;
     }
 
     public double getTopRPM() {

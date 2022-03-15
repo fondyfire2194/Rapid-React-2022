@@ -4,7 +4,9 @@
 
 package frc.robot.commands.Intakes;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 
@@ -17,7 +19,7 @@ public class RunActiveIntake extends CommandBase {
   private boolean stopActiveIntakeNow;
 
   public RunActiveIntake(IntakesSubsystem intake, CargoTransportSubsystem transport) {
- 
+
     m_intake = intake;
 
     m_transport = transport;
@@ -33,6 +35,10 @@ public class RunActiveIntake extends CommandBase {
 
     m_intake.setRearCurrentLimit(20);
 
+    if (m_intake.useFrontIntake)
+      Shuffleboard.selectTab("FrontIntakeCamera");
+    else
+      Shuffleboard.selectTab("RearIntakeCamera");
   }
 
   @Override
@@ -73,23 +79,28 @@ public class RunActiveIntake extends CommandBase {
         m_intake.runActiveIntakeMotor();
     }
 
-    m_transport.intakeLowerRollerMotor();
-
   }
 
   @Override
   public void end(boolean interrupted) {
     m_intake.stopFrontIntakeMotor();
     m_intake.stopRearIntakeMotor();
-    m_transport.stopLowerRoller();
     stopActiveIntakeNow = false;
+
+    if (Robot.getFMSConnected())
+
+      Shuffleboard.selectTab("Competition");
+
+    else
+    
+      Shuffleboard.selectTab("Intake");
 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return stopActiveIntakeNow;
 
   }
 }

@@ -16,13 +16,13 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Vision.LimeLight;
+import frc.robot.commands.AutoCommands.Common.AllRetPu;
 import frc.robot.commands.CargoTransport.RunLowerRoller;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
-import frc.robot.commands.Intakes.SetRearIntakeActive;
 import frc.robot.commands.Intakes.StopIntakeMotors;
 import frc.robot.commands.RobotDrive.ClearRobFaults;
 import frc.robot.commands.RobotDrive.PositionStraight;
@@ -80,8 +80,8 @@ public class SetUpOI {
                                         .getLayout("IntakeSelect", BuiltInLayouts.kList).withPosition(0, 0)
                                         .withSize(1, 4).withProperties(Map.of("Label position", "TOP"));
 
-                        intakeSelect.add("Select Front", new SetFrontIntakeActive(intake));
-                        intakeSelect.add("Select Rear", new SetRearIntakeActive(intake));
+                        intakeSelect.add("Select Front", new SetFrontIntakeActive(intake,true));
+                        intakeSelect.add("Select Rear", new SetFrontIntakeActive(intake,false));
                         intakeSelect.addBoolean("RearActive", () -> !intake.useFrontIntake);
                         intakeSelect.addBoolean("FrontActive", () -> intake.useFrontIntake);
                         intakeSelect.addBoolean("FrontConnected", () -> intake.frontIntakeMotorConnected);
@@ -95,6 +95,10 @@ public class SetUpOI {
                         intakeActions.add("ArmLower", new ActiveIntakeArmLower(intake));
                         intakeActions.add("Run Motor", new RunActiveIntake(intake, transport));
                         intakeActions.add("Stop Motor", new StopIntakeMotors(intake));
+ 
+                        double[] data = { 0, 0, -2 };
+ 
+                        intakeActions.add(new AllRetPu(intake, drive, turret, tilt, transport, data));
 
                         ShuffleboardLayout intakeValues = Shuffleboard.getTab("Intake")
                                         .getLayout("IntakeValues", BuiltInLayouts.kList).withPosition(2, 0)
@@ -186,7 +190,6 @@ public class SetUpOI {
 
                         turretValues2.addBoolean("InPosition", () -> turret.atTargetAngle());
 
-                        turretValues2.addBoolean("BrakeMode", () -> turret.isBrake());
                         turretValues2.addBoolean("TargetHorOK",
                                         () -> limelight.getHorOnTarget(turret.turretVisionTolerance));
 
@@ -241,12 +244,8 @@ public class SetUpOI {
                         tiltValues.addNumber("PCT", () -> tilt.getOut());
                         tiltValues.addNumber("Amps", () -> tilt.getAmps());
                         tiltValues.addNumber("Speed", () -> tilt.getSpeed());
-                        // tiltValues.addNumber("Vision Offset", () -> tilt.targetVerticalOffset);
                         tiltValues.addNumber("AdjTarget", () -> tilt.adjustedVerticalError);
-                        // tiltValues.addNumber("Vision Error", () ->
-                        // limelight.getdegVerticalToTarget());
-
-                        tiltValues.addNumber("DriverOffset", () -> tilt.driverVerticalOffsetDegrees);
+                        tiltValues.addNumber("VertDegToTarget", () -> limelight.getdegVerticalToTarget());
 
                         ShuffleboardLayout tiltValues2 = Shuffleboard.getTab("SetupTilt")
                                         .getLayout("States", BuiltInLayouts.kGrid).withPosition(4, 0).withSize(3, 2)
@@ -257,7 +256,6 @@ public class SetUpOI {
                         tiltValues2.addBoolean("OnBottomLS", () -> tilt.m_reverseLimit.isPressed());
 
                         tiltValues2.addBoolean("PosResetDone", () -> tilt.positionResetDone);
-                        tiltValues2.addBoolean("BrakeMode", () -> tilt.isBrake());
                         tiltValues2.addBoolean("OKTune", () -> (tilt.tuneOn && tilt.lastTuneOn));
                         tiltValues2.addBoolean("Connected (9)", () -> tilt.tiltMotorConnected);
                         tiltValues2.addBoolean("+SWLimit", () -> tilt.onPlusSoftwareLimit());
@@ -312,6 +310,7 @@ public class SetUpOI {
                         shooterValues.addNumber("Target RPM", () -> shooter.requiredRPM);
                         shooterValues.addNumber("TopRollerRPM", () -> shooter.getTopRPM());
                         shooterValues.addNumber("TopTargetRPM", () -> shooter.topRequiredRPM);
+                        shooterValues.addNumber("TopRollerAmp", () -> shooter.getTopRollerMotorAmps());
 
                         shooterValues.addNumber("Left PCT", () -> shooter.getLeftPctOut());
                         shooterValues.addNumber("LeftAmps", () -> shooter.getLeftAmps());
@@ -327,8 +326,8 @@ public class SetUpOI {
                                         .withSize(2, 3).withProperties(Map.of("Label position", "LEFT"));
 
                         shooterValues1.addBoolean("ShooterAtSpeed", () -> shooter.atSpeed());
-                        shooterValues1.addBoolean("TopRollerRunning", () -> shooter.getTopRollerRunning());
-
+                        shooterValues1.addBoolean("TopRollerAtSpeed", () -> shooter.getTopRollerAtSpeed());
+                        shooterValues.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
                         shooterValues1.addBoolean("TuneOn", () -> (shooter.tuneOn && shooter.lastTuneOn));
                         shooterValues1.addBoolean("BothConnected(6,7)", () -> shooter.allConnected);
                         shooterValues1.addBoolean("Use Slider", () -> shooter.useSpeedSlider);
@@ -397,11 +396,11 @@ public class SetUpOI {
 
                         robotCommands.add("ClearFaults", new ClearRobFaults(drive));
                         robotCommands.add("Stop Robot", new StopRobot(drive));
-                        robotCommands.add("To -4(2)", new PositionStraight(drive, -4, .5));
-                        robotCommands.add("To -4(3)", new PositionStraight(drive, -4, .5));
-                        robotCommands.add("To -4(1)", new PositionStraight(drive, -4, .5));
-                        robotCommands.add("To 0(1)", new PositionStraight(drive, 0, .5));
-                        robotCommands.add("To 0", new PositionStraight(drive, 0,.5));
+                        robotCommands.add("To 4", new PositionStraight(drive, +4, .5));
+                        robotCommands.add("To -4", new PositionStraight(drive, -4, .6));
+                        robotCommands.add("To 1", new PositionStraight(drive, 1, .5));
+                        robotCommands.add("To -1", new PositionStraight(drive, -1, .5));
+                        robotCommands.add("To 0", new PositionStraight(drive, 0, .5));
                         robotCommands.add("Cmd", drive);
 
                         ShuffleboardLayout robotValues = Shuffleboard.getTab("SetupRobot")

@@ -128,6 +128,8 @@ public class RevTiltSubsystem extends SubsystemBase {
         mEncoder.setPositionConversionFactor(degreesPerRev);
         mEncoder.setVelocityConversionFactor(degreesPerRev / 60);
 
+        m_motor.setSmartCurrentLimit(3);
+
         setFF_MaxOuts();
         tunePosGains();
         // tuneVelGains();

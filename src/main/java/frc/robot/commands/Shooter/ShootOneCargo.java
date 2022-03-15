@@ -60,7 +60,7 @@ public class ShootOneCargo extends CommandBase {
 
     m_shooter.runShooterPlusRoller(m_rpm);
 
-    if ((!oneShot) && cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerRunning()) {
+    if ((!oneShot) && cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed()) {
 
       m_transport.releaseCargo();
 
@@ -71,13 +71,13 @@ public class ShootOneCargo extends CommandBase {
 
     if (!cargoAtShoot && (m_intake.getCargoAtFront() || frontIntakeRunning)) {
       m_intake.runFrontIntakeMotor();
-      m_transport.intakeLowerRollerMotor();
+    //  m_transport.intakeLowerRollerMotor();
       frontIntakeRunning = true;
     }
 
     if (!cargoAtShoot && !frontIntakeRunning && (m_intake.getCargoAtRear() || rearIntakeRunning)) {
       m_intake.runRearIntakeMotor();
-      m_transport.intakeLowerRollerMotor();
+    //  m_transport.intakeLowerRollerMotor();
       rearIntakeRunning = true;
     }
 

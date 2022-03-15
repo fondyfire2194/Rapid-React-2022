@@ -52,7 +52,7 @@ public class ArcadeDrive extends CommandBase {
     if (Math.abs(tempRot) < .05)
       tempRot = 0;
 SmartDashboard.putNumber("TestDrive",tempx);
-    m_drivetrain.arcadeDrive(tempx, tempRot / 2);
+    m_drivetrain.arcadeDrive(tempx, tempRot / 3);
 
   }
 

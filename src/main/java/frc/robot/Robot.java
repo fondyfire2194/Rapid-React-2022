@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
@@ -71,17 +70,17 @@ public class Robot extends TimedRobot {
 
     // Set up custom log entries
      DataLog log = DataLogManager.getLog();
-    // rrBooleanLog = new BooleanLogEntry(log, "/my/boolean");
+     rrBooleanLog = new BooleanLogEntry(log, "/my/boolean");
      rrDoubleLog = new DoubleLogEntry(log, "/my/double");
-    // rrStringLog = new StringLogEntry(log, "/my/string");
+     rrStringLog = new StringLogEntry(log, "/my/string");
 
     m_robotContainer = new RobotContainer();
 
     getAllianceColorBlue();
 
-   // if (m_robotContainer.isMatch)
+    if (m_robotContainer.isMatch)
 
-     // Shuffleboard.selectTab("Pre-Round");
+      Shuffleboard.selectTab("Pre-Round");
 
   }
 
@@ -162,7 +161,7 @@ public class Robot extends TimedRobot {
     if (RobotBase.isReal())
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
 
-   // Shuffleboard.selectTab("Competition");
+    Shuffleboard.selectTab("Competition");
 
     Shuffleboard.startRecording();
     // get delay time
@@ -269,8 +268,8 @@ public class Robot extends TimedRobot {
 
     autoHasRun = false;
 
-    // if (RobotBase.isReal() && !m_robotContainer.m_tilt.positionResetDone)
-    //   new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
+    if (RobotBase.isReal() && !m_robotContainer.m_tilt.positionResetDone)
+      new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
 
     m_robotContainer.m_limelight.useVision = false;
 
@@ -303,19 +302,13 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
-  private void setStartingPose(Pose2d pose) {
-
-    m_robotContainer.m_drive.resetAll();
-
-    m_robotContainer.m_drive.resetPose(pose);
-  }
 
   public static boolean getAllianceColorBlue() {
 
     return DriverStation.getAlliance() == Alliance.Blue;
   }
 
-  public static boolean getFMConnected() {
+  public static boolean getFMSConnected() {
 
     return DriverStation.isFMSAttached();
   }

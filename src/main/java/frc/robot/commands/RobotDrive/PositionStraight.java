@@ -56,9 +56,9 @@ public class PositionStraight extends CommandBase {
     if (rightOut < m_min)
       rightOut = m_min;
 
-    m_drive.driveLeftSide(leftOut - yawCorrection);
+    m_drive.driveLeftSide(leftOut - .5 * yawCorrection);
 
-    m_drive.driveRightSide(rightOut + yawCorrection);
+    m_drive.driveRightSide(rightOut + .5 * yawCorrection);
 
   }
 
@@ -70,6 +70,6 @@ public class PositionStraight extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(m_endpoint - m_drive.getLeftDistance()) < .1;
   }
 }

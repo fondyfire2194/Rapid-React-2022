@@ -13,10 +13,9 @@ import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.AutoCommands.Common.LowerShoot;
 import frc.robot.commands.AutoCommands.Common.PrepositionTiltAndTurret;
-import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
 import frc.robot.commands.Intakes.RunActiveIntake;
-import frc.robot.commands.Intakes.SetRearIntakeActive;
+import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Intakes.StopActiveIntake;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
@@ -57,7 +56,7 @@ public class PUS3_ThirdCargo extends SequentialCommandGroup {
 
             new PrepositionTiltAndTurret(tilt, turret, tiltAngle, turretAngle))
 
-                .deadlineWith(new SetRearIntakeActive(intake),
+                .deadlineWith(new SetFrontIntakeActive(intake,false),
 
                     new RunActiveIntake(intake, transport)),
 

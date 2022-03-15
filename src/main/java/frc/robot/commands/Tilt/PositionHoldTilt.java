@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RevTiltSubsystem;
 
 public class PositionHoldTilt extends CommandBase {
-  /** Creates a new PositionTilt. */
+  /** Creates a new PositionHoldTilt. */
 
   private final RevTiltSubsystem m_tilt;
   
