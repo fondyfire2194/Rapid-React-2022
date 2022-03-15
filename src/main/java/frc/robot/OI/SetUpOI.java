@@ -29,6 +29,7 @@ import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.StopRobot;
+import frc.robot.commands.RobotDrive.TurnToAngleProfiled;
 import frc.robot.commands.Shooter.ClearShFaults;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.RunTopRoller;
@@ -57,14 +58,14 @@ import frc.robot.trajectories.FondyFireTrajectory;
 /** Add your docs here. */
 public class SetUpOI {
 
-        private boolean showTurret = true;
-        private boolean showTilt = true;
-        private boolean showShooter = true;
-        private boolean showRobot = true;
-        private boolean showTransport = true;
-        private boolean showClimber = true;
-        private boolean showSubsystems = true;
-        private boolean showIntake = true;
+        public static boolean showTurret = true;
+        public static boolean showTilt = true;
+        public static boolean showShooter = true;
+        public static boolean showRobot = true;
+        public static boolean showTransport = true;
+        public static boolean showClimber = true;
+        public static boolean showSubsystems = true;
+        public static boolean showIntake = true;
 
         public double timeToStart;
 
@@ -72,9 +73,9 @@ public class SetUpOI {
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
                         LimeLight limelight, IntakesSubsystem intake,
                         ClimberSubsystem climber,
-                        FondyFireTrajectory traj, boolean isMatch) {
+                        FondyFireTrajectory traj) {
 
-                if (showIntake && !isMatch) {
+                if (showIntake) {
 
                         ShuffleboardLayout intakeSelect = Shuffleboard.getTab("Intake")
                                         .getLayout("IntakeSelect", BuiltInLayouts.kList).withPosition(0, 0)
@@ -98,7 +99,7 @@ public class SetUpOI {
  
                         double[] data = { 0, 0, -2 };
  
-                        intakeActions.add(new AllRetPu(intake, drive, turret, tilt, transport, data));
+                        intakeActions.add(new AllRetPu(intake, drive, turret, tilt, transport, limelight, data));
 
                         ShuffleboardLayout intakeValues = Shuffleboard.getTab("Intake")
                                         .getLayout("IntakeValues", BuiltInLayouts.kList).withPosition(2, 0)
@@ -129,7 +130,7 @@ public class SetUpOI {
 
                 }
 
-                if (showTurret && !isMatch) {
+                if (showTurret ) {
 
                         ShuffleboardLayout turretCommands = Shuffleboard.getTab("SetupTurret")
                                         .getLayout("Turret", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4)
@@ -222,7 +223,7 @@ public class SetUpOI {
 
                 }
 
-                if (showTilt && !isMatch) {
+                if (showTilt) {
 
                         ShuffleboardLayout tiltCommands = Shuffleboard.getTab("SetupTilt")
                                         .getLayout("Tilt", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 5)
@@ -277,7 +278,7 @@ public class SetUpOI {
 
                 }
 
-                if (showShooter && !isMatch) {
+                if (showShooter ) {
 
                         ShuffleboardLayout shooterCommands = Shuffleboard.getTab("SetupShooter")
                                         .getLayout("MAXRPM 5500", BuiltInLayouts.kList).withPosition(0, 0)
@@ -345,7 +346,7 @@ public class SetUpOI {
 
                 }
 
-                if (showTransport && !isMatch) {
+                if (showTransport ) {
 
                         ShuffleboardLayout transportValues = Shuffleboard.getTab("SetupTransport")
                                         .getLayout("TransportValues", BuiltInLayouts.kList).withPosition(0, 0)
@@ -373,7 +374,7 @@ public class SetUpOI {
 
                 }
 
-                if (showClimber && !isMatch) {
+                if (showClimber ) {
                         ShuffleboardLayout climberInfo = Shuffleboard.getTab("SetupTransport")
                                         .getLayout("Climber", BuiltInLayouts.kList).withPosition(7, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels
@@ -385,7 +386,7 @@ public class SetUpOI {
 
                 }
 
-                if (showRobot && !isMatch) {
+                if (showRobot ) {
 
                         ShuffleboardLayout robotCommands = Shuffleboard.getTab("SetupRobot")
                                         .getLayout("Robot", BuiltInLayouts.kList).withPosition(0, 0)
@@ -403,8 +404,19 @@ public class SetUpOI {
                         robotCommands.add("To 0", new PositionStraight(drive, 0, .5));
                         robotCommands.add("Cmd", drive);
 
+                        ShuffleboardLayout robotCommands1 = Shuffleboard.getTab("SetupRobot")
+                                        .getLayout("Robot1", BuiltInLayouts.kList).withPosition(2, 0)
+                                        .withSize(2, 4).withProperties(Map.of("Label position", "LEFT"));
+
+                        robotCommands1.add("TurnTo 0", new TurnToAngleProfiled(drive, 0));
+                        robotCommands1.add("TurnTo 45", new TurnToAngleProfiled(drive, 45));
+                        robotCommands1.add("TurnTo 90", new TurnToAngleProfiled(drive, 90));
+                        robotCommands1.add("TurnTo 180", new TurnToAngleProfiled(drive, 180));
+                        robotCommands1.add("TurnTo -45", new TurnToAngleProfiled(drive, -45));
+                        robotCommands1.add("TurnTo -90", new TurnToAngleProfiled(drive, -90));
+
                         ShuffleboardLayout robotValues = Shuffleboard.getTab("SetupRobot")
-                                        .getLayout("RobotValues", BuiltInLayouts.kList).withPosition(2, 0)
+                                        .getLayout("RobotValues", BuiltInLayouts.kList).withPosition(4, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels
 
                         robotValues.addNumber("LeftMeters", () -> drive.getLeftDistance());
@@ -420,7 +432,7 @@ public class SetUpOI {
                         robotValues.addNumber("Target", () -> drive.leftTargetPosition);
 
                         ShuffleboardLayout robotValues2 = Shuffleboard.getTab("SetupRobot")
-                                        .getLayout("States", BuiltInLayouts.kGrid).withPosition(5, 0)
+                                        .getLayout("States", BuiltInLayouts.kGrid).withPosition(6, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "TOP")); // labels
 
                         robotValues2.addBoolean("TuneOn", () -> (drive.tuneOn && drive.lastTuneOn));
@@ -434,17 +446,17 @@ public class SetUpOI {
                         robotValues2.addBoolean("RFoll", () -> drive.getRightFollower());
 
                         ShuffleboardLayout robotGains = Shuffleboard.getTab("SetupRobot")
-                                        .getLayout("Gains", BuiltInLayouts.kGrid).withPosition(6, 0)
+                                        .getLayout("Gains", BuiltInLayouts.kGrid).withPosition(8, 0)
                                         .withSize(1, 2).withProperties(Map.of("Label position", "TOP")); // labels
 
-                        robotGains.addNumber("LFF", () -> drive.ffset);
-                        robotGains.addNumber("LP", () -> drive.pset);
-                        robotGains.addNumber("RFF", () -> drive.rffset);
-                        robotGains.addNumber("RP", () -> drive.rpset);
+                        
+                        robotGains.addNumber("kP",()->drive.kP);
+                        robotGains.addNumber("kI",()->drive.kI);
+                        robotGains.addNumber("kD", ()->drive.kD);
 
                 }
 
-                if (showSubsystems && !isMatch) {
+                if (showSubsystems ) {
 
                         ShuffleboardLayout subSystems = Shuffleboard.getTab("Can+Sols")
                                         .getLayout("All", BuiltInLayouts.kList).withPosition(0, 0)

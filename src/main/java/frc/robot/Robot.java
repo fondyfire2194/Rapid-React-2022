@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.OI.Show_Hide_Screens;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.AutoCommands.AllRetPuShoot;
@@ -120,10 +121,6 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_limelight.periodic();
 
-    m_robotContainer.m_tilt.testLock = m_robotContainer.m_driverController.getTrigger();
-
-    m_robotContainer.m_tilt.testLockFromThrottle = m_robotContainer.m_driverController.getThrottle();
-
     loopCtr++;
 
     SmartDashboard.putNumber("LPCTRA", loopCtr);
@@ -159,6 +156,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_drive.setIdleMode(true);
 
     if (RobotBase.isReal())
+
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
 
     Shuffleboard.selectTab("Competition");

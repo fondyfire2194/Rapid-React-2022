@@ -32,21 +32,21 @@ public class SetUpPreRoundOI {
 
         public SendableChooser<Command> autoChooser = new SendableChooser<>();
         public SendableChooser<Integer> startDelayChooser = new SendableChooser<>();
-        private boolean showAuto;
+        public static boolean m_showPreRound;
         double rate =.5;
       
 
         public SetUpPreRoundOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
                         LimeLight ll, IntakesSubsystem intake, ClimberSubsystem climber,
-                        FondyFireTrajectory traj, RawContoursV2 rcv2, boolean liveMatch) {
+                        FondyFireTrajectory traj, RawContoursV2 rcv2) {
 
                 /**
                  * 
                  * Pre round
                  */
 
-                if (showAuto || liveMatch) {
+                if (m_showPreRound) {
                         // Put
                         // autonomous chooser on the dashboard.
                         // The first argument is the root container

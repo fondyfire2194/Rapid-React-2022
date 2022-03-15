@@ -4,7 +4,6 @@
 
 package frc.robot.commands.Shooter;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -41,11 +40,13 @@ public class ShootOneCargo extends CommandBase {
   public void initialize() {
 
     frontIntakeRunning = false;
+
     rearIntakeRunning = false;
 
     oneShot = false;
 
     m_intake.cargoAtBothIntakes = m_intake.getCargoAtFront() && m_intake.getCargoAtRear();
+
     noCargoAtStart = !m_intake.getCargoAtFront() && !m_intake.getCargoAtRear() && !m_transport.getCargoAtShoot();
 
   }
@@ -65,26 +66,32 @@ public class ShootOneCargo extends CommandBase {
       m_transport.releaseCargo();
 
       if (!cargoAtShoot) {
+
         oneShot = true;
       }
     }
 
     if (!cargoAtShoot && (m_intake.getCargoAtFront() || frontIntakeRunning)) {
+
       m_intake.runFrontIntakeMotor();
-    //  m_transport.intakeLowerRollerMotor();
+
       frontIntakeRunning = true;
     }
 
     if (!cargoAtShoot && !frontIntakeRunning && (m_intake.getCargoAtRear() || rearIntakeRunning)) {
+
       m_intake.runRearIntakeMotor();
-    //  m_transport.intakeLowerRollerMotor();
+
       rearIntakeRunning = true;
     }
 
     if (frontIntakeRunning) {
+
       frontIntakeRunning = !cargoAtShoot;
     }
+
     if (rearIntakeRunning) {
+
       rearIntakeRunning = !cargoAtShoot;
     }
 

@@ -28,12 +28,12 @@ import frc.robot.subsystems.RevTurretSubsystem;
 /** Add your docs here. */
 public class LLVisionShuffleboard {
 
-        private boolean m_showVision = true;
+        public static boolean m_showVision;
 
         HttpCamera LLFeed;
 
         public LLVisionShuffleboard(LimeLight ll, RawContoursV2 rCV2, RevTurretSubsystem turret,
-                        RevTiltSubsystem tilt, RevShooterSubsystem shooter, boolean isMatch) {
+                        RevTiltSubsystem tilt, RevShooterSubsystem shooter) {
 
                 /**
                  * 

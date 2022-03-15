@@ -28,7 +28,7 @@ public class PUS3 extends SequentialCommandGroup {
       LimeLight ll, RevShooterSubsystem shooter, RawContoursV2 rcv2,
       CargoTransportSubsystem transport, Compressor compressor, double[] data) {
 
-    addCommands(new AllRetPu(intake, drive, turret, tilt, transport, data),
+    addCommands(new AllRetPu(intake, drive, turret, tilt, transport, ll, data),
 
         new GetNumberOfContourValues(rcv2),
 

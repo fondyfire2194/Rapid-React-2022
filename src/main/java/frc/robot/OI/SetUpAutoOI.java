@@ -36,89 +36,90 @@ public class SetUpAutoOI {
 
         public SendableChooser<Command> autoChooser = new SendableChooser<>();
         public SendableChooser<Integer> startDelayChooser = new SendableChooser<>();
-        private boolean showAuto;
+        public static boolean m_showAuto;
         double rate = .5;
 
         public SetUpAutoOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
                         LimeLight ll, IntakesSubsystem intake, ClimberSubsystem climber,
-                        FondyFireTrajectory traj, RawContoursV2 rcv2, boolean liveMatch) {
+                        FondyFireTrajectory traj, RawContoursV2 rcv2) {
 
-                ShuffleboardLayout miscComp = Shuffleboard.getTab("CompetitionMisc")
-                                .getLayout("Misc1", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4)
-                                .withProperties(Map.of("Label position", "LEFT"));
+                if (m_showAuto) {
+                        ShuffleboardLayout miscComp = Shuffleboard.getTab("CompetitionMisc")
+                                        .getLayout("Misc1", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4)
+                                        .withProperties(Map.of("Label position", "LEFT"));
 
-                miscComp.add("Reset to 0", new ResetTurretAngle(turret));
-                miscComp.addNumber("TUAngle", () -> turret.getAngle());
-                miscComp.addNumber("TiltAngle", () -> tilt.getAngle());
-                miscComp.addNumber("RPM", () -> shooter.getRPM());
-                miscComp.addNumber("LeftAmps", () -> shooter.getLeftAmps());
-                miscComp.addNumber("RightAmps", () -> shooter.getRightAmps());
-                miscComp.addNumber("TargetArea%Scrn", () -> ll.getTargetArea());
-                miscComp.addNumber("BNDBoxWidth", () -> ll.getBoundingBoxWidth());
-                miscComp.addNumber("BndBoxHeight", () -> ll.getBoundingBoxHeight());
-                miscComp.addNumber("AspectRatio", () -> ll.getAspectRatio());
+                        miscComp.add("Reset to 0", new ResetTurretAngle(turret));
+                        miscComp.addNumber("TUAngle", () -> turret.getAngle());
+                        miscComp.addNumber("TiltAngle", () -> tilt.getAngle());
+                        miscComp.addNumber("RPM", () -> shooter.getRPM());
+                        miscComp.addNumber("LeftAmps", () -> shooter.getLeftAmps());
+                        miscComp.addNumber("RightAmps", () -> shooter.getRightAmps());
+                        miscComp.addNumber("TargetArea%Scrn", () -> ll.getTargetArea());
+                        miscComp.addNumber("BNDBoxWidth", () -> ll.getBoundingBoxWidth());
+                        miscComp.addNumber("BndBoxHeight", () -> ll.getBoundingBoxHeight());
+                        miscComp.addNumber("AspectRatio", () -> ll.getAspectRatio());
 
-                miscComp.addNumber("RQDRPM", () -> shooter.requiredRPM);
+                        miscComp.addNumber("RQDRPM", () -> shooter.requiredRPM);
 
-                ShuffleboardLayout misComp1 = Shuffleboard.getTab("CompetitionMisc")
-                                .getLayout("Misc2", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4)
-                                .withProperties(Map.of("Label position", "LEFT"));
+                        ShuffleboardLayout misComp1 = Shuffleboard.getTab("CompetitionMisc")
+                                        .getLayout("Misc2", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4)
+                                        .withProperties(Map.of("Label position", "LEFT"));
 
-                // misComp1.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
+                        // misComp1.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
 
-                ShuffleboardLayout misComp2 = Shuffleboard.getTab("CompetitionMisc")
-                                .getLayout("Misc3", BuiltInLayouts.kList).withPosition(4, 0).withSize(2, 4)
-                                .withProperties(Map.of("Label position", "LEFT"));
+                        ShuffleboardLayout misComp2 = Shuffleboard.getTab("CompetitionMisc")
+                                        .getLayout("Misc3", BuiltInLayouts.kList).withPosition(4, 0).withSize(2, 4)
+                                        .withProperties(Map.of("Label position", "LEFT"));
 
-                misComp2.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
-                misComp2.addNumber("CameraCalcSpeed", () -> shooter.cameraCalculatedSpeed);
-                misComp2.addNumber("CameraCalcTilt", () -> tilt.cameraCalculatedTiltPosition);
-                misComp2.add("Reset Enc", new ResetEncoders(drive));
-                misComp2.add("Reset Gyro", new ResetGyro(drive));
-                misComp2.addNumber("LeftMeters", () -> drive.getLeftDistance());
-                misComp2.addNumber("RightMeters", () -> drive.getRightDistance());
+                        misComp2.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
+                        misComp2.addNumber("CameraCalcSpeed", () -> shooter.cameraCalculatedSpeed);
+                        misComp2.addNumber("CameraCalcTilt", () -> tilt.cameraCalculatedTiltPosition);
+                        misComp2.add("Reset Enc", new ResetEncoders(drive));
+                        misComp2.add("Reset Gyro", new ResetGyro(drive));
+                        misComp2.addNumber("LeftMeters", () -> drive.getLeftDistance());
+                        misComp2.addNumber("RightMeters", () -> drive.getRightDistance());
 
-                ShuffleboardLayout misComp3 = Shuffleboard.getTab("CompetitionMisc")
-                                .getLayout("Misc4", BuiltInLayouts.kList).withPosition(6, 0).withSize(2, 4)
-                                .withProperties(Map.of("Label position", "LEFT"));
+                        ShuffleboardLayout misComp3 = Shuffleboard.getTab("CompetitionMisc")
+                                        .getLayout("Misc4", BuiltInLayouts.kList).withPosition(6, 0).withSize(2, 4)
+                                        .withProperties(Map.of("Label position", "LEFT"));
 
-                misComp3.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
+                        misComp3.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
 
-                misComp3.addBoolean("CargoAvailable", () -> transport.getCargoAtShoot());
+                        misComp3.addBoolean("CargoAvailable", () -> transport.getCargoAtShoot());
 
-                misComp3.addBoolean("IsShooting", () -> shooter.isShooting);
+                        misComp3.addBoolean("IsShooting", () -> shooter.isShooting);
 
-                ShuffleboardLayout misComVis = Shuffleboard.getTab("CompetitionMisc")
-                                .getLayout("MiscVis", BuiltInLayouts.kList).withPosition(8, 0).withSize(2, 4)
-                                .withProperties(Map.of("Label position", "LEFT"));
-                misComVis.add("No Zoom Pipeline", new LimelightSetPipeline(ll, 1));
-                misComVis.add("Driver Pipeline", new LimelightSetPipeline(ll, 0));
-                misComVis.add("Vision On", new UseVision(ll, true));
-                misComVis.add("Vision Off", new UseVision(ll, false));
-                misComVis.addBoolean("LLTGT", () -> ll.getIsTargetFound());
-                misComVis.addBoolean("TiVT", () -> tilt.validTargetSeen);
-                misComVis.addBoolean("TuVT", () -> turret.validTargetSeen);
+                        ShuffleboardLayout misComVis = Shuffleboard.getTab("CompetitionMisc")
+                                        .getLayout("MiscVis", BuiltInLayouts.kList).withPosition(8, 0).withSize(2, 4)
+                                        .withProperties(Map.of("Label position", "LEFT"));
+                        misComVis.add("No Zoom Pipeline", new LimelightSetPipeline(ll, 1));
+                        misComVis.add("Driver Pipeline", new LimelightSetPipeline(ll, 0));
+                        misComVis.add("Vision On", new UseVision(ll, true));
+                        misComVis.add("Vision Off", new UseVision(ll, false));
+                        misComVis.addBoolean("LLTGT", () -> ll.getIsTargetFound());
+                        misComVis.addBoolean("TiVT", () -> tilt.validTargetSeen);
+                        misComVis.addBoolean("TuVT", () -> turret.validTargetSeen);
 
-                HttpCamera llght = new HttpCamera("CoprocessorCamera",
-                                "http://10.21.94.11:5800/stream.mjpg");
+                        HttpCamera llght = new HttpCamera("CoprocessorCamera",
+                                        "http://10.21.94.11:5800/stream.mjpg");
 
-                ShuffleboardTab llFeed = Shuffleboard.getTab("Pre-Round");
+                        ShuffleboardTab llFeed = Shuffleboard.getTab("Pre-Round");
 
-                llFeed.add("Limelight_90", llght).withWidget(BuiltInWidgets.kCameraStream)
-                                .withPosition(5, 0).withSize(3, 3)
-                                .withProperties(Map.of("Show Crosshair", true,
-                                                "Show Controls", true, "Rotation", "QUARTER_CW"));
+                        llFeed.add("Limelight_90", llght).withWidget(BuiltInWidgets.kCameraStream)
+                                        .withPosition(5, 0).withSize(3, 3)
+                                        .withProperties(Map.of("Show Crosshair", true,
+                                                        "Show Controls", true, "Rotation", "QUARTER_CW"));
 
-                // Shuffleboard.getTab("Competition").addNumber("TimeRemaining", () ->
-                // drive.getMatchTime())
-                // .withWidget(BuiltInWidgets.kTextView).withPosition(9, 0).withSize(1, 1);
-                // Shuffleboard.getTab("Competition").addNumber("Battery", () ->
-                // getPDPInfo()[0])
-                // .withWidget(BuiltInWidgets.kTextView).withPosition(9, 1).withSize(1, 1);
-                // Shuffleboard.getTab("Competition").addNumber("TotalEnegy Ah", () ->
-                // getPDPInfo()[2])
-                // .withWidget(BuiltInWidgets.kTextView).withPosition(9, 2).withSize(1, 1);
-
+                        // Shuffleboard.getTab("Competition").addNumber("TimeRemaining", () ->
+                        // drive.getMatchTime())
+                        // .withWidget(BuiltInWidgets.kTextView).withPosition(9, 0).withSize(1, 1);
+                        // Shuffleboard.getTab("Competition").addNumber("Battery", () ->
+                        // getPDPInfo()[0])
+                        // .withWidget(BuiltInWidgets.kTextView).withPosition(9, 1).withSize(1, 1);
+                        // Shuffleboard.getTab("Competition").addNumber("TotalEnegy Ah", () ->
+                        // getPDPInfo()[2])
+                        // .withWidget(BuiltInWidgets.kTextView).withPosition(9, 2).withSize(1, 1);
+                }
         }
 }

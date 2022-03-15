@@ -33,13 +33,14 @@ import frc.robot.subsystems.RevTurretSubsystem;
 /** Add your docs here. */
 public class HubVisionShuffleboard {
 
+        public static boolean m_showHubVision;
 
         public HubVisionShuffleboard(LimeLight ll, RawContoursV2 rcv2,
                         VisionReferenceTarget vrt, RevTurretSubsystem turret,
-                        RevTiltSubsystem tilt, RevShooterSubsystem shooter, boolean isMatch,
+                        RevTiltSubsystem tilt, RevShooterSubsystem shooter,
                         CargoTransportSubsystem transport, Compressor compressor) {
 
-                if (true) {
+                if (m_showHubVision) {
 
                         ShuffleboardLayout contourPX = Shuffleboard.getTab("HubVision")
                                         .getLayout("allXY", BuiltInLayouts.kList).withPosition(0, 0)
@@ -92,8 +93,8 @@ public class HubVisionShuffleboard {
                         testContourPX.addNumber("Test Area", () -> vrt.getTestTargetArea());
 
                 }
-                // &&!isMatch
-                if (true) {
+        
+                if (m_showHubVision) {
                         ShuffleboardLayout targetValues = Shuffleboard.getTab("HubVision")
                                         .getLayout("bullseye", BuiltInLayouts.kList).withPosition(4, 0)
                                         .withSize(1, 4).withProperties(Map.of("Label position", "TOP")); // labels)
@@ -104,20 +105,16 @@ public class HubVisionShuffleboard {
                         targetValues.addNumber("WeightedX", () -> rcv2.weightedTargetValue);
                         targetValues.addNumber("WeightedAngle", () -> rcv2.weightedTargetAngle);
 
+                        HttpCamera llght = new HttpCamera("CoprocessorCamera",
+                                        "http://10.21.94.11:5800/stream.mjpg");
+
+                        ShuffleboardTab llFeed = Shuffleboard.getTab("HubVision");
+
+                        llFeed.add("Limelight_90", llght).withWidget(BuiltInWidgets.kCameraStream)
+                                        .withPosition(5, 0).withSize(3, 3)
+                                        .withProperties(Map.of("Show Crosshair", true,
+                                                        "Show Controls", true, "Rotation", "QUARTER_CW"));
                 }
-
-                
-                HttpCamera llght = new HttpCamera("CoprocessorCamera",
-                                "http://10.21.94.11:5800/stream.mjpg");
-
-
-                ShuffleboardTab llFeed = Shuffleboard.getTab("HubVision");
-
-                llFeed.add("Limelight_90", llght).withWidget(BuiltInWidgets.kCameraStream)
-                                .withPosition(5, 0).withSize(3, 3)
-                                .withProperties(Map.of("Show Crosshair", true,
-                                                "Show Controls", true, "Rotation", "QUARTER_CW"));
-
         }
 
 }
