@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Intakes;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
@@ -17,6 +18,8 @@ public class RunActiveIntake extends CommandBase {
   private CargoTransportSubsystem m_transport;
 
   private boolean stopActiveIntakeNow;
+
+  private double m_startTime;
 
   public RunActiveIntake(IntakesSubsystem intake, CargoTransportSubsystem transport) {
 
@@ -53,7 +56,7 @@ public class RunActiveIntake extends CommandBase {
 
         stopActiveIntakeNow = m_intake.getCargoAtFront();
 
-        m_intake.setFrontCurrentLimit(10);
+        // m_intake.setFrontCurrentLimit(10);
 
       }
 
@@ -61,11 +64,13 @@ public class RunActiveIntake extends CommandBase {
 
         stopActiveIntakeNow = m_intake.getCargoAtRear();
 
-        m_intake.setRearCurrentLimit(10);
+        m_startTime = Timer.getFPGATimestamp();
+
+        // m_intake.setRearCurrentLimit(10);
       }
     }
 
-    if (stopActiveIntakeNow) {
+    if (stopActiveIntakeNow && Timer.getFPGATimestamp() > m_startTime + .1) {
 
       m_intake.m_frontIntakeMotor.stopMotor();
 
@@ -92,7 +97,7 @@ public class RunActiveIntake extends CommandBase {
       Shuffleboard.selectTab("Competition");
 
     else
-    
+
       Shuffleboard.selectTab("Intake");
 
   }

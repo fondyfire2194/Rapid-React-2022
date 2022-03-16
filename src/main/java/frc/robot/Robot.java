@@ -27,6 +27,7 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.AutoCommands.AllRetPuShoot;
 import frc.robot.commands.AutoCommands.PUS3;
+import frc.robot.commands.AutoCommands.Common.LeftRetPuAdv;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Vision.SetUpLimelightForDriver;
@@ -188,8 +189,7 @@ public class Robot extends TimedRobot {
 
       case 1:// in front of power port, move back use shooter data index 1
 
-        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, transport, comp,
-            FieldMap.leftTarmacData);
+        m_autonomousCommand = new LeftRetPuAdv(intake, drive, transport, shooter);
 
         break;
 

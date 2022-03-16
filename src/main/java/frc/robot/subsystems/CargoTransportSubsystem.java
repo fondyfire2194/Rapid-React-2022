@@ -15,6 +15,7 @@ import com.revrobotics.ColorSensorV3;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,6 +38,10 @@ public class CargoTransportSubsystem extends SubsystemBase {
   public boolean allConnected;
 
   public boolean noCargoAtShooterForOneSecond;
+
+  public AnalogInput cargoAboveLowRoll = new AnalogInput(1);
+    
+  
 
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
 
@@ -102,6 +107,10 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     runLowerAtVelocity(-100);
 
+  }
+
+  public double cargoAboveShoot(){
+    return cargoAboveLowRoll.getAverageVoltage();
   }
 
   public boolean getCargoAtShoot() {

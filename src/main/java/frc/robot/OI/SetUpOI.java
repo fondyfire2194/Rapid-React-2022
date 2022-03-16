@@ -15,9 +15,13 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.AutoCommands.Common.AllRetPu;
+import frc.robot.commands.AutoCommands.Common.LeftRetPuAdv;
 import frc.robot.commands.CargoTransport.RunLowerRoller;
+import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
@@ -81,8 +85,8 @@ public class SetUpOI {
                                         .getLayout("IntakeSelect", BuiltInLayouts.kList).withPosition(0, 0)
                                         .withSize(1, 4).withProperties(Map.of("Label position", "TOP"));
 
-                        intakeSelect.add("Select Front", new SetFrontIntakeActive(intake,true));
-                        intakeSelect.add("Select Rear", new SetFrontIntakeActive(intake,false));
+                        intakeSelect.add("Select Front", new SetFrontIntakeActive(intake, true));
+                        intakeSelect.add("Select Rear", new SetFrontIntakeActive(intake, false));
                         intakeSelect.addBoolean("RearActive", () -> !intake.useFrontIntake);
                         intakeSelect.addBoolean("FrontActive", () -> intake.useFrontIntake);
                         intakeSelect.addBoolean("FrontConnected", () -> intake.frontIntakeMotorConnected);
@@ -96,10 +100,16 @@ public class SetUpOI {
                         intakeActions.add("ArmLower", new ActiveIntakeArmLower(intake));
                         intakeActions.add("Run Motor", new RunActiveIntake(intake, transport));
                         intakeActions.add("Stop Motor", new StopIntakeMotors(intake));
- 
+
                         double[] data = { 0, 0, -2 };
- 
-                        intakeActions.add(new AllRetPu(intake, drive, turret, tilt, transport, limelight, data));
+
+                        intakeActions.add("LeftTarmac", new LeftRetPuAdv(intake, drive, transport, shooter));
+
+                        intakeActions.add(new ParallelRaceGroup(
+
+                                        new AllRetPu(intake, drive, turret, tilt, transport, limelight, data),
+                                 
+                                        new RunLowerRollerIntake(transport)));
 
                         ShuffleboardLayout intakeValues = Shuffleboard.getTab("Intake")
                                         .getLayout("IntakeValues", BuiltInLayouts.kList).withPosition(2, 0)
@@ -130,7 +140,7 @@ public class SetUpOI {
 
                 }
 
-                if (showTurret ) {
+                if (showTurret) {
 
                         ShuffleboardLayout turretCommands = Shuffleboard.getTab("SetupTurret")
                                         .getLayout("Turret", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4)
@@ -278,7 +288,7 @@ public class SetUpOI {
 
                 }
 
-                if (showShooter ) {
+                if (showShooter) {
 
                         ShuffleboardLayout shooterCommands = Shuffleboard.getTab("SetupShooter")
                                         .getLayout("MAXRPM 5500", BuiltInLayouts.kList).withPosition(0, 0)
@@ -346,7 +356,7 @@ public class SetUpOI {
 
                 }
 
-                if (showTransport ) {
+                if (showTransport) {
 
                         ShuffleboardLayout transportValues = Shuffleboard.getTab("SetupTransport")
                                         .getLayout("TransportValues", BuiltInLayouts.kList).withPosition(0, 0)
@@ -374,7 +384,7 @@ public class SetUpOI {
 
                 }
 
-                if (showClimber ) {
+                if (showClimber) {
                         ShuffleboardLayout climberInfo = Shuffleboard.getTab("SetupTransport")
                                         .getLayout("Climber", BuiltInLayouts.kList).withPosition(7, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels
@@ -386,7 +396,7 @@ public class SetUpOI {
 
                 }
 
-                if (showRobot ) {
+                if (showRobot) {
 
                         ShuffleboardLayout robotCommands = Shuffleboard.getTab("SetupRobot")
                                         .getLayout("Robot", BuiltInLayouts.kList).withPosition(0, 0)
@@ -399,7 +409,7 @@ public class SetUpOI {
                         robotCommands.add("Stop Robot", new StopRobot(drive));
                         robotCommands.add("To 4", new PositionStraight(drive, +4, .5));
                         robotCommands.add("To -4", new PositionStraight(drive, -4, .6));
-                        robotCommands.add("To 1", new PositionStraight(drive, 1, .5));
+                        robotCommands.add("To 2", new PositionStraight(drive, 2, .3));
                         robotCommands.add("To -1", new PositionStraight(drive, -1, .5));
                         robotCommands.add("To 0", new PositionStraight(drive, 0, .5));
                         robotCommands.add("Cmd", drive);
@@ -449,14 +459,13 @@ public class SetUpOI {
                                         .getLayout("Gains", BuiltInLayouts.kGrid).withPosition(8, 0)
                                         .withSize(1, 2).withProperties(Map.of("Label position", "TOP")); // labels
 
-                        
-                        robotGains.addNumber("kP",()->drive.kP);
-                        robotGains.addNumber("kI",()->drive.kI);
-                        robotGains.addNumber("kD", ()->drive.kD);
+                        robotGains.addNumber("kP", () -> drive.kP);
+                        robotGains.addNumber("kI", () -> drive.kI);
+                        robotGains.addNumber("kD", () -> drive.kD);
 
                 }
 
-                if (showSubsystems ) {
+                if (showSubsystems) {
 
                         ShuffleboardLayout subSystems = Shuffleboard.getTab("Can+Sols")
                                         .getLayout("All", BuiltInLayouts.kList).withPosition(0, 0)

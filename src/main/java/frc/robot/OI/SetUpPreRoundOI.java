@@ -17,6 +17,7 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.AutoCommands.AllRetPuShoot;
 import frc.robot.commands.AutoCommands.DoNothing;
+import frc.robot.commands.AutoCommands.Common.LeftRetPuAdv;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -33,8 +34,7 @@ public class SetUpPreRoundOI {
         public SendableChooser<Command> autoChooser = new SendableChooser<>();
         public SendableChooser<Integer> startDelayChooser = new SendableChooser<>();
         public static boolean m_showPreRound;
-        double rate =.5;
-      
+        double rate = .5;
 
         public SetUpPreRoundOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
@@ -61,9 +61,8 @@ public class SetUpPreRoundOI {
 
                         autoChooser.addOption("Taxi", new PositionStraight(drive, distance, rate));
 
-                        autoChooser.addOption("Left Tarmac Retract Pickup Shoot",
-                                        new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
-                                                        transport, compressor, data));
+                        autoChooser.addOption("Left Tarmac Retract Pickup Advance Shoot",
+                                        new LeftRetPuAdv(intake, drive, transport, shooter));
 
                         autoChooser.addOption("Right Tarmac Edge Retract Pickup Shoot",
                                         new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
@@ -85,8 +84,6 @@ public class SetUpPreRoundOI {
                         startDelayChooser.addOption("Four Seconds", 4);
                         startDelayChooser.addOption("Five Seconds", 5);
 
-
-                 
                         HttpCamera llght = new HttpCamera("CoprocessorCamera",
                                         "http://10.21.94.11:5800/stream.mjpg");
 
@@ -97,7 +94,6 @@ public class SetUpPreRoundOI {
                                         .withProperties(Map.of("Show Crosshair", true,
                                                         "Show Controls", true, "Rotation", "QUARTER_CW"));
 
-                        
                 }
 
         }

@@ -67,9 +67,7 @@ public class FieldMap {
         // robot starts with rear bumper behind tarmac
         // perimeter and centered on target cargo
 
-        public static final double leftTarmacDriveToPosition = (cargoFieldRingDiameter / 2)
-                        - leftTarmacLineFromHubCenter
-                        - rearIntakeAdder + robotLength;
+        public static final double leftTarmacDriveToPosition = Units.inchesToMeters(36);
         public static final double leftTarmacTiltUpperAngle = 25;
         public static final double leftTarmacTurretUpperAngle = 10;
         public static double leftTarmacUpperRPM = 21;

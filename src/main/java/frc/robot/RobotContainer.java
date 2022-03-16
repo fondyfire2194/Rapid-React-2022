@@ -53,10 +53,12 @@ import frc.robot.commands.Shooter.ShootOneCargo;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Shooter.StopShooter;
 import frc.robot.commands.Shooter.StopTopRoller;
+import frc.robot.commands.Tilt.PositionHoldTilt;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Tilt.TiltJog;
 import frc.robot.commands.Tilt.TiltJogVelocity;
 import frc.robot.commands.Tilt.TiltWaitForStop;
+import frc.robot.commands.Turret.PositionHoldTurret;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.TurretJog;
 import frc.robot.commands.Turret.TurretJogVelocity;
@@ -209,10 +211,10 @@ public class RobotContainer {
 
             m_transport.setDefaultCommand(new StopLowerRoller(m_transport));
 
-            // m_tilt.setDefaultCommand(new PositionHoldTilt(m_tilt);
+             m_tilt.setDefaultCommand(new PositionHoldTilt(m_tilt));
 
-            // m_turret.setDefaultCommand(new PositionHoldTurret(m_turret,
-            // m_limelight));
+            m_turret.setDefaultCommand(new PositionHoldTurret(m_turret,
+            m_limelight));
 
             // m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
 
@@ -377,9 +379,9 @@ public class RobotContainer {
              * Setup gamepad is used for testing functions
              */
 
-            setupDownButton.whileHeld(new RunLowerRoller(m_transport, -10));
+            setupDownButton.whileHeld(new RunLowerRoller(m_transport, -100));
 
-            setupUpButton.whileHeld(new RunLowerRoller(m_transport, 10));
+            setupUpButton.whileHeld(new RunLowerRoller(m_transport, 100));
 
             setupLeftButton.whileHeld(new JogShooterVelocity(m_shooter, () -> 0.2))
                         .whileHeld(new RunTopRoller(m_shooter, 500))

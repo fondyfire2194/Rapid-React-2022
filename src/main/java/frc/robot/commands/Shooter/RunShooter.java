@@ -7,6 +7,7 @@
 
 package frc.robot.commands.Shooter;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.RevShooterSubsystem;
@@ -16,20 +17,21 @@ public class RunShooter extends CommandBase {
    * Creates a new StartShooter.
    */
   private RevShooterSubsystem m_shooter;
-  
+
   private double m_rpm;
+  private double m_startTime;
 
   public RunShooter(RevShooterSubsystem shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
-    
+
     addRequirements(m_shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    m_startTime = Timer.getFPGATimestamp();
     m_rpm = m_shooter.getSpeedSource();
   }
 
@@ -38,6 +40,8 @@ public class RunShooter extends CommandBase {
   public void execute() {
 
     m_shooter.runShooterPlusRoller(m_rpm);
+
+    m_shooter.atSpeed = Timer.getFPGATimestamp() > m_startTime + .75;
 
   }
 

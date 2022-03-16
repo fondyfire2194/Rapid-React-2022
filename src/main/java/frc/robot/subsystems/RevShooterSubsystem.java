@@ -113,6 +113,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double presetRPM = 1750;
     public int shootSpeedSource;
     public boolean haltTopRoller;
+    public boolean atSpeed;
 
     public RevShooterSubsystem() {
 
@@ -246,7 +247,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public boolean atSpeed() {
 
-        return Math.abs(requiredRPM - getRPM()) < (requiredRPM * .05);// getrpm is -
+        return atSpeed;
 
     }
 
@@ -404,7 +405,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     }
 
     public boolean getTopRollerAtSpeed() {
-        return Math.abs(topRequiredRPM - getTopRPM()) < topRequiredRPM / 5;
+        return atSpeed;
     }
 
     public double getTopRPM() {

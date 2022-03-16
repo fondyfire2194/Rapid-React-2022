@@ -33,7 +33,7 @@ public class RunLowerRollerIntake extends CommandBase {
     
     m_transport.runLowerAtVelocity(Pref.getPref("LowRollIntakeRPM"));
 
-    latchCargoAtShoot = m_transport.getCargoAtShoot() || m_transport.getCargoIsBlue() || m_transport.getCargoIsRed();
+    latchCargoAtShoot = m_transport.getCargoAtShoot();
   }
 
   // Called once the command ends or is interrupted.

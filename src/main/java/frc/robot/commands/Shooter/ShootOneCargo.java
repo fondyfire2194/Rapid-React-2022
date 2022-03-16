@@ -23,8 +23,6 @@ public class ShootOneCargo extends CommandBase {
 
   private boolean oneShot;
 
-  private double m_rpm;
-
   public ShootOneCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
       IntakesSubsystem intake) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -32,7 +30,7 @@ public class ShootOneCargo extends CommandBase {
     m_transport = transport;
     m_intake = intake;
 
-    addRequirements(shooter);
+    addRequirements(m_shooter, m_intake, m_transport);
   }
 
   // Called when the command is initially scheduled.
@@ -57,11 +55,7 @@ public class ShootOneCargo extends CommandBase {
 
     cargoAtShoot = m_transport.getCargoAtShoot();
 
-    m_rpm = m_shooter.getSpeedSource();
-
-    m_shooter.runShooterPlusRoller(m_rpm);
-
-    if ((!oneShot) && cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed()) {
+    if (!oneShot && cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed()) {
 
       m_transport.releaseCargo();
 
