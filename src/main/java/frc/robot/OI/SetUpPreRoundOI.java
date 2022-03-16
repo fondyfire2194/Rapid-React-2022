@@ -12,13 +12,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.commands.AutoCommands.AllRetPuShoot;
-import frc.robot.commands.AutoCommands.DoNothing;
-import frc.robot.commands.AutoCommands.Common.LeftRetPuAdv;
-import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -31,8 +26,8 @@ import frc.robot.trajectories.FondyFireTrajectory;
 /** Add your docs here. */
 public class SetUpPreRoundOI {
 
-        public SendableChooser<Command> autoChooser = new SendableChooser<>();
-        public SendableChooser<Integer> startDelayChooser = new SendableChooser<>();
+        public SendableChooser<Integer> autoChooser = new SendableChooser<>();
+        public SendableChooser<Double> startDelayChooser = new SendableChooser<>();
         public static boolean m_showPreRound;
         double rate = .5;
 
@@ -54,35 +49,39 @@ public class SetUpPreRoundOI {
                         // tabs
                         Shuffleboard.getTab("Pre-Round").add("Auto Commands", autoChooser).withSize(2, 1)
                                         .withPosition(0, 0); // place it in the top-left corner
-                        double distance = 0;
-                        double[] data = { 0, 0, 0, 0, 0, 0, 0 };
+                        
 
-                        autoChooser.setDefaultOption("Do Nothing", new DoNothing());
+                        autoChooser.setDefaultOption("Do Nothing", 0);
 
-                        autoChooser.addOption("Taxi", new PositionStraight(drive, distance, rate));
+                        autoChooser.addOption("Taxi", 1);
 
-                        autoChooser.addOption("Left Tarmac Retract Pickup Advance Shoot",
-                                        new LeftRetPuAdv(intake, drive, transport, shooter));
+                        autoChooser.addOption("Left Tarmac Retract Pickup Advance Upper Shoot",
+                                        2);
 
-                        autoChooser.addOption("Right Tarmac Edge Retract Pickup Shoot",
-                                        new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
-                                                        transport, compressor, data));
+                        autoChooser.addOption("Left Tarmac Retract Pickup Advance Lower Shoot",
+                                        3);
 
-                        autoChooser.addOption("Right Tarmac Center Retract Pickup Shoot",
-                                        new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2,
-                                                        transport, compressor, data));
+                        autoChooser.addOption("Right Tarmac Edge Retract Pickup Upper Shoot",
+                                        4);
 
-                        // autoChooser.addOption("Right Tarmac Shoot 3", new RRetPuS3());
+                        autoChooser.addOption("Right Tarmac Edge Retract Pickup Lower Shoot",
+                                       5);
+
+                        autoChooser.addOption("Right Tarmac Center Retract Pickup Upper Shoot",
+                                       6);
+                                       
+                        autoChooser.addOption("Right Tarmac Center Retract Pickup Lower Shoot",
+                                        7);
 
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
                                         .withPosition(2, 0); //
 
-                        startDelayChooser.setDefaultOption("No Delay", 0);
-                        startDelayChooser.addOption("One Second", 1);
-                        startDelayChooser.addOption("Two Seconds", 2);
-                        startDelayChooser.addOption("Three Seconds", 3);
-                        startDelayChooser.addOption("Four Seconds", 4);
-                        startDelayChooser.addOption("Five Seconds", 5);
+                        startDelayChooser.setDefaultOption("No Delay", 0.);
+                        startDelayChooser.addOption("One Second", 1.);
+                        startDelayChooser.addOption("Two Seconds", 2.);
+                        startDelayChooser.addOption("Three Seconds", 3.);
+                        startDelayChooser.addOption("Four Seconds", 4.);
+                        startDelayChooser.addOption("Five Seconds", 5.);
 
                         HttpCamera llght = new HttpCamera("CoprocessorCamera",
                                         "http://10.21.94.11:5800/stream.mjpg");

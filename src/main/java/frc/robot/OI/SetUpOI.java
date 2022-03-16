@@ -15,13 +15,9 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.AutoCommands.Common.AllRetPu;
-import frc.robot.commands.AutoCommands.Common.LeftRetPuAdv;
+import frc.robot.commands.AutoCommands.LeftRetPuAdvShootChoice;
 import frc.robot.commands.CargoTransport.RunLowerRoller;
-import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
@@ -103,13 +99,10 @@ public class SetUpOI {
 
                         double[] data = { 0, 0, -2 };
 
-                        intakeActions.add("LeftTarmac", new LeftRetPuAdv(intake, drive, transport, shooter));
-
-                        intakeActions.add(new ParallelRaceGroup(
-
-                                        new AllRetPu(intake, drive, turret, tilt, transport, limelight, data),
-                                 
-                                        new RunLowerRollerIntake(transport)));
+                        intakeActions.add("LeftTarmacUpper", new LeftRetPuAdvShootChoice(intake, drive, transport,
+                                        shooter, tilt, turret, limelight, compressor, data, true));
+                        intakeActions.add("LeftTarmacLower", new LeftRetPuAdvShootChoice(intake, drive, transport,
+                                        shooter, tilt, turret, limelight, compressor, data, false));
 
                         ShuffleboardLayout intakeValues = Shuffleboard.getTab("Intake")
                                         .getLayout("IntakeValues", BuiltInLayouts.kList).withPosition(2, 0)

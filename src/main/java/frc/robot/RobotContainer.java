@@ -38,6 +38,9 @@ import frc.robot.commands.CargoTransport.RunLowerRoller;
 import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Climber.RunClimber;
+import frc.robot.commands.Intakes.ActiveIntakeArmLower;
+import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
+import frc.robot.commands.Intakes.ReverseActiveIntakeMotor;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Intakes.StopActiveIntake;
@@ -46,6 +49,7 @@ import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
+import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.RunTopRoller;
 import frc.robot.commands.Shooter.ShootHighFromUnderHub;
 import frc.robot.commands.Shooter.ShootLowFromUnderHub;
@@ -211,10 +215,10 @@ public class RobotContainer {
 
             m_transport.setDefaultCommand(new StopLowerRoller(m_transport));
 
-             m_tilt.setDefaultCommand(new PositionHoldTilt(m_tilt));
+            m_tilt.setDefaultCommand(new PositionHoldTilt(m_tilt));
 
             m_turret.setDefaultCommand(new PositionHoldTurret(m_turret,
-            m_limelight));
+                        m_limelight));
 
             // m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
 
@@ -276,9 +280,7 @@ public class RobotContainer {
                         .whenReleased(new StopActiveIntake(m_intake))
                         .whenReleased(new StopLowerRoller(m_transport));
 
-            new JoystickButton(m_driverController, 2)
-
-                        .whileHeld(new ShootOneCargo(m_shooter, m_transport, m_intake));
+            // new JoystickButton(m_driverController, 2)
 
             new JoystickButton(m_driverController, 12).whenPressed(new SetFrontIntakeActive(m_intake, true));
 
@@ -326,16 +328,19 @@ public class RobotContainer {
              * 
              */
 
-            codriverX.whileHeld(m_intake::lowerFrontArm)
-                        .whileHeld(m_intake::reverseFrontIntakeMotor)
+            codriverX.whileHeld(new SetFrontIntakeActive(m_intake, true))
+                        .whileHeld(new ActiveIntakeArmLower(m_intake))
+                        .whileHeld(new ReverseActiveIntakeMotor(m_intake, .5))
 
-                        .whenReleased(m_intake::raiseFrontArm)
-                        .whenReleased(m_intake::stopFrontIntakeMotor);
+                        .whenReleased(new ActiveIntakeArmRaise(m_intake))
+                        .whenReleased(new StopActiveIntake(m_intake));
 
-            codriverB.whileHeld(m_intake::lowerRearArm)
-                        .whileHeld(m_intake::reverseRearIntakeMotor)
-                        .whenReleased(m_intake::raiseRearArm)
-                        .whenReleased(m_intake::stopRearIntakeMotor);
+            codriverB.whileHeld(new SetFrontIntakeActive(m_intake, false))
+                        .whileHeld(new ActiveIntakeArmLower(m_intake))
+                        .whileHeld(new ReverseActiveIntakeMotor(m_intake, .5))
+
+                        .whenReleased(new ActiveIntakeArmRaise(m_intake))
+                        .whenReleased(new StopActiveIntake(m_intake));
 
             codriverA.whileHeld(new RunLowerRoller(m_transport, -100))
                         .whenReleased((m_transport::stopLowerRoller));

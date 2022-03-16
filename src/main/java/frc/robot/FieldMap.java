@@ -67,51 +67,58 @@ public class FieldMap {
         // robot starts with rear bumper behind tarmac
         // perimeter and centered on target cargo
 
-        public static final double leftTarmacDriveToPosition = Units.inchesToMeters(36);
-        public static final double leftTarmacTiltUpperAngle = 25;
-        public static final double leftTarmacTurretUpperAngle = 10;
-        public static double leftTarmacUpperRPM = 21;
-        public static final double leftTarmacTiltLowerAngle = 25;
-        public static final double leftTarmacTurretLowerAngle = 10;
-        public static double leftTarmacLowerRPM = 21;
+        public static final double leftTarmacPickupPosition = Units.inchesToMeters(36);
+        public static final double leftTarmacShootPosition = Units.inchesToMeters(36);
 
-        public static final double[] leftTarmacData = {
-                        leftTarmacTiltUpperAngle, leftTarmacTurretUpperAngle,
-                        leftTarmacDriveToPosition, leftTarmacUpperRPM, leftTarmacTiltLowerAngle,
-                        leftTarmacTurretLowerAngle, leftTarmacLowerRPM
+        public static final double leftTarmacTiltUpperAngle = 2;
+        public static final double leftTarmacTurretUpperAngle = 0;
+        public static double leftTarmacUpperRPM = 3000;
+
+        public static final double leftTarmacTiltLowerAngle = 4;
+        public static final double leftTarmacTurretLowerAngle = 0;
+        public static double leftTarmacLowerRPM = 2100;
+
+        public static final double[] leftTarmacData = { leftTarmacPickupPosition,
+                        leftTarmacShootPosition, leftTarmacTiltUpperAngle,
+                        leftTarmacTurretUpperAngle, leftTarmacUpperRPM,
+                        leftTarmacTiltLowerAngle, leftTarmacTurretLowerAngle,
+                        leftTarmacLowerRPM
         };
 
-        public static final double rightTarmacDriveToPosition = (cargoFieldRingDiameter / 2)
-                        - leftTarmacLineFromHubCenter
-                        - rearIntakeAdder + robotLength;
-        public static final double rightTarmacTiltUpperAngle = 25;
-        public static final double rightTarmacTurretUpperAngle = 10;
-        public static double rightTarmacUpperRPM = 21;
-        public static final double rightTarmacTiltLowerAngle = 25;
-        public static final double rightTarmacTurretLowerAngle = 10;
-        public static double rightTarmacLowerRPM = 21;
+        public static final double rightTarmacPickupPosition = Units.inchesToMeters(36);
+        public static final double rightTarmacShootPosition = Units.inchesToMeters(36);
 
-        public static final double[] rightTarmacData = {
-                        rightTarmacTiltUpperAngle, rightTarmacTurretUpperAngle,
-                        rightTarmacDriveToPosition, rightTarmacUpperRPM, rightTarmacTiltLowerAngle,
-                        rightTarmacTurretLowerAngle, rightTarmacLowerRPM
+        public static final double rightTarmacTiltUpperAngle = 2;
+        public static final double rightTarmacTurretUpperAngle = 0;
+        public static double rightTarmacUpperRPM = 3000;
+
+        public static final double rightTarmacTiltLowerAngle = 4;
+        public static final double rightTarmacTurretLowerAngle = 0;
+        public static double rightTarmacLowerRPM = 2100;
+
+        public static final double[] rightTarmacData = { rightTarmacPickupPosition,
+                        rightTarmacShootPosition, rightTarmacTiltUpperAngle,
+                        rightTarmacTurretUpperAngle, rightTarmacUpperRPM,
+                        rightTarmacTiltLowerAngle, rightTarmacTurretLowerAngle,
+                        rightTarmacLowerRPM
         };
 
-        public static final double rightCenTarmacDriveToPosition = (cargoFieldRingDiameter / 2)
-                        - leftTarmacLineFromHubCenter
-                        - rearIntakeAdder + robotLength;
-        public static final double rightCenTarmacTiltUpperAngle = 25;
-        public static final double rightCenTarmacTurretUpperAngle = 10;
-        public static double rightCenTarmacUpperRPM = 21;
-        public static final double rightCenTarmacTiltLowerAngle = 25;
-        public static final double rightCenTarmacTurretLowerAngle = 10;
-        public static double rightCenTarmacLowerRPM = 21;
-        
+        public static final double centerTarmacPickupPosition = Units.inchesToMeters(36);
+        public static final double centerTarmacShootPosition = Units.inchesToMeters(36);
 
-        public static final double[] rightCenTarmacData = {
-                        rightCenTarmacTiltUpperAngle, rightCenTarmacTurretUpperAngle,
-                        rightCenTarmacDriveToPosition, rightCenTarmacUpperRPM, rightTarmacTiltLowerAngle,
-                        rightCenTarmacTurretLowerAngle, rightCenTarmacLowerRPM
+        public static final double centerTarmacTiltUpperAngle = 2;
+        public static final double centerTarmacTurretUpperAngle = 0;
+        public static double centerTarmacUpperRPM = 3000;
+
+        public static final double centerTarmacTiltLowerAngle = 4;
+        public static final double centerTarmacTurretLowerAngle = 0;
+        public static double centerTarmacLowerRPM = 2100;
+
+        public static final double[] centerTarmacData = { centerTarmacPickupPosition,
+                        centerTarmacShootPosition, centerTarmacTiltUpperAngle,
+                        centerTarmacTurretUpperAngle, centerTarmacUpperRPM,
+                        centerTarmacTiltLowerAngle, centerTarmacTurretLowerAngle,
+                        centerTarmacLowerRPM
         };
 
 }

@@ -25,9 +25,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.OI.Show_Hide_Screens;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.commands.AutoCommands.AllRetPuShoot;
-import frc.robot.commands.AutoCommands.PUS3;
-import frc.robot.commands.AutoCommands.Common.LeftRetPuAdv;
+import frc.robot.commands.MessageCommand;
+import frc.robot.commands.AutoCommands.CenterRetPuAdvShootChoice;
+import frc.robot.commands.AutoCommands.LeftRetPuAdvShootChoice;
+import frc.robot.commands.AutoCommands.RightRetPuAdvShootChoice;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Vision.SetUpLimelightForDriver;
@@ -60,6 +61,8 @@ public class Robot extends TimedRobot {
   public static DoubleLogEntry rrDoubleLog;
   public static StringLogEntry rrStringLog;
 
+  double[] data = { 0, 0, 0 };
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -68,13 +71,13 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     // Starts recording to data log
-    DataLogManager.start();
+    // DataLogManager.start();
 
     // Set up custom log entries
-     DataLog log = DataLogManager.getLog();
-     rrBooleanLog = new BooleanLogEntry(log, "/my/boolean");
-     rrDoubleLog = new DoubleLogEntry(log, "/my/double");
-     rrStringLog = new StringLogEntry(log, "/my/string");
+    // DataLog log = DataLogManager.getLog();
+    // rrBooleanLog = new BooleanLogEntry(log, "/my/boolean");
+    // rrDoubleLog = new DoubleLogEntry(log, "/my/double");
+    // rrStringLog = new StringLogEntry(log, "/my/string");
 
     m_robotContainer = new RobotContainer();
 
@@ -107,14 +110,14 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     // m_robotContainer.m_setup.checkLimits();
     // if (tst >= 298) {
-    //   // Only log when necessary
-    //   rrBooleanLog.append(true);
-    
-      // rrDoubleLog.append(3.5);
-    //   rrStringLog.append("wow!");
+    // // Only log when necessary
+    // rrBooleanLog.append(true);
+
+    // rrDoubleLog.append(3.5);
+    // rrStringLog.append("wow!");
     // }
 
-   SmartDashboard.putBoolean("FMSConn", m_robotContainer.isMatch);
+    SmartDashboard.putBoolean("FMSConn", m_robotContainer.isMatch);
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
     // SmartDashboard.putNumber("thr",m_robotContainer.m_driverController.getThrottle());
     SmartDashboard.putNumber("thr1", m_robotContainer.getThrottle());
@@ -165,9 +168,9 @@ public class Robot extends TimedRobot {
     Shuffleboard.startRecording();
     // get delay time
 
-    m_startDelay = 0;// (double) m_robotContainer.m_setup.startDelayChooser.getSelected();
+    m_startDelay = m_robotContainer.m_preOi.startDelayChooser.getSelected();
 
-    autoChoice = 0;// m_robotContainer.m_setup.autoChooser.getSelected();
+    autoChoice = m_robotContainer.m_preOi.autoChooser.getSelected();
 
     LimeLight ll = m_robotContainer.m_limelight;
     RevTiltSubsystem tilt = m_robotContainer.m_tilt;
@@ -181,37 +184,53 @@ public class Robot extends TimedRobot {
 
     switch (autoChoice) {
 
-      case 0:// taxi start anywhere as agreed with other teams inside a tarmac facing in
+      case 0:
+      m_autonomousCommand=new MessageCommand("Did Nothing Auto");
+        break;
 
-        m_autonomousCommand = new PositionStraight(m_robotContainer.m_drive, -1,.5);
+      case 1:// taxi start anywhere as agreed with other teams inside a tarmac facing in
+
+        m_autonomousCommand = new PositionStraight(m_robotContainer.m_drive, -1, .3);
 
         break;
 
-      case 1:// in front of power port, move back use shooter data index 1
-
-        m_autonomousCommand = new LeftRetPuAdv(intake, drive, transport, shooter);
-
-        break;
-
-      case 2://
-
-        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, transport, comp,
-            FieldMap.rightTarmacData);
+      case 2:// left tarmac upper shoot
+        data = FieldMap.leftTarmacData;
+        m_autonomousCommand = new LeftRetPuAdvShootChoice(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            data, true);
 
         break;
 
-      case 3://
+      case 3:// left tarmac lower shoot
 
-        m_autonomousCommand = new AllRetPuShoot(intake, drive, turret, tilt, ll, shooter, rcv2, transport, comp,
-            FieldMap.rightCenTarmacData);
+        data = FieldMap.leftTarmacData;
+        m_autonomousCommand = new LeftRetPuAdvShootChoice(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            data, false);
 
         break;
 
       case 4://
+        data = FieldMap.rightTarmacData;
+        m_autonomousCommand = new RightRetPuAdvShootChoice(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            data, true);
+        break;
 
-        m_autonomousCommand = new PUS3(intake, drive, turret, tilt, ll, shooter, rcv2, transport, comp,
-            FieldMap.rightCenTarmacData);
+      case 5://
+        data = FieldMap.rightTarmacData;
+        m_autonomousCommand = new RightRetPuAdvShootChoice(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            data, false);
 
+        break;
+
+      case 6://
+        data = FieldMap.rightTarmacData;
+        m_autonomousCommand = new CenterRetPuAdvShootChoice(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            data, true);
+        break;
+      case 7://
+        data = FieldMap.rightTarmacData;
+        m_autonomousCommand = new CenterRetPuAdvShootChoice(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            data, false);
         break;
 
       default:
@@ -267,6 +286,7 @@ public class Robot extends TimedRobot {
     autoHasRun = false;
 
     if (RobotBase.isReal() && !m_robotContainer.m_tilt.positionResetDone)
+
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
 
     m_robotContainer.m_limelight.useVision = false;
@@ -299,7 +319,6 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
-
 
   public static boolean getAllianceColorBlue() {
 

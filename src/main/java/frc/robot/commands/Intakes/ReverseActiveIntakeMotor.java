@@ -7,12 +7,12 @@ package frc.robot.commands.Intakes;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakesSubsystem;
 
-public class RunActiveIntakeMotor extends CommandBase {
+public class ReverseActiveIntakeMotor extends CommandBase {
   /** Creates a new RunActiveIntakeMotor. */
   private IntakesSubsystem m_intake;
   private double m_speed;
 
-  public RunActiveIntakeMotor(IntakesSubsystem intake, double speed) {
+  public ReverseActiveIntakeMotor(IntakesSubsystem intake, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_intake = intake;
     m_speed = speed;
@@ -28,7 +28,13 @@ public class RunActiveIntakeMotor extends CommandBase {
   @Override
   public void execute() {
 
-    m_intake.runActiveIntakeMotor();
+    if (m_intake.useFrontIntake)
+
+      m_intake.reverseFrontIntakeMotor();
+
+    else
+
+      m_intake.reverseRearIntakeMotor();
   }
 
   // Called once the command ends or is interrupted.

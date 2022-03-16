@@ -44,16 +44,15 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public boolean twoCargoOnBoard;
 
-public boolean cargoAtBothIntakes;
-
+  public boolean cargoAtBothIntakes;
 
   public IntakesSubsystem() {
-   m_frontIntakeMotor.configFactoryDefault();
+    m_frontIntakeMotor.configFactoryDefault();
 
     m_rearIntakeMotor.configFactoryDefault();
 
     m_rearIntakeMotor.setNeutralMode(NeutralMode.Brake);
- 
+
     m_frontIntakeMotor.setInverted(true);
 
     m_frontIntakeMotor.setNeutralMode(NeutralMode.Brake);
@@ -63,7 +62,7 @@ public boolean cargoAtBothIntakes;
     raiseFrontArm();
 
     frontIntakeCargoDetect = new AnalogInput(2);
-    
+
     rearIntakeCargoDetect = new AnalogInput(3);
 
   }
@@ -90,16 +89,14 @@ public boolean cargoAtBothIntakes;
     else
       lowerRearArm();
   }
- 
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
 
     SmartDashboard.putNumber("FCDV", frontIntakeCargoDetect.getVoltage());
     SmartDashboard.putNumber("RCDV", rearIntakeCargoDetect.getVoltage());
- 
- 
- 
+
   }
 
   public boolean getCargoAtFront() {
@@ -200,7 +197,6 @@ public boolean cargoAtBothIntakes;
 
   }
 
-
   public void stopRearIntakeMotor() {
     m_rearIntakeMotor.set(ControlMode.PercentOutput, 0);
   }
@@ -280,5 +276,5 @@ public boolean cargoAtBothIntakes;
   public void setRearCurrentLimit(int amps) {
     m_rearIntakeMotor.configPeakCurrentLimit(amps);
   }
-  
+
 }

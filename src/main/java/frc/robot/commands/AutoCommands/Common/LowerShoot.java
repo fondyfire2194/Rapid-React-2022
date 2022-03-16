@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Shooter.ShootTwoCargo;
 import frc.robot.commands.Tilt.PositionTilt;
@@ -28,9 +29,9 @@ public class LowerShoot extends SequentialCommandGroup {
       CargoTransportSubsystem transport, IntakesSubsystem intake, Compressor comp, double[] data) {
     // Use addRequirements() here to declare subsystem dependencies.
 
-    double lowerTiltAngle = data[4];
-    double lowerTurretAngle = data[5];
-    double lowerRPM = data[6];
+    double lowerTiltAngle = data[5];
+    double lowerTurretAngle = data[6];
+    double lowerRPM = data[7];
 
     addCommands(
 
@@ -38,9 +39,13 @@ public class LowerShoot extends SequentialCommandGroup {
 
         new SetShootSpeedSource(shooter, 2),
 
+        new SetPresetRPM(shooter, lowerRPM),
+
         new RunShooter(shooter),
 
-        new ShootTwoCargo(shooter, transport, intake));
+        new ShootTwoCargo(shooter, transport, intake)
+
+            .deadlineWith(new PositionHoldTiltTurret(tilt, turret, ll)));
 
   }
 

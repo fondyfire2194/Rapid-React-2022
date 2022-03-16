@@ -38,6 +38,7 @@ public class RevDrivetrain extends SubsystemBase {
     // private static final DrivetrainConstants DRIVETRAIN_CONSTANTS = new
     // NeoDrivetrainConstants();
 
+ 
     private final CANSparkMax mLeadLeft; // NOPMD
     private final CANSparkMax mFollowerLeft; // NOPMD
 
@@ -98,6 +99,9 @@ public class RevDrivetrain extends SubsystemBase {
     private int robotStoppedCtr;
 
     public boolean robotStoppedForOneSecond;
+   
+    public final double pickUpRate = .3;
+    public final double positionRate = .4;
 
     public RevDrivetrain() {
         mLeadLeft = new CANSparkMax(CANConstants.DRIVETRAIN_LEFT_MASTER,
