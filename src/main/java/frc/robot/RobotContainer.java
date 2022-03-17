@@ -34,6 +34,7 @@ import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.VisionReferenceTarget;
+import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
 import frc.robot.commands.CargoTransport.RunLowerRoller;
 import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
@@ -42,18 +43,19 @@ import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
 import frc.robot.commands.Intakes.ReverseActiveIntakeMotor;
 import frc.robot.commands.Intakes.RunActiveIntake;
+import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Intakes.StopActiveIntake;
 import frc.robot.commands.Intakes.StopIntakeMotors;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
+import frc.robot.commands.Shooter.ChangeShooterSpeed;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.RunTopRoller;
-import frc.robot.commands.Shooter.ShootHighFromUnderHub;
-import frc.robot.commands.Shooter.ShootLowFromUnderHub;
 import frc.robot.commands.Shooter.ShootOneCargo;
+//import frc.robot.commands.Shooter.ShootTwoCargo;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Shooter.StopShooter;
 import frc.robot.commands.Shooter.StopTopRoller;
@@ -131,6 +133,8 @@ public class RobotContainer {
 
       public boolean clickUp;
 
+      // Drive joystick
+
       // Co driver gamepad
 
       // Setup gamepad LOGITECH
@@ -195,6 +199,17 @@ public class RobotContainer {
             m_tilt = new RevTiltSubsystem();
             m_climber = new ClimberSubsystem();
 
+            m_drive.setDefaultCommand(getArcadeDriveCommand());
+
+            m_intake.setDefaultCommand((new StopActiveIntake(m_intake)));
+
+            m_transport.setDefaultCommand(new StopLowerRoller(m_transport));
+
+            m_tilt.setDefaultCommand(new PositionHoldTilt(m_tilt));
+
+            m_turret.setDefaultCommand(new PositionHoldTurret(m_turret,
+                        m_limelight));
+
             m_limelight = new LimeLight();
             m_limelight.setCamMode(CamMode.kvision);
             m_limelight.setLEDMode(LedMode.kpipeLine);
@@ -211,18 +226,9 @@ public class RobotContainer {
 
             m_trajectory = new FondyFireTrajectory(m_drive);
 
-            m_intake.setDefaultCommand((new StopActiveIntake(m_intake)));
-
-            m_transport.setDefaultCommand(new StopLowerRoller(m_transport));
-
-            m_tilt.setDefaultCommand(new PositionHoldTilt(m_tilt));
-
-            m_turret.setDefaultCommand(new PositionHoldTurret(m_turret,
-                        m_limelight));
-
             // m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
 
-            Show_Hide_Screens.setStates();
+            Show_Hide_Screens.setStates(true, false, false);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intake, m_climber, m_trajectory);
@@ -237,8 +243,6 @@ public class RobotContainer {
                         m_transport, m_compressor);
 
             m_llVis = new LLVisionShuffleboard(m_limelight, m_rCV2, m_turret, m_tilt, m_shooter);
-
-            m_drive.setDefaultCommand(getArcadeDriveCommand());
 
             configureButtonBindings();
 
@@ -277,56 +281,57 @@ public class RobotContainer {
 
                         .whileHeld(new RunActiveIntake(m_intake, m_transport))
                         .whileHeld(new RunLowerRollerIntake(m_transport));
-                        // .whenReleased(new StopActiveIntake(m_intake))
-                        // .whenReleased(new StopLowerRoller(m_transport));
+            // .whenReleased(new StopActiveIntake(m_intake))
+            // .whenReleased(new StopLowerRoller(m_transport));
 
-            // new JoystickButton(m_driverController, 2)
+            new JoystickButton(m_driverController, 2).whenPressed(new ShootOneCargo(m_shooter, m_transport, m_intake));
 
-            new JoystickButton(m_driverController, 12).whenPressed(new SetFrontIntakeActive(m_intake, true));
+            new JoystickButton(m_driverController, 3).whenPressed(new SetFrontIntakeActive(m_intake, true));
 
-            new JoystickButton(m_driverController, 3).whenPressed(new StopShoot(m_shooter, m_transport))
+            new JoystickButton(m_driverController, 4).whenPressed(new StopShoot(m_shooter, m_transport))
                         .whenPressed(new StopLowerRoller(m_transport));
 
-            new JoystickButton(m_driverController, 4)
-                        .whenPressed(new PositionTilt(m_tilt, TiltConstants.TILT_MAX_ANGLE));
+            new JoystickButton(m_driverController, 5).whenPressed(new SetFrontIntakeActive(m_intake, false));
 
-            // new JoystickButton(m_driverController, 5).
-
-            // new JoystickButton(m_driverController, 6).
+            new JoystickButton(m_driverController, 6).whenPressed(new RunShooter(m_shooter));
 
             new JoystickButton(m_driverController, 7)
                         .whenPressed(new PositionTilt(m_tilt, TiltConstants.TILT_MIN_ANGLE))
                         .whenPressed(new PositionTurret(m_turret, 0));
 
-            // .whileHeld(new SetUpLimelightForDriver(m_limelight))
-            // .whenReleased(new PositionTilt(m_tilt, m_tilt.tiltMaxAngle))
-            // .whenReleased(new SetVisionMode(m_limelight))
-            // .whenReleased(new SetUpLimelightForNoVision(m_limelight));
+            new JoystickButton(m_driverController, 8)
+                        .whileHeld(new RunCargoOutShooter(m_shooter, m_intake, m_transport));
 
-            new JoystickButton(m_driverController, 10).whenPressed(new SetFrontIntakeActive(m_intake, false));
+            // new JoystickButton(m_driverController, 10).
 
-            new JoystickButton(m_driverController, 9)
-                        .whenPressed(new ShootHighFromUnderHub(m_shooter, m_tilt, m_transport, m_intake));
+            // new JoystickButton(m_driverController, 9)
 
-            new JoystickButton(m_driverController, 11)
-                        .whenPressed(new ShootLowFromUnderHub(m_shooter, m_tilt, m_transport, m_intake));
+            // new JoystickButton(m_driverController, 11)
 
             //
             // new JoystickButton(m_driverController, 12)
 
-            driverUpButton.whenPressed(() -> m_tilt.aimHigher());
+            driverUpButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, 0));// tarmac line upper hub
 
-            driverDownButton.whenPressed(() -> m_tilt.aimLower());
+            driverDownButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, 1));// tarmac line lower hub
 
-            driverLeftButton.whenPressed(() -> m_turret.aimFurtherLeft());// shoot right
+            driverLeftButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, 2));// against hub upper
 
-            driverRightButton.whenPressed(() -> m_turret.aimFurtherRight());// shoot left
+            driverRightButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, 3));// against hub lower
 
             /**
              * co driver can empty robot
              * 
              * 
              */
+
+            codriverStart.whileHeld(new JogShooterVelocity(m_shooter, () -> 0.3))
+                        .whileHeld(new RunTopRoller(m_shooter, 500))
+                        .whileHeld(new RunLowerRoller(m_transport, 100))
+                        .whenReleased(new StopShooter(m_shooter))
+                        .whenReleased(new StopTopRoller(m_shooter))
+                        .whenReleased(new StopLowerRoller(m_transport))
+                        .whenReleased(new StopActiveIntake(m_intake));
 
             codriverX.whileHeld(new SetFrontIntakeActive(m_intake, true))
                         .whileHeld(new ActiveIntakeArmLower(m_intake))
@@ -360,26 +365,22 @@ public class RobotContainer {
 
             // .whenReleased(() -> m_climber.lockRatchet());
 
-            // codriverRightTrigger
-
             // codriverBack.whenPressed(new ClimberArm(m_climber, true));
 
-            // codriverStart.whenPressed(new ClimberArm(m_climber, false));
+            // codriverUpButton.whenPressed
+            // codriverDownButton.whenPressed
 
-            // codriverUpButton.whenPressed(() -> m_tilt.aimHigher());
-
-            // codriverDownButton.whenPressed(() -> m_tilt.aimLower());
-
-            // codriverLeftButton.whenPressed(() -> m_turret.aimFurtherLeft());// shoot
+            // codriverLeftButton.whenPressed
             // right
 
-            // codriverRightButton.whenPressed(() -> m_turret.aimFurtherRight());// shoot
+            // codriverRightButton.whenPressed(
             // left
 
-            // codriverUpButton.whenPressed(new ChangeShooterSpeed(m_shooter, +1));
-            // codriverDownButton.whenPressed(new ChangeShooterSpeed(m_shooter, -1));
-            // codriverRightButton.whenPressed(new ChangeShooterSpeed(m_shooter, +2));
-            // codriverLeftButton.whenPressed(new ChangeShooterSpeed(m_shooter, -2));
+            codriverUpButton.whenPressed(new ChangeShooterSpeed(m_shooter, +100));
+            codriverDownButton.whenPressed(new ChangeShooterSpeed(m_shooter, -100));
+            codriverRightButton.whenPressed(new ChangeShooterSpeed(m_shooter, +250));
+            codriverLeftButton.whenPressed(new ChangeShooterSpeed(m_shooter, -250));
+
             /**
              * Setup gamepad is used for testing functions
              */
@@ -388,14 +389,7 @@ public class RobotContainer {
 
             setupUpButton.whileHeld(new RunLowerRoller(m_transport, 100));
 
-            setupLeftButton.whileHeld(new JogShooterVelocity(m_shooter, () -> 0.2))
-                        .whileHeld(new RunTopRoller(m_shooter, 500))
-                        .whileHeld(new RunLowerRoller(m_transport, 100))
-                        .whenReleased(new StopShooter(m_shooter))
-                        .whenReleased(new StopTopRoller(m_shooter))
-                        .whenReleased(new StopLowerRoller(m_transport))
-                        .whenReleased(new StopActiveIntake(m_intake));
-
+            // setupLeftButton.
             setupX.whileHeld(getJogTiltVelocityCommand(setupGamepad))
                         .whileHeld(getJogTurretVelocityCommand(setupGamepad)).whenReleased(new TiltWaitForStop(m_tilt))
                         .whenReleased(new TurretWaitForStop(m_turret));

@@ -118,7 +118,11 @@ public class FieldMap {
                         centerTarmacShootPosition, centerTarmacTiltUpperAngle,
                         centerTarmacTurretUpperAngle, centerTarmacUpperRPM,
                         centerTarmacTiltLowerAngle, centerTarmacTurretLowerAngle,
-                        centerTarmacLowerRPM
-        };
+                        centerTarmacLowerRPM };
+
+        public static final double[] shootMode_0 = { 2, 4000 };
+        public static final double[] shootMode_1 = { 2, 4000 };
+        public static final double[] shootMode_2 = { 2, 4000 };
+        public static final double[] shootMode_3 = { 2, 4000 };
 
 }

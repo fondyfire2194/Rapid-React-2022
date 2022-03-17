@@ -38,6 +38,7 @@ import frc.robot.commands.Shooter.RunTopRoller;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Shooter.ShootOneCargo;
 import frc.robot.commands.Shooter.ShootTwoCargo;
+//import frc.robot.commands.Shooter.ShootTwoCargo;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Shooter.StopTopRoller;
 import frc.robot.commands.Tilt.ClearFaults;
@@ -285,16 +286,11 @@ public class SetUpOI {
 
                         shooterCommands.add("Stop Shoot", new StopShoot(shooter, transport));
 
-                        shooterCommands.add("Start Shoot", new SequentialCommandGroup(
+                        shooterCommands.add("Start Shooter", new SequentialCommandGroup(
                                         new SetShootSpeedSource(shooter, shooter.fromSlider), new RunShooter(shooter)));
 
-                        shooterCommands.add("ShootOne", new SequentialCommandGroup(
-
-                                        new SetShootSpeedSource(shooter, shooter.fromSlider),
-
-                                        new ParallelRaceGroup(new ShootOneCargo(shooter, transport, intake),
-
-                                                        new RunShooter(shooter))));
+                        shooterCommands.add("ShootOne",
+                                        new ShootOneCargo(shooter, transport, intake));
                         shooterCommands.add("ShootTwo",
                                         new ShootTwoCargo(shooter, transport, intake));
 

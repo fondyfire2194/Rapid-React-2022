@@ -62,9 +62,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean lowerRollerPositioning;
 
-  private double m_startTime;
-
-  private int cargoSeenValue;
+  public boolean wrongCargoColor;
 
   public CargoTransportSubsystem() {
 
@@ -144,11 +142,11 @@ public class CargoTransportSubsystem extends SubsystemBase {
     return Robot.getAllianceColorBlue();
   }
 
-  public boolean getCargoAllianceMatch() {
+  public boolean getCargoAllianceMisMatch() {
 
-    return getCargoAtShoot() && ((getAllianceBlue() && getCargoIsBlue())
+    return getCargoAtShoot() && ((getAllianceBlue() && getCargoIsRed())
 
-        || (!getAllianceBlue() && getCargoIsRed()));
+        || (!getAllianceBlue() && getCargoIsBlue()));
   }
 
   

@@ -56,7 +56,10 @@ public class RunActiveIntake extends CommandBase {
 
         stopActiveIntakeNow = m_intake.getCargoAtFront();
 
-        // m_intake.setFrontCurrentLimit(10);
+        m_startTime = Timer.getFPGATimestamp();
+
+        m_intake.twoCargoOnBoard = true;
+
 
       }
 
@@ -65,6 +68,8 @@ public class RunActiveIntake extends CommandBase {
         stopActiveIntakeNow = m_intake.getCargoAtRear();
 
         m_startTime = Timer.getFPGATimestamp();
+
+        m_intake.twoCargoOnBoard=true;
 
         // m_intake.setRearCurrentLimit(10);
       }

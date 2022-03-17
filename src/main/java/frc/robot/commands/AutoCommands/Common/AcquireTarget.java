@@ -74,15 +74,14 @@ public class AcquireTarget extends SequentialCommandGroup {
 
                                 new CalculateTargetDistance(ll, rcv2, tilt, turret, shooter),
 
-                                new SelectSpeedAndTiltByDistance(shooter, tilt),
+                                new SelectSpeedAndTiltByDistance(shooter, tilt)
+                        //         new ParallelCommandGroup(new PositionTilt(tilt, tilt.cameraCalculatedTiltPosition),
 
-                                new ParallelCommandGroup(new PositionTilt(tilt, tilt.cameraCalculatedTiltPosition),
+                        //                         new SetShootSpeedSource(shooter, 1),
 
-                                                new SetShootSpeedSource(shooter, 1),
+                        //                         new RunShooter(shooter),
 
-                                                new RunShooter(shooter)),
-
-                                new ShootTwoCargo(shooter, transport, intake)
+                        //        new ShootTwoCargo(shooter, transport, intake))
 
                 );
 

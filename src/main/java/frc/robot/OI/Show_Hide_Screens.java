@@ -9,13 +9,13 @@ public final class Show_Hide_Screens {
   private Show_Hide_Screens() {
   }
 
-  public static void setStates() {
+  public static void setStates(boolean auto, boolean vision, boolean test) {
 
-    boolean autoMode = false;
+    boolean autoMode = auto;
 
-    boolean showVision = false;
+    boolean showVision = vision;
 
-    boolean testing = true;
+    boolean testing = test;
 
     SetUpOI.showTurret = testing;
     SetUpOI.showTilt = testing;

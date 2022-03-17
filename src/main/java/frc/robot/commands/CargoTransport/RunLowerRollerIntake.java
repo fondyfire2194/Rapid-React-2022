@@ -36,7 +36,10 @@ public class RunLowerRollerIntake extends CommandBase {
     m_transport.runLowerAtVelocity(Pref.getPref("LowRollIntakeRPM"));
 
     if (!latchCargoAtShoot && m_transport.getCargoAtShoot()) {
+
       m_startTime = Timer.getFPGATimestamp();
+      
+      m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
     }
 
     if (!latchCargoAtShoot)

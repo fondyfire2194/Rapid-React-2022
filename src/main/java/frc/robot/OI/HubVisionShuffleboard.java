@@ -105,12 +105,12 @@ public class HubVisionShuffleboard {
                         targetValues.addNumber("WeightedX", () -> rcv2.weightedTargetValue);
                         targetValues.addNumber("WeightedAngle", () -> rcv2.weightedTargetAngle);
 
-                        HttpCamera llght = new HttpCamera("CoprocessorCamera",
+                        HttpCamera llght = new HttpCamera("CoCam",
                                         "http://10.21.94.11:5800/stream.mjpg");
 
                         ShuffleboardTab llFeed = Shuffleboard.getTab("HubVision");
 
-                        llFeed.add("Limelight_90", llght).withWidget(BuiltInWidgets.kCameraStream)
+                        llFeed.add("Limelight-90", llght).withWidget(BuiltInWidgets.kCameraStream)
                                         .withPosition(5, 0).withSize(3, 3)
                                         .withProperties(Map.of("Show Crosshair", true,
                                                         "Show Controls", true, "Rotation", "QUARTER_CW"));

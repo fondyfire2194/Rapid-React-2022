@@ -30,13 +30,13 @@ public class ShootOneCargo extends CommandBase {
     m_transport = transport;
     m_intake = intake;
 
-    addRequirements( m_intake, m_transport);
+    addRequirements(m_intake, m_transport);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    m_shooter.isShooting = true;
     frontIntakeRunning = false;
 
     rearIntakeRunning = false;
@@ -60,6 +60,8 @@ public class ShootOneCargo extends CommandBase {
     if (!oneShot && cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed()) {
 
       m_transport.releaseCargo();
+
+      m_intake.twoCargoOnBoard = false;
 
       if (!cargoAtShoot) {
 
@@ -100,7 +102,7 @@ public class ShootOneCargo extends CommandBase {
     m_shooter.stop();
     m_shooter.stopTopRoller();
     m_transport.stopLowerRoller();
-
+    m_shooter.isShooting = false;
   }
 
   // Returns true when the command should end.

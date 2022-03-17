@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.Robot;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -49,7 +50,6 @@ public class SetUpPreRoundOI {
                         // tabs
                         Shuffleboard.getTab("Pre-Round").add("Auto Commands", autoChooser).withSize(2, 1)
                                         .withPosition(0, 0); // place it in the top-left corner
-                        
 
                         autoChooser.setDefaultOption("Do Nothing", 0);
 
@@ -65,11 +65,11 @@ public class SetUpPreRoundOI {
                                         4);
 
                         autoChooser.addOption("Right Tarmac Edge Retract Pickup Lower Shoot",
-                                       5);
+                                        5);
 
                         autoChooser.addOption("Right Tarmac Center Retract Pickup Upper Shoot",
-                                       6);
-                                       
+                                        6);
+
                         autoChooser.addOption("Right Tarmac Center Retract Pickup Lower Shoot",
                                         7);
 
@@ -83,15 +83,6 @@ public class SetUpPreRoundOI {
                         startDelayChooser.addOption("Four Seconds", 4.);
                         startDelayChooser.addOption("Five Seconds", 5.);
 
-                        HttpCamera llght = new HttpCamera("CoprocessorCamera",
-                                        "http://10.21.94.11:5800/stream.mjpg");
-
-                        ShuffleboardTab llFeed = Shuffleboard.getTab("Pre-Round");
-
-                        llFeed.add("Limelight_90", llght).withWidget(BuiltInWidgets.kCameraStream)
-                                        .withPosition(5, 0).withSize(3, 3)
-                                        .withProperties(Map.of("Show Crosshair", true,
-                                                        "Show Controls", true, "Rotation", "QUARTER_CW"));
 
                 }
 

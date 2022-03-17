@@ -99,9 +99,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public double adjustedCameraMPS;
     public double driverThrottleValue;
-    public boolean useProgramSpeed;
-    public boolean useDriverSpeed;
-    public double programSpeed;
+   
 
     public double shooterRPMAdder;
     public double shooterRPMChange;
@@ -117,6 +115,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public int shootSpeedSource;
     public boolean haltTopRoller;
     public boolean atSpeed;
+    public int shootSetup;
 
     public RevShooterSubsystem() {
 
@@ -168,7 +167,6 @@ public class RevShooterSubsystem extends SubsystemBase {
 
         shootOne = false;
 
-        programSpeed = minRPM;
 
         if (RobotBase.isReal()) {
 

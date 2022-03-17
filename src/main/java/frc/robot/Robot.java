@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
@@ -61,6 +62,7 @@ public class Robot extends TimedRobot {
   public static DoubleLogEntry rrDoubleLog;
   public static StringLogEntry rrStringLog;
 
+
   double[] data = { 0, 0, 0 };
 
   /**
@@ -80,6 +82,8 @@ public class Robot extends TimedRobot {
     // rrStringLog = new StringLogEntry(log, "/my/string");
 
     m_robotContainer = new RobotContainer();
+
+   
 
     getAllianceColorBlue();
 
@@ -185,7 +189,7 @@ public class Robot extends TimedRobot {
     switch (autoChoice) {
 
       case 0:
-      m_autonomousCommand=new MessageCommand("Did Nothing Auto");
+        m_autonomousCommand = new MessageCommand("Did Nothing Auto");
         break;
 
       case 1:// taxi start anywhere as agreed with other teams inside a tarmac facing in
