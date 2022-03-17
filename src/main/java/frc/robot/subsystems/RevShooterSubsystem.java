@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -54,6 +53,9 @@ public class RevShooterSubsystem extends SubsystemBase {
     public boolean useCameraSpeed;
     public boolean useSpeedSlider;
     public boolean usePresetSpeed;
+    public int fromSlider = 0;
+    public int fromCamera = 1;
+    public int fromPreset = 2;
 
     public boolean startShooter;
 
@@ -282,8 +284,8 @@ public class RevShooterSubsystem extends SubsystemBase {
         startShooter = false;
     }
 
-    public double getSpeedSource() {
-
+    public double getRPMFromSpeedSource() {
+        useSpeedSlider = false;
         switch (shootSpeedSource) {
             case 0:
                 useSpeedSlider = true;

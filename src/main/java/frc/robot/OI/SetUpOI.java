@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.AutoCommands.LeftRetPuAdvShootChoice;
 import frc.robot.commands.CargoTransport.RunLowerRoller;
@@ -96,13 +98,6 @@ public class SetUpOI {
                         intakeActions.add("ArmLower", new ActiveIntakeArmLower(intake));
                         intakeActions.add("Run Motor", new RunActiveIntake(intake, transport));
                         intakeActions.add("Stop Motor", new StopIntakeMotors(intake));
-
-                        double[] data = { 0, 0, -2 };
-
-                        intakeActions.add("LeftTarmacUpper", new LeftRetPuAdvShootChoice(intake, drive, transport,
-                                        shooter, tilt, turret, limelight, compressor, data, true));
-                        intakeActions.add("LeftTarmacLower", new LeftRetPuAdvShootChoice(intake, drive, transport,
-                                        shooter, tilt, turret, limelight, compressor, data, false));
 
                         ShuffleboardLayout intakeValues = Shuffleboard.getTab("Intake")
                                         .getLayout("IntakeValues", BuiltInLayouts.kList).withPosition(2, 0)
@@ -289,10 +284,17 @@ public class SetUpOI {
                                         .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                         shooterCommands.add("Stop Shoot", new StopShoot(shooter, transport));
-                        shooterCommands.add("Start Shoot", new RunShooter(shooter));
 
-                        shooterCommands.add("ShootOne",
-                                        new ShootOneCargo(shooter, transport, intake));
+                        shooterCommands.add("Start Shoot", new SequentialCommandGroup(
+                                        new SetShootSpeedSource(shooter, shooter.fromSlider), new RunShooter(shooter)));
+
+                        shooterCommands.add("ShootOne", new SequentialCommandGroup(
+
+                                        new SetShootSpeedSource(shooter, shooter.fromSlider),
+
+                                        new ParallelRaceGroup(new ShootOneCargo(shooter, transport, intake),
+
+                                                        new RunShooter(shooter))));
                         shooterCommands.add("ShootTwo",
                                         new ShootTwoCargo(shooter, transport, intake));
 

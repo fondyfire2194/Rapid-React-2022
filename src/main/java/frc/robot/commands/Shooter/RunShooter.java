@@ -31,8 +31,10 @@ public class RunShooter extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    
     m_startTime = Timer.getFPGATimestamp();
-    m_rpm = m_shooter.getSpeedSource();
+
+    m_rpm = m_shooter.getRPMFromSpeedSource();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

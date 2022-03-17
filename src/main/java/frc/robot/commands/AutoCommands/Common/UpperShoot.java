@@ -6,6 +6,7 @@ package frc.robot.commands.AutoCommands.Common;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Shooter.RunShooter;
@@ -31,7 +32,7 @@ public class UpperShoot extends SequentialCommandGroup {
 
     // Use addRequirements() here to declare subsystem dependencies.
     // data 0 to 3 used i pickp and position routines
-
+ 
     double upperTiltPosition = data[2];
     double upperTurretPosition = data[3];
     double upperRPM = data[4];
@@ -42,15 +43,15 @@ public class UpperShoot extends SequentialCommandGroup {
  
         new PositionTurret(turret, upperTurretPosition)),
 
-        new SetShootSpeedSource(shooter, 2),
+        new SetShootSpeedSource(shooter, shooter.fromPreset),
 
         new SetPresetRPM(shooter, upperRPM),
 
-        new RunShooter(shooter),
+        new ParallelRaceGroup(new RunShooter(shooter),
 
-        new ShootTwoCargo(shooter, transport, intake)
+            new ShootTwoCargo(shooter, transport, intake))
 
-            .deadlineWith(new PositionHoldTiltTurret(tilt, turret, ll)));
+                .deadlineWith(new PositionHoldTiltTurret(tilt, turret, ll)));
 
   }
 

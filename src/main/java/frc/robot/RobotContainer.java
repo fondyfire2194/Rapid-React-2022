@@ -276,9 +276,9 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 1)
 
                         .whileHeld(new RunActiveIntake(m_intake, m_transport))
-                        .whileHeld(new RunLowerRollerIntake(m_transport))
-                        .whenReleased(new StopActiveIntake(m_intake))
-                        .whenReleased(new StopLowerRoller(m_transport));
+                        .whileHeld(new RunLowerRollerIntake(m_transport));
+                        // .whenReleased(new StopActiveIntake(m_intake))
+                        // .whenReleased(new StopLowerRoller(m_transport));
 
             // new JoystickButton(m_driverController, 2)
 

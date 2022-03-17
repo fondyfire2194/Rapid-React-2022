@@ -30,7 +30,7 @@ public class ShootOneCargo extends CommandBase {
     m_transport = transport;
     m_intake = intake;
 
-    addRequirements(m_shooter, m_intake, m_transport);
+    addRequirements( m_intake, m_transport);
   }
 
   // Called when the command is initially scheduled.
@@ -52,6 +52,8 @@ public class ShootOneCargo extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    m_shooter.runShooterPlusRoller(m_shooter.getRPMFromSpeedSource());
 
     cargoAtShoot = m_transport.getCargoAtShoot();
 

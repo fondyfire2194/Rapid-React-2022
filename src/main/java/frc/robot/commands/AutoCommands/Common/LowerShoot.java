@@ -6,6 +6,7 @@ package frc.robot.commands.AutoCommands.Common;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Vision.LimeLight;
@@ -37,15 +38,15 @@ public class LowerShoot extends SequentialCommandGroup {
 
         new ParallelCommandGroup(new PositionTilt(tilt, lowerTiltAngle), new PositionTurret(turret, lowerTurretAngle)),
 
-        new SetShootSpeedSource(shooter, 2),
+        new SetShootSpeedSource(shooter, shooter.fromPreset),
 
         new SetPresetRPM(shooter, lowerRPM),
 
-        new RunShooter(shooter),
+        new ParallelRaceGroup(new RunShooter(shooter),
 
-        new ShootTwoCargo(shooter, transport, intake)
+            new ShootTwoCargo(shooter, transport, intake))
 
-            .deadlineWith(new PositionHoldTiltTurret(tilt, turret, ll)));
+                .deadlineWith(new PositionHoldTiltTurret(tilt, turret, ll)));
 
   }
 

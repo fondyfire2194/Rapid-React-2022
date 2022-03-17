@@ -16,6 +16,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,7 +42,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public AnalogInput cargoAboveLowRoll = new AnalogInput(1);
     
-  
+  public DigitalInput cargoSensor = new DigitalInput(0);
 
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
 
@@ -114,8 +115,9 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   public boolean getCargoAtShoot() {
-    int value = rcs.getProximity();
-    return value > (int) Pref.getPref("CargoDetectValue");
+    // int value = rcs.getProximity();
+    // return value > (int) Pref.getPref("CargoDetectValue");
+    return cargoSensor.get();
   }
 
   public void positionLowerRoller(double distance) {

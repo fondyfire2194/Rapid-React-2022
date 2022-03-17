@@ -69,6 +69,7 @@ public class LeftRetPuAdvShootChoice extends SequentialCommandGroup {
                                                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret, ll)),
 
                                 new ConditionalCommand(
+                                        
                                                 new UpperShoot(turret, tilt, ll, shooter, transport, intake, comp,
                                                                 data),
                                                 new LowerShoot(turret, tilt, ll, shooter, transport, intake, comp,

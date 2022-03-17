@@ -102,6 +102,8 @@ public class Pref {
 
     prefDict.put("CargoDetectValue",1000.);
 
+    prefDict.put("LowRollStopTime",.25);
+
 
     // camera
 
