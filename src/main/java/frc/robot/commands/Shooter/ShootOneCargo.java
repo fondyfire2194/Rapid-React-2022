@@ -4,7 +4,9 @@
 
 package frc.robot.commands.Shooter;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Pref;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
@@ -22,6 +24,7 @@ public class ShootOneCargo extends CommandBase {
   private boolean noCargoAtStart;
 
   private boolean oneShot;
+  private double m_startTime;
 
   public ShootOneCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
       IntakesSubsystem intake) {
@@ -47,6 +50,9 @@ public class ShootOneCargo extends CommandBase {
 
     noCargoAtStart = !m_intake.getCargoAtFront() && !m_intake.getCargoAtRear() && !m_transport.getCargoAtShoot();
 
+    m_startTime = 0;
+
+    m_transport.latchCargoAtShoot = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -65,6 +71,11 @@ public class ShootOneCargo extends CommandBase {
 
       if (!cargoAtShoot) {
 
+        if (!m_intake.getCargoAtFront() && !m_intake.getCargoAtRear()) {
+
+          m_transport.stopLowerRoller();
+
+        }
         oneShot = true;
       }
     }
@@ -83,14 +94,17 @@ public class ShootOneCargo extends CommandBase {
       rearIntakeRunning = true;
     }
 
-    if (frontIntakeRunning) {
+    if (frontIntakeRunning || rearIntakeRunning) {
 
-      frontIntakeRunning = !cargoAtShoot;
-    }
+      if (!m_transport.latchCargoAtShoot && m_transport.getCargoAtShoot()) {
 
-    if (rearIntakeRunning) {
+        m_startTime = Timer.getFPGATimestamp();
 
-      rearIntakeRunning = !cargoAtShoot;
+        m_transport.latchCargoAtShoot = true;
+
+        m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
+      }
+
     }
 
   }
@@ -109,6 +123,10 @@ public class ShootOneCargo extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    return noCargoAtStart || (!frontIntakeRunning && !rearIntakeRunning && oneShot);
+    return noCargoAtStart || (m_transport.latchCargoAtShoot && m_startTime != 0
+
+        && Timer.getFPGATimestamp() > m_startTime + Pref.getPref("LowRollStopTime"))
+
+        || (!frontIntakeRunning && !rearIntakeRunning);
   }
 }

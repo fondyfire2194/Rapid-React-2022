@@ -198,6 +198,7 @@ public class RobotContainer {
             m_turret = new RevTurretSubsystem();
             m_tilt = new RevTiltSubsystem();
             m_climber = new ClimberSubsystem();
+            m_limelight = new LimeLight();
 
             m_drive.setDefaultCommand(getArcadeDriveCommand());
 
@@ -210,7 +211,6 @@ public class RobotContainer {
             m_turret.setDefaultCommand(new PositionHoldTurret(m_turret,
                         m_limelight));
 
-            m_limelight = new LimeLight();
             m_limelight.setCamMode(CamMode.kvision);
             m_limelight.setLEDMode(LedMode.kpipeLine);
             m_limelight.setStream((StreamType.kStandard));
@@ -228,7 +228,7 @@ public class RobotContainer {
 
             // m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
 
-            Show_Hide_Screens.setStates(true, false, false);
+            Show_Hide_Screens.setStates(false, true, true);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intake, m_climber, m_trajectory);
@@ -280,9 +280,8 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 1)
 
                         .whileHeld(new RunActiveIntake(m_intake, m_transport))
-                        .whileHeld(new RunLowerRollerIntake(m_transport));
-            // .whenReleased(new StopActiveIntake(m_intake))
-            // .whenReleased(new StopLowerRoller(m_transport));
+                        .whenPressed(new RunLowerRollerIntake(m_transport))
+                        .whenReleased(new StopActiveIntake(m_intake));
 
             new JoystickButton(m_driverController, 2).whenPressed(new ShootOneCargo(m_shooter, m_transport, m_intake));
 

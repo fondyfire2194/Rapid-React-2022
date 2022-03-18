@@ -58,7 +58,7 @@ public class CalculateTargetDistance extends CommandBase {
   @Override
   public void execute() {
 
-    if (m_limelight.useVision && (m_limelight.getIsTargetFound() || RobotBase.isSimulation())) {
+    if ((m_limelight.getIsTargetFound() || RobotBase.isSimulation())) {
 
       m_cameraVerticalError = m_limelight.getdegVerticalToTarget() - m_limelight.verticalOffset;
 
@@ -67,17 +67,15 @@ public class CalculateTargetDistance extends CommandBase {
         m_cameraVerticalError = 0;
 
       }
-     
-
-    
 
       double tanAngleSum = Math.tan((Math.toRadians(m_cameraVerticalError + cameraAngle)));
 
-      //m_shooter.calculatedCameraDistance = FieldConstants.heightDifference / tanAngleSum;
+      // m_shooter.calculatedCameraDistance = FieldConstants.heightDifference /
+      // tanAngleSum;
 
       m_shooter.calculatedCameraDistance = (int) Math.round(FieldConstants.heightDifference
-        
-      / (Math.tan(m_rcv2.getCenterTxAngle() * Math.cos(m_rcv2.getCenterTyAngle()))));
+
+          / (Math.tan(m_rcv2.getCenterTxAngle() * Math.cos(m_rcv2.getCenterTyAngle()))));
 
       m_tilt.driverAdjustAngle = Math.toDegrees(Math.atan(m_tilt.adjustMeters / m_shooter.calculatedCameraDistance));
 

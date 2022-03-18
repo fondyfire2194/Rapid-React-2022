@@ -49,6 +49,7 @@ import frc.robot.commands.Turret.ClearTurFaults;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.ResetTurretAngle;
 import frc.robot.commands.Turret.StopTurret;
+import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -285,7 +286,6 @@ public class SetUpOI {
                                         .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                         shooterCommands.add("Stop Shoot", new StopShoot(shooter, transport));
-
                         shooterCommands.add("Start Shooter", new SequentialCommandGroup(
                                         new SetShootSpeedSource(shooter, shooter.fromSlider), new RunShooter(shooter)));
 
@@ -321,7 +321,6 @@ public class SetUpOI {
                         shooterValues.addNumber("LeftFaults", () -> shooter.getLeftFaults());
                         shooterValues.addNumber("RightFaults", () -> shooter.getRightFaults());
                         shooterValues.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
-
                         ShuffleboardLayout shooterValues1 = Shuffleboard.getTab("SetupShooter")
 
                                         .getLayout("ShooterValues1", BuiltInLayouts.kList).withPosition(4, 0)

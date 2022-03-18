@@ -33,8 +33,8 @@ public class RunCargoOutShooter extends CommandBase {
   public void execute() {
 
     m_shooter.spinAtRPM(1200);
-    m_shooter.runTopAtVelocity(500);
-    m_transport.runLowerAtVelocity(500);
+    m_shooter.runTopAtVelocity(800);
+    m_transport.runLowerAtVelocity(800);
 
   }
 

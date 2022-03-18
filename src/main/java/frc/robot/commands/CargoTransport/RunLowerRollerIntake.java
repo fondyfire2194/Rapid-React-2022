@@ -5,6 +5,7 @@
 package frc.robot.commands.CargoTransport;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -12,7 +13,7 @@ import frc.robot.subsystems.CargoTransportSubsystem;
 public class RunLowerRollerIntake extends CommandBase {
   /** Creates a new RunRollers. */
   private final CargoTransportSubsystem m_transport;
-  private boolean latchCargoAtShoot;
+
   private double m_startTime;
 
   public RunLowerRollerIntake(CargoTransportSubsystem transport) {
@@ -26,7 +27,8 @@ public class RunLowerRollerIntake extends CommandBase {
   @Override
   public void initialize() {
     m_transport.haltLowerRollerMotor = false;
-    latchCargoAtShoot = false;
+    m_transport.latchCargoAtShoot = false;
+    m_startTime=0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,28 +37,33 @@ public class RunLowerRollerIntake extends CommandBase {
 
     m_transport.runLowerAtVelocity(Pref.getPref("LowRollIntakeRPM"));
 
-    if (!latchCargoAtShoot && m_transport.getCargoAtShoot()) {
+    if (!m_transport.latchCargoAtShoot && m_transport.getCargoAtShoot()) {
 
       m_startTime = Timer.getFPGATimestamp();
-      
+
+      m_transport.latchCargoAtShoot = true;
+
       m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
     }
 
-    if (!latchCargoAtShoot)
-
-      latchCargoAtShoot = m_transport.getCargoAtShoot();
+    if (m_startTime != 0)
+      m_transport.latchCargoAtShoot = true;
+    SmartDashboard.putNumber("ISTA", m_startTime);
+    SmartDashboard.putBoolean("LATCH", m_transport.latchCargoAtShoot);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_transport.stopLowerRoller();
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return latchCargoAtShoot && Timer.getFPGATimestamp() > m_startTime + Pref.getPref("LowRollStopTime");
+    return m_transport.latchCargoAtShoot && m_startTime != 0
+        && Timer.getFPGATimestamp() > m_startTime + Pref.getPref("LowRollStopTime");
 
   }
 }

@@ -64,6 +64,8 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean wrongCargoColor;
 
+public boolean latchCargoAtShoot;
+
   public CargoTransportSubsystem() {
 
     m_lowerRollerMotor = new CANSparkMax(CANConstants.LOWER_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -187,7 +189,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public void stopLowerRoller() {
     lowerRequiredRPM = 0;
-    runLowerAtVelocity(0);
+    m_lowerRollerMotor.set(0);
   }
 
   public double getLowerRollerMotorAmps() {

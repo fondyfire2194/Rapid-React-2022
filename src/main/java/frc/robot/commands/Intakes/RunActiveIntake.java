@@ -38,10 +38,10 @@ public class RunActiveIntake extends CommandBase {
 
     m_intake.setRearCurrentLimit(20);
 
-    if (m_intake.useFrontIntake)
-      Shuffleboard.selectTab("FrontIntakeCamera");
-    else
-      Shuffleboard.selectTab("RearIntakeCamera");
+    // if (m_intake.useFrontIntake)
+    //   Shuffleboard.selectTab("FrontIntakeCamera");
+    // else
+    //   Shuffleboard.selectTab("RearIntakeCamera");
   }
 
   @Override
