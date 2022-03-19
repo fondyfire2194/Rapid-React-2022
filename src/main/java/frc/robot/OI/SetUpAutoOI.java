@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -19,9 +18,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.commands.RobotDrive.ResetEncoders;
-import frc.robot.commands.RobotDrive.ResetGyro;
-import frc.robot.commands.Turret.ResetTurretAngle;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -37,7 +33,7 @@ public class SetUpAutoOI {
         public SendableChooser<Command> autoChooser = new SendableChooser<>();
         public SendableChooser<Integer> startDelayChooser = new SendableChooser<>();
         public static boolean m_showAuto;
-        // double rate = .5;
+        
 
         public SetUpAutoOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
@@ -134,19 +130,9 @@ public class SetUpAutoOI {
                         ShuffleboardTab llFeed = Shuffleboard.getTab("Competition");
 
                         llFeed.addCamera("LL", "Copro1Cam", "http://10.21.94.11:5800/stream.mjpg")
-                                        .withPosition(5, 0).withSize(5, 4)
+                                        .withPosition(6, 0).withSize(3, 4)
                                         .withProperties(Map.of("Show Crosshair", true,
                                                         "Show Controls", true, "Rotation", "QUARTER_CW"));
-
-                        // Shuffleboard.getTab("Competition").addNumber("TimeRemaining", () ->
-                        // drive.getMatchTime())
-                        // .withWidget(BuiltInWidgets.kTextView).withPosition(9, 0).withSize(1, 1);
-                        // Shuffleboard.getTab("Competition").addNumber("Battery", () ->
-                        // getPDPInfo()[0])
-                        // .withWidget(BuiltInWidgets.kTextView).withPosition(9, 1).withSize(1, 1);
-                        // Shuffleboard.getTab("Competition").addNumber("TotalEnegy Ah", () ->
-                        // getPDPInfo()[2])
-                        // .withWidget(BuiltInWidgets.kTextView).withPosition(9, 2).withSize(1, 1);
                 }
         }
 }

@@ -4,15 +4,9 @@
 
 package frc.robot.OI;
 
-import java.util.Map;
-
-import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.Robot;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -55,23 +49,15 @@ public class SetUpPreRoundOI {
 
                         autoChooser.addOption("Taxi", 1);
 
-                        autoChooser.addOption("Left Tarmac Retract Pickup Advance Upper Shoot",
+                        autoChooser.addOption("Left Tarmac Retract Pickup Advance Shoot",
                                         2);
 
-                        autoChooser.addOption("Left Tarmac Retract Pickup Advance Lower Shoot",
+                        autoChooser.addOption("Right Tarmac Edge Retract Pickup Shoot",
                                         3);
 
-                        autoChooser.addOption("Right Tarmac Edge Retract Pickup Upper Shoot",
+                        autoChooser.addOption("Right Tarmac Center Retract Pickup Shoot",
                                         4);
 
-                        autoChooser.addOption("Right Tarmac Edge Retract Pickup Lower Shoot",
-                                        5);
-
-                        autoChooser.addOption("Right Tarmac Center Retract Pickup Upper Shoot",
-                                        6);
-
-                        autoChooser.addOption("Right Tarmac Center Retract Pickup Lower Shoot",
-                                        7);
 
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
                                         .withPosition(2, 0); //

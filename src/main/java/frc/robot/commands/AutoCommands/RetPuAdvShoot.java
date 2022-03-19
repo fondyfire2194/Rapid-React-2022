@@ -4,22 +4,23 @@
 
 package frc.robot.commands.AutoCommands;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.AutoCommands.Common.LowerShoot;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
-import frc.robot.commands.AutoCommands.Common.UpperShoot;
-import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
+import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.SetPresetRPM;
+import frc.robot.commands.Shooter.SetShootSpeedSource;
+import frc.robot.commands.Shooter.ShootCargo;
+import frc.robot.commands.Tilt.PositionTilt;
+import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -27,15 +28,14 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
-public class CenterRetPuAdvShootChoice extends SequentialCommandGroup {
+public class RetPuAdvShoot extends SequentialCommandGroup {
 
 
         /** Creates a new LRetPuShoot. */
-        public CenterRetPuAdvShootChoice(IntakesSubsystem intake, RevDrivetrain drive,
+        public RetPuAdvShoot(IntakesSubsystem intake, RevDrivetrain drive,
                         CargoTransportSubsystem transport, RevShooterSubsystem shooter, RevTiltSubsystem tilt,
-                        RevTurretSubsystem turret, LimeLight ll, Compressor comp, double[] data, boolean upper) {
- 
-                                addRequirements(intake, drive, transport, shooter, turret, tilt);
+                        RevTurretSubsystem turret, LimeLight ll, Compressor comp, double[] data) {
+                addRequirements(intake, drive, transport, shooter, turret, tilt);
                 // Use addRequirements() here to declare subsystem dependencies.
 
                 double pickUpRate = drive.pickUpRate;
@@ -43,38 +43,38 @@ public class CenterRetPuAdvShootChoice extends SequentialCommandGroup {
 
                 double drivePickupPosition = data[0];
                 double shootPosition = data[1];
-
+                double upperTiltAngle = data[2];
+                double upperTurretAngle = data[3];
+                double upperRPM = data[4];
                 // remaining data used in shoot routine
 
                 addCommands(
-
                                 new ParallelCommandGroup(
 
                                                 new SetFrontIntakeActive(intake, false),
-                                                new ActiveIntakeArmLower(intake),
                                                 new ResetEncoders(drive),
                                                 new ResetGyro(drive)),
 
                                 new ParallelRaceGroup(
-
                                                 new PositionStraight(drive, drivePickupPosition,
                                                                 pickUpRate),
-
                                                 new RunActiveIntake(intake, transport))
-
                                                                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret,
                                                                                 ll)),
 
-                                new PositionStraight(drive, shootPosition, positionRate)
+                                new ParallelCommandGroup(
+                                                new SetShootSpeedSource(shooter, shooter.fromPreset),
+                                                new SetPresetRPM(shooter, upperRPM),
 
-                                                .deadlineWith(new PositionHoldTiltTurret(tilt, turret, ll)),
+                                                new PositionStraight(drive, shootPosition, positionRate),
+                                                new PositionTilt(tilt, upperTiltAngle),
+                                                new PositionTurret(turret, upperTurretAngle)),
 
-                                new ConditionalCommand(
-                                                new UpperShoot(turret, tilt, ll, shooter, transport, intake, comp,
-                                                                data),
-                                                new LowerShoot(turret, tilt, ll, shooter, transport, intake, comp,
-                                                                data),
-                                                () -> upper));
+                                new ParallelRaceGroup(
+                                                new ShootCargo(shooter, transport, intake, true),
+                                                new RunShooter(shooter))
+                                                                .deadlineWith(new PositionHoldTiltTurret(tilt, turret,
+                                                                                ll)));
 
         }
 }

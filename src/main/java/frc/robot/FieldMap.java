@@ -13,6 +13,8 @@ public class FieldMap {
         public static final double visionStripLength = Units.inchesToMeters(5);
         public static final int numberOfVisionStrips = 16;
         public static final double angleStripToStrip = 360 / 16;// 22.5 degrees
+        public static final double heightToBaseVisionStrip = Units.inchesToMeters(101.625);
+        public static final double visionStripRingDiameter = Units.inchesToMeters(53.375);
 
         // each tarmac sees 4 vision strips right to left
         public static final double rightRightOfCenter = 67.5;
@@ -65,16 +67,16 @@ public class FieldMap {
         // left tarmac auto start upper
 
         // robot starts with rear bumper behind tarmac
-        // perimeter and centered on target cargo
+        // perimeter and centered on target and cargo
 
-        public static final double leftTarmacPickupPosition = Units.inchesToMeters(36);
+        public static final double leftTarmacPickupPosition = Units.inchesToMeters(-42);
         public static final double leftTarmacShootPosition = Units.inchesToMeters(36);
 
         public static final double leftTarmacTiltUpperAngle = 2;
         public static final double leftTarmacTurretUpperAngle = 0;
         public static double leftTarmacUpperRPM = 3000;
 
-        public static final double leftTarmacTiltLowerAngle = 4;
+        public static final double leftTarmacTiltLowerAngle = 1;
         public static final double leftTarmacTurretLowerAngle = 0;
         public static double leftTarmacLowerRPM = 2100;
 
@@ -85,7 +87,7 @@ public class FieldMap {
                         leftTarmacLowerRPM
         };
 
-        public static final double rightTarmacPickupPosition = Units.inchesToMeters(36);
+        public static final double rightTarmacPickupPosition = Units.inchesToMeters(-36);
         public static final double rightTarmacShootPosition = Units.inchesToMeters(36);
 
         public static final double rightTarmacTiltUpperAngle = 2;
@@ -120,9 +122,10 @@ public class FieldMap {
                         centerTarmacTiltLowerAngle, centerTarmacTurretLowerAngle,
                         centerTarmacLowerRPM };
 
-        public static final double[] shootMode_0 = { 2, 4000 };
-        public static final double[] shootMode_1 = { 2, 4000 };
-        public static final double[] shootMode_2 = { 2, 4000 };
-        public static final double[] shootMode_3 = { 2, 4000 };
-
+        public static final double[] shootMode_0 = { 1, 3500 };// 40"
+        public static final double[] shootMode_1 = { 4, 4000 };// 100"
+        public static final double[] shootMode_2 = { 11, 4200 };// 160"
+        public static final double[] shootMode_3 = { 18, 5000 };// 220"
+        
+        public static String[] shootModeName = { "At Hub", "Tarmac Line", "Inner Launchpad", "TBD" };
 }

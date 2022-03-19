@@ -7,13 +7,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.cscore.HttpCamera;
-import edu.wpi.first.util.datalog.BooleanLogEntry;
-import edu.wpi.first.util.datalog.DataLog;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -23,16 +17,15 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.OI.Show_Hide_Screens;
+import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.MessageCommand;
-import frc.robot.commands.AutoCommands.CenterRetPuAdvShootChoice;
-import frc.robot.commands.AutoCommands.LeftRetPuAdvShootChoice;
-import frc.robot.commands.AutoCommands.RightRetPuAdvShootChoice;
+import frc.robot.commands.AutoCommands.RetPuAdvShoot;
+import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
-import frc.robot.commands.Vision.SetUpLimelightForDriver;
+import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -58,12 +51,11 @@ public class Robot extends TimedRobot {
   public double timeToStart;
   int tst;
   private int loopCtr;
-  public static BooleanLogEntry rrBooleanLog;
-  public static DoubleLogEntry rrDoubleLog;
-  public static StringLogEntry rrStringLog;
+  // public static BooleanLogEntry rrBooleanLog;
+  // public static DoubleLogEntry rrDoubleLog;
+  // public static StringLogEntry rrStringLog;
 
-
-  double[] data = { 0, 0, 0 };
+  double[] data = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -82,8 +74,6 @@ public class Robot extends TimedRobot {
     // rrStringLog = new StringLogEntry(log, "/my/string");
 
     m_robotContainer = new RobotContainer();
-
-   
 
     getAllianceColorBlue();
 
@@ -148,13 +138,11 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_limelight.useVision = false;
     m_robotContainer.checkCANDevices();
 
-    new SetUpLimelightForDriver(m_robotContainer.m_limelight).schedule();
-
   }
 
   @Override
   public void disabledPeriodic() {
-
+    SmartDashboard.putNumber("RetPos", FieldMap.leftTarmacData[0]);
   }
 
   public void autonomousInit() {
@@ -183,7 +171,7 @@ public class Robot extends TimedRobot {
     RevDrivetrain drive = m_robotContainer.m_drive;
     CargoTransportSubsystem transport = m_robotContainer.m_transport;
     IntakesSubsystem intake = m_robotContainer.m_intake;
-    RawContoursV2 rcv2 = m_robotContainer.m_rCV2;
+    RawContoursV2 rcv2 = m_robotContainer.m_rcv2;
     Compressor comp = m_robotContainer.m_compressor;
 
     switch (autoChoice) {
@@ -193,48 +181,30 @@ public class Robot extends TimedRobot {
         break;
 
       case 1:// taxi start anywhere as agreed with other teams inside a tarmac facing in
-
+        ll.setPipeline(PipelinesConstants.noZoom960720);
         m_autonomousCommand = new PositionStraight(m_robotContainer.m_drive, -1, .3);
 
         break;
 
       case 2:// left tarmac upper shoot
         data = FieldMap.leftTarmacData;
-        m_autonomousCommand = new LeftRetPuAdvShootChoice(intake, drive, transport, shooter, tilt, turret, ll, comp,
-            data, true);
+        ll.setPipeline(PipelinesConstants.noZoom960720);
+        m_autonomousCommand = new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            data);
 
         break;
 
-      case 3:// left tarmac lower shoot
-
-        data = FieldMap.leftTarmacData;
-        m_autonomousCommand = new LeftRetPuAdvShootChoice(intake, drive, transport, shooter, tilt, turret, ll, comp,
-            data, false);
-
+      case 3://
+        data = FieldMap.rightTarmacData;
+        ll.setPipeline(PipelinesConstants.noZoom960720);
+        m_autonomousCommand = new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            data);
         break;
 
       case 4://
-        data = FieldMap.rightTarmacData;
-        m_autonomousCommand = new RightRetPuAdvShootChoice(intake, drive, transport, shooter, tilt, turret, ll, comp,
-            data, true);
-        break;
-
-      case 5://
-        data = FieldMap.rightTarmacData;
-        m_autonomousCommand = new RightRetPuAdvShootChoice(intake, drive, transport, shooter, tilt, turret, ll, comp,
-            data, false);
-
-        break;
-
-      case 6://
-        data = FieldMap.rightTarmacData;
-        m_autonomousCommand = new CenterRetPuAdvShootChoice(intake, drive, transport, shooter, tilt, turret, ll, comp,
-            data, true);
-        break;
-      case 7://
-        data = FieldMap.rightTarmacData;
-        m_autonomousCommand = new CenterRetPuAdvShootChoice(intake, drive, transport, shooter, tilt, turret, ll, comp,
-            data, false);
+        data = FieldMap.centerTarmacData;
+        m_autonomousCommand = new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            data);
         break;
 
       default:
@@ -275,10 +245,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
 
-      // new SetLogItemsState(m_robotContainer.m_shooter, m_robotContainer.m_tilt,
-      // m_robotContainer.m_turret, false)
-      // .schedule();
-
     }
 
     Shuffleboard.update();
@@ -289,13 +255,18 @@ public class Robot extends TimedRobot {
 
     autoHasRun = false;
 
+    CommandScheduler.getInstance().cancelAll();
+
     if (RobotBase.isReal() && !m_robotContainer.m_tilt.positionResetDone)
 
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
-
+    m_robotContainer.m_limelight.setPipeline(PipelinesConstants.ledsOffPipeline);
     m_robotContainer.m_limelight.useVision = false;
 
     m_robotContainer.m_intake.setFrontActive();
+
+    new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_rcv2, m_robotContainer.m_tilt,
+        m_robotContainer.m_turret, m_robotContainer.m_shooter).schedule();
 
   }
 
@@ -306,8 +277,13 @@ public class Robot extends TimedRobot {
 
   public void teleopPeriodic() {
 
-    // m_robotContainer.setupGamepad.setRumble(RumbleType.kLeftRumble, 1.0);
+    if (m_robotContainer.m_transport.wrongCargoColor) {
 
+      m_robotContainer.m_transport.wrongCargoColor = false;
+
+      new RunCargoOutShooter(m_robotContainer.m_shooter, m_robotContainer.m_intake, m_robotContainer.m_transport)
+          .schedule();
+    }
   }
 
   @Override

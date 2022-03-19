@@ -34,14 +34,18 @@ public class RunActiveIntake extends CommandBase {
 
     stopActiveIntakeNow = false;
 
+    m_intake.cargoAtFrontIntake = false;
+
+    m_intake.cargoAtRearIntake = false;
+
     m_intake.setFrontCurrentLimit(20);
 
     m_intake.setRearCurrentLimit(20);
 
     // if (m_intake.useFrontIntake)
-    //   Shuffleboard.selectTab("FrontIntakeCamera");
+    // Shuffleboard.selectTab("FrontIntakeCamera");
     // else
-    //   Shuffleboard.selectTab("RearIntakeCamera");
+    // Shuffleboard.selectTab("RearIntakeCamera");
   }
 
   @Override
@@ -50,16 +54,21 @@ public class RunActiveIntake extends CommandBase {
 
     m_intake.lowerActiveArm();
 
+    //watch for second cargo and latch its arrival
+    //stop intake quickly and latch cargo at intake in case it goes
+    //out of sensor range
+
     if (m_transport.getCargoAtShoot()) {
 
       if (m_intake.useFrontIntake) {
 
         stopActiveIntakeNow = m_intake.getCargoAtFront();
 
+        m_intake.cargoAtFrontIntake = stopActiveIntakeNow;
+
         m_startTime = Timer.getFPGATimestamp();
 
         m_intake.twoCargoOnBoard = true;
-
 
       }
 
@@ -67,9 +76,11 @@ public class RunActiveIntake extends CommandBase {
 
         stopActiveIntakeNow = m_intake.getCargoAtRear();
 
+        m_intake.cargoAtRearIntake = stopActiveIntakeNow;
+
         m_startTime = Timer.getFPGATimestamp();
 
-        m_intake.twoCargoOnBoard=true;
+        m_intake.twoCargoOnBoard = true;
 
         // m_intake.setRearCurrentLimit(10);
       }

@@ -46,6 +46,10 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public boolean cargoAtBothIntakes;
 
+  public boolean cargoAtFrontIntake;
+
+  public boolean cargoAtRearIntake;
+
   public IntakesSubsystem() {
     
     m_frontIntakeMotor.configFactoryDefault();

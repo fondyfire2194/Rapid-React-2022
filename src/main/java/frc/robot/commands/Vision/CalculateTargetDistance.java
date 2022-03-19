@@ -6,6 +6,7 @@ package frc.robot.commands.Vision;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.FieldMap;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
@@ -38,7 +39,7 @@ public class CalculateTargetDistance extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    m_shooter.calculatedCameraDistance = -1;
   }
 
   /*
@@ -68,7 +69,8 @@ public class CalculateTargetDistance extends CommandBase {
 
       }
 
-      double tanAngleSum = Math.tan((Math.toRadians(m_cameraVerticalError + cameraAngle)));
+      // double tanAngleSum = Math.tan((Math.toRadians(m_cameraVerticalError +
+      // cameraAngle)));
 
       // m_shooter.calculatedCameraDistance = FieldConstants.heightDifference /
       // tanAngleSum;
@@ -76,21 +78,8 @@ public class CalculateTargetDistance extends CommandBase {
       m_shooter.calculatedCameraDistance = (int) Math.round(FieldConstants.heightDifference
 
           / (Math.tan(m_rcv2.getCenterTxAngle() * Math.cos(m_rcv2.getCenterTyAngle()))));
-
-      m_tilt.driverAdjustAngle = Math.toDegrees(Math.atan(m_tilt.adjustMeters / m_shooter.calculatedCameraDistance));
-
-      m_turret.driverAdjustAngle = Math
-
-          .toDegrees(Math.atan(m_turret.adjustMeters / m_shooter.calculatedCameraDistance));
-
-    } else
-
-    {
-
-      m_shooter.calculatedCameraDistance = -1;
-      m_tilt.driverAdjustAngle = 0.1;
-      m_turret.driverAdjustAngle = 0.1;
-
+     
+          m_shooter.calculatedCameraDistance += (FieldMap.visionStripRingDiameter / 2);
     }
 
   }

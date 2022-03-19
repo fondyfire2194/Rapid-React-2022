@@ -15,10 +15,9 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.FieldMap;
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.AutoCommands.LeftRetPuAdvShootChoice;
 import frc.robot.commands.CargoTransport.RunLowerRoller;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Intakes.ActiveIntakeArmLower;
@@ -36,9 +35,7 @@ import frc.robot.commands.Shooter.ClearShFaults;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.RunTopRoller;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Shooter.ShootOneCargo;
-import frc.robot.commands.Shooter.ShootTwoCargo;
-//import frc.robot.commands.Shooter.ShootTwoCargo;
+import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Shooter.StopTopRoller;
 import frc.robot.commands.Tilt.ClearFaults;
@@ -49,7 +46,6 @@ import frc.robot.commands.Turret.ClearTurFaults;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.ResetTurretAngle;
 import frc.robot.commands.Turret.StopTurret;
-import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -290,11 +286,12 @@ public class SetUpOI {
                                         new SetShootSpeedSource(shooter, shooter.fromSlider), new RunShooter(shooter)));
 
                         shooterCommands.add("ShootOne",
-                                        new ShootOneCargo(shooter, transport, intake));
+                                        new ShootCargo(shooter, transport, intake, false));
                         shooterCommands.add("ShootTwo",
-                                        new ShootTwoCargo(shooter, transport, intake));
+                                        new ShootCargo(shooter, transport, intake, true));
 
                         shooterCommands.add("ClearFaults", new ClearShFaults(shooter));
+
                         shooterCommands.add("Cmd", shooter);
 
                         shooterCommands.add("RunShooterFromSlider",
@@ -306,9 +303,9 @@ public class SetUpOI {
 
                         ShuffleboardLayout shooterValues = Shuffleboard.getTab("SetupShooter")
                                         .getLayout("ShooterValues", BuiltInLayouts.kList).withPosition(2, 0)
-                                        .withSize(2, 3).withProperties(Map.of("Label position", "LEFT")); // labels
+                                        .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels
 
-                        shooterValues.addNumber(" ActualRPM", () -> shooter.getRPM());
+                        shooterValues.addNumber("ActualRPM", () -> shooter.getRPM());
                         shooterValues.addNumber("Target RPM", () -> shooter.requiredRPM);
                         shooterValues.addNumber("TopRollerRPM", () -> shooter.getTopRPM());
                         shooterValues.addNumber("TopTargetRPM", () -> shooter.topRequiredRPM);
@@ -332,7 +329,7 @@ public class SetUpOI {
                         shooterValues1.addBoolean("TuneOn", () -> (shooter.tuneOn && shooter.lastTuneOn));
                         shooterValues1.addBoolean("BothConnected(6,7)", () -> shooter.allConnected);
                         shooterValues1.addBoolean("Use Slider", () -> shooter.useSpeedSlider);
-
+                        shooterValues1.addString("PresetMode", () -> shooter.presetModeName);
                         ShuffleboardLayout shooterValues2 = Shuffleboard.getTab("SetupShooter")
 
                                         .getLayout("Gains", BuiltInLayouts.kList).withPosition(6, 0).withSize(1, 2)

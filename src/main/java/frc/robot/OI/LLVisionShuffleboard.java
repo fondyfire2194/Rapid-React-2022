@@ -50,9 +50,9 @@ public class LLVisionShuffleboard {
                                                                                                          // for
 
                         zoomCommands.add("No Zoom",
-                                        new LimelightSetPipeline(ll, PipelinesConstants.noZoomPipeline));
+                                        new LimelightSetPipeline(ll, PipelinesConstants.noZoom960720));
                         zoomCommands.add("2XZoom",
-                                        new LimelightSetPipeline(ll, PipelinesConstants.x2ZoomPipeline));
+                                        new LimelightSetPipeline(ll, PipelinesConstants.x2Zoom320240));
                         zoomCommands.add("3X Zoom",
                                         new LimelightSetPipeline(ll, PipelinesConstants.x3ZoomPipeline));
 

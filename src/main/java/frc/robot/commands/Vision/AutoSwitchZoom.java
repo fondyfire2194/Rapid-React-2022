@@ -55,7 +55,7 @@ public class AutoSwitchZoom extends CommandBase {
 
     if (m_limelight.getIsTargetFound()) {
 
-      if (m_limelight.getPipeline() == PipelinesConstants.noZoomPipeline
+      if (m_limelight.getPipeline() == PipelinesConstants.x2Zoom320240
           && m_limelight.getBoundingBoxHeight() < minUseableTargetHeight
           && !changeLocked) {
 
@@ -79,7 +79,7 @@ public class AutoSwitchZoom extends CommandBase {
       }
 
       // check if too close for 2 x zoom
-      if (m_limelight.getPipeline() == PipelinesConstants.x2ZoomPipeline
+      if (m_limelight.getPipeline() == PipelinesConstants.x2Zoom320240
       
           && (m_limelight.getBoundingBoxHeight() > maxUseableTargetHeight)
 

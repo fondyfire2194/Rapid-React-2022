@@ -46,9 +46,8 @@ public class RunLowerRollerIntake extends CommandBase {
       m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
     }
 
-    if (m_startTime != 0)
-      m_transport.latchCargoAtShoot = true;
     SmartDashboard.putNumber("ISTA", m_startTime);
+    
     SmartDashboard.putBoolean("LATCH", m_transport.latchCargoAtShoot);
   }
 

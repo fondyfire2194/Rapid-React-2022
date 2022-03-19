@@ -11,7 +11,7 @@ import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
 
-public class ShootOneCargo extends CommandBase {
+public class ShootCargo extends CommandBase {
   /** Creates a new ShootCargo. */
   private RevShooterSubsystem m_shooter;
   private CargoTransportSubsystem m_transport;
@@ -25,13 +25,17 @@ public class ShootOneCargo extends CommandBase {
 
   private boolean oneShot;
   private double m_startTime;
+  private boolean cargoAtFront;
+  private boolean cargoAtRear;
+  private boolean m_shootTwo;
 
-  public ShootOneCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
-      IntakesSubsystem intake) {
+  public ShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
+      IntakesSubsystem intake, boolean shootTwo) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_transport = transport;
     m_intake = intake;
+    m_shootTwo = shootTwo;
 
     addRequirements(m_intake, m_transport);
   }
@@ -40,6 +44,7 @@ public class ShootOneCargo extends CommandBase {
   @Override
   public void initialize() {
     m_shooter.isShooting = true;
+
     frontIntakeRunning = false;
 
     rearIntakeRunning = false;
@@ -59,9 +64,20 @@ public class ShootOneCargo extends CommandBase {
   @Override
   public void execute() {
 
-    m_shooter.runShooterPlusRoller(m_shooter.getRPMFromSpeedSource());
+   // m_shooter.runShooterPlusRoller(m_shooter.getRPMFromSpeedSource());
 
     cargoAtShoot = m_transport.getCargoAtShoot();
+
+    // release cargo to shooter from lower roller
+    // once it clears the at-shoot sensor stop the lower roller if
+    // there is no cargo at either intake
+
+    // if there is more cargo let the low roller keep running
+    // if not stop the roller
+    // if there is more cargo start the appropriate intake motor
+    // to drive it into the low roller
+    // once detected at the low rollers stop the roller and intake motor
+    // command ends there
 
     if (!oneShot && cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed()) {
 
@@ -71,32 +87,42 @@ public class ShootOneCargo extends CommandBase {
 
       if (!cargoAtShoot) {
 
-        if (!m_intake.getCargoAtFront() && !m_intake.getCargoAtRear()) {
+        cargoAtFront = m_intake.getCargoAtFront() || m_intake.cargoAtFrontIntake;
+
+        cargoAtRear = m_intake.getCargoAtRear() || m_intake.cargoAtRearIntake;
+
+        if (!cargoAtFront && !cargoAtRear) {
 
           m_transport.stopLowerRoller();
 
         }
+
         oneShot = true;
+
       }
     }
 
-    if (!cargoAtShoot && (m_intake.getCargoAtFront() || frontIntakeRunning)) {
+    if (!cargoAtShoot && (cargoAtFront || frontIntakeRunning)) {
 
       m_intake.runFrontIntakeMotor();
+
+      m_intake.cargoAtFrontIntake = false;
 
       frontIntakeRunning = true;
     }
 
-    if (!cargoAtShoot && !frontIntakeRunning && (m_intake.getCargoAtRear() || rearIntakeRunning)) {
+    if (!cargoAtShoot && !frontIntakeRunning && (cargoAtRear || rearIntakeRunning)) {
 
       m_intake.runRearIntakeMotor();
+
+      m_intake.cargoAtRearIntake = false;
 
       rearIntakeRunning = true;
     }
 
     if (frontIntakeRunning || rearIntakeRunning) {
 
-      if (!m_transport.latchCargoAtShoot && m_transport.getCargoAtShoot()) {
+      if (!m_shootTwo && !m_transport.latchCargoAtShoot && m_transport.getCargoAtShoot()) {
 
         m_startTime = Timer.getFPGATimestamp();
 
@@ -113,8 +139,8 @@ public class ShootOneCargo extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_shooter.useSpeedSlider = false;
-    m_shooter.stop();
-    m_shooter.stopTopRoller();
+    // m_shooter.stop();
+    // m_shooter.stopTopRoller();
     m_transport.stopLowerRoller();
     m_shooter.isShooting = false;
   }

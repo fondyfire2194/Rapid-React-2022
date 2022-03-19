@@ -116,6 +116,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public boolean haltTopRoller;
     public boolean atSpeed;
     public int shootSetup;
+    public String presetModeName;
 
     public RevShooterSubsystem() {
 

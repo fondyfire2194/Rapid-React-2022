@@ -12,9 +12,7 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Shooter.ShootOneCargo;
-import frc.robot.commands.Shooter.ShootTwoCargo;
-//import frc.robot.commands.Shooter.ShootTwoCargo;
+import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -51,7 +49,7 @@ public class UpperShoot extends SequentialCommandGroup {
 
         new ParallelRaceGroup(new RunShooter(shooter),
 
-            new ShootTwoCargo(shooter, transport, intake))
+            new ShootCargo(shooter, transport, intake,true))
 
                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret, ll)));
 

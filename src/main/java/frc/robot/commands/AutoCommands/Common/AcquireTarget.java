@@ -6,15 +6,10 @@ package frc.robot.commands.AutoCommands.Common;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.commands.Shooter.RunShooter;
-import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Shooter.ShootTwoCargo;
-import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.PositionTurretToVision;
 import frc.robot.commands.Turret.TurretWaitForStop;
@@ -33,9 +28,7 @@ public class AcquireTarget extends SequentialCommandGroup {
 
         /** Creates a new Acquire target. */
 
-        public AcquireTarget(LimeLight ll, RevTiltSubsystem tilt, RevTurretSubsystem turret, RawContoursV2 rcv2,
-                        RevShooterSubsystem shooter, CargoTransportSubsystem transport, IntakesSubsystem intake,
-                        Compressor compressor) {
+        public AcquireTarget(LimeLight ll, RevTiltSubsystem tilt, RevTurretSubsystem turret, RawContoursV2 rcv2) {
                 // Add your commands in the addCommands() call, e.g.
                 // addCommands(new FooCommand(), new BarCommand());
 
@@ -51,11 +44,11 @@ public class AcquireTarget extends SequentialCommandGroup {
                  * 
                  */
 
-                addCommands(new SetUpLimelightForTarget(ll, PipelinesConstants.x2ZoomPipeline, false),
+                addCommands(new SetUpLimelightForTarget(ll, PipelinesConstants.x2Zoom320240, false),
 
                                 new ConditionalCommand(new GetVisionValues(rcv2),
 
-                                                new SetUpLimelightForTarget(ll, PipelinesConstants.noZoomPipeline,
+                                                new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720,
                                                                 false),
 
                                                 () -> ll.getBoundingBoxHeightInX2ZoomRange()),
@@ -68,22 +61,8 @@ public class AcquireTarget extends SequentialCommandGroup {
 
                                 new TurretWaitForStop(turret), new GetNumberOfContourValues(rcv2),
 
-                                new CalculateTarget(rcv2),
-
-                                new PositionTurret(turret, rcv2.targetAngle), new TurretWaitForStop(turret),
-
-                                new CalculateTargetDistance(ll, rcv2, tilt, turret, shooter),
-
-                                new SelectSpeedAndTiltByDistance(shooter, tilt)
-                        //         new ParallelCommandGroup(new PositionTilt(tilt, tilt.cameraCalculatedTiltPosition),
-
-                        //                         new SetShootSpeedSource(shooter, 1),
-
-                        //                         new RunShooter(shooter),
-
-                        //        new ShootTwoCargo(shooter, transport, intake))
-
-                );
+                                new CalculateTarget(rcv2));
 
         }
+
 }

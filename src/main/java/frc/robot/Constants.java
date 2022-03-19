@@ -288,10 +288,10 @@ public final class Constants {
 
    public static class PipelinesConstants {
 
-      public static final int noZoomPipeline = 0;
-      public static final int x2ZoomPipeline = 1;
-      public static final int x3ZoomPipeline = 2;
-      public static final int driverPipeline = 4;
+      public static final int noZoom960720 = 1;
+      public static final int x2Zoom320240 = 2;
+      public static final int x3ZoomPipeline = 3;
+      
       public static final int ledsOffPipeline = 8;
 
       public static final double noZoomMinBoundingBoxHeight = 3;

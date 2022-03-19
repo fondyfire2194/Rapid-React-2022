@@ -74,9 +74,7 @@ public class HubVisionShuffleboard {
                         contourDist.add("Set2XZoom", new Set2XZoomValues(rcv2, ll));
 
                         contourDist.add("AcquireTarget",
-                                        new AcquireTarget(ll, tilt, turret, rcv2, shooter, null, null, compressor));
-
-                        contourDist.add("Calculate", new CalculateTargetDistance(ll, rcv2, tilt, turret, shooter));
+                                        new AcquireTarget(ll, tilt, turret, rcv2));
 
                         contourPX.addString("LtoRMedArea", () -> rcv2.getLCRMedianArea());
 
@@ -93,7 +91,7 @@ public class HubVisionShuffleboard {
                         testContourPX.addNumber("Test Area", () -> vrt.getTestTargetArea());
 
                 }
-        
+
                 if (m_showHubVision) {
                         ShuffleboardLayout targetValues = Shuffleboard.getTab("HubVision")
                                         .getLayout("bullseye", BuiltInLayouts.kList).withPosition(4, 0)
@@ -104,7 +102,7 @@ public class HubVisionShuffleboard {
 
                         targetValues.addNumber("WeightedX", () -> rcv2.weightedTargetValue);
                         targetValues.addNumber("WeightedAngle", () -> rcv2.weightedTargetAngle);
-
+                        targetValues.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
                         HttpCamera llght = new HttpCamera("CoCam",
                                         "http://10.21.94.11:5800/stream.mjpg");
 

@@ -26,6 +26,12 @@ public class RunCargoOutShooter extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
+    m_intake.cargoAtRearIntake = false;
+
+    m_intake.cargoAtFrontIntake = false;
+
+    m_transport.wrongCargoColor = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,7 +39,9 @@ public class RunCargoOutShooter extends CommandBase {
   public void execute() {
 
     m_shooter.spinAtRPM(1200);
+
     m_shooter.runTopAtVelocity(800);
+
     m_transport.runLowerAtVelocity(800);
 
   }
