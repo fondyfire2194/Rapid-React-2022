@@ -51,9 +51,9 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double cameraCalculatedSpeed;
     public double pset, iset, dset, ffset, izset;
     public boolean useCameraSpeed;
-    public boolean useSpeedSlider;
+    public boolean useThrottle;
     public boolean usePresetSpeed;
-    public int fromSlider = 0;
+    public int fromThrottle = 0;
     public int fromCamera = 1;
     public int fromPreset = 2;
 
@@ -99,7 +99,6 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public double adjustedCameraMPS;
     public double driverThrottleValue;
-   
 
     public double shooterRPMAdder;
     public double shooterRPMChange;
@@ -108,15 +107,14 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double minRPM = 100;
     public double shootCargosRunning;
 
-    public NetworkTableEntry shooterSpeed;
     public boolean correctCargoColor;
     public double topRequiredRPM;
     public double presetRPM = 1750;
-    public int shootSpeedSource;
+    public int shootSpeedSource = 0;
     public boolean haltTopRoller;
     public boolean atSpeed;
     public int shootSetup;
-    public String presetModeName;
+    public String presetModeName = "Not Assigned";
 
     public RevShooterSubsystem() {
 
@@ -145,18 +143,13 @@ public class RevShooterSubsystem extends SubsystemBase {
         m_topRollerMotor.setInverted(false);
         setTopRollerBrakeOn(true);
 
-        Arrays.asList(mLeftMotor, mRightMotor, m_topRollerMotor)
+        Arrays.asList(mLeftMotor, mRightMotor)
                 .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
 
         // Set motors to brake mode for faster stop
         Arrays.asList(mLeftMotor, mRightMotor, m_topRollerMotor)
                 .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
 
-        shooterSpeed = Shuffleboard.getTab("SetupShooter").add("ShooterSpeed",
-                3).withWidget("Number Slider")
-                .withPosition(0, 4).withSize(4, 1).withProperties(Map.of("Min", 500, "Max",
-                        5500))
-                .getEntry();
 
         tuneGains();
 
@@ -167,7 +160,6 @@ public class RevShooterSubsystem extends SubsystemBase {
         requiredRPM = 2500;
 
         shootOne = false;
-
 
         if (RobotBase.isReal()) {
 
@@ -284,11 +276,11 @@ public class RevShooterSubsystem extends SubsystemBase {
     }
 
     public double getRPMFromSpeedSource() {
-        useSpeedSlider = false;
+        useThrottle = false;
         switch (shootSpeedSource) {
             case 0:
-                useSpeedSlider = true;
-                return shooterSpeed.getDouble(500);
+                useThrottle = true;
+                return getRPMfromThrottle();
             case 1:
                 return cameraCalculatedSpeed;
             case 2:
@@ -298,6 +290,13 @@ public class RevShooterSubsystem extends SubsystemBase {
 
         }
 
+    }
+
+    public double getRPMfromThrottle() {
+        double maxrpm = 5500;
+        double minrpm = 500;
+        double rpmRange = maxrpm - minrpm;
+        return minrpm + rpmRange * driverThrottleValue;
     }
 
     public double getLeftPctOut() {

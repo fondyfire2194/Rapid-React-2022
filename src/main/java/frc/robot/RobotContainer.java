@@ -35,30 +35,23 @@ import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.VisionReferenceTarget;
 import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
-import frc.robot.commands.CargoTransport.RunLowerRoller;
 import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Climber.RunClimber;
-import frc.robot.commands.Intakes.ActiveIntakeArmLower;
-import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
-import frc.robot.commands.Intakes.ReverseActiveIntakeMotor;
+import frc.robot.commands.Climber.StopClimber;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Intakes.StopActiveIntake;
-import frc.robot.commands.Intakes.StopIntakeMotors;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
 import frc.robot.commands.Shooter.ChangeShooterSpeed;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
 import frc.robot.commands.Shooter.RunShooter;
-import frc.robot.commands.Shooter.RunTopRoller;
 import frc.robot.commands.Shooter.ShootCargo;
 //import frc.robot.commands.Shooter.ShootTwoCargo;
 import frc.robot.commands.Shooter.StopShoot;
-import frc.robot.commands.Shooter.StopShooter;
-import frc.robot.commands.Shooter.StopTopRoller;
 import frc.robot.commands.Tilt.PositionHoldTilt;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Tilt.TiltJog;
@@ -91,7 +84,8 @@ public class RobotContainer {
       // The driver's controller
       public final Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
       public final XboxController codriverGamepad = new XboxController(OIConstants.kCoDriverControllerPort);
-  //    public final XboxController setupGamepad = new XboxController(OIConstants.kSetupControllerPort);
+      // public final XboxController setupGamepad = new
+      // XboxController(OIConstants.kSetupControllerPort);
 
       public final RevDrivetrain m_drive;
 
@@ -130,7 +124,6 @@ public class RobotContainer {
       public FondyFireTrajectory m_trajectory;
 
       public VisionReferenceTarget m_vrt;
-
 
       // Drive joystick
 
@@ -212,6 +205,8 @@ public class RobotContainer {
             m_turret.setDefaultCommand(new PositionHoldTurret(m_turret,
                         m_limelight));
 
+            m_climber.setDefaultCommand(new StopClimber(m_climber));
+
             m_limelight.setCamMode(CamMode.kvision);
             m_limelight.setLEDMode(LedMode.kpipeLine);
             m_limelight.setStream((StreamType.kStandard));
@@ -227,7 +222,7 @@ public class RobotContainer {
 
             m_trajectory = new FondyFireTrajectory(m_drive);
 
-            Show_Hide_Screens.setStates(true, false, false);
+            Show_Hide_Screens.setStates(false, false, true);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intake, m_climber, m_trajectory);
@@ -278,11 +273,12 @@ public class RobotContainer {
 
             new JoystickButton(m_driverController, 1)
                         .whileHeld(new RunActiveIntake(m_intake, m_transport))
-                        .whenPressed(new RunLowerRollerIntake(m_transport))
+                        .whenPressed(new RunLowerRollerIntake(m_transport, m_intake))
                         .whenReleased(new StopActiveIntake(m_intake));
 
             new JoystickButton(m_driverController, 2)
-                        .whenPressed(new ShootCargo(m_shooter, m_transport, m_intake, false));
+                        .whenPressed(new RunShooter(m_shooter))
+                        .whenPressed(new ShootCargo(m_shooter, m_transport, m_intake));
 
             new JoystickButton(m_driverController, 6).whenPressed(new SetFrontIntakeActive(m_intake, true));
 
@@ -307,18 +303,23 @@ public class RobotContainer {
 
             // new JoystickButton(m_driverController, 9)
 
-            // new JoystickButton(m_driverController, 11)
+            new JoystickButton(m_driverController, 11).whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmUp")));
 
-            //
-            // new JoystickButton(m_driverController, 12)
+            new JoystickButton(m_driverController, 12)
+                        .whileHeld(new RunClimber(m_climber, -Pref.getPref("ClimbArmDown")));
 
-            driverUpButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, m_limelight, 0));// tarmac line upper hub
+            driverUpButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, m_limelight, 0));// tarmac line
+                                                                                                         // upper hub
 
-            driverDownButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, m_limelight, 1));// tarmac line lower hub
+            driverDownButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, m_limelight, 1));// tarmac
+                                                                                                           // line lower
+                                                                                                           // hub
 
-            driverLeftButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, m_limelight, 2));// against hub upper
+            driverLeftButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, m_limelight, 2));// against
+                                                                                                           // hub upper
 
-            driverRightButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, m_limelight, 3));// against hub lower
+            driverRightButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, m_limelight, 3));// against
+                                                                                                            // hub lower
 
             /**
              * co driver can empty robot
@@ -327,14 +328,15 @@ public class RobotContainer {
             codriverStart.whileHeld(new RunCargoOutShooter(m_shooter, m_intake, m_transport));
 
             codriverX.whileHeld(getJogTiltVelocityCommand(codriverGamepad))
-                        .whileHeld(getJogTurretVelocityCommand(codriverGamepad)).whenReleased(new TiltWaitForStop(m_tilt))
+                        .whileHeld(getJogTurretVelocityCommand(codriverGamepad))
+                        .whenReleased(new TiltWaitForStop(m_tilt))
                         .whenReleased(new TurretWaitForStop(m_turret));
 
             codriverY.whileHeld(getJogTiltCommand(codriverGamepad)).whileHeld(getJogTurretCommand(codriverGamepad))
                         .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));
 
             codriverB.whenPressed(new SetFrontIntakeActive(m_intake, false));
-                        
+
             codriverUpButton.whenPressed(new ChangeShooterSpeed(m_shooter, +100));
             codriverDownButton.whenPressed(new ChangeShooterSpeed(m_shooter, -100));
             codriverRightButton.whenPressed(new ChangeShooterSpeed(m_shooter, +250));
@@ -342,22 +344,6 @@ public class RobotContainer {
 
             codriverA.whileHeld(new SetFrontIntakeActive(m_intake, true));
 
-            // // climber
-
-            // codriverLeftTrigger
-
-            // .whenPressed(() -> m_climber.unlockRatchet())
-
-            // .whileHeld(getRunClimberMotorCommand(codriverGamepad))
-
-            // .whenReleased(() -> m_climber.stopMotor())
-
-            // .whenReleased(() -> m_climber.lockRatchet());
-
-            // codriverBack.whenPressed(new ClimberArm(m_climber, true));
-
-         
-      
             LiveWindow.disableAllTelemetry();
 
       }
@@ -387,7 +373,7 @@ public class RobotContainer {
       }
 
       public Command getJogTiltCommand(XboxController gamepad) {
-            return new TiltJog(m_tilt, () -> -gamepad.getRawAxis(1) / 5, gamepad);
+            return new TiltJog(m_tilt, () -> -gamepad.getRawAxis(1) / 2, gamepad);
       }
 
       /**
@@ -428,13 +414,8 @@ public class RobotContainer {
             return new JogShooterVelocity(m_shooter, () -> codriverGamepad.getRawAxis(4));
       }
 
-      public Command getRunClimberMotorCommand(XboxController gamepad) {
-
-            return new RunClimber(m_climber, () -> codriverGamepad.getRawAxis(1));
-      }
-
       public double getThrottle() {
-            return (1 - m_driverController.getThrottle()) / 2;
+            return (1 + m_driverController.getThrottle()) / 2;
       }
 
       public void checkCANDevices() {

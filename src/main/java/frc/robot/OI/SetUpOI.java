@@ -107,7 +107,7 @@ public class SetUpOI {
                         intakeValues.addNumber("Motor CMD", () -> intake.getActiveMotor());
                         intakeValues.addBoolean("CargoAtRearIn", () -> intake.getCargoAtRear());
                         intakeValues.addBoolean("CargoAtFrontIn", () -> intake.getCargoAtFront());
-
+                        intakeActions.add("IntakeCmd", intake);
                         UsbCamera frontIntakeCamera = CameraServer.startAutomaticCapture("FrontCam", 0);
 
                         ShuffleboardTab frontFeed = Shuffleboard.getTab("FrontIntakeCamera");
@@ -282,13 +282,13 @@ public class SetUpOI {
                                         .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                         shooterCommands.add("Stop Shoot", new StopShoot(shooter, transport));
-                        shooterCommands.add("Start Shooter", new SequentialCommandGroup(
-                                        new SetShootSpeedSource(shooter, shooter.fromSlider), new RunShooter(shooter)));
+
+                        shooterCommands.add("Start Shooter", new RunShooter(shooter));
 
                         shooterCommands.add("ShootOne",
-                                        new ShootCargo(shooter, transport, intake, false));
+                                        new ShootCargo(shooter, transport, intake));
                         shooterCommands.add("ShootTwo",
-                                        new ShootCargo(shooter, transport, intake, true));
+                                        new ShootCargo(shooter, transport, intake));
 
                         shooterCommands.add("ClearFaults", new ClearShFaults(shooter));
 
@@ -328,7 +328,7 @@ public class SetUpOI {
                         shooterValues.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
                         shooterValues1.addBoolean("TuneOn", () -> (shooter.tuneOn && shooter.lastTuneOn));
                         shooterValues1.addBoolean("BothConnected(6,7)", () -> shooter.allConnected);
-                        shooterValues1.addBoolean("Use Slider", () -> shooter.useSpeedSlider);
+                        shooterValues1.addBoolean("Use Throttle", () -> shooter.useThrottle);
                         shooterValues1.addString("PresetMode", () -> shooter.presetModeName);
                         ShuffleboardLayout shooterValues2 = Shuffleboard.getTab("SetupShooter")
 
@@ -358,6 +358,7 @@ public class SetUpOI {
                         transportValues.addNumber("LowRollOut", () -> transport.getLowerRoller());
                         transportValues.add("Cmd", transport);
                         transportValues.addBoolean("LowerRollerAtSpeed", () -> transport.getLowerRollerAtSpeed());
+                        transportValues.addBoolean("WrongColor", () -> transport.wrongCargoColor);
 
                         ShuffleboardLayout transportValues1 = Shuffleboard.getTab("SetupTransport")
                                         .getLayout("TransportStates", BuiltInLayouts.kGrid).withPosition(2, 0)
@@ -376,10 +377,8 @@ public class SetUpOI {
                                         .getLayout("Climber", BuiltInLayouts.kList).withPosition(7, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels
 
-                        climberInfo.addBoolean("ClimbArmUp", () -> climber.getArmRaised());
-                        climberInfo.addBoolean("ClimbArmUDown", () -> climber.getArmLowered());
-                        climberInfo.addBoolean("Locked", () -> climber.getRatchetLocked());
-                        climberInfo.addBoolean("Unlocked", () -> climber.getRatchetUnlocked());
+                        climberInfo.addNumber("ClimberAmps", () -> climber.getMotorAmps());
+                        climberInfo.addNumber("ClimberOut", () -> climber.getMotorOut());
 
                 }
 

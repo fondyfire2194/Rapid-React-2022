@@ -23,7 +23,7 @@ public final class Show_Hide_Screens {
     SetUpOI.showRobot = testing;
     SetUpOI.showTransport = testing;
     SetUpOI.showClimber = testing;
-    SetUpOI.showSubsystems = testing;
+    SetUpOI.showSubsystems = true;
     SetUpOI.showIntake = testing;
 
     LLVisionShuffleboard.m_showVision = showVision;

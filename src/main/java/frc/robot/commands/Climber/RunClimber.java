@@ -14,12 +14,12 @@ public class RunClimber extends CommandBase {
 
   private final ClimberSubsystem m_climber;
 
-  private Supplier<Double> m_xaxisSpeedSupplier;
+  private double m_speed;
 
-  public RunClimber(ClimberSubsystem climber, Supplier<Double> xaxisSpeedSupplier) {
+  public RunClimber(ClimberSubsystem climber, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_climber = climber;
-    m_xaxisSpeedSupplier = xaxisSpeedSupplier;
+    m_speed=speed;
 
     addRequirements(m_climber);
   }
@@ -33,18 +33,14 @@ public class RunClimber extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    if (m_climber.getArmRaised() && m_climber.getRatchetUnlocked()) {
-
-      m_climber.runMotor(-m_xaxisSpeedSupplier.get());
-    }
-
+      m_climber.runMotor(m_speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_climber.runMotor(0);
+    m_climber.stopMotor();
   }
 
   // Returns true when the command should end.

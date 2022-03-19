@@ -34,10 +34,10 @@ public class Pref {
 
     // Tilt smart motion
     prefDict.put("tIKff", .0);
-    prefDict.put("tIKp", .3);
-    prefDict.put("tIKi", .00007);
-    prefDict.put("tIKd", 0.5);
-    prefDict.put("tIKiz", 0.5);
+    prefDict.put("tIKp", .4);
+    prefDict.put("tIKi", .0005);
+    prefDict.put("tIKd", 0.6);
+    prefDict.put("tIKiz", 0.75);
     prefDict.put("tIMaxV", 550.);// deg per sec
     prefDict.put("tIMaxA", 150.);// deg per sec/sec
     prefDict.put("tITune", 0.);
@@ -92,18 +92,21 @@ public class Pref {
 
     prefDict.put("LowRollIntakeRPM", 250.);
 
-    prefDict.put("LowRollReleaseRPM", 500.);  
+    prefDict.put("LowRollReleaseRPM", 500.);
 
-    prefDict.put("TopRollShootRPM", 950.);
+    prefDict.put("TopRollShootRPM", 500.);
 
     prefDict.put("Rollers_kP", .0008);
-  
+
     prefDict.put("Rollers_kD", .015);
 
-    prefDict.put("CargoDetectValue",1000.);
+    prefDict.put("CargoDetectValue", 1000.);
 
-    prefDict.put("LowRollStopTime",.25);
+    prefDict.put("LowRollStopTime", .2);
 
+    prefDict.put("ClimbArmDown", -.75);
+
+    prefDict.put("ClimbArmUp", .75);
 
     // camera
 

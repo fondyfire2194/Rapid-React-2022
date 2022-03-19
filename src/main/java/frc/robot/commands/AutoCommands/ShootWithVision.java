@@ -44,7 +44,7 @@ public class ShootWithVision extends SequentialCommandGroup {
 
         new ParallelRaceGroup(
 
-            new ShootCargo(shooter, transport, intake, true),
+            new ShootCargo(shooter, transport, intake),
 
             new RunShooter(shooter))
 

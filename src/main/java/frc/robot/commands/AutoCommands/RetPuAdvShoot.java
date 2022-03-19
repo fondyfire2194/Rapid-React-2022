@@ -30,7 +30,6 @@ import frc.robot.subsystems.RevTurretSubsystem;
 
 public class RetPuAdvShoot extends SequentialCommandGroup {
 
-
         /** Creates a new LRetPuShoot. */
         public RetPuAdvShoot(IntakesSubsystem intake, RevDrivetrain drive,
                         CargoTransportSubsystem transport, RevShooterSubsystem shooter, RevTiltSubsystem tilt,
@@ -71,10 +70,16 @@ public class RetPuAdvShoot extends SequentialCommandGroup {
                                                 new PositionTurret(turret, upperTurretAngle)),
 
                                 new ParallelRaceGroup(
-                                                new ShootCargo(shooter, transport, intake, true),
+                                                new SequentialCommandGroup(new ShootCargo(shooter, transport, intake),
+                                                                
+                                                new ShootCargo(shooter, transport, intake)),
+
                                                 new RunShooter(shooter))
+
                                                                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret,
-                                                                                ll)));
+                                                                                ll)),
+
+                                new ParallelCommandGroup(new PositionTilt(tilt, 0), new PositionTurret(turret, 0)));
 
         }
 }

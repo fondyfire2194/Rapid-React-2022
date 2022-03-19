@@ -120,7 +120,7 @@ public class RevTiltSubsystem extends SubsystemBase {
         mPidController = m_motor.getPIDController();
         m_motor.restoreFactoryDefaults();
         m_motor.setInverted(false);
-        m_motor.setOpenLoopRampRate(5);
+        m_motor.setOpenLoopRampRate(1);
         aimCenter();
         mEncoder.setPosition(0);
         targetAngle = 0;
@@ -128,7 +128,7 @@ public class RevTiltSubsystem extends SubsystemBase {
         mEncoder.setPositionConversionFactor(degreesPerRev);
         mEncoder.setVelocityConversionFactor(degreesPerRev / 60);
 
-        m_motor.setSmartCurrentLimit(3);
+        m_motor.setSmartCurrentLimit(20);
 
         setFF_MaxOuts();
         tunePosGains();
@@ -387,7 +387,7 @@ public class RevTiltSubsystem extends SubsystemBase {
         double i = Pref.getPref("tIKi");
         double d = Pref.getPref("tIKd");
         double iz = Pref.getPref("tIKiz");
-        allowedErr = .01;
+        allowedErr = .001;
         kMinOutput = -.5;
         kMaxOutput = .5;
         mPidController.setOutputRange(kMinOutput, kMaxOutput, POSITION_SLOT);

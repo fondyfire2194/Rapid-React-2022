@@ -11,30 +11,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimberSubsystem;
 
-public class JogClimber extends CommandBase {
+public class StopClimber extends CommandBase {
   /** Creates a new TurnClimberMotor. */
 
   private final ClimberSubsystem m_climber;
-  private final Supplier<Double> m_xaxisSpeedSupplier;
-  private XboxController m_controller;
+ 
 
-  public JogClimber(ClimberSubsystem climber, Supplier<Double> xaxisSpeedSupplier, XboxController controller) {
+  public StopClimber(ClimberSubsystem climber) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_climber = climber;
-    m_controller = controller;
-    m_xaxisSpeedSupplier = xaxisSpeedSupplier;
+   addRequirements(m_climber);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {SmartDashboard.putNumber("CLIMBer", m_xaxisSpeedSupplier.get());
+  public void initialize() {
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    m_climber.runMotor(m_xaxisSpeedSupplier.get());
+
+    m_climber.stopMotor();
   }
 
   // Called once the command ends or is interrupted.

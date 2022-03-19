@@ -18,8 +18,6 @@ public class ClimberSubsystem extends SubsystemBase {
   /** Creates a new Climber. */
 
   final WPI_TalonSRX m_climberMotor = new WPI_TalonSRX(CANConstants.CLIMB_MOTOR);
-  final DoubleSolenoid m_climberArm = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 4, 5);
-  final DoubleSolenoid m_climberRatchet = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,6, 7);
 
   public boolean climberMotorConnected;
 
@@ -28,9 +26,7 @@ public class ClimberSubsystem extends SubsystemBase {
     m_climberMotor.configFactoryDefault();
 
     m_climberMotor.setNeutralMode(NeutralMode.Brake);
-    
-    
-    lockRatchet();
+
 
   }
 
@@ -59,38 +55,6 @@ public class ClimberSubsystem extends SubsystemBase {
     }
   }
 
-  public void raiseArm() {
-    m_climberArm.set(DoubleSolenoid.Value.kReverse);
-  }
-
-  public void lowerArm() {
-    m_climberArm.set(DoubleSolenoid.Value.kForward);
-  }
-
-  public boolean getArmRaised() {
-    return m_climberArm.get() == DoubleSolenoid.Value.kReverse;
-  }
-
-  public boolean getArmLowered() {
-    return m_climberArm.get() == DoubleSolenoid.Value.kForward;
-  }
-
-  public void lockRatchet() {
-    m_climberRatchet.set(DoubleSolenoid.Value.kForward);
-  }
-
-  public void unlockRatchet() {
-    m_climberRatchet.set(DoubleSolenoid.Value.kReverse);
-  }
-
-  public boolean getRatchetLocked() {
-    return m_climberRatchet.get() == DoubleSolenoid.Value.kForward;
-  }
-
-  public boolean getRatchetUnlocked() {
-    return m_climberRatchet.get() == DoubleSolenoid.Value.kReverse;
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -102,11 +66,5 @@ public class ClimberSubsystem extends SubsystemBase {
 
   }
 
-  public void simulationInit() {
-  
-  }
-
-  public void simulationPeriodic() {
-   
-  }
+ 
 }

@@ -22,8 +22,10 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.RetPuAdvShoot;
+import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.RobotDrive.PositionStraight;
+import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -113,10 +115,7 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putBoolean("FMSConn", m_robotContainer.isMatch);
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
-    // SmartDashboard.putNumber("thr",m_robotContainer.m_driverController.getThrottle());
-    SmartDashboard.putNumber("thr1", m_robotContainer.getThrottle());
-    SmartDashboard.putNumber("thry", m_robotContainer.m_driverController.getY());
-
+    
     m_robotContainer.m_limelight.periodic();
 
     loopCtr++;
@@ -147,6 +146,8 @@ public class Robot extends TimedRobot {
 
   public void autonomousInit() {
 
+    m_robotContainer.m_drive.resetAll();
+    autoHasRun = false;
     m_robotContainer.m_limelight.allianceIsBlue = DriverStation.getAlliance() == Alliance.Blue;
 
     m_robotContainer.m_drive.setIdleMode(true);
@@ -246,7 +247,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
 
     }
-
+    autoHasRun = false;
     Shuffleboard.update();
 
     Shuffleboard.startRecording();
@@ -260,10 +261,16 @@ public class Robot extends TimedRobot {
     if (RobotBase.isReal() && !m_robotContainer.m_tilt.positionResetDone)
 
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
-    m_robotContainer.m_limelight.setPipeline(PipelinesConstants.ledsOffPipeline);
-    m_robotContainer.m_limelight.useVision = false;
+  
+      m_robotContainer.m_limelight.setPipeline(PipelinesConstants.ledsOffPipeline);
+  
+      m_robotContainer.m_limelight.useVision = false;
 
     m_robotContainer.m_intake.setFrontActive();
+
+    m_robotContainer.m_shooter.shootSpeedSource = m_robotContainer.m_shooter.fromPreset;
+
+    new SetShootPositionSpeedTilt(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_limelight, 0).schedule();;
 
     new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_rcv2, m_robotContainer.m_tilt,
         m_robotContainer.m_turret, m_robotContainer.m_shooter).schedule();

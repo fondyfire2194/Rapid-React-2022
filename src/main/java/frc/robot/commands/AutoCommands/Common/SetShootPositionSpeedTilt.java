@@ -52,13 +52,14 @@ public class SetShootPositionSpeedTilt extends InstantCommand {
         m_tilt.presetPosition = FieldMap.shootMode_2[1];
         m_ll.setPipeline(PipelinesConstants.noZoom960720);
         break;
-      case 3:
-        m_shooter.presetRPM = FieldMap.shootMode_3[0];
+      case 3://test mode
+        m_shooter.shootSpeedSource = m_shooter.fromThrottle;
         m_tilt.presetPosition = FieldMap.shootMode_3[1];
         m_ll.setPipeline(PipelinesConstants.noZoom960720);
         break;
       default:
-        m_shooter.presetRPM = FieldMap.shootMode_0[0];
+        m_shooter.shootSpeedSource = m_shooter.fromThrottle;       
+        m_shooter.presetRPM = m_shooter.getRPMfromThrottle();
         m_tilt.presetPosition = FieldMap.shootMode_0[1];
         m_ll.setPipeline(PipelinesConstants.noZoom960720);
         break;

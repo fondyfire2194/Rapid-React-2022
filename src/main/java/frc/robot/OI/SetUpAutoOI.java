@@ -112,6 +112,7 @@ public class SetUpAutoOI {
                         compet1.addNumber("LeftAmps", () -> shooter.getLeftAmps());
                         compet1.addNumber("RightAmps", () -> shooter.getRightAmps());
                         compet1.addNumber("RQDRPM", () -> shooter.requiredRPM);
+                        compet1.addNumber("RobotPosn", ()->drive.getAverageDistance());
 
                         ShuffleboardLayout compet2 = Shuffleboard.getTab("Competition")
                                         .getLayout("Info", BuiltInLayouts.kList).withPosition(2, 0).withSize(1, 4)
@@ -126,6 +127,7 @@ public class SetUpAutoOI {
                         compet3.addNumber("Match Time", () -> DriverStation.getMatchTime());
                         compet3.addBoolean("WrongColorCargo", () -> transport.wrongCargoColor);
                         compet3.addBoolean("TwoCargoOnBoard", () -> intake.twoCargoOnBoard);
+                        compet3.addBoolean("FrontIntake", () -> intake.useFrontIntake);
 
                         ShuffleboardTab llFeed = Shuffleboard.getTab("Competition");
 

@@ -27,10 +27,7 @@ public class RunCargoOutShooter extends CommandBase {
   @Override
   public void initialize() {
 
-    m_intake.cargoAtRearIntake = false;
-
-    m_intake.cargoAtFrontIntake = false;
-
+  
     m_transport.wrongCargoColor = false;
   }
 

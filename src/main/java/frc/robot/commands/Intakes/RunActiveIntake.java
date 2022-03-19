@@ -34,10 +34,6 @@ public class RunActiveIntake extends CommandBase {
 
     stopActiveIntakeNow = false;
 
-    m_intake.cargoAtFrontIntake = false;
-
-    m_intake.cargoAtRearIntake = false;
-
     m_intake.setFrontCurrentLimit(20);
 
     m_intake.setRearCurrentLimit(20);
@@ -54,17 +50,15 @@ public class RunActiveIntake extends CommandBase {
 
     m_intake.lowerActiveArm();
 
-    //watch for second cargo and latch its arrival
-    //stop intake quickly and latch cargo at intake in case it goes
-    //out of sensor range
+    // watch for second cargo and latch its arrival
+    // stop intake quickly and latch cargo at intake in case it goes
+    // out of sensor range
 
     if (m_transport.getCargoAtShoot()) {
 
       if (m_intake.useFrontIntake) {
 
         stopActiveIntakeNow = m_intake.getCargoAtFront();
-
-        m_intake.cargoAtFrontIntake = stopActiveIntakeNow;
 
         m_startTime = Timer.getFPGATimestamp();
 
@@ -75,8 +69,6 @@ public class RunActiveIntake extends CommandBase {
       if (!m_intake.useFrontIntake) {
 
         stopActiveIntakeNow = m_intake.getCargoAtRear();
-
-        m_intake.cargoAtRearIntake = stopActiveIntakeNow;
 
         m_startTime = Timer.getFPGATimestamp();
 
@@ -107,6 +99,8 @@ public class RunActiveIntake extends CommandBase {
     m_intake.stopFrontIntakeMotor();
     m_intake.stopRearIntakeMotor();
     stopActiveIntakeNow = false;
+    m_transport.stopLowerRoller();
+    m_intake.stopLowerRoller = true;
 
     if (Robot.getFMSConnected())
 

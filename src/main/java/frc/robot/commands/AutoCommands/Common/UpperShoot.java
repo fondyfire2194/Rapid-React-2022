@@ -49,7 +49,7 @@ public class UpperShoot extends SequentialCommandGroup {
 
         new ParallelRaceGroup(new RunShooter(shooter),
 
-            new ShootCargo(shooter, transport, intake,true))
+            new ShootCargo(shooter, transport, intake))
 
                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret, ll)));
 

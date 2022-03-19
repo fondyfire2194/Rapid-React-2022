@@ -42,6 +42,7 @@ public class RunShooter extends CommandBase {
   public void execute() {
 
     if (m_rpm != m_shooter.getRPMFromSpeedSource()) {
+
       m_rpm = m_shooter.getRPMFromSpeedSource();
     }
 
@@ -55,7 +56,7 @@ public class RunShooter extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_shooter.stop();
-    m_shooter.useSpeedSlider = false;
+  
   }
 
   // Returns true when the command should end.
