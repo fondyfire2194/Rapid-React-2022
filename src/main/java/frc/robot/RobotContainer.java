@@ -59,6 +59,7 @@ import frc.robot.commands.Tilt.TiltJogVelocity;
 import frc.robot.commands.Tilt.TiltWaitForStop;
 import frc.robot.commands.Turret.PositionHoldTurret;
 import frc.robot.commands.Turret.PositionTurret;
+import frc.robot.commands.Turret.PositionTurretIncremental;
 import frc.robot.commands.Turret.TurretJog;
 import frc.robot.commands.Turret.TurretJogVelocity;
 import frc.robot.commands.Turret.TurretWaitForStop;
@@ -148,25 +149,6 @@ public class RobotContainer {
       public POVButton codriverDownButton = new POVButton(codriverGamepad, 180);
       public POVButton codriverLeftButton = new POVButton(codriverGamepad, 270);
 
-      // Setup gamepad XBox 3
-      // JoystickButton setupA = new JoystickButton(setupGamepad, 1);
-      // JoystickButton setupB = new JoystickButton(setupGamepad, 2);
-      // JoystickButton setupX = new JoystickButton(setupGamepad, 3);
-      // JoystickButton setupY = new JoystickButton(setupGamepad, 4);
-      // JoystickButton setupLeftTrigger = new JoystickButton(setupGamepad, 5);
-      // JoystickButton setupRightTrigger = new JoystickButton(setupGamepad, 6);
-
-      // JoystickButton setupBack = new JoystickButton(setupGamepad, 7);
-      // JoystickButton setupStart = new JoystickButton(setupGamepad, 8);
-
-      // JoystickButton setupLeftStick = new JoystickButton(setupGamepad, 11);
-      // JoystickButton setupRightStick = new JoystickButton(setupGamepad, 12);
-
-      // public POVButton setupUpButton = new POVButton(setupGamepad, 0);
-      // public POVButton setupRightButton = new POVButton(setupGamepad, 90);
-      // public POVButton setupDownButton = new POVButton(setupGamepad, 180);
-      // public POVButton setupLeftButton = new POVButton(setupGamepad, 270);
-
       public POVButton driverUpButton = new POVButton(m_driverController, 0);
       public POVButton driverRightButton = new POVButton(m_driverController, 90);
       public POVButton driverDownButton = new POVButton(m_driverController, 180);
@@ -222,7 +204,11 @@ public class RobotContainer {
 
             m_trajectory = new FondyFireTrajectory(m_drive);
 
+            // test configuration
             Show_Hide_Screens.setStates(false, false, true);
+
+            // competition configuration
+            // Show_Hide_Screens.setStates(true, false, false);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intake, m_climber, m_trajectory);
@@ -341,8 +327,11 @@ public class RobotContainer {
             codriverDownButton.whenPressed(new ChangeShooterSpeed(m_shooter, -100));
             codriverRightButton.whenPressed(new ChangeShooterSpeed(m_shooter, +250));
             codriverLeftButton.whenPressed(new ChangeShooterSpeed(m_shooter, -250));
-
             codriverA.whileHeld(new SetFrontIntakeActive(m_intake, true));
+
+            codriverLeftTrigger.whenPressed(new PositionTurretIncremental(m_turret, 1));
+
+            codriverRightTrigger.whenPressed(new PositionTurretIncremental(m_turret, -1));
 
             LiveWindow.disableAllTelemetry();
 

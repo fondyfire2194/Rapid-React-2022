@@ -102,7 +102,9 @@ public class Pref {
 
     prefDict.put("CargoDetectValue", 1000.);
 
-    prefDict.put("LowRollStopTime", .2);
+    prefDict.put("LowRollStopTimeRed", .2);
+
+    prefDict.put("LowRollStopTimeBlue", .2);
 
     prefDict.put("ClimbArmDown", -.75);
 

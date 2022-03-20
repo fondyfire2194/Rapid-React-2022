@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
+import frc.robot.Robot;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 
@@ -18,10 +19,12 @@ public class RunLowerRollerIntake extends CommandBase {
 
   private double m_startTime;
 
-  public RunLowerRollerIntake(CargoTransportSubsystem transport,IntakesSubsystem intake) {
+  private double activeLowStopTime;
+
+  public RunLowerRollerIntake(CargoTransportSubsystem transport, IntakesSubsystem intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_transport = transport;
-m_intake=intake;
+    m_intake = intake;
     addRequirements(m_transport);
   }
 
@@ -30,8 +33,14 @@ m_intake=intake;
   public void initialize() {
     m_transport.haltLowerRollerMotor = false;
     m_transport.latchCargoAtShoot = false;
-    m_startTime=0;
-    m_intake.stopLowerRoller=false;
+    m_startTime = 0;
+    m_intake.stopLowerRoller = false;
+
+    activeLowStopTime = Pref.getPref("LowRollStopTimeRed");
+
+    if (Robot.getAllianceColorBlue())
+    
+      activeLowStopTime = Pref.getPref("LowRollStopTimeBlue");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -50,7 +59,7 @@ m_intake=intake;
     }
 
     SmartDashboard.putNumber("ISTA", m_startTime);
-    
+
     SmartDashboard.putBoolean("LATCH", m_transport.latchCargoAtShoot);
   }
 
@@ -61,11 +70,12 @@ m_intake=intake;
 
   }
 
-  // Returns true when the command should end.  
+  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_transport.getCargoAtShoot()||  m_intake.stopLowerRoller|| m_transport.latchCargoAtShoot && m_startTime != 0
-        && Timer.getFPGATimestamp() > m_startTime + Pref.getPref("LowRollStopTime");
+    return m_transport.getCargoAtShoot() || m_intake.stopLowerRoller
+        || m_transport.latchCargoAtShoot && m_startTime != 0
+            && Timer.getFPGATimestamp() > m_startTime + activeLowStopTime;
 
   }
 }

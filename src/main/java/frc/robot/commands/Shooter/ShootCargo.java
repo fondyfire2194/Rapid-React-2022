@@ -7,11 +7,13 @@ package frc.robot.commands.Shooter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
+import frc.robot.Robot;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
 
 public class ShootCargo extends CommandBase {
+
   /** Creates a new ShootCargo. */
   private RevShooterSubsystem m_shooter;
   private CargoTransportSubsystem m_transport;
@@ -28,6 +30,7 @@ public class ShootCargo extends CommandBase {
 
   private boolean endit1;
   private boolean endit2;
+  private double activeLowStopTime;
 
   public ShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
       IntakesSubsystem intake) {
@@ -59,13 +62,17 @@ public class ShootCargo extends CommandBase {
 
     m_transport.latchCargoAtShoot = false;
 
+    activeLowStopTime = Pref.getPref("LowRollStopTimeRed");
+    if (Robot.getAllianceColorBlue())
+      activeLowStopTime = Pref.getPref("LowRollStopTimeBlue");
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    //m_shooter.runShooterPlusRoller(m_shooter.getRPMFromSpeedSource());
+    // m_shooter.runShooterPlusRoller(m_shooter.getRPMFromSpeedSource());
 
     cargoAtShoot = m_transport.getCargoAtShoot();
 
@@ -101,8 +108,11 @@ public class ShootCargo extends CommandBase {
     // new cargo on its way and low roller is running
 
     if (frontIntakeRunning || rearIntakeRunning) {
+
       if (!m_transport.latchCargoAtShoot)
-        m_transport.runLowerAtVelocity(500);
+
+        m_transport.runLowerAtVelocity(Pref.getPref("LowRollIntakeRPM"));
+
       if (!m_transport.latchCargoAtShoot && m_transport.getCargoAtShoot()) {
 
         m_startTime_2 = Timer.getFPGATimestamp();
@@ -113,7 +123,8 @@ public class ShootCargo extends CommandBase {
       }
       // second cargo end
       endit2 = m_transport.latchCargoAtShoot && m_startTime != 0
-          && Timer.getFPGATimestamp() > m_startTime + Pref.getPref("LowRollStopTime");
+
+          && Timer.getFPGATimestamp() > m_startTime + activeLowStopTime;
 
     }
 
