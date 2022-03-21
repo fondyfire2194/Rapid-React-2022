@@ -4,14 +4,12 @@
 
 package frc.robot.commands.AutoCommands.Common;
 
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.Turret.PositionTurretToVision;
 import frc.robot.commands.Turret.TurretWaitForStop;
-import frc.robot.commands.Vision.SetUpLimelightForTarget;
+import frc.robot.commands.Vision.UseVision;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
@@ -26,30 +24,9 @@ public class AcquireTarget extends SequentialCommandGroup {
                 // Add your commands in the addCommands() call, e.g.
                 // addCommands(new FooCommand(), new BarCommand());
 
-                /**
-                 * Camera is fixed so should see a target on either or possibly both no and 2x
-                 * zoom
-                 * Start with 2x and if no target or a target with bounding box height > set
-                 * 
-                 * value (tbd) then change to no zoom and check.
-                 * 
-                 * 
-                 * 
-                 * 
-                 */
+        
 
-                addCommands(new SetUpLimelightForTarget(ll, PipelinesConstants.x2Zoom320240, false),
-
-                                new ConditionalCommand(new GetVisionValues(rcv2),
-
-                                                new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720,
-                                                                false),
-
-                                                () -> ll.getBoundingBoxHeightInX2ZoomRange()),
-
-                                new ConditionalCommand(new GetVisionValues(rcv2), new FindTargetFail("No Target", ll),
-
-                                                () -> ll.getBoundingBoxHeightInNoZoomRange()),
+                addCommands(new UseVision(ll, false),
 
                                 new PositionTurretToVision(turret, ll, ll.getdegRotationToTarget()),
 

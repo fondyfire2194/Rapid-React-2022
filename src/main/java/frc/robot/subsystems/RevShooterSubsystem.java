@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import java.util.Arrays;
-import java.util.Map;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -13,12 +12,10 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
@@ -50,7 +47,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double lastkP, lastkI, lastkD, lastkIz, lastkFF, lastkMaxOutput, lastkMinOutput, lastAcc;
     public double cameraCalculatedSpeed;
     public double pset, iset, dset, ffset, izset;
-   
+
     public int fromThrottle = 0;
     public int fromCamera = 1;
     public int fromPreset = 2;
@@ -62,6 +59,8 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double teleopSetupShooterSpeed;
 
     public boolean shotInProgress;
+
+    public int shootMode;
 
     public PowerDistribution pdp = new PowerDistribution(1, ModuleType.kCTRE);
 
@@ -98,7 +97,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double adjustedCameraMPS;
     public double driverThrottleValue;
 
-    public double shooterRPMAdder;
+    public double[] shooterRPMAdder = { 0, 0, 0, 0 };
     public double shooterRPMChange;
     public double cameraCalculatedTiltPosition;
     public double maxRPM = 5500;
@@ -113,6 +112,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public boolean atSpeed;
     public int shootSetup;
     public String presetModeName = "Not Assigned";
+    public int ShootMode;
 
     public RevShooterSubsystem() {
 
@@ -147,7 +147,6 @@ public class RevShooterSubsystem extends SubsystemBase {
         // Set motors to brake mode for faster stop
         Arrays.asList(mLeftMotor, mRightMotor, m_topRollerMotor)
                 .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
-
 
         tuneGains();
 
@@ -274,15 +273,14 @@ public class RevShooterSubsystem extends SubsystemBase {
     }
 
     public double getRPMFromSpeedSource() {
-        
+
         switch (shootSpeedSource) {
             case 0:
-                
                 return getRPMfromThrottle();
             case 1:
-                return cameraCalculatedSpeed;
+                return cameraCalculatedSpeed + shooterRPMAdder[shootMode];
             case 2:
-                return presetRPM;
+                return presetRPM + shooterRPMAdder[shootMode];
             default:
                 return 500;
 

@@ -24,6 +24,7 @@ public class SetupForShootLocation extends SequentialCommandGroup {
       // Add your commands in the addCommands() call, e.g.
       // addCommands(new FooCommand(), new BarCommand());
       addCommands(
+        
           new SetShootPositionSpeedTilt(shooter, tilt, ll, shootMode),
 
           new PositionTilt(tilt, 0),

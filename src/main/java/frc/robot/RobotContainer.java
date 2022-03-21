@@ -34,7 +34,7 @@ import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.VisionReferenceTarget;
-import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
+import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.AutoCommands.Common.SetupForShootLocation;
 import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
@@ -207,10 +207,15 @@ public class RobotContainer {
             m_trajectory = new FondyFireTrajectory(m_drive);
 
             // test configuration
-            Show_Hide_Screens.setStates(false, false, true);
+     //       Show_Hide_Screens.setStates(false, false, false, true);
+            // test configuration with hub vision
+            Show_Hide_Screens.setStates(false, false, true, true);
 
             // competition configuration
-            // Show_Hide_Screens.setStates(true, false, false);
+            // Show_Hide_Screens.setStates(true, false,false, false);
+ 
+            // competition with hub vision configuration
+            // Show_Hide_Screens.setStates(true, false,true, false);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intake, m_climber, m_trajectory);
@@ -294,11 +299,12 @@ public class RobotContainer {
 
             // new JoystickButton(m_driverController, 10).
 
-            // new JoystickButton(m_driverController, 9)
+             new JoystickButton(m_driverController, 9).whenPressed(new AcquireTarget(m_limelight, m_tilt, m_turret, m_rcv2));
 
             new JoystickButton(m_driverController, 11).whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmUp")));
 
             new JoystickButton(m_driverController, 12)
+
                         .whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmDown")));
 
             driverUpButton.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 0));// tarmac
@@ -332,10 +338,14 @@ public class RobotContainer {
             codriverB.whenPressed(new SetFrontIntakeActive(m_intake, false));
 
             codriverUpButton.whenPressed(new ChangeShooterSpeed(m_shooter, +100));
+
             codriverDownButton.whenPressed(new ChangeShooterSpeed(m_shooter, -100));
+
             codriverRightButton.whenPressed(new ChangeShooterSpeed(m_shooter, +250));
+
             codriverLeftButton.whenPressed(new ChangeShooterSpeed(m_shooter, -250));
-            codriverA.whileHeld(new SetFrontIntakeActive(m_intake, true));
+
+            codriverA.whenPressed(new SetFrontIntakeActive(m_intake, true));
 
             codriverLeftTrigger.whenPressed(new PositionTurretIncremental(m_turret, 1));
 
