@@ -22,6 +22,7 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.RetPuAdvShoot;
+import frc.robot.commands.AutoCommands.ShootRetract;
 import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.RobotDrive.PositionStraight;
@@ -205,6 +206,12 @@ public class Robot extends TimedRobot {
       case 4://
         data = FieldMap.centerTarmacData;
         m_autonomousCommand = new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            data);
+        break;
+
+        case 5://
+        data = FieldMap.leftTarmacData;
+        m_autonomousCommand = new ShootRetract( drive, tilt,turret, ll, transport, shooter,  intake, comp,
             data);
         break;
 

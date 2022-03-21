@@ -50,9 +50,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double lastkP, lastkI, lastkD, lastkIz, lastkFF, lastkMaxOutput, lastkMinOutput, lastAcc;
     public double cameraCalculatedSpeed;
     public double pset, iset, dset, ffset, izset;
-    public boolean useCameraSpeed;
-    public boolean useThrottle;
-    public boolean usePresetSpeed;
+   
     public int fromThrottle = 0;
     public int fromCamera = 1;
     public int fromPreset = 2;
@@ -276,10 +274,10 @@ public class RevShooterSubsystem extends SubsystemBase {
     }
 
     public double getRPMFromSpeedSource() {
-        useThrottle = false;
+        
         switch (shootSpeedSource) {
             case 0:
-                useThrottle = true;
+                
                 return getRPMfromThrottle();
             case 1:
                 return cameraCalculatedSpeed;

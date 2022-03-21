@@ -110,6 +110,8 @@ public class Pref {
 
     prefDict.put("ClimbArmUp", .75);
 
+    prefDict.put("ArcadeTurnKp", .4);
+
     // camera
 
     prefDict.put("HubTgtGn", 10.);

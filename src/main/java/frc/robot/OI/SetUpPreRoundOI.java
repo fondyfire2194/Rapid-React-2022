@@ -58,6 +58,8 @@ public class SetUpPreRoundOI {
                         autoChooser.addOption("Right Tarmac Center Retract Pickup Shoot",
                                         4);
 
+                        autoChooser.addOption("Shoot Plus Taxi",
+                                        5);
 
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
                                         .withPosition(2, 0); //
@@ -68,7 +70,6 @@ public class SetUpPreRoundOI {
                         startDelayChooser.addOption("Three Seconds", 3.);
                         startDelayChooser.addOption("Four Seconds", 4.);
                         startDelayChooser.addOption("Five Seconds", 5.);
-
 
                 }
 

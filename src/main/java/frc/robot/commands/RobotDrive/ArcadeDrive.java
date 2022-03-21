@@ -6,16 +6,15 @@ package frc.robot.commands.RobotDrive;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Pref;
 import frc.robot.subsystems.RevDrivetrain;
 
 public class ArcadeDrive extends CommandBase {
   private final RevDrivetrain m_drivetrain;
   private final Supplier<Double> m_xaxisSpeedSupplier;
   private final Supplier<Double> m_zaxisRotateSupplier;
-
 
   /**
    * Creates a new ArcadeDrive. This command will drive your robot according to
@@ -51,8 +50,8 @@ public class ArcadeDrive extends CommandBase {
 
     if (Math.abs(tempRot) < .05)
       tempRot = 0;
-SmartDashboard.putNumber("TestDrive",tempx);
-    m_drivetrain.arcadeDrive(tempx, tempRot / 3);
+    SmartDashboard.putNumber("TestDrive", tempx);
+    m_drivetrain.arcadeDrive(tempx, tempRot * Pref.getPref("ArcadeTurnKp"));
 
   }
 

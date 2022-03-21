@@ -35,10 +35,12 @@ import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.VisionReferenceTarget;
 import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
+import frc.robot.commands.AutoCommands.Common.SetupForShootLocation;
 import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Climber.RunClimber;
 import frc.robot.commands.Climber.StopClimber;
+import frc.robot.commands.Intakes.DelayOffIntake;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
@@ -257,10 +259,15 @@ public class RobotContainer {
              * 
              */
 
+            // new JoystickButton(m_driverController, 1)
+            //             .whileHeld(new RunActiveIntake(m_intake, m_transport))
+            //             .whenPressed(new RunLowerRollerIntake(m_transport, m_intake))
+            //             .whenReleased(new StopActiveIntake(m_intake));
+
             new JoystickButton(m_driverController, 1)
-                        .whileHeld(new RunActiveIntake(m_intake, m_transport))
+                        .whenPressed(new RunActiveIntake(m_intake, m_transport))
                         .whenPressed(new RunLowerRollerIntake(m_transport, m_intake))
-                        .whenReleased(new StopActiveIntake(m_intake));
+                        .whenReleased(new DelayOffIntake(m_intake));
 
             new JoystickButton(m_driverController, 2)
                         .whenPressed(new RunShooter(m_shooter))
@@ -292,20 +299,21 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 11).whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmUp")));
 
             new JoystickButton(m_driverController, 12)
-                        .whileHeld(new RunClimber(m_climber, -Pref.getPref("ClimbArmDown")));
+                        .whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmDown")));
 
-            driverUpButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, m_limelight, 0));// tarmac line
-                                                                                                         // upper hub
+            driverUpButton.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 0));// tarmac
+                                                                                                               // line
+            // upper hub
 
-            driverDownButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, m_limelight, 1));// tarmac
-                                                                                                           // line lower
-                                                                                                           // hub
+            driverDownButton.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 1));// tarmac
+            // line lower
+            // hub
 
-            driverLeftButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, m_limelight, 2));// against
-                                                                                                           // hub upper
+            driverLeftButton.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 2));// against
+            // hub upper
 
-            driverRightButton.whenPressed(new SetShootPositionSpeedTilt(m_shooter, m_tilt, m_limelight, 3));// against
-                                                                                                            // hub lower
+            driverRightButton.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 3));// against
+            // hub lower
 
             /**
              * co driver can empty robot

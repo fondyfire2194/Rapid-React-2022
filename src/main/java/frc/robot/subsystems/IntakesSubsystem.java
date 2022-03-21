@@ -48,10 +48,10 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public boolean stopLowerRoller;
 
-  
+  public boolean endIntakeCommand;
 
   public IntakesSubsystem() {
-    
+
     m_frontIntakeMotor.configFactoryDefault();
 
     m_rearIntakeMotor.configFactoryDefault();

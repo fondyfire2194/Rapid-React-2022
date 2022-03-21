@@ -310,6 +310,7 @@ public class SetUpOI {
                         shooterValues.addNumber("TopRollerRPM", () -> shooter.getTopRPM());
                         shooterValues.addNumber("TopTargetRPM", () -> shooter.topRequiredRPM);
                         shooterValues.addNumber("TopRollerAmp", () -> shooter.getTopRollerMotorAmps());
+                        shooterValues.addNumber("TopRollerOut", () -> shooter.getTopRoller());
 
                         shooterValues.addNumber("Left PCT", () -> shooter.getLeftPctOut());
                         shooterValues.addNumber("LeftAmps", () -> shooter.getLeftAmps());
@@ -328,7 +329,6 @@ public class SetUpOI {
                         shooterValues.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
                         shooterValues1.addBoolean("TuneOn", () -> (shooter.tuneOn && shooter.lastTuneOn));
                         shooterValues1.addBoolean("BothConnected(6,7)", () -> shooter.allConnected);
-                        shooterValues1.addBoolean("Use Throttle", () -> shooter.useThrottle);
                         shooterValues1.addString("PresetMode", () -> shooter.presetModeName);
                         ShuffleboardLayout shooterValues2 = Shuffleboard.getTab("SetupShooter")
 
@@ -356,6 +356,7 @@ public class SetUpOI {
                         transportValues.addNumber("LowRollCMDRPM", () -> transport.lowerRequiredRPM);
                         transportValues.addNumber("LowRollAmps", () -> transport.getLowerRollerMotorAmps());
                         transportValues.addNumber("LowRollOut", () -> transport.getLowerRoller());
+ 
                         transportValues.add("Cmd", transport);
                         transportValues.addBoolean("LowerRollerAtSpeed", () -> transport.getLowerRollerAtSpeed());
                         transportValues.addBoolean("WrongColor", () -> transport.wrongCargoColor);

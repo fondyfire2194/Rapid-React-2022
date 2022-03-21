@@ -87,7 +87,7 @@ public class FieldMap {
                         leftTarmacLowerRPM
         };
 
-        public static final double rightTarmacPickupPosition = Units.inchesToMeters(-36);
+        public static final double rightTarmacPickupPosition = Units.inchesToMeters(-40);
         public static final double rightTarmacShootPosition = Units.inchesToMeters(0);
 
         public static final double rightTarmacTiltUpperAngle = 2;
@@ -105,8 +105,8 @@ public class FieldMap {
                         rightTarmacLowerRPM
         };
 
-        public static final double centerTarmacPickupPosition = Units.inchesToMeters(36);
-        public static final double centerTarmacShootPosition = Units.inchesToMeters(36);
+        public static final double centerTarmacPickupPosition = Units.inchesToMeters(-42);
+        public static final double centerTarmacShootPosition = Units.inchesToMeters(0);
 
         public static final double centerTarmacTiltUpperAngle = 2;
         public static final double centerTarmacTurretUpperAngle = 0;
@@ -122,10 +122,10 @@ public class FieldMap {
                         centerTarmacTiltLowerAngle, centerTarmacTurretLowerAngle,
                         centerTarmacLowerRPM };
 
-        public static final double[] shootMode_0 = { 1, 3500 };// 40"
-        public static final double[] shootMode_1 = { 4, 4000 };// 100"
-        public static final double[] shootMode_2 = { 11, 4200 };// 160"
-        public static final double[] shootMode_3 = { 18, 5000 };// 220"
+        public static final double[] shootMode_0 = { 1, 3500 };// 40" at hub "lob"
+        public static final double[] shootMode_1 = { 4, 4000 };// 100" at tarmac line
+        public static final double[] shootMode_2 = { 14, 4500 };// 200" inner launch pad
+        public static final double[] shootMode_3 = { 0,500 };// set by operator during test
         
-        public static String[] shootModeName = { "At Hub", "Tarmac Line", "Inner Launchpad", "TBD" };
+        public static String[] shootModeName = { "At Hub", "Tarmac Line", "Inner Launchpad", "TestSetup" };
 }

@@ -34,14 +34,15 @@ public class RunActiveIntake extends CommandBase {
 
     stopActiveIntakeNow = false;
 
-    m_intake.setFrontCurrentLimit(20);
+    m_intake.endIntakeCommand = false;
 
-    m_intake.setRearCurrentLimit(20);
+    if (m_intake.useFrontIntake)
 
-    // if (m_intake.useFrontIntake)
-    // Shuffleboard.selectTab("FrontIntakeCamera");
-    // else
-    // Shuffleboard.selectTab("RearIntakeCamera");
+      Shuffleboard.selectTab("FrontIntakeCamera");
+
+    else
+
+      Shuffleboard.selectTab("RearIntakeCamera");
   }
 
   @Override
@@ -74,7 +75,6 @@ public class RunActiveIntake extends CommandBase {
 
         m_intake.twoCargoOnBoard = true;
 
-        // m_intake.setRearCurrentLimit(10);
       }
     }
 
@@ -98,6 +98,8 @@ public class RunActiveIntake extends CommandBase {
   public void end(boolean interrupted) {
     m_intake.stopFrontIntakeMotor();
     m_intake.stopRearIntakeMotor();
+    m_intake.raiseRearArm();
+    m_intake.raiseFrontArm();
     stopActiveIntakeNow = false;
     m_transport.stopLowerRoller();
     m_intake.stopLowerRoller = true;
@@ -115,7 +117,7 @@ public class RunActiveIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return stopActiveIntakeNow;
+    return stopActiveIntakeNow || m_intake.endIntakeCommand;
 
   }
 }
