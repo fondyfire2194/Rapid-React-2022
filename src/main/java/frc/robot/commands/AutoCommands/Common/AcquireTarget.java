@@ -26,11 +26,7 @@ public class AcquireTarget extends SequentialCommandGroup {
 
         
 
-                addCommands(new UseVision(ll, false),
-
-                                new PositionTurretToVision(turret, ll, ll.getdegRotationToTarget()),
-
-                                new TurretWaitForStop(turret), new GetNumberOfContourValues(rcv2),
+                addCommands( new GetNumberOfContourValues(rcv2),
 
                                 new CalculateTarget(rcv2));
 
