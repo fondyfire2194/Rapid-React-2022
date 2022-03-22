@@ -34,8 +34,6 @@ public class RunActiveIntake extends CommandBase {
 
     stopActiveIntakeNow = false;
 
-
-    
   }
 
   @Override
@@ -104,7 +102,6 @@ public class RunActiveIntake extends CommandBase {
     m_transport.stopLowerRoller();
     m_intake.stopLowerRoller = true;
 
-
     Shuffleboard.selectTab("Competition");
 
   }
@@ -112,6 +109,6 @@ public class RunActiveIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return stopActiveIntakeNow;//stopActiveIntakeNow;
+    return stopActiveIntakeNow || m_transport.wrongCargoColor;// stopActiveIntakeNow;
   }
 }

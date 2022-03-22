@@ -49,7 +49,7 @@ public class RevTiltSubsystem extends SubsystemBase {
     // 0.001, 0);
     public SparkMaxLimitSwitch m_reverseLimit;
     public SparkMaxLimitSwitch m_forwardLimit;
-   
+
     public boolean positionResetDone;
     public double targetAngle;
     private double inPositionBandwidth = 1;
@@ -76,7 +76,6 @@ public class RevTiltSubsystem extends SubsystemBase {
     public boolean tiltMotorConnected;
     private double maxAdjustMeters = .5;
     private double minAdjustMeters = -.5;
-    // public double motorEndpointDegrees;
     public int faultSeen;
     public double lockPIDOut;
     public double lockPIDOutVolts;
@@ -147,7 +146,6 @@ public class RevTiltSubsystem extends SubsystemBase {
         m_forwardLimit = m_motor.getForwardLimitSwitch(Type.kNormallyClosed);
         m_forwardLimit.enableLimitSwitch(true);
 
-
         if (RobotBase.isReal() && m_reverseLimit.isPressed()) {
             resetAngle();
         }
@@ -159,13 +157,13 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         setSoftwareLimits();
         SmartDashboard.putNumber("TIdegPerRev", degreesPerRev);
-
         tiltTarget = Shuffleboard.getTab("SetupTilt")
                 .add("TargetDegrees", 0)
                 .withWidget(BuiltInWidgets.kTextView)
                 .withPosition(2, 3).withSize(2, 1)
                 .withProperties(Map.of("min", 0, "max", 14))
                 .getEntry();
+
     }
 
     @Override

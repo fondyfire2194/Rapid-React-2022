@@ -82,10 +82,10 @@ public class ShootCargo extends CommandBase {
 
     cargoAtShoot = m_transport.getCargoAtShoot();
 
-    if ((cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed())||cargoReleasing) {
+    if ((cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed()) || cargoReleasing) {
 
       m_transport.releaseCargo();
-      
+
       cargoReleasing = true;
     }
 
@@ -154,6 +154,6 @@ public class ShootCargo extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    return noCargoAtStart || endit1 || endit2 || m_transport.latchCargoAtShoot;
+    return noCargoAtStart || m_transport.wrongCargoColor || endit1 || endit2 || m_transport.latchCargoAtShoot;
   }
 }

@@ -50,7 +50,7 @@ public class ArcadeDrive extends CommandBase {
 
     if (Math.abs(tempRot) < .05)
       tempRot = 0;
-    SmartDashboard.putNumber("TestDrive", tempx);
+    
     m_drivetrain.arcadeDrive(tempx, tempRot * Pref.getPref("ArcadeTurnKp"));
 
   }

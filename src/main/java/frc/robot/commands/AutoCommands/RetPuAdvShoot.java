@@ -60,29 +60,34 @@ public class RetPuAdvShoot extends SequentialCommandGroup {
                                                 new PositionStraight(drive, drivePickupPosition,
                                                                 pickUpRate),
 
-                                                new RunActiveIntake(intake, transport))
+                                                new ParallelRaceGroup(new TimeDelay(3),
 
-                                                                .deadlineWith(new PositionHoldTiltTurret(tilt, turret,
-                                                                                ll)),
+                                                                new RunActiveIntake(intake, transport)))
+
+                                                                                .deadlineWith(new PositionHoldTiltTurret(
+                                                                                                tilt, turret,
+                                                                                                ll)),
 
                                 new ParallelCommandGroup(
 
                                                 new SetShootSpeedSource(shooter, shooter.fromPreset),
-                 
+
                                                 new SetPresetRPM(shooter, upperRPM),
 
                                                 new PositionStraight(drive, shootPosition, positionRate),
-                 
+
                                                 new PositionTilt(tilt, upperTiltAngle),
-                 
+
                                                 new PositionTurret(turret, upperTurretAngle)),
 
                                 new ParallelRaceGroup(
 
-                                                new SequentialCommandGroup(new TimeDelay(2),new ShootCargo(shooter, transport, intake),
-                                                 new TimeDelay(2)  ,             
-                                                new ShootCargo(shooter, transport, intake),
-                                                new TimeDelay(2)),
+                                                new SequentialCommandGroup(new TimeDelay(2),
+                                                                new ShootCargo(shooter, transport, intake),
+                                                                new TimeDelay(2),
+                                                                new ShootCargo(shooter, transport, intake),
+                                                                new TimeDelay(2)),
+                                                                
                                                 new RunShooter(shooter))
 
                                                                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret,

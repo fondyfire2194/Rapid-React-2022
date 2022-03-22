@@ -238,7 +238,8 @@ public class SetUpOI {
 
                         tiltValues.addNumber("TIAngle", () -> tilt.getAngle());
                         tiltValues.addNumber("TITgt", () -> tilt.targetAngle);
-                        tiltValues.addNumber("PresetAngle", () -> tilt.presetPosition);                       tiltValues.addNumber("PCT", () -> tilt.getOut());
+                        tiltValues.addNumber("PresetAngle", () -> tilt.presetPosition);
+                        tiltValues.addNumber("PCT", () -> tilt.getOut());
                         tiltValues.addNumber("Amps", () -> tilt.getAmps());
                         tiltValues.addNumber("Speed", () -> tilt.getSpeed());
                         tiltValues.addNumber("AdjTarget", () -> tilt.adjustedVerticalError);
@@ -309,7 +310,7 @@ public class SetUpOI {
                         shooterValues.addNumber("ActualRPM", () -> shooter.getRPM());
                         shooterValues.addNumber("Target RPM", () -> shooter.requiredRPM);
                         shooterValues.addNumber("Preset RPM", () -> shooter.presetRPM);
-                       
+
                         shooterValues.addNumber("TopRollerRPM", () -> shooter.getTopRPM());
                         shooterValues.addNumber("TopTargetRPM", () -> shooter.topRequiredRPM);
                         shooterValues.addNumber("TopRollerAmp", () -> shooter.getTopRollerMotorAmps());
@@ -333,7 +334,7 @@ public class SetUpOI {
                         shooterValues1.addBoolean("TuneOn", () -> (shooter.tuneOn && shooter.lastTuneOn));
                         shooterValues1.addBoolean("BothConnected(6,7)", () -> shooter.allConnected);
                         shooterValues1.addString("PresetMode", () -> shooter.presetModeName);
-                        shooterValues1.addNumber("PresetNumber", ()->shooter.shootMode);
+                        shooterValues1.addNumber("PresetNumber", () -> shooter.shootMode);
 
                         ShuffleboardLayout shooterValues2 = Shuffleboard.getTab("SetupShooter")
 
@@ -361,7 +362,7 @@ public class SetUpOI {
                         transportValues.addNumber("LowRollCMDRPM", () -> transport.lowerRequiredRPM);
                         transportValues.addNumber("LowRollAmps", () -> transport.getLowerRollerMotorAmps());
                         transportValues.addNumber("LowRollOut", () -> transport.getLowerRoller());
- 
+
                         transportValues.add("Cmd", transport);
                         transportValues.addBoolean("LowerRollerAtSpeed", () -> transport.getLowerRollerAtSpeed());
                         transportValues.addBoolean("WrongColor", () -> transport.wrongCargoColor);
@@ -460,37 +461,45 @@ public class SetUpOI {
                 if (showSubsystems) {
 
                         ShuffleboardLayout subSystems = Shuffleboard.getTab("CanBus")
-                                        .getLayout("All", BuiltInLayouts.kList).withPosition(0, 0)
-                                        .withSize(3, 7).withProperties(Map.of("Label position", "LEFT")); //
+                                        .getLayout("Subs 1", BuiltInLayouts.kList).withPosition(0, 2)
+                                        .withSize(3, 3).withProperties(Map.of("Label position", "LEFT")); //
 
                         subSystems.add("Drive", drive);
                         subSystems.add("Shooter",
                                         shooter);
-                        subSystems.add("Turret", turret);
-                        subSystems.add("Tilt", tilt);
-                        subSystems.add("Transport", transport);
-                        subSystems.add("Intakes", intake);
+                        subSystems.add("Climber", climber);
+
+                        ShuffleboardLayout subSystems1 = Shuffleboard.getTab("CanBus")
+                                        .getLayout("Subs 2", BuiltInLayouts.kList).withPosition(3, 2)
+                                        .withSize(3, 3).withProperties(Map.of("Label position", "LEFT")); //
+
+                        subSystems1.add("Turret", turret);
+                        subSystems1.add("Tilt", tilt);
+                        subSystems1.add("Transport", transport);
+                        subSystems1.add("Intakes", intake);
 
                         ShuffleboardLayout scheduler = Shuffleboard.getTab("CanBus")
-                                        .getLayout("Scheduler", BuiltInLayouts.kList).withPosition(3, 0)
-                                        .withSize(4, 2).withProperties(Map.of("Label position", "TOP")); //
+                                        .getLayout("Scheduler", BuiltInLayouts.kList).withPosition(0, 0)
+                                        .withSize(10, 2).withProperties(Map.of("Label position", "TOP")); //
 
                         scheduler.add("Scheduler", CommandScheduler.getInstance());
 
                         ShuffleboardLayout canBus = Shuffleboard.getTab("CanBus")
-                                        .getLayout("Canbus", BuiltInLayouts.kGrid).withPosition(3, 2)
+                                        .getLayout("Canbus", BuiltInLayouts.kGrid).withPosition(6, 2)
                                         .withSize(4, 2).withProperties(Map.of("Label position", "TOP")); // labels
 
                         canBus.addBoolean("TurretConnected (8)", () -> turret.turretMotorConnected);
                         canBus.addBoolean("TiltConnected (9)", () -> tilt.tiltMotorConnected);
-                         canBus.addBoolean("ShooterConnected (6,7,10)",()->shooter.allConnected);
-                       
+                        canBus.addBoolean("ShooterConnected (6,7,10)", () -> shooter.allConnected);
+
                         canBus.addBoolean("LowerRollerConnected(12)", () -> transport.lowerRollerMotorConnected);
                         canBus.addBoolean("AllDriveConnected  (2,3,4,5)", () -> drive.allConnected);
                         canBus.addBoolean("ClimberConnected(15)", () -> climber.climberMotorConnected);
 
                         canBus.addBoolean("FrontIntakeConnected (13)", () -> intake.frontIntakeMotorConnected);
                         canBus.addBoolean("RearIntakeConnected (14)", () -> intake.rearIntakeMotorConnected);
+                        canBus.addBoolean("ClimberConnected (15)", () -> climber.climberMotorConnected);
+
                 }
         }
 

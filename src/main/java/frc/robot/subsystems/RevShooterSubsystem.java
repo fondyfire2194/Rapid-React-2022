@@ -179,7 +179,7 @@ public class RevShooterSubsystem extends SubsystemBase {
         checkTune();
 
         SmartDashboard.putString("LeftFaults", "SS");// faultAsBitString());
-        SmartDashboard.putNumber("TopEnc", m_topEncoder.getPosition());
+        SmartDashboard.putNumber("TopOut", getTopRoller());
     }
 
     @Override

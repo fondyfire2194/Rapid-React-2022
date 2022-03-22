@@ -289,6 +289,7 @@ public final class Constants {
    public static class PipelinesConstants {
 
       public static final int noZoom960720 = 1;
+      
       public static final int x2Zoom320240 = 2;
       public static final int x3ZoomPipeline = 3;
       

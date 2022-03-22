@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.FieldMap;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
+import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 
@@ -36,17 +37,22 @@ public class SetShootPositionSpeedTilt extends InstantCommand {
     m_shooter.presetModeName = FieldMap.shootModeName[m_shooter.shootMode];
 
     switch (m_shooter.shootMode) {
-
+//at hub
       case 0:
         m_shooter.presetRPM = FieldMap.shootMode_0[1];
         m_tilt.presetPosition = FieldMap.shootMode_0[0];
         m_ll.setPipeline(PipelinesConstants.noZoom960720);
+        m_ll.setLEDMode(LedMode.kforceOff);
 
         break;
+
+        //tarmac line
       case 1:
         m_shooter.presetRPM = FieldMap.shootMode_1[1];
         m_tilt.presetPosition = FieldMap.shootMode_1[0];
         m_ll.setPipeline(PipelinesConstants.noZoom960720);
+        m_ll.setLEDMode(LedMode.kpipeLine);
+
         break;
       case 2:
         m_shooter.presetRPM = FieldMap.shootMode_2[1];

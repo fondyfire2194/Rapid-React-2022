@@ -27,6 +27,9 @@ public class FieldMap {
         public static final double leftLeftOfCenter = -45;
         public static final double leftTwoLeftOfCenter = -67.5;
 
+        public static final int atHub=0;
+        public static final int tarmacLine=1;
+
         // tarmacs
         // angles
         public static final double hubRotationToField = 66;// +/- 3 degrees information only

@@ -11,24 +11,20 @@
 package frc.robot.commands.Turret;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Vision.LimeLight;
-import frc.robot.Vision.RawContoursV2;
-import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.subsystems.RevTurretSubsystem;
 
-public class PositionTurretToVision extends CommandBase {
+public class PositionTurretToPreset extends CommandBase {
   /** Creates a new PositionTilt. */
 
   private final RevTurretSubsystem m_turret;
-  private final RawContoursV2 m_rcv2;
 
   boolean endIt;
   private int loopCtr;
 
-  public PositionTurretToVision(RevTurretSubsystem turret, RawContoursV2 rcv2) {
+  public PositionTurretToPreset(RevTurretSubsystem turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_turret = turret;
-    m_rcv2 = rcv2;
+  
 
     addRequirements(m_turret);
   }
@@ -37,7 +33,7 @@ public class PositionTurretToVision extends CommandBase {
   @Override
   public void initialize() {
 
-    m_turret.targetAngle = m_rcv2.weightedTargetAngle;
+    m_turret.targetAngle = m_turret.presetPosition;
 
     if (m_turret.targetAngle < -10) {
 

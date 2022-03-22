@@ -58,6 +58,7 @@ public class Robot extends TimedRobot {
   // public static StringLogEntry rrStringLog;
 
   double[] data = { 0, 0, 0, 0, 0, 0, 0, 0 };
+  public static double matchTimeRemaining;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -175,6 +176,8 @@ public class Robot extends TimedRobot {
     RawContoursV2 rcv2 = m_robotContainer.m_rcv2;
     Compressor comp = m_robotContainer.m_compressor;
 
+
+  ll.setPipeline(PipelinesConstants.ledsOffPipeline);
     switch (autoChoice) {
 
       case 0:
@@ -182,14 +185,13 @@ public class Robot extends TimedRobot {
         break;
 
       case 1:// taxi start anywhere as agreed with other teams inside a tarmac facing in
-        ll.setPipeline(PipelinesConstants.noZoom960720);
+      
         m_autonomousCommand = new PositionStraight(m_robotContainer.m_drive, -1.5, .3);
 
         break;
 
       case 2:// left tarmac upper shoot
         data = FieldMap.leftTarmacData;
-        ll.setPipeline(PipelinesConstants.noZoom960720);
         m_autonomousCommand = new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
             data);
 
@@ -197,7 +199,7 @@ public class Robot extends TimedRobot {
 
       case 3://
         data = FieldMap.rightTarmacData;
-        ll.setPipeline(PipelinesConstants.noZoom960720);
+        
         m_autonomousCommand = new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
             data);
         break;
@@ -292,11 +294,12 @@ public class Robot extends TimedRobot {
 
      if (m_robotContainer.m_transport.wrongCargoColor) {
 
-       m_robotContainer.m_transport.wrongCargoColor = false;
-
       new RunCargoOutShooter(m_robotContainer.m_shooter, m_robotContainer.m_intake, m_robotContainer.m_transport)
-          .schedule();
+          
+      .schedule();
     }
+
+    matchTimeRemaining = DriverStation.getMatchTime();
   }
 
   @Override

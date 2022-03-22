@@ -108,6 +108,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     public boolean turretUseVision;
     public double turretOffsetAdder;
     public double turretOffsetChange;
+    public double presetPosition;
 
     public RevTurretSubsystem() {
         m_motor = new CANSparkMax(CANConstants.TURRET_ROTATE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);

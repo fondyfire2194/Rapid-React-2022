@@ -94,6 +94,7 @@ public boolean latchCargoAtShoot;
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("PROXVAL", rcs.getProximity());
+      SmartDashboard.putNumber("LowRollOut",getLowerRoller());
 
   }
 
