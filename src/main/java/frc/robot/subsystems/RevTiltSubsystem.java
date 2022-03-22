@@ -48,6 +48,8 @@ public class RevTiltSubsystem extends SubsystemBase {
     // public final PIDController tiltLockController = new PIDController(.032,
     // 0.001, 0);
     public SparkMaxLimitSwitch m_reverseLimit;
+    public SparkMaxLimitSwitch m_forwardLimit;
+   
     public boolean positionResetDone;
     public double targetAngle;
     private double inPositionBandwidth = 1;
@@ -142,6 +144,9 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
         m_reverseLimit.enableLimitSwitch(true);
+        m_forwardLimit = m_motor.getForwardLimitSwitch(Type.kNormallyClosed);
+        m_forwardLimit.enableLimitSwitch(true);
+
 
         if (RobotBase.isReal() && m_reverseLimit.isPressed()) {
             resetAngle();

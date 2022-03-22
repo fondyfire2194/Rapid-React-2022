@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
+import frc.robot.commands.TimeDelay;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
@@ -60,6 +61,7 @@ public class RetPuAdvShoot extends SequentialCommandGroup {
                                                                 pickUpRate),
 
                                                 new RunActiveIntake(intake, transport))
+
                                                                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret,
                                                                                 ll)),
 
@@ -77,10 +79,10 @@ public class RetPuAdvShoot extends SequentialCommandGroup {
 
                                 new ParallelRaceGroup(
 
-                                                new SequentialCommandGroup(new ShootCargo(shooter, transport, intake),
-                                                                
-                                                new ShootCargo(shooter, transport, intake)),
-
+                                                new SequentialCommandGroup(new TimeDelay(2),new ShootCargo(shooter, transport, intake),
+                                                 new TimeDelay(2)  ,             
+                                                new ShootCargo(shooter, transport, intake),
+                                                new TimeDelay(2)),
                                                 new RunShooter(shooter))
 
                                                                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret,

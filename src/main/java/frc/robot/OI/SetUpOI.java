@@ -238,7 +238,7 @@ public class SetUpOI {
 
                         tiltValues.addNumber("TIAngle", () -> tilt.getAngle());
                         tiltValues.addNumber("TITgt", () -> tilt.targetAngle);
-                        tiltValues.addNumber("PCT", () -> tilt.getOut());
+                        tiltValues.addNumber("PresetAngle", () -> tilt.presetPosition);                       tiltValues.addNumber("PCT", () -> tilt.getOut());
                         tiltValues.addNumber("Amps", () -> tilt.getAmps());
                         tiltValues.addNumber("Speed", () -> tilt.getSpeed());
                         tiltValues.addNumber("AdjTarget", () -> tilt.adjustedVerticalError);
@@ -251,6 +251,7 @@ public class SetUpOI {
                         tiltValues2.addBoolean("InPosition", () -> tilt.atTargetAngle());
 
                         tiltValues2.addBoolean("OnBottomLS", () -> tilt.m_reverseLimit.isPressed());
+                        tiltValues2.addBoolean("OnTopLS", () -> tilt.m_forwardLimit.isPressed());
 
                         tiltValues2.addBoolean("PosResetDone", () -> tilt.positionResetDone);
                         tiltValues2.addBoolean("OKTune", () -> (tilt.tuneOn && tilt.lastTuneOn));
@@ -307,6 +308,8 @@ public class SetUpOI {
 
                         shooterValues.addNumber("ActualRPM", () -> shooter.getRPM());
                         shooterValues.addNumber("Target RPM", () -> shooter.requiredRPM);
+                        shooterValues.addNumber("Preset RPM", () -> shooter.presetRPM);
+                       
                         shooterValues.addNumber("TopRollerRPM", () -> shooter.getTopRPM());
                         shooterValues.addNumber("TopTargetRPM", () -> shooter.topRequiredRPM);
                         shooterValues.addNumber("TopRollerAmp", () -> shooter.getTopRollerMotorAmps());
@@ -330,6 +333,8 @@ public class SetUpOI {
                         shooterValues1.addBoolean("TuneOn", () -> (shooter.tuneOn && shooter.lastTuneOn));
                         shooterValues1.addBoolean("BothConnected(6,7)", () -> shooter.allConnected);
                         shooterValues1.addString("PresetMode", () -> shooter.presetModeName);
+                        shooterValues1.addNumber("PresetNumber", ()->shooter.shootMode);
+
                         ShuffleboardLayout shooterValues2 = Shuffleboard.getTab("SetupShooter")
 
                                         .getLayout("Gains", BuiltInLayouts.kList).withPosition(6, 0).withSize(1, 2)

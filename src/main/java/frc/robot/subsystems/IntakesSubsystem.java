@@ -40,7 +40,7 @@ public class IntakesSubsystem extends SubsystemBase {
 
   private AnalogInput rearIntakeCargoDetect;// next to be released for shooting
 
-  private double cargoDetectedVolts = 1.2;
+  private double cargoDetectedVolts = 1.8;
 
   public boolean twoCargoOnBoard;
 
@@ -66,7 +66,7 @@ public class IntakesSubsystem extends SubsystemBase {
 
     raiseFrontArm();
 
-    frontIntakeCargoDetect = new AnalogInput(2);
+    frontIntakeCargoDetect = new AnalogInput(0);
 
     rearIntakeCargoDetect = new AnalogInput(3);
 

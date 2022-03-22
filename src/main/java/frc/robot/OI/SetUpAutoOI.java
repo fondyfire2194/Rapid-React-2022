@@ -6,10 +6,13 @@ package frc.robot.OI;
 
 import java.util.Map;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -33,7 +36,6 @@ public class SetUpAutoOI {
         public SendableChooser<Command> autoChooser = new SendableChooser<>();
         public SendableChooser<Integer> startDelayChooser = new SendableChooser<>();
         public static boolean m_showAuto;
-        
 
         public SetUpAutoOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
@@ -104,7 +106,7 @@ public class SetUpAutoOI {
                         compet.addBoolean("TiltOnSwitch", () -> tilt.onMinusHardwarLimit());
 
                         ShuffleboardLayout compet1 = Shuffleboard.getTab("Competition")
-                                        .getLayout("Values", BuiltInLayouts.kList).withPosition(1, 0).withSize(1, 4)
+                                        .getLayout("Values", BuiltInLayouts.kList).withPosition(1, 0).withSize(1, 5)
                                         .withProperties(Map.of("Label position", "TOP"));
                         compet1.addNumber("TUAngle", () -> turret.getAngle());
                         compet1.addNumber("TiltAngle", () -> tilt.getAngle());
@@ -112,29 +114,52 @@ public class SetUpAutoOI {
                         compet1.addNumber("LeftAmps", () -> shooter.getLeftAmps());
                         compet1.addNumber("RightAmps", () -> shooter.getRightAmps());
                         compet1.addNumber("RQDRPM", () -> shooter.requiredRPM);
-                        compet1.addNumber("RobotPosn", ()->drive.getAverageDistance());
+                        compet1.addNumber("RobotPosn", () -> drive.getAverageDistance());
+                        compet1.addNumber("WeightedX", () -> rcv2.weightedTargetValue);
+                        compet1.addNumber("WeightedAngle", () -> rcv2.weightedTargetAngle);
+                        compet1.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
 
                         ShuffleboardLayout compet2 = Shuffleboard.getTab("Competition")
-                                        .getLayout("Info", BuiltInLayouts.kList).withPosition(2, 0).withSize(1, 4)
+                                        .getLayout("Info", BuiltInLayouts.kList).withPosition(2, 0).withSize(1, 5)
                                         .withProperties(Map.of("Label position", "TOP"));
                         compet2.addBoolean("Blue Alliance", () -> Robot.getAllianceColorBlue());
                         compet2.addBoolean("Red Alliance", () -> !Robot.getAllianceColorBlue());
 
                         ShuffleboardLayout compet3 = Shuffleboard.getTab("Competition")
-                                        .getLayout("Important", BuiltInLayouts.kList).withPosition(3, 0).withSize(1, 4)
+                                        .getLayout("Important", BuiltInLayouts.kList).withPosition(3, 0).withSize(1, 5)
                                         .withProperties(Map.of("Label position", "TOP"));
                         compet3.addNumber("BatteryVolts", () -> RobotController.getBatteryVoltage());
                         compet3.addNumber("Match Time", () -> DriverStation.getMatchTime());
                         compet3.addBoolean("WrongColorCargo", () -> transport.wrongCargoColor);
+                        compet3.addBoolean("BlueCargo", () -> transport.getCargoIsBlue());
+                        compet3.addBoolean("RedCargo", () -> transport.getCargoIsRed());
                         compet3.addBoolean("TwoCargoOnBoard", () -> intake.twoCargoOnBoard);
                         compet3.addBoolean("FrontIntake", () -> intake.useFrontIntake);
-
+                        compet3.addString("PresetMode", () -> shooter.presetModeName);
                         ShuffleboardTab llFeed = Shuffleboard.getTab("Competition");
 
                         llFeed.addCamera("LL", "Copro1Cam", "http://10.21.94.11:5800/stream.mjpg")
                                         .withPosition(6, 0).withSize(3, 4)
                                         .withProperties(Map.of("Show Crosshair", true,
                                                         "Show Controls", true, "Rotation", "QUARTER_CW"));
+
+                        UsbCamera frontIntakeCamera = CameraServer.startAutomaticCapture("FrontCam", 0);
+
+                        ShuffleboardTab frontFeed = Shuffleboard.getTab("FrontIntakeCamera");
+
+                        frontFeed.add("FrontCamera", frontIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
+                                        .withPosition(2, 0).withSize(6, 4)
+                                        .withProperties(Map.of("Show Crosshair", false, "Show Controls", true));
+
+                        ShuffleboardTab rearFeed = Shuffleboard.getTab("RearIntakeCamera");
+
+                        UsbCamera rearIntakeCamera = CameraServer.startAutomaticCapture("RearCam", 1);
+
+                        rearFeed.add("RearCamera", rearIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
+                                        .withPosition(2, 0).withSize(6, 4)
+                                        .withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
+
                 }
+
         }
 }

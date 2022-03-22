@@ -184,7 +184,7 @@ public class Robot extends TimedRobot {
 
       case 1:// taxi start anywhere as agreed with other teams inside a tarmac facing in
         ll.setPipeline(PipelinesConstants.noZoom960720);
-        m_autonomousCommand = new PositionStraight(m_robotContainer.m_drive, -1, .3);
+        m_autonomousCommand = new PositionStraight(m_robotContainer.m_drive, -1.5, .3);
 
         break;
 
@@ -291,9 +291,9 @@ public class Robot extends TimedRobot {
 
   public void teleopPeriodic() {
 
-    if (m_robotContainer.m_transport.wrongCargoColor) {
+     if (m_robotContainer.m_transport.wrongCargoColor) {
 
-      m_robotContainer.m_transport.wrongCargoColor = false;
+       m_robotContainer.m_transport.wrongCargoColor = false;
 
       new RunCargoOutShooter(m_robotContainer.m_shooter, m_robotContainer.m_intake, m_robotContainer.m_transport)
           .schedule();

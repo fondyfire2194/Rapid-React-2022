@@ -34,8 +34,13 @@ public class RunActiveIntake extends CommandBase {
 
     stopActiveIntakeNow = false;
 
-    m_intake.endIntakeCommand = false;
 
+    
+  }
+
+  @Override
+
+  public void execute() {
     if (m_intake.useFrontIntake)
 
       Shuffleboard.selectTab("FrontIntakeCamera");
@@ -43,11 +48,6 @@ public class RunActiveIntake extends CommandBase {
     else
 
       Shuffleboard.selectTab("RearIntakeCamera");
-  }
-
-  @Override
-
-  public void execute() {
 
     m_intake.lowerActiveArm();
 
@@ -104,20 +104,14 @@ public class RunActiveIntake extends CommandBase {
     m_transport.stopLowerRoller();
     m_intake.stopLowerRoller = true;
 
-    if (Robot.getFMSConnected())
 
-      Shuffleboard.selectTab("Competition");
-
-    else
-
-      Shuffleboard.selectTab("Intake");
+    Shuffleboard.selectTab("Competition");
 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return stopActiveIntakeNow || m_intake.endIntakeCommand;
-
+    return stopActiveIntakeNow;//stopActiveIntakeNow;
   }
 }

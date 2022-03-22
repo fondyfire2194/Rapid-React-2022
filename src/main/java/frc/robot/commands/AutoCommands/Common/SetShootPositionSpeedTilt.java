@@ -18,42 +18,44 @@ public class SetShootPositionSpeedTilt extends InstantCommand {
   private RevShooterSubsystem m_shooter;
   private RevTiltSubsystem m_tilt;
   private LimeLight m_ll;
+  private int m_shootMode;
 
   public SetShootPositionSpeedTilt(RevShooterSubsystem shooter, RevTiltSubsystem tilt, LimeLight ll, int shootMode) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_tilt = tilt;
     m_ll = ll;
-    m_shooter.shootMode = shootMode;
+    m_shootMode = shootMode;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    m_shooter.shootMode = m_shootMode;
     m_shooter.shootSpeedSource = m_shooter.fromPreset;
     m_shooter.presetModeName = FieldMap.shootModeName[m_shooter.shootMode];
 
     switch (m_shooter.shootMode) {
 
       case 0:
-        m_shooter.presetRPM = FieldMap.shootMode_0[0];
-        m_tilt.presetPosition = FieldMap.shootMode_0[1];
+        m_shooter.presetRPM = FieldMap.shootMode_0[1];
+        m_tilt.presetPosition = FieldMap.shootMode_0[0];
         m_ll.setPipeline(PipelinesConstants.noZoom960720);
+
         break;
       case 1:
-        m_shooter.presetRPM = FieldMap.shootMode_1[0];
-        m_tilt.presetPosition = FieldMap.shootMode_1[1];
+        m_shooter.presetRPM = FieldMap.shootMode_1[1];
+        m_tilt.presetPosition = FieldMap.shootMode_1[0];
         m_ll.setPipeline(PipelinesConstants.noZoom960720);
         break;
       case 2:
-        m_shooter.presetRPM = FieldMap.shootMode_2[0];
-        m_tilt.presetPosition = FieldMap.shootMode_2[1];
+        m_shooter.presetRPM = FieldMap.shootMode_2[1];
+        m_tilt.presetPosition = FieldMap.shootMode_2[0];
         m_ll.setPipeline(PipelinesConstants.noZoom960720);
         break;
       case 3:// test mode
         m_shooter.shootSpeedSource = m_shooter.fromThrottle;
-        m_tilt.presetPosition = FieldMap.shootMode_3[1];
+        m_tilt.presetPosition = FieldMap.shootMode_3[0];
         m_ll.setPipeline(PipelinesConstants.noZoom960720);
         break;
       default:

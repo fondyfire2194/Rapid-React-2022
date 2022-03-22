@@ -56,6 +56,7 @@ import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Tilt.PositionHoldTilt;
 import frc.robot.commands.Tilt.PositionTilt;
+import frc.robot.commands.Tilt.PositionTiltToPreset;
 import frc.robot.commands.Tilt.TiltJog;
 import frc.robot.commands.Tilt.TiltJogVelocity;
 import frc.robot.commands.Tilt.TiltWaitForStop;
@@ -207,15 +208,15 @@ public class RobotContainer {
             m_trajectory = new FondyFireTrajectory(m_drive);
 
             // test configuration
-     //       Show_Hide_Screens.setStates(false, false, false, true);
+            // Show_Hide_Screens.setStates(false, false, false, true);
             // test configuration with hub vision
-            Show_Hide_Screens.setStates(false, false, true, true);
+           // Show_Hide_Screens.setStates(false, false, true, true);
 
             // competition configuration
-            // Show_Hide_Screens.setStates(true, false,false, false);
- 
+             Show_Hide_Screens.setStates(true, false,false, false);
+
             // competition with hub vision configuration
-            // Show_Hide_Screens.setStates(true, false,true, false);
+   //         Show_Hide_Screens.setStates(true, false,true, false);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intake, m_climber, m_trajectory);
@@ -265,14 +266,14 @@ public class RobotContainer {
              */
 
             // new JoystickButton(m_driverController, 1)
-            //             .whileHeld(new RunActiveIntake(m_intake, m_transport))
-            //             .whenPressed(new RunLowerRollerIntake(m_transport, m_intake))
-            //             .whenReleased(new StopActiveIntake(m_intake));
+            // .whileHeld(new RunActiveIntake(m_intake, m_transport))
+            // .whenPressed(new RunLowerRollerIntake(m_transport, m_intake))
+            // .whenReleased(new StopActiveIntake(m_intake));
 
             new JoystickButton(m_driverController, 1)
-                        .whenPressed(new RunActiveIntake(m_intake, m_transport))
-                        .whenPressed(new RunLowerRollerIntake(m_transport, m_intake))
-                        .whenReleased(new DelayOffIntake(m_intake));
+                        .whileHeld(new RunActiveIntake(m_intake, m_transport))
+                        .whenPressed(new RunLowerRollerIntake(m_transport, m_intake));
+                      //  .whenReleased(new DelayOffIntake(m_intake));
 
             new JoystickButton(m_driverController, 2)
                         .whenPressed(new RunShooter(m_shooter))
@@ -299,7 +300,8 @@ public class RobotContainer {
 
             // new JoystickButton(m_driverController, 10).
 
-             new JoystickButton(m_driverController, 9).whenPressed(new AcquireTarget(m_limelight, m_tilt, m_turret, m_rcv2));
+            new JoystickButton(m_driverController, 9)
+                        .whenPressed(new AcquireTarget(m_limelight, m_tilt, m_turret, m_rcv2));
 
             new JoystickButton(m_driverController, 11).whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmUp")));
 
@@ -319,7 +321,6 @@ public class RobotContainer {
             // hub upper
 
             driverRightButton.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 3));// against
-            // hub lower
 
             /**
              * co driver can empty robot

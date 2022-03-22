@@ -72,9 +72,9 @@ public class FieldMap {
         public static final double leftTarmacPickupPosition = Units.inchesToMeters(-42);
         public static final double leftTarmacShootPosition = Units.inchesToMeters(0);
 
-        public static final double leftTarmacTiltUpperAngle = 2;
+        public static final double leftTarmacTiltUpperAngle = 5;
         public static final double leftTarmacTurretUpperAngle = 0;
-        public static double leftTarmacUpperRPM = 1200;
+        public static double leftTarmacUpperRPM = 3750;
 
         public static final double leftTarmacTiltLowerAngle = 1;
         public static final double leftTarmacTurretLowerAngle = 0;
