@@ -157,10 +157,10 @@ public boolean latchCargoAtShoot;
 
     double rpm = Pref.getPref("LowRollReleaseRPM");
 
-    if (getCargoAtShoot()) {
+   // if (getCargoAtShoot()) {
 
       runLowerAtVelocity(rpm);
-    }
+    //}
   }
 
 
@@ -227,7 +227,7 @@ public boolean latchCargoAtShoot;
 
     m_lowerPID.setIZone(kIz, VELOCITY_SLOT);
 
-    m_lowerPID.setOutputRange(-0.5, 0.5, VELOCITY_SLOT);
+    m_lowerPID.setOutputRange(-1, 1, VELOCITY_SLOT);
 
     m_lowerRollerMotor.setClosedLoopRampRate(acc);
 

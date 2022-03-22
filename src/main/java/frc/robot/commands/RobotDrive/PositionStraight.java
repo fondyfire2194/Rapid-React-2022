@@ -71,6 +71,10 @@ public class PositionStraight extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(m_endpoint - m_drive.getLeftDistance()) < .1;
+    return Math.abs(m_endpoint - m_drive.getLeftDistance()) < .1
+
+        && Math.abs(m_endpoint - m_drive.getRightDistance()) < .1;
+
+      //  && m_drive.isStopped();
   }
 }

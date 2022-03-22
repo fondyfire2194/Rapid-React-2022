@@ -113,9 +113,10 @@ public class SetUpAutoOI {
                         compet1.addNumber("RPM", () -> shooter.getRPM());
                         compet1.addNumber("LeftAmps", () -> shooter.getLeftAmps());
                         compet1.addNumber("RightAmps", () -> shooter.getRightAmps());
-                        compet1.addNumber("RQDRPM", () -> shooter.requiredRPM);
+                        compet1.addNumber("PresetRPM", () -> shooter.presetRPM);
+                        compet1.addNumber("DriverAdjustRPM", () -> shooter.shooterRPMAdder[shooter.shootMode]);
                         compet1.addNumber("RobotPosn", () -> drive.getAverageDistance());
-                        compet1.addNumber("WeightedX", () -> rcv2.weightedTargetValue);
+
                         compet1.addNumber("WeightedAngle", () -> rcv2.weightedTargetAngle);
                         compet1.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
 

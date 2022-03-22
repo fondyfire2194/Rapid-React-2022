@@ -26,7 +26,6 @@ import frc.robot.commands.AutoCommands.ShootRetract;
 import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.RobotDrive.PositionStraight;
-import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -277,7 +276,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_shooter.shootSpeedSource = m_robotContainer.m_shooter.fromPreset;
 
-    new SetShootPositionSpeedTilt(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_limelight, 0).schedule();;
+    new SetShootPositionSpeedTilt(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_limelight, 1).schedule();;
 
     new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_rcv2, m_robotContainer.m_tilt,
         m_robotContainer.m_turret, m_robotContainer.m_shooter).schedule();

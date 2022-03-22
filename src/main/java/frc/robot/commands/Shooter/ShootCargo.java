@@ -32,6 +32,8 @@ public class ShootCargo extends CommandBase {
   private boolean endit2;
   private double activeLowStopTime;
 
+  private boolean cargoReleasing;
+
   public ShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
       IntakesSubsystem intake) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -52,6 +54,8 @@ public class ShootCargo extends CommandBase {
 
     rearIntakeRunning = false;
 
+    cargoReleasing = false;
+
     m_intake.cargoAtBothIntakes = m_intake.getCargoAtFront() && m_intake.getCargoAtRear();
 
     noCargoAtStart = !m_intake.getCargoAtFront() && !m_intake.getCargoAtRear() && !m_transport.getCargoAtShoot();
@@ -63,7 +67,9 @@ public class ShootCargo extends CommandBase {
     m_transport.latchCargoAtShoot = false;
 
     activeLowStopTime = Pref.getPref("LowRollStopTimeRed");
+
     if (Robot.getAllianceColorBlue())
+
       activeLowStopTime = Pref.getPref("LowRollStopTimeBlue");
 
   }
@@ -76,9 +82,11 @@ public class ShootCargo extends CommandBase {
 
     cargoAtShoot = m_transport.getCargoAtShoot();
 
-    if (cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed()) {
+    if ((cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed())||cargoReleasing) {
 
       m_transport.releaseCargo();
+      
+      cargoReleasing = true;
     }
 
     if (!cargoAtShoot && !rearIntakeRunning && (m_intake.getCargoAtFront() || frontIntakeRunning)) {
@@ -139,6 +147,7 @@ public class ShootCargo extends CommandBase {
     m_shooter.isShooting = false;
     m_intake.stopFrontIntakeMotor();
     m_intake.stopRearIntakeMotor();
+    cargoReleasing = false;
   }
 
   // Returns true when the command should end.

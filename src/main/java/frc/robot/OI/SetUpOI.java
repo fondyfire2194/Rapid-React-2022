@@ -459,7 +459,7 @@ public class SetUpOI {
 
                 if (showSubsystems) {
 
-                        ShuffleboardLayout subSystems = Shuffleboard.getTab("Can+Sols")
+                        ShuffleboardLayout subSystems = Shuffleboard.getTab("CanBus")
                                         .getLayout("All", BuiltInLayouts.kList).withPosition(0, 0)
                                         .withSize(3, 7).withProperties(Map.of("Label position", "LEFT")); //
 
@@ -471,28 +471,26 @@ public class SetUpOI {
                         subSystems.add("Transport", transport);
                         subSystems.add("Intakes", intake);
 
-                        ShuffleboardLayout scheduler = Shuffleboard.getTab("Can+Sols")
+                        ShuffleboardLayout scheduler = Shuffleboard.getTab("CanBus")
                                         .getLayout("Scheduler", BuiltInLayouts.kList).withPosition(3, 0)
-                                        .withSize(7, 2).withProperties(Map.of("Label position", "TOP")); //
+                                        .withSize(4, 2).withProperties(Map.of("Label position", "TOP")); //
 
                         scheduler.add("Scheduler", CommandScheduler.getInstance());
 
-                        ShuffleboardLayout canBus = Shuffleboard.getTab("Can+Sols")
+                        ShuffleboardLayout canBus = Shuffleboard.getTab("CanBus")
                                         .getLayout("Canbus", BuiltInLayouts.kGrid).withPosition(3, 2)
                                         .withSize(4, 2).withProperties(Map.of("Label position", "TOP")); // labels
 
                         canBus.addBoolean("TurretConnected (8)", () -> turret.turretMotorConnected);
                         canBus.addBoolean("TiltConnected (9)", () -> tilt.tiltMotorConnected);
-                        // canBus.addBoolean("LeftShooterConnected (6)
-                        // canBus.addBoolean("TopRollerConnected (12)", () ->
-                        // transport.topRollerMotorConnected);
-                        canBus.addBoolean("LowerRollerConnected(14)", () -> transport.lowerRollerMotorConnected);
-                        canBus.addBoolean("LDR1Connected  (2)", () -> drive.leftLeadConnected);
+                         canBus.addBoolean("ShooterConnected (6,7,10)",()->shooter.allConnected);
+                       
+                        canBus.addBoolean("LowerRollerConnected(12)", () -> transport.lowerRollerMotorConnected);
+                        canBus.addBoolean("AllDriveConnected  (2,3,4,5)", () -> drive.allConnected);
+                        canBus.addBoolean("ClimberConnected(15)", () -> climber.climberMotorConnected);
 
-                        // (4)",()->robotDrive.rightLeadConnected)
-                        canBus.addBoolean("RDr2Connected (5)", () -> drive.rightFollowerConnected);
-                        canBus.addBoolean("FrontIntakeConnected (10)", () -> intake.frontIntakeMotorConnected);
-                        canBus.addBoolean("RearIntakeConnected (10)", () -> intake.rearIntakeMotorConnected);
+                        canBus.addBoolean("FrontIntakeConnected (13)", () -> intake.frontIntakeMotorConnected);
+                        canBus.addBoolean("RearIntakeConnected (14)", () -> intake.rearIntakeMotorConnected);
                 }
         }
 
