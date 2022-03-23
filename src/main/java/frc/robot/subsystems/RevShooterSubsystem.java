@@ -180,6 +180,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
         SmartDashboard.putString("LeftFaults", "SS");// faultAsBitString());
         SmartDashboard.putNumber("TopOut", getTopRoller());
+        SmartDashboard.putNumber("ThrRPM", getRPMfromThrottle());
     }
 
     @Override

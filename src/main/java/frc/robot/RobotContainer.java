@@ -319,10 +319,7 @@ public class RobotContainer {
 
             codriverStart.whileHeld(new RunCargoOutShooter(m_shooter, m_intake, m_transport));
 
-            codriverX.whileHeld(getJogTiltVelocityCommand(codriverGamepad))
-                        .whileHeld(getJogTurretVelocityCommand(codriverGamepad))
-                        .whenReleased(new TiltWaitForStop(m_tilt))
-                        .whenReleased(new TurretWaitForStop(m_turret));
+           // codriverX.
 
             codriverY.whileHeld(getJogTiltCommand(codriverGamepad)).whileHeld(getJogTurretCommand(codriverGamepad))
                         .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));
@@ -417,7 +414,7 @@ public class RobotContainer {
       }
 
       public double getThrottle() {
-            return (1 + m_driverController.getThrottle()) / 2;
+            return (1 - m_driverController.getThrottle()) / 2;
       }
 
       public void checkCANDevices() {
@@ -428,6 +425,7 @@ public class RobotContainer {
             m_shooter.checkCAN();
             m_drive.checkCAN();
             m_transport.checkCAN();
+            m_climber.checkCAN();
 
       }
 

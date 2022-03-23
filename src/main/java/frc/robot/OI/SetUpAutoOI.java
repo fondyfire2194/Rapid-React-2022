@@ -44,7 +44,7 @@ public class SetUpAutoOI {
                 if (m_showAuto) {
 
                         ShuffleboardLayout compet = Shuffleboard.getTab("Competition")
-                                        .getLayout("States", BuiltInLayouts.kList).withPosition(0, 0).withSize(1, 5)
+                                        .getLayout("States", BuiltInLayouts.kList).withPosition(0, 0).withSize(1, 6)
                                         .withProperties(Map.of("Label position", "TOP"));
 
                         compet.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
@@ -54,7 +54,7 @@ public class SetUpAutoOI {
                         compet.addBoolean("TiltOnSwitch", () -> tilt.onMinusHardwarLimit());
 
                         ShuffleboardLayout compet1 = Shuffleboard.getTab("Competition")
-                                        .getLayout("Values", BuiltInLayouts.kList).withPosition(1, 0).withSize(1, 5)
+                                        .getLayout("Values", BuiltInLayouts.kList).withPosition(1, 0).withSize(1, 6)
                                         .withProperties(Map.of("Label position", "TOP"));
                         compet1.addNumber("TUAngle", () -> turret.getAngle());
                         compet1.addNumber("TiltAngle", () -> tilt.getAngle());
@@ -66,7 +66,7 @@ public class SetUpAutoOI {
                         compet1.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
                         compet1.addBoolean("LLHasTarget", () -> ll.getIsTargetFound());
                         ShuffleboardLayout compet2 = Shuffleboard.getTab("Competition")
-                                        .getLayout("Colors", BuiltInLayouts.kList).withPosition(2, 0).withSize(1, 5)
+                                        .getLayout("Colors", BuiltInLayouts.kList).withPosition(2, 0).withSize(1, 6)
                                         .withProperties(Map.of("Label position", "TOP"));
                         compet2.addBoolean("Blue Alliance", () -> Robot.getAllianceColorBlue());
                         compet2.addBoolean("Red Alliance", () -> !Robot.getAllianceColorBlue());
@@ -77,13 +77,13 @@ public class SetUpAutoOI {
                         compet2.addBoolean("FrontIntake", () -> intake.useFrontIntake);
 
                         ShuffleboardLayout compet3 = Shuffleboard.getTab("Competition")
-                                        .getLayout("Important", BuiltInLayouts.kList).withPosition(4, 0).withSize(1, 5)
+                                        .getLayout("Important", BuiltInLayouts.kList).withPosition(4, 0).withSize(1, 6)
                                         .withProperties(Map.of("Label position", "TOP"));
                         compet3.addNumber("BatteryVolts", () -> RobotController.getBatteryVoltage());
                         compet3.addNumber("Match Time", () -> Robot.matchTimeRemaining);
 
                         ShuffleboardLayout compet4 = Shuffleboard.getTab("Competition")
-                                        .getLayout("PresetData", BuiltInLayouts.kList).withPosition(3, 0).withSize(1, 5)
+                                        .getLayout("PresetData", BuiltInLayouts.kList).withPosition(3, 0).withSize(1, 6)
                                         .withProperties(Map.of("Label position", "TOP"));
 
                         compet4.addString("PresetMode", () -> shooter.presetModeName);

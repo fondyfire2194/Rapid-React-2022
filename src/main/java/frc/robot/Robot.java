@@ -115,6 +115,7 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putBoolean("FMSConn", m_robotContainer.isMatch);
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
+    SmartDashboard.putNumber("DRTHVAL", m_robotContainer.getThrottle());
     
     m_robotContainer.m_limelight.periodic();
 
