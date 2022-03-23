@@ -17,7 +17,6 @@ public class ShootCargo extends CommandBase {
   /** Creates a new ShootCargo. */
   private RevShooterSubsystem m_shooter;
   private CargoTransportSubsystem m_transport;
-  private int m_speedSource;
   private IntakesSubsystem m_intake;
   private boolean frontIntakeRunning;
   private boolean rearIntakeRunning;
@@ -78,8 +77,7 @@ public class ShootCargo extends CommandBase {
   @Override
   public void execute() {
 
-    // m_shooter.runShooterPlusRoller(m_shooter.getRPMFromSpeedSource());
-
+    
     cargoAtShoot = m_transport.getCargoAtShoot();
 
     if ((cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed()) || cargoReleasing) {
@@ -103,14 +101,18 @@ public class ShootCargo extends CommandBase {
       rearIntakeRunning = true;
     }
     // no second cargo
+
     if (!cargoAtShoot && !frontIntakeRunning && !rearIntakeRunning) {
+   
       if (m_startTime == 0) {
+  
         m_startTime = Timer.getFPGATimestamp();
       }
 
     }
 
     // no second cargo end
+
     endit1 = m_startTime != 0 && Timer.getFPGATimestamp() > m_startTime_2 + 1;
 
     // new cargo on its way and low roller is running
@@ -130,6 +132,7 @@ public class ShootCargo extends CommandBase {
         m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
       }
       // second cargo end
+      
       endit2 = m_transport.latchCargoAtShoot && m_startTime != 0
 
           && Timer.getFPGATimestamp() > m_startTime + activeLowStopTime;

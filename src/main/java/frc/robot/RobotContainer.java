@@ -299,6 +299,7 @@ public class RobotContainer {
             // new JoystickButton(m_driverController, 10).
 
             new JoystickButton(m_driverController, 9)
+
                         .whenPressed(new AcquireTarget(m_limelight, m_tilt, m_turret, m_rcv2));
 
             new JoystickButton(m_driverController, 11).whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmUp")));
@@ -307,7 +308,7 @@ public class RobotContainer {
 
                         .whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmDown")));
 
-                       // close to hub
+            // close to hub
             driverUpButton.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 0));
             // tarmac line
             driverDownButton.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 1));// tarmac
@@ -341,6 +342,9 @@ public class RobotContainer {
             codriverLeftTrigger.whenPressed(new PositionTurretIncremental(m_turret, 1));
 
             codriverRightTrigger.whenPressed(new PositionTurretIncremental(m_turret, -1));
+
+            //test allow low shoot speed
+            codriverLeftStick.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 3));
 
             LiveWindow.disableAllTelemetry();
 

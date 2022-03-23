@@ -28,6 +28,6 @@ public class EmptyCargoFromShooter extends ParallelRaceGroup {
         new JogShooter(shooter, () -> 0.25),
         new RunTopRoller(shooter, 800),
         new RunLowerRoller(transport, 800),
-        new TimeDelay(3)));
+        new TimeDelay(3));
   }
 }

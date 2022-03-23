@@ -22,10 +22,8 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.RetPuAdvShoot;
-import frc.robot.commands.AutoCommands.ShootRetract;
 import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
 import frc.robot.commands.Intakes.EmptyCargoFromShooter;
-import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Vision.CalculateTargetDistance;
@@ -81,7 +79,7 @@ public class Robot extends TimedRobot {
 
     getAllianceColorBlue();
 
-    if (m_robotContainer.isMatch)
+
 
       Shuffleboard.selectTab("Pre-Round");
 
@@ -211,12 +209,6 @@ public class Robot extends TimedRobot {
             data);
         break;
 
-        case 5://
-        data = FieldMap.leftTarmacData;
-        m_autonomousCommand = new ShootRetract( drive, tilt,turret, ll, transport, shooter,  intake, comp,
-            data);
-        break;
-
       default:
 
         break;
@@ -293,12 +285,12 @@ public class Robot extends TimedRobot {
 
   public void teleopPeriodic() {
 
-    //   if (m_robotContainer.m_transport.wrongCargoColor) {
-
-    //    new EmptyCargoFromShooter(m_robotContainer.m_shooter, m_robotContainer.m_intake, m_robotContainer.m_transport)
+      if (m_robotContainer.m_transport.wrongCargoColor) {
+    
+       new EmptyCargoFromShooter(m_robotContainer.m_shooter, m_robotContainer.m_transport)
           
-    //    .execute();
-    //  }
+       .execute();
+     }
 
     matchTimeRemaining = DriverStation.getMatchTime();
   }

@@ -27,8 +27,8 @@ public class FieldMap {
         public static final double leftLeftOfCenter = -45;
         public static final double leftTwoLeftOfCenter = -67.5;
 
-        public static final int atHub=0;
-        public static final int tarmacLine=1;
+        public static final int atHub = 0;
+        public static final int tarmacLine = 1;
 
         // tarmacs
         // angles
@@ -72,7 +72,7 @@ public class FieldMap {
         // robot starts with rear bumper behind tarmac
         // perimeter and centered on target and cargo
 
-        public static final double leftTarmacPickupPosition = Units.inchesToMeters(-42);
+        public static final double leftTarmacPickupPosition = Units.inchesToMeters(-46);
         public static final double leftTarmacShootPosition = Units.inchesToMeters(0);
 
         public static final double leftTarmacTiltUpperAngle = 5;
@@ -90,12 +90,12 @@ public class FieldMap {
                         leftTarmacLowerRPM
         };
 
-        public static final double rightTarmacPickupPosition = Units.inchesToMeters(-40);
+        public static final double rightTarmacPickupPosition = Units.inchesToMeters(-41);
         public static final double rightTarmacShootPosition = Units.inchesToMeters(0);
 
-        public static final double rightTarmacTiltUpperAngle = 2;
-        public static final double rightTarmacTurretUpperAngle = 0;
-        public static double rightTarmacUpperRPM = 3000;
+        public static final double rightTarmacTiltUpperAngle = 5;
+        public static final double rightTarmacTurretUpperAngle = 20;
+        public static double rightTarmacUpperRPM = 3750;
 
         public static final double rightTarmacTiltLowerAngle = 4;
         public static final double rightTarmacTurretLowerAngle = 0;
@@ -108,12 +108,12 @@ public class FieldMap {
                         rightTarmacLowerRPM
         };
 
-        public static final double centerTarmacPickupPosition = Units.inchesToMeters(-42);
+        public static final double centerTarmacPickupPosition = Units.inchesToMeters(-51);
         public static final double centerTarmacShootPosition = Units.inchesToMeters(0);
 
-        public static final double centerTarmacTiltUpperAngle = 2;
-        public static final double centerTarmacTurretUpperAngle = 0;
-        public static double centerTarmacUpperRPM = 3000;
+        public static final double centerTarmacTiltUpperAngle = 5;
+        public static final double centerTarmacTurretUpperAngle = -17;
+        public static double centerTarmacUpperRPM = 3750;
 
         public static final double centerTarmacTiltLowerAngle = 4;
         public static final double centerTarmacTurretLowerAngle = 0;
@@ -128,7 +128,7 @@ public class FieldMap {
         public static final double[] shootMode_0 = { 1, 3500 };// 40" at hub "lob"
         public static final double[] shootMode_1 = { 4, 4000 };// 100" at tarmac line
         public static final double[] shootMode_2 = { 14, 4500 };// 200" inner launch pad
-        public static final double[] shootMode_3 = { 0,500 };// set by operator during test
-        
+        public static final double[] shootMode_3 = { 0, 500 };// set by operator during test
+
         public static String[] shootModeName = { "At Hub", "Tarmac Line", "Inner Launchpad", "TestSetup" };
 }

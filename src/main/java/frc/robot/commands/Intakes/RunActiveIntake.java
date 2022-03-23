@@ -39,6 +39,7 @@ public class RunActiveIntake extends CommandBase {
   @Override
 
   public void execute() {
+
      if (m_intake.useFrontIntake)
 
        Shuffleboard.selectTab("FrontIntakeCamera");
@@ -50,6 +51,16 @@ public class RunActiveIntake extends CommandBase {
     m_intake.lowerActiveArm();
 
     m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
+ 
+    //run intake until first cargo is at lower rollers
+    
+    if (!m_transport.getCargoAtShoot()) {
+
+      if (!stopActiveIntakeNow)
+
+        m_intake.runActiveIntakeMotor();
+    }
+
     // watch for second cargo and latch its arrival
     // stop intake quickly and latch cargo at intake in case it goes
     // out of sensor range
@@ -84,13 +95,7 @@ public class RunActiveIntake extends CommandBase {
       m_intake.m_rearIntakeMotor.stopMotor();
     }
 
-    if (!m_transport.getCargoAtShoot() || !m_intake.getCargoAtFront()) {
-
-      if (!stopActiveIntakeNow)
-
-        m_intake.runActiveIntakeMotor();
-    }
-
+  
   }
 
   @Override

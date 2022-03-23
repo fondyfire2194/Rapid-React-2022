@@ -4,8 +4,12 @@
 
 package frc.robot.OI;
 
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
@@ -57,9 +61,6 @@ public class SetUpPreRoundOI {
 
                         autoChooser.addOption("Right Tarmac Center Retract Pickup Shoot",
                                         4);
-
-                        autoChooser.addOption("Shoot Plus Taxi",
-                                        5);
 
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
                                         .withPosition(2, 0); //
