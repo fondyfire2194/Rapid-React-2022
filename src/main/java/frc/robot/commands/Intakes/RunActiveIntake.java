@@ -39,16 +39,17 @@ public class RunActiveIntake extends CommandBase {
   @Override
 
   public void execute() {
-    if (m_intake.useFrontIntake)
+     if (m_intake.useFrontIntake)
 
-      Shuffleboard.selectTab("FrontIntakeCamera");
+       Shuffleboard.selectTab("FrontIntakeCamera");
 
-    else
+     else
 
-      Shuffleboard.selectTab("RearIntakeCamera");
+       Shuffleboard.selectTab("RearIntakeCamera");
 
     m_intake.lowerActiveArm();
 
+    m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
     // watch for second cargo and latch its arrival
     // stop intake quickly and latch cargo at intake in case it goes
     // out of sensor range

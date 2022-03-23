@@ -276,13 +276,13 @@ public final class Constants {
 
       public static final double fieldLength = Units.inchesToMeters(626.25);
 
-      public static final double hubTargetHeight = 626.25 / 12;
+      public static final double hubTargetHeight = 104 / 12;
 
       public static final double CAMERA_HEIGHT = 90. / 12;
 
       public static final double heightDifference = hubTargetHeight - CAMERA_HEIGHT;
 
-      public static final double CAMERA_ANGLE = 128.;
+      public static final double CAMERA_ANGLE = 128.-90.;
 
    }
 

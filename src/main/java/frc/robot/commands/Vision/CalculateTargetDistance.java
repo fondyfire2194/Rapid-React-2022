@@ -5,6 +5,7 @@
 package frc.robot.commands.Vision;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.FieldMap;
 import frc.robot.Constants.FieldConstants;
@@ -40,6 +41,7 @@ public class CalculateTargetDistance extends CommandBase {
   @Override
   public void initialize() {
     m_shooter.calculatedCameraDistance = -1;
+    cameraAngle = FieldConstants.CAMERA_ANGLE;
   }
 
   /*
@@ -61,7 +63,13 @@ public class CalculateTargetDistance extends CommandBase {
 
     if ((m_limelight.getIsTargetFound() || RobotBase.isSimulation())) {
 
-      m_cameraVerticalError = m_limelight.getdegVerticalToTarget() - m_limelight.verticalOffset;
+      // m_cameraVerticalError = m_limelight.getdegVerticalToTarget() -
+      // m_limelight.verticalOffset;
+      m_cameraVerticalError = m_limelight.getdegRotationToTarget()- m_limelight.horizontalOffset;
+      SmartDashboard.putNumber("CAMVE", m_cameraVerticalError);
+      SmartDashboard.putNumber("HeightDiff", FieldConstants.heightDifference);
+      SmartDashboard.putNumber("CamAng", cameraAngle);
+    SmartDashboard.putNumber("CamOFM_LI", m_limelight.horizontalOffset);
 
       if (RobotBase.isSimulation()) {
 
@@ -69,17 +77,20 @@ public class CalculateTargetDistance extends CommandBase {
 
       }
 
-      // double tanAngleSum = Math.tan((Math.toRadians(m_cameraVerticalError +
-      // cameraAngle)));
+      double tanAngleSum = Math.tan((Math.toRadians(m_cameraVerticalError +
+          cameraAngle))); 
+           SmartDashboard.putNumber("TanSum", tanAngleSum);
 
-      // m_shooter.calculatedCameraDistance = FieldConstants.heightDifference /
-      // tanAngleSum;
+      m_shooter.calculatedCameraDistance = (int) (FieldConstants.heightDifference /
+          tanAngleSum);
 
-      m_shooter.calculatedCameraDistance = (int) Math.round(FieldConstants.heightDifference
+      // m_shooter.calculatedCameraDistance = (int)
+      // Math.round(FieldConstants.heightDifference
 
-          / (Math.tan(m_rcv2.getCenterTxAngle() * Math.cos(m_rcv2.getCenterTyAngle()))));
-     
-          m_shooter.calculatedCameraDistance += (FieldMap.visionStripRingDiameter / 2);
+      // / (Math.tan(m_rcv2.getCenterTxAngle() *
+      // Math.cos(m_rcv2.getCenterTyAngle()))));
+
+      // m_shooter.calculatedCameraDistance += (FieldMap.visionStripRingDiameter / 2);
     }
 
   }

@@ -410,7 +410,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     }
 
     public double getTopRoller() {
-        return m_topRollerMotor.get();
+        return m_topRollerMotor.getAppliedOutput();
     }
 
     public void stopTopRoller() {

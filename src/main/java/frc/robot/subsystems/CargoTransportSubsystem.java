@@ -187,7 +187,7 @@ public boolean latchCargoAtShoot;
   }
 
   public double getLowerRoller() {
-    return m_lowerRollerMotor.get();
+    return m_lowerRollerMotor.getAppliedOutput();
   }
 
   public void stopLowerRoller() {

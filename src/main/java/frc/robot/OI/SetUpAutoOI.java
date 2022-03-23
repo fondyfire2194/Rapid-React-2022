@@ -64,7 +64,7 @@ public class SetUpAutoOI {
                         compet1.addNumber("RobotPosn", () -> drive.getAverageDistance());
                         compet1.addNumber("WeightedAngle", () -> rcv2.weightedTargetAngle);
                         compet1.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
-
+                        compet1.addBoolean("LLHasTarget", () -> ll.getIsTargetFound());
                         ShuffleboardLayout compet2 = Shuffleboard.getTab("Competition")
                                         .getLayout("Colors", BuiltInLayouts.kList).withPosition(2, 0).withSize(1, 5)
                                         .withProperties(Map.of("Label position", "TOP"));
@@ -77,13 +77,13 @@ public class SetUpAutoOI {
                         compet2.addBoolean("FrontIntake", () -> intake.useFrontIntake);
 
                         ShuffleboardLayout compet3 = Shuffleboard.getTab("Competition")
-                                        .getLayout("Important", BuiltInLayouts.kList).withPosition(2, 3).withSize(1, 5)
+                                        .getLayout("Important", BuiltInLayouts.kList).withPosition(4, 0).withSize(1, 5)
                                         .withProperties(Map.of("Label position", "TOP"));
                         compet3.addNumber("BatteryVolts", () -> RobotController.getBatteryVoltage());
                         compet3.addNumber("Match Time", () -> Robot.matchTimeRemaining);
 
                         ShuffleboardLayout compet4 = Shuffleboard.getTab("Competition")
-                                        .getLayout("PresetData", BuiltInLayouts.kList).withPosition(3, 0).withSize(1, 3)
+                                        .getLayout("PresetData", BuiltInLayouts.kList).withPosition(3, 0).withSize(1, 5)
                                         .withProperties(Map.of("Label position", "TOP"));
 
                         compet4.addString("PresetMode", () -> shooter.presetModeName);

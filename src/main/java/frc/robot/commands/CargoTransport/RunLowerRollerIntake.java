@@ -73,7 +73,7 @@ public class RunLowerRollerIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_transport.getCargoAtShoot() || m_intake.stopLowerRoller
+    return  m_intake.stopLowerRoller
         || m_transport.latchCargoAtShoot && m_startTime != 0
             && Timer.getFPGATimestamp() > m_startTime + activeLowStopTime;
 

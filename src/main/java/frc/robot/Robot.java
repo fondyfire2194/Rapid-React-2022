@@ -24,6 +24,7 @@ import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.RetPuAdvShoot;
 import frc.robot.commands.AutoCommands.ShootRetract;
 import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
+import frc.robot.commands.Intakes.EmptyCargoFromShooter;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
@@ -292,12 +293,12 @@ public class Robot extends TimedRobot {
 
   public void teleopPeriodic() {
 
-     if (m_robotContainer.m_transport.wrongCargoColor) {
+    //   if (m_robotContainer.m_transport.wrongCargoColor) {
 
-      new RunCargoOutShooter(m_robotContainer.m_shooter, m_robotContainer.m_intake, m_robotContainer.m_transport)
+    //    new EmptyCargoFromShooter(m_robotContainer.m_shooter, m_robotContainer.m_intake, m_robotContainer.m_transport)
           
-      .schedule();
-    }
+    //    .execute();
+    //  }
 
     matchTimeRemaining = DriverStation.getMatchTime();
   }
