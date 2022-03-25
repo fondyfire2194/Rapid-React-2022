@@ -101,6 +101,9 @@ public class SetUpAutoOI {
                                                         "Show Controls", true, "Rotation", "QUARTER_CW"));
 
                         UsbCamera frontIntakeCamera = CameraServer.startAutomaticCapture("FrontCam", 0);
+                        frontIntakeCamera.setResolution(320, 240);
+                        frontIntakeCamera.setFPS(20);
+                        
 
                         ShuffleboardTab frontFeed = Shuffleboard.getTab("FrontIntakeCamera");
 
@@ -111,7 +114,9 @@ public class SetUpAutoOI {
                         ShuffleboardTab rearFeed = Shuffleboard.getTab("RearIntakeCamera");
 
                         UsbCamera rearIntakeCamera = CameraServer.startAutomaticCapture("RearCam", 1);
-
+                        rearIntakeCamera.setResolution(320, 240);
+                        rearIntakeCamera.setFPS(20);
+                        
                         rearFeed.add("RearCamera", rearIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
                                         .withPosition(2, 0).withSize(6, 4)
                                         .withProperties(Map.of("Show Crosshair", false, "Show Controls", false));

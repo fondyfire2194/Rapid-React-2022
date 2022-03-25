@@ -79,12 +79,13 @@ public class ShootCargo extends CommandBase {
 
     
     cargoAtShoot = m_transport.getCargoAtShoot();
+    
 
-    if ((cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed()) || cargoReleasing) {
+    if ((cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed())) {
 
       m_transport.releaseCargo();
 
-      cargoReleasing = true;
+      
     }
 
     if (!cargoAtShoot && !rearIntakeRunning && (m_intake.getCargoAtFront() || frontIntakeRunning)) {

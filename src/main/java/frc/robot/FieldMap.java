@@ -126,7 +126,7 @@ public class FieldMap {
                         centerTarmacLowerRPM };
 
         public static final double[] shootMode_0 = { 1, 3500 };// 40" at hub "lob"
-        public static final double[] shootMode_1 = { 4, 4000 };// 100" at tarmac line
+        public static final double[] shootMode_1 = { 6, 4000 };// 100" at tarmac line
         public static final double[] shootMode_2 = { 14, 4500 };// 200" inner launch pad
         public static final double[] shootMode_3 = { 0, 500 };// set by operator during test
 

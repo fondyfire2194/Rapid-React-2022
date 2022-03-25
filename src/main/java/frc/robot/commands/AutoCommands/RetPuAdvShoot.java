@@ -60,13 +60,11 @@ public class RetPuAdvShoot extends SequentialCommandGroup {
                                                 new PositionStraight(drive, drivePickupPosition,
                                                                 pickUpRate),
 
-                                                new ParallelRaceGroup(new TimeDelay(3),
+                                                new RunActiveIntake(intake, transport))
 
-                                                                new RunActiveIntake(intake, transport)))
-
-                                                                                .deadlineWith(new PositionHoldTiltTurret(
-                                                                                                tilt, turret,
-                                                                                                ll)),
+                                                                .deadlineWith(new PositionHoldTiltTurret(
+                                                                                tilt, turret,
+                                                                                ll)),
 
                                 new ParallelCommandGroup(
 
@@ -87,7 +85,7 @@ public class RetPuAdvShoot extends SequentialCommandGroup {
                                                                 new TimeDelay(2),
                                                                 new ShootCargo(shooter, transport, intake),
                                                                 new TimeDelay(2)),
-                                                                
+
                                                 new RunShooter(shooter))
 
                                                                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret,

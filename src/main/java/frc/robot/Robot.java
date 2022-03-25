@@ -286,12 +286,12 @@ public class Robot extends TimedRobot {
 
   public void teleopPeriodic() {
 
-      if (m_robotContainer.m_transport.wrongCargoColor) {
+    //   if (m_robotContainer.m_transport.wrongCargoColor) {
     
-       new EmptyCargoFromShooter(m_robotContainer.m_shooter, m_robotContainer.m_transport)
+    //    new EmptyCargoFromShooter(m_robotContainer.m_shooter, m_robotContainer.m_transport)
           
-       .execute();
-     }
+    //    .execute();
+    //  }
 
     matchTimeRemaining = DriverStation.getMatchTime();
   }

@@ -6,8 +6,8 @@ package frc.robot.commands.Intakes;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 
@@ -20,6 +20,8 @@ public class RunActiveIntake extends CommandBase {
   private boolean stopActiveIntakeNow;
 
   private double m_startTime;
+
+  private int loopctr;
 
   public RunActiveIntake(IntakesSubsystem intake, CargoTransportSubsystem transport) {
 
@@ -34,40 +36,48 @@ public class RunActiveIntake extends CommandBase {
 
     stopActiveIntakeNow = false;
 
+    loopctr = 0;
+
   }
 
   @Override
 
   public void execute() {
 
-     if (m_intake.useFrontIntake)
+    if (loopctr < 50)
 
-       Shuffleboard.selectTab("FrontIntakeCamera");
+      loopctr++;
 
-     else
+    if (m_intake.useFrontIntake)
 
-       Shuffleboard.selectTab("RearIntakeCamera");
+      Shuffleboard.selectTab("FrontIntakeCamera");
+
+    else
+
+      Shuffleboard.selectTab("RearIntakeCamera");
 
     m_intake.lowerActiveArm();
 
-    m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
- 
-    //run intake until first cargo is at lower rollers
-    
-    if (!m_transport.getCargoAtShoot()) {
+    // m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
 
-      if (!stopActiveIntakeNow)
+    // run intake until first cargo is at lower rollers
 
-        m_intake.runActiveIntakeMotor();
+    if (!m_transport.getCargoAtShoot() && loopctr > 25) {
+
+      // if (!stopActiveIntakeNow)
+
+      m_intake.runActiveIntakeMotor();
     }
 
     // watch for second cargo and latch its arrival
     // stop intake quickly and latch cargo at intake in case it goes
     // out of sensor range
 
-    if (m_transport.getCargoAtShoot()) {
+    if (m_transport.getCargoAtShoot() && !stopActiveIntakeNow) {
 
       if (m_intake.useFrontIntake) {
+
+        m_intake.runFrontIntakeMotor();
 
         stopActiveIntakeNow = m_intake.getCargoAtFront();
 
@@ -77,7 +87,9 @@ public class RunActiveIntake extends CommandBase {
 
       }
 
-      if (!m_intake.useFrontIntake) {
+      if (!m_intake.useFrontIntake && !stopActiveIntakeNow) {
+
+        m_intake.runRearIntakeMotor();
 
         stopActiveIntakeNow = m_intake.getCargoAtRear();
 
@@ -87,15 +99,15 @@ public class RunActiveIntake extends CommandBase {
 
       }
     }
+    SmartDashboard.putBoolean("SAIN", stopActiveIntakeNow);
 
-    if (stopActiveIntakeNow && Timer.getFPGATimestamp() > m_startTime + .1) {
+    if (stopActiveIntakeNow && m_startTime != 0) {
 
       m_intake.m_frontIntakeMotor.stopMotor();
 
       m_intake.m_rearIntakeMotor.stopMotor();
     }
 
-  
   }
 
   @Override
@@ -115,6 +127,7 @@ public class RunActiveIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return stopActiveIntakeNow || m_transport.wrongCargoColor;// stopActiveIntakeNow;
+    return stopActiveIntakeNow && m_startTime != 0 && Timer.getFPGATimestamp() > m_startTime + .1
+        || m_transport.wrongCargoColor;// stopActiveIntakeNow;
   }
 }
