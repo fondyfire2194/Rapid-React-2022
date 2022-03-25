@@ -119,6 +119,25 @@ public class Pref {
     // Shuffleboard
 
     prefDict.put("IsMatch", 1.);
+
+    prefDict.put("UseAutPrefs", 0.);
+
+    prefDict.put("autRPM", 3500.);
+
+    prefDict.put("autTilt", 5.);
+
+    prefDict.put("autCTu", -17.);
+
+    prefDict.put("autRTu", 20.);
+
+    prefDict.put("teleHubTilt", 2.8);
+
+    prefDict.put("teleHubRPM", 3300.);
+
+    prefDict.put("teleTarTilt", 13.); //6 before
+
+    prefDict.put("teleTarRPM", 3400.); //4000 before
+
   }
 
   public static void ensureRioPrefs() {

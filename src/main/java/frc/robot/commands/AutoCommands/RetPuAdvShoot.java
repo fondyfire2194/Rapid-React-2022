@@ -55,16 +55,20 @@ public class RetPuAdvShoot extends SequentialCommandGroup {
                                                 new ResetEncoders(drive),
                                                 new ResetGyro(drive)),
 
-                                new ParallelCommandGroup(
+                                new ParallelCommandGroup(new PositionStraight(drive, drivePickupPosition,
+                                                pickUpRate), new TimeDelay(3))
 
-                                                new PositionStraight(drive, drivePickupPosition,
-                                                                pickUpRate),
+                                                                // new ParallelRaceGroup(
 
-                                                new RunActiveIntake(intake, transport))
+                                                                // new TimeDelay(4),
 
-                                                                .deadlineWith(new PositionHoldTiltTurret(
-                                                                                tilt, turret,
-                                                                                ll)),
+                                                                .deadlineWith(
+
+                                                                                new RunActiveIntake(intake, transport),
+
+                                                                                new PositionHoldTiltTurret(
+                                                                                                tilt, turret,
+                                                                                                ll)),
 
                                 new ParallelCommandGroup(
 

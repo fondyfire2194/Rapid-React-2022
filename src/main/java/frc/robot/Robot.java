@@ -57,6 +57,7 @@ public class Robot extends TimedRobot {
   // public static StringLogEntry rrStringLog;
 
   double[] data = { 0, 0, 0, 0, 0, 0, 0, 0 };
+  private boolean usePrefs = false;
   public static double matchTimeRemaining;
 
   /**
@@ -79,9 +80,7 @@ public class Robot extends TimedRobot {
 
     getAllianceColorBlue();
 
-
-
-      Shuffleboard.selectTab("Pre-Round");
+    Shuffleboard.selectTab("Pre-Round");
 
   }
 
@@ -116,7 +115,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("FMSConn", m_robotContainer.isMatch);
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
     SmartDashboard.putNumber("DRTHVAL", m_robotContainer.getThrottle());
-    
+
     m_robotContainer.m_limelight.periodic();
 
     loopCtr++;
@@ -176,8 +175,15 @@ public class Robot extends TimedRobot {
     RawContoursV2 rcv2 = m_robotContainer.m_rcv2;
     Compressor comp = m_robotContainer.m_compressor;
 
+    ll.setPipeline(PipelinesConstants.ledsOffPipeline);
 
-  ll.setPipeline(PipelinesConstants.ledsOffPipeline);
+    usePrefs = false;
+
+    if (Pref.getPref("UseAutPrefs") != 0.) {
+
+      usePrefs = true;
+    }
+
     switch (autoChoice) {
 
       case 0:
@@ -185,13 +191,23 @@ public class Robot extends TimedRobot {
         break;
 
       case 1:// taxi start anywhere as agreed with other teams inside a tarmac facing in
-      
+
         m_autonomousCommand = new PositionStraight(m_robotContainer.m_drive, -1.5, .3);
 
         break;
 
       case 2:// left tarmac upper shoot
+
         data = FieldMap.leftTarmacData;
+
+        if (usePrefs) {
+
+          data[2] = Pref.getPref("autTilt");// tilt
+
+          data[4] = Pref.getPref("autRPM");// rpm
+
+        }
+
         m_autonomousCommand = new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
             data);
 
@@ -199,15 +215,37 @@ public class Robot extends TimedRobot {
 
       case 3://
         data = FieldMap.rightTarmacData;
-        
+
+        if (usePrefs) {
+
+          data[2] = Pref.getPref("autTilt");// tilt
+
+          data[4] = Pref.getPref("autRPM");// rpm
+
+          data[3] = Pref.getPref("autRTu");// turret
+        }
+
         m_autonomousCommand = new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
             data);
         break;
 
       case 4://
+      
         data = FieldMap.centerTarmacData;
+
+        if (usePrefs) {
+
+          data[2] = Pref.getPref("autTilt");// tilt
+
+          data[4] = Pref.getPref("autRPM");// rpm
+
+          data[3] = Pref.getPref("autCTu");// turret
+
+        }
+
         m_autonomousCommand = new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
             data);
+
         break;
 
       default:
@@ -262,17 +300,19 @@ public class Robot extends TimedRobot {
 
     if (RobotBase.isReal() && !m_robotContainer.m_tilt.positionResetDone)
 
-      new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
-  
-      m_robotContainer.m_limelight.setPipeline(PipelinesConstants.ledsOffPipeline);
-  
-      m_robotContainer.m_limelight.useVision = false;
+      new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(false);
+
+    m_robotContainer.m_limelight.setPipeline(PipelinesConstants.ledsOffPipeline);
+
+    m_robotContainer.m_limelight.useVision = false;
 
     m_robotContainer.m_intake.setFrontActive();
 
     m_robotContainer.m_shooter.shootSpeedSource = m_robotContainer.m_shooter.fromPreset;
 
-    new SetShootPositionSpeedTilt(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_limelight, 1).schedule();;
+    new SetShootPositionSpeedTilt(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_limelight, 1)
+        .schedule();
+    ;
 
     new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_rcv2, m_robotContainer.m_tilt,
         m_robotContainer.m_turret, m_robotContainer.m_shooter).schedule();
@@ -286,12 +326,13 @@ public class Robot extends TimedRobot {
 
   public void teleopPeriodic() {
 
-    //   if (m_robotContainer.m_transport.wrongCargoColor) {
-    
-    //    new EmptyCargoFromShooter(m_robotContainer.m_shooter, m_robotContainer.m_transport)
-          
-    //    .execute();
-    //  }
+    // if (m_robotContainer.m_transport.wrongCargoColor) {
+
+    // new EmptyCargoFromShooter(m_robotContainer.m_shooter,
+    // m_robotContainer.m_transport)
+
+    // .execute();
+    // }
 
     matchTimeRemaining = DriverStation.getMatchTime();
   }

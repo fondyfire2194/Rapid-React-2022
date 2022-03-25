@@ -302,7 +302,12 @@ public class RobotContainer {
 
                         .whenPressed(new AcquireTarget(m_limelight, m_tilt, m_turret, m_rcv2));
 
-            new JoystickButton(m_driverController, 11).whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmUp")));
+            new JoystickButton(m_driverController, 11).whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmUp")))
+            
+                        .whenPressed(new PositionTilt(m_tilt, TiltConstants.TILT_MIN_ANGLE))
+
+                        .whenPressed(new PositionTurret(m_turret, 0));
+            ;
 
             new JoystickButton(m_driverController, 12)
 
@@ -319,7 +324,7 @@ public class RobotContainer {
 
             codriverStart.whileHeld(new RunCargoOutShooter(m_shooter, m_intake, m_transport));
 
-           // codriverX.
+            // codriverX.
 
             codriverY.whileHeld(getJogTiltCommand(codriverGamepad)).whileHeld(getJogTurretCommand(codriverGamepad))
                         .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));
@@ -340,7 +345,7 @@ public class RobotContainer {
 
             codriverRightTrigger.whenPressed(new PositionTurretIncremental(m_turret, -1));
 
-            //test allow low shoot speed
+            // test allow low shoot speed
             codriverLeftStick.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 3));
 
             LiveWindow.disableAllTelemetry();

@@ -72,8 +72,8 @@ public class FieldMap {
         // robot starts with rear bumper behind tarmac
         // perimeter and centered on target and cargo
 
-        public static final double leftTarmacPickupPosition = Units.inchesToMeters(-46);
-        public static final double leftTarmacShootPosition = Units.inchesToMeters(0);
+        public static final double leftTarmacPickupPosition = Units.inchesToMeters(-50);
+        public static final double leftTarmacShootPosition = Units.inchesToMeters(-6.);
 
         public static final double leftTarmacTiltUpperAngle = 5;
         public static final double leftTarmacTurretUpperAngle = 0;
@@ -109,7 +109,7 @@ public class FieldMap {
         };
 
         public static final double centerTarmacPickupPosition = Units.inchesToMeters(-51);
-        public static final double centerTarmacShootPosition = Units.inchesToMeters(0);
+        public static final double centerTarmacShootPosition = Units.inchesToMeters(-4);
 
         public static final double centerTarmacTiltUpperAngle = 5;
         public static final double centerTarmacTurretUpperAngle = -17;

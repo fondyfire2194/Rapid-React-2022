@@ -198,7 +198,7 @@ public final class Constants {
 
    public static class TiltConstants {
 
-      public static final double TILT_MIN_ANGLE = 0;
+      public static final double TILT_MIN_ANGLE = -1;
 
       public static final double TILT_MAX_ANGLE = 18;
 
