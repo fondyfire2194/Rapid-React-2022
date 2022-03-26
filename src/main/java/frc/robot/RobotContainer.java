@@ -302,16 +302,17 @@ public class RobotContainer {
 
                         .whenPressed(new AcquireTarget(m_limelight, m_tilt, m_turret, m_rcv2));
 
-            new JoystickButton(m_driverController, 11).whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmUp")))
-            
-                        .whenPressed(new PositionTilt(m_tilt, TiltConstants.TILT_MIN_ANGLE))
+            new JoystickButton(m_driverController, 11).whileHeld(
 
-                        .whenPressed(new PositionTurret(m_turret, 0));
-            ;
+                        new RunClimber(m_climber, Pref.getPref("ClimbArmUp")));
 
             new JoystickButton(m_driverController, 12)
 
-                        .whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmDown")));
+                        .whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmDown")))
+
+                        .whenPressed(new PositionTilt(m_tilt, TiltConstants.TILT_MIN_ANGLE))
+
+                        .whenPressed(new PositionTurret(m_turret, 0));
 
             // close to hub
             driverUpButton.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 0));

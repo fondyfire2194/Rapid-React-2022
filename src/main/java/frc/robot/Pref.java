@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Preferences;
 
 public class Pref {
@@ -122,21 +123,53 @@ public class Pref {
 
     prefDict.put("UseAutPrefs", 0.);
 
-    prefDict.put("autRPM", 3500.);
+    // left start
+    
+    prefDict.put("autLRtctPt", Units.inchesToMeters(-51.));
 
-    prefDict.put("autTilt", 5.);
+    prefDict.put("autLShootPt", Units.inchesToMeters(-6.));
+
+    prefDict.put("autLTilt", 5.);
+
+    prefDict.put("autLTu", 0.);
+
+    prefDict.put("autLRPM", 3500.);
+
+    // right start
+
+    prefDict.put("autRRPM", 3500.);
+
+    prefDict.put("autRTilt", 5.);
+
+    prefDict.put("autRTu", 20.);
+
+    prefDict.put("autRRtctPt", Units.inchesToMeters(-51.));
+
+    prefDict.put("autRShootPt", Units.inchesToMeters(-6.));
+
+    // center start
+
+    prefDict.put("autCRPM", 3500.);
+
+    prefDict.put("autCTilt", 5.);
 
     prefDict.put("autCTu", -17.);
 
-    prefDict.put("autRTu", 20.);
+    prefDict.put("autCRtctPt", Units.inchesToMeters(-51.));
+
+    prefDict.put("autCShootPt", Units.inchesToMeters(-6.));
+
+    // teteop at hub
 
     prefDict.put("teleHubTilt", 2.8);
 
     prefDict.put("teleHubRPM", 3300.);
 
-    prefDict.put("teleTarTilt", 13.); //6 before
+    // teleop at tarmac
 
-    prefDict.put("teleTarRPM", 3400.); //4000 before
+    prefDict.put("teleTarTilt", 13.); // 6 before
+
+    prefDict.put("teleTarRPM", 3400.); // 4000 before
 
   }
 

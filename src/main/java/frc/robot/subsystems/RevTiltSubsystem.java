@@ -142,21 +142,30 @@ public class RevTiltSubsystem extends SubsystemBase {
         m_motor.setIdleMode(IdleMode.kBrake);
 
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
+
         m_reverseLimit.enableLimitSwitch(true);
+
         m_forwardLimit = m_motor.getForwardLimitSwitch(Type.kNormallyClosed);
+
         m_forwardLimit.enableLimitSwitch(true);
 
         if (RobotBase.isReal() && m_reverseLimit.isPressed()) {
+
             resetAngle();
         }
 
         if (RobotBase.isSimulation()) {
+
             REVPhysicsSim.getInstance().addSparkMax(m_motor, DCMotor.getNeo550(1));
 
         }
 
+        enableSoftLimits(false);
+
         setSoftwareLimits();
+
         SmartDashboard.putNumber("TIdegPerRev", degreesPerRev);
+
         tiltTarget = Shuffleboard.getTab("SetupTilt")
                 .add("TargetDegrees", 0)
                 .withWidget(BuiltInWidgets.kTextView)

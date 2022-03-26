@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
@@ -152,10 +153,6 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_drive.setIdleMode(true);
 
-    if (RobotBase.isReal())
-
-      new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(true);
-
     Shuffleboard.selectTab("Competition");
 
     Shuffleboard.startRecording();
@@ -192,7 +189,8 @@ public class Robot extends TimedRobot {
 
       case 1:// taxi start anywhere as agreed with other teams inside a tarmac facing in
 
-        m_autonomousCommand = new PositionStraight(m_robotContainer.m_drive, -1.5, .3);
+        m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+            new PositionStraight(m_robotContainer.m_drive, -1.5, .3));
 
         break;
 
@@ -202,49 +200,73 @@ public class Robot extends TimedRobot {
 
         if (usePrefs) {
 
-          data[2] = Pref.getPref("autTilt");// tilt
+          data[0] = Pref.getPref("autLRtctPt");//retract point
 
-          data[4] = Pref.getPref("autRPM");// rpm
+          data[1] = Pref.getPref("autLShootPt");//shoot point
+
+          data[2] = Pref.getPref("autLTilt");// tilt
+
+          data[3] = Pref.getPref("autLTu");//turret
+
+          data[4] = Pref.getPref("autLRPM");// rpm
 
         }
 
-        m_autonomousCommand = new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
-            data);
+        m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+
+            new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
+
+                data));
 
         break;
 
       case 3://
+      
         data = FieldMap.rightTarmacData;
 
         if (usePrefs) {
 
-          data[2] = Pref.getPref("autTilt");// tilt
+          data[0] = Pref.getPref("autRRtctPt");//retract point
 
-          data[4] = Pref.getPref("autRPM");// rpm
+          data[1] = Pref.getPref("autRShootPt");//shoot point
 
-          data[3] = Pref.getPref("autRTu");// turret
+          data[2] = Pref.getPref("autRTilt");// tilt
+
+          data[3] = Pref.getPref("autRTu");//turret
+
+          data[4] = Pref.getPref("autRRPM");// rpm
         }
 
-        m_autonomousCommand = new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
-            data);
+        m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+
+            new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
+
+                data));
         break;
 
       case 4://
-      
+
         data = FieldMap.centerTarmacData;
 
         if (usePrefs) {
 
-          data[2] = Pref.getPref("autTilt");// tilt
+          data[0] = Pref.getPref("autCRtctPt");//retract point
 
-          data[4] = Pref.getPref("autRPM");// rpm
+          data[1] = Pref.getPref("autCShootPt");//shoot point
 
-          data[3] = Pref.getPref("autCTu");// turret
+          data[2] = Pref.getPref("autCTilt");// tilt
+
+          data[3] = Pref.getPref("autCTu");//turret
+
+          data[4] = Pref.getPref("autCRPM");// rpm
 
         }
 
-        m_autonomousCommand = new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
-            data);
+        m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+
+            new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
+
+                data));
 
         break;
 
@@ -284,10 +306,12 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
 
     if (m_autonomousCommand != null) {
+
       m_autonomousCommand.cancel();
 
     }
     autoHasRun = false;
+
     Shuffleboard.update();
 
     Shuffleboard.startRecording();
