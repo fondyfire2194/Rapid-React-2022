@@ -102,6 +102,9 @@ public class IntakesSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("FCDV", frontIntakeCargoDetect.getVoltage());
     SmartDashboard.putNumber("RCDV", rearIntakeCargoDetect.getVoltage());
 
+    SmartDashboard.putNumber("FrontIntakeMotor", getFrontMotor());
+
+    SmartDashboard.putNumber("RearIntakeMotor", getRearMotor());
   }
 
   public boolean getCargoAtFront() {
