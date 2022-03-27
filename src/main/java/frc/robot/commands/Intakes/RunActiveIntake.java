@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Intakes;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,7 +49,7 @@ public class RunActiveIntake extends CommandBase {
 
       loopctr++;
 
-    if (m_intake.useFrontIntake)
+    if (DriverStation.isTeleop() && m_intake.useFrontIntake)
 
       Shuffleboard.selectTab("FrontIntakeCamera");
 
@@ -120,8 +121,11 @@ public class RunActiveIntake extends CommandBase {
     m_transport.stopLowerRoller();
     m_intake.stopLowerRoller = true;
 
-    Shuffleboard.selectTab("Competition");
+    if (DriverStation.isAutonomous()) {
 
+      Shuffleboard.selectTab("Competition");
+
+    }
   }
 
   // Returns true when the command should end.

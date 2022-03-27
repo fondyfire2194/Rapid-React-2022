@@ -12,6 +12,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Pref;
+import frc.robot.SimpleCSVLogger;
 
 public class RevShooterSubsystem extends SubsystemBase {
 
@@ -57,8 +59,6 @@ public class RevShooterSubsystem extends SubsystemBase {
     public int teleopSetupIndex = 5;
 
     public double teleopSetupShooterSpeed;
-
-    public boolean shotInProgress;
 
     public int shootMode;
 
@@ -109,10 +109,14 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double presetRPM = 1750;
     public int shootSpeedSource = 0;
     public boolean haltTopRoller;
-    public boolean atSpeed;
+    public boolean isAtSpeed;
     public int shootSetup;
     public String presetModeName = "Not Assigned";
     public int ShootMode;
+    public SimpleCSVLogger shootLogger = new SimpleCSVLogger();
+    public boolean shootLogInProgress;
+    public boolean logShooterItems;
+    public boolean endShootFile;
 
     public RevShooterSubsystem() {
 
@@ -234,13 +238,16 @@ public class RevShooterSubsystem extends SubsystemBase {
     }
 
     public double getRPM() {
-        return mEncoder.getVelocity();
+        return Math.round(mEncoder.getVelocity());
     }
 
-    public boolean atSpeed() {
+    public boolean getShooterAtSpeed() {
+        return isAtSpeed;
 
-        return atSpeed;
+    }
 
+    public boolean getShooterIsShooting() {
+        return isShooting;
     }
 
     public void jogLeftMotor() {
@@ -403,11 +410,11 @@ public class RevShooterSubsystem extends SubsystemBase {
     }
 
     public boolean getTopRollerAtSpeed() {
-        return atSpeed;
+        return isAtSpeed;
     }
 
     public double getTopRPM() {
-        return m_topEncoder.getVelocity();
+        return Math.round(m_topEncoder.getVelocity() * 10) / 10;
     }
 
     public double getTopRoller() {
@@ -514,4 +521,14 @@ public class RevShooterSubsystem extends SubsystemBase {
         driverOKShoot = false;
     }
 
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType("Shooter");
+        builder.addBooleanProperty("shoot_at_speed", this::getShooterAtSpeed, null);
+        builder.addBooleanProperty("is_shooting", this::getShooterIsShooting, null);
+        builder.addDoubleProperty("shoot_rpm", this::getRPM, null);
+        builder.addDoubleProperty("top_roll_rpm", this::getTopRPM, null);
+        builder.addBooleanProperty("top_at_speed", this::getTopRollerAtSpeed, null);
+        
+    }
 }

@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -285,4 +286,17 @@ public class IntakesSubsystem extends SubsystemBase {
     m_rearIntakeMotor.configPeakCurrentLimit(amps);
   }
 
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("Intake");
+    builder.addBooleanProperty("cargo_at_front", this::getCargoAtFront, null);
+    builder.addBooleanProperty("cargo_at_rear", this::getCargoAtRear, null);
+    builder.addDoubleProperty("front_out", this::getFrontMotor, null);
+    builder.addDoubleProperty("rear_out", this::getRearMotor, null);
+    builder.addBooleanProperty("front_arm_down", this::getFrontArmLowered, null);
+    builder.addBooleanProperty("front_arm_up", this::getFrontArmRaised, null);
+    builder.addBooleanProperty("rear_arm_down", this::getRearArmLowered, null);
+    builder.addBooleanProperty("rear_arm_up", this::getRearArmRaised, null);
+
+  }
 }

@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -521,4 +522,19 @@ public class RevDrivetrain extends SubsystemBase {
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(getLeftRate(), getRightRate());
     }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType("Drive_train");
+        builder.addBooleanProperty("in_position", this::getInPosition, null);
+        builder.addBooleanProperty("in_pos_left", this::getInPositionLeft, null);
+        builder.addBooleanProperty("in_pos_right", this::getInPositionRight, null);
+        builder.addDoubleProperty("left_posn", this::getLeftDistance, null);
+        builder.addDoubleProperty("right_posn", this::getRightDistance, null);
+        builder.addDoubleProperty("left_vel_mps", this::getLeftRate, null);
+        builder.addDoubleProperty("right_vel_mps", this::getRightRate, null);
+        builder.addDoubleProperty("gyro_angle", this::getYaw, null);
+
+    }
+
 }

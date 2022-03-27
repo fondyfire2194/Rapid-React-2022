@@ -45,8 +45,7 @@ public class PositionHoldTiltTest extends CommandBase {
   @Override
   public void execute() {
     
-    SmartDashboard.putBoolean("TTiL", m_tilt.testLock);
-
+    
   
     if (!m_tilt.testLock) {
 

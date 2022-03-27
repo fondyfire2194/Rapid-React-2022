@@ -152,7 +152,7 @@ public class SetUpOI {
 
                         turretValues.addNumber("TUAngle", () -> turret.getAngle());
                         turretValues.addNumber("TUTgt", () -> turret.targetAngle);
-                        turretValues.addNumber("Pct", () -> turret.getOut());
+                        turretValues.addNumber("Pct", () -> turret.getMotorOut());
                         turretValues.addNumber("Amps", () -> turret.getAmps());
                         turretValues.addNumber("Speed", () -> turret.getSpeed());
                         turretValues.addNumber("Vision Offset", () -> turret.targetHorizontalOffset);
@@ -239,7 +239,7 @@ public class SetUpOI {
                         tiltValues.addNumber("TIAngle", () -> tilt.getAngle());
                         tiltValues.addNumber("TITgt", () -> tilt.targetAngle);
                         tiltValues.addNumber("PresetAngle", () -> tilt.presetPosition);
-                        tiltValues.addNumber("PCT", () -> tilt.getOut());
+                        tiltValues.addNumber("PCT", () -> tilt.getMotorOut());
                         tiltValues.addNumber("Amps", () -> tilt.getAmps());
                         tiltValues.addNumber("Speed", () -> tilt.getSpeed());
                         tiltValues.addNumber("AdjTarget", () -> tilt.adjustedVerticalError);
@@ -328,7 +328,7 @@ public class SetUpOI {
                                         .getLayout("ShooterValues1", BuiltInLayouts.kList).withPosition(4, 0)
                                         .withSize(2, 3).withProperties(Map.of("Label position", "LEFT"));
 
-                        shooterValues1.addBoolean("ShooterAtSpeed", () -> shooter.atSpeed());
+                        shooterValues1.addBoolean("ShooterAtSpeed", () -> shooter.getShooterAtSpeed());
                         shooterValues1.addBoolean("TopRollerAtSpeed", () -> shooter.getTopRollerAtSpeed());
                         shooterValues.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
                         shooterValues1.addBoolean("TuneOn", () -> (shooter.tuneOn && shooter.lastTuneOn));

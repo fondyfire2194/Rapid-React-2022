@@ -80,7 +80,7 @@ public class RevColorSensor {
   public int getProximity() {
     int proximity = m_colorSensor.getProximity();
 
-    SmartDashboard.putNumber("Proximity", proximity);
+    SmartDashboard.putNumber("ColorProx", proximity);
 
     return proximity;
 
@@ -89,7 +89,7 @@ public class RevColorSensor {
   public double getIR() {
     double IR = m_colorSensor.getIR();
 
-    SmartDashboard.putNumber("IR", IR);
+    SmartDashboard.putNumber("ColorIR", IR);
 
     return IR;
   }

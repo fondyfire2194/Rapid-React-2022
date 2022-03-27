@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -24,7 +25,6 @@ import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.RetPuAdvShoot;
 import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
-import frc.robot.commands.Intakes.EmptyCargoFromShooter;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Vision.CalculateTargetDistance;
@@ -53,12 +53,12 @@ public class Robot extends TimedRobot {
   public double timeToStart;
   int tst;
   private int loopCtr;
-  // public static BooleanLogEntry rrBooleanLog;
+  // public BooleanLogEntry rrBooleanLog;
   // public static DoubleLogEntry rrDoubleLog;
   // public static StringLogEntry rrStringLog;
 
   double[] data = { 0, 0, 0, 0, 0, 0, 0, 0 };
-  private boolean usePrefs = false;
+
   public static double matchTimeRemaining;
 
   /**
@@ -69,13 +69,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     // Starts recording to data log
-    // DataLogManager.start();
-
-    // Set up custom log entries
-    // DataLog log = DataLogManager.getLog();
-    // rrBooleanLog = new BooleanLogEntry(log, "/my/boolean");
-    // rrDoubleLog = new DoubleLogEntry(log, "/my/double");
-    // rrStringLog = new StringLogEntry(log, "/my/string");
+    DataLogManager.start();
 
     m_robotContainer = new RobotContainer();
 
@@ -105,17 +99,8 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     // m_robotContainer.m_setup.checkLimits();
-    // if (tst >= 298) {
-    // // Only log when necessary
-    // rrBooleanLog.append(true);
 
-    // rrDoubleLog.append(3.5);
-    // rrStringLog.append("wow!");
-    // }
-
-    SmartDashboard.putBoolean("FMSConn", m_robotContainer.isMatch);
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
-    SmartDashboard.putNumber("DRTHVAL", m_robotContainer.getThrottle());
 
     m_robotContainer.m_limelight.periodic();
 
@@ -142,7 +127,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    SmartDashboard.putNumber("RetPos", FieldMap.leftTarmacData[0]);
+
   }
 
   public void autonomousInit() {
@@ -174,13 +159,6 @@ public class Robot extends TimedRobot {
 
     ll.setPipeline(PipelinesConstants.ledsOffPipeline);
 
-    usePrefs = false;
-
-    if (Pref.getPref("UseAutPrefs") != 0.) {
-
-      usePrefs = true;
-    }
-
     switch (autoChoice) {
 
       case 0:
@@ -198,19 +176,15 @@ public class Robot extends TimedRobot {
 
         data = FieldMap.leftTarmacData;
 
-        if (usePrefs) {
+        data[0] = Pref.getPref("autLRtctPt");// retract point
 
-          data[0] = Pref.getPref("autLRtctPt");//retract point
+        data[1] = Pref.getPref("autLShootPt");// shoot point
 
-          data[1] = Pref.getPref("autLShootPt");//shoot point
+        data[2] = Pref.getPref("autLTilt");// tilt
 
-          data[2] = Pref.getPref("autLTilt");// tilt
+        data[3] = Pref.getPref("autLTu");// turret
 
-          data[3] = Pref.getPref("autLTu");//turret
-
-          data[4] = Pref.getPref("autLRPM");// rpm
-
-        }
+        data[4] = Pref.getPref("autLRPM");// rpm
 
         m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
@@ -221,21 +195,18 @@ public class Robot extends TimedRobot {
         break;
 
       case 3://
-      
+
         data = FieldMap.rightTarmacData;
 
-        if (usePrefs) {
+        data[0] = Pref.getPref("autRRtctPt");// retract point
 
-          data[0] = Pref.getPref("autRRtctPt");//retract point
+        data[1] = Pref.getPref("autRShootPt");// shoot point
 
-          data[1] = Pref.getPref("autRShootPt");//shoot point
+        data[2] = Pref.getPref("autRTilt");// tilt
 
-          data[2] = Pref.getPref("autRTilt");// tilt
+        data[3] = Pref.getPref("autRTu");// turret
 
-          data[3] = Pref.getPref("autRTu");//turret
-
-          data[4] = Pref.getPref("autRRPM");// rpm
-        }
+        data[4] = Pref.getPref("autRRPM");// rpm
 
         m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
@@ -248,19 +219,15 @@ public class Robot extends TimedRobot {
 
         data = FieldMap.centerTarmacData;
 
-        if (usePrefs) {
+        data[0] = Pref.getPref("autCRtctPt");// retract point
 
-          data[0] = Pref.getPref("autCRtctPt");//retract point
+        data[1] = Pref.getPref("autCShootPt");// shoot point
 
-          data[1] = Pref.getPref("autCShootPt");//shoot point
+        data[2] = Pref.getPref("autCTilt");// tilt
 
-          data[2] = Pref.getPref("autCTilt");// tilt
+        data[3] = Pref.getPref("autCTu");// turret
 
-          data[3] = Pref.getPref("autCTu");//turret
-
-          data[4] = Pref.getPref("autCRPM");// rpm
-
-        }
+        data[4] = Pref.getPref("autCRPM");// rpm
 
         m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
@@ -318,8 +285,6 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_drive.setIdleMode(true);
 
-    autoHasRun = false;
-
     CommandScheduler.getInstance().cancelAll();
 
     if (RobotBase.isReal() && !m_robotContainer.m_tilt.positionResetDone)
@@ -349,7 +314,7 @@ public class Robot extends TimedRobot {
   @Override
 
   public void teleopPeriodic() {
-
+    // SmartDashboard.putData("ShootSequence", m_robotContainer.ssdisp);
     // if (m_robotContainer.m_transport.wrongCargoColor) {
 
     // new EmptyCargoFromShooter(m_robotContainer.m_shooter,

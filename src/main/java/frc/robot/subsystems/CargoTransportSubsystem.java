@@ -15,6 +15,8 @@ import com.revrobotics.ColorSensorV3;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
@@ -41,7 +43,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
   public boolean noCargoAtShooterForOneSecond;
 
   public AnalogInput cargoAboveLowRoll = new AnalogInput(1);
-    
+
   public DigitalInput cargoSensor = new DigitalInput(0);
 
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
@@ -64,7 +66,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean wrongCargoColor;
 
-public boolean latchCargoAtShoot;
+  public boolean latchCargoAtShoot;
 
   public CargoTransportSubsystem() {
 
@@ -94,7 +96,7 @@ public boolean latchCargoAtShoot;
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("PROXVAL", rcs.getProximity());
-      SmartDashboard.putNumber("LowRollOut",getLowerRoller());
+    SmartDashboard.putNumber("LowRollOut", getLowerRoller());
 
   }
 
@@ -112,13 +114,13 @@ public boolean latchCargoAtShoot;
 
   }
 
-  public double cargoAboveShoot(){
+  public double cargoAboveShoot() {
+    
     return cargoAboveLowRoll.getAverageVoltage();
   }
 
   public boolean getCargoAtShoot() {
-    // int value = rcs.getProximity();
-    // return value > (int) Pref.getPref("CargoDetectValue");
+
     return cargoSensor.get();
   }
 
@@ -153,17 +155,13 @@ public boolean latchCargoAtShoot;
         || (!getAllianceBlue() && getCargoIsBlue()));
   }
 
-  
   public void releaseCargo() {
 
     double rpm = Pref.getPref("LowRollReleaseRPM");
 
-   // if (getCargoAtShoot()) {
+    runLowerAtVelocity(rpm);
 
-      runLowerAtVelocity(rpm);
-    //}
   }
-
 
   public void runLowerAtVelocity(double rpm) {
 
@@ -179,7 +177,7 @@ public boolean latchCargoAtShoot;
 
   public double getLowerRPM() {
 
-    return m_lowerEncoder.getVelocity();
+    return Math.round(m_lowerEncoder.getVelocity() * 10) / 10;
   }
 
   public void runLowerRollerMotor(double speed) {
@@ -234,4 +232,15 @@ public boolean latchCargoAtShoot;
 
   }
 
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("Cargo_transport");
+    builder.addBooleanProperty("cargo_at_shoot", this::getCargoAtShoot, null);
+    builder.addDoubleProperty("low_roll_out", this::getLowerRoller, null);
+    builder.addDoubleProperty("low_roll_rpm", this::getLowerRPM, null);
+    builder.addBooleanProperty("cargo_is_blue", this::getCargoIsBlue, null);
+    builder.addBooleanProperty("cargo_is_red", this::getCargoIsRed, null);
+    builder.addBooleanProperty("cargo_wrong_color", this::getCargoAllianceMisMatch, null);
+
+  }
 }

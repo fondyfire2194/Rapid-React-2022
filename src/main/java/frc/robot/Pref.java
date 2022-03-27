@@ -117,12 +117,6 @@ public class Pref {
 
     prefDict.put("HubTgtGn", 10.);
 
-    // Shuffleboard
-
-    prefDict.put("IsMatch", 1.);
-
-    prefDict.put("UseAutPrefs", 0.);
-
     // left start
     
     prefDict.put("autLRtctPt", Units.inchesToMeters(-51.));

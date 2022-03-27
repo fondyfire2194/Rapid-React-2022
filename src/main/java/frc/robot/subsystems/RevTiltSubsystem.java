@@ -16,6 +16,7 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -267,7 +268,7 @@ public class RevTiltSubsystem extends SubsystemBase {
         return getAngle();
     }
 
-    public double getOut() {
+    public double getMotorOut() {
         return m_motor.getAppliedOutput();
     }
 
@@ -287,7 +288,11 @@ public class RevTiltSubsystem extends SubsystemBase {
         return m_motor.getFault(FaultID.kSoftLimitRev);
     }
 
-    public boolean onMinusHardwarLimit() {
+    public boolean onPlusHardwareLimit() {
+        return m_motor.getFault(FaultID.kHardLimitRev);
+    }
+
+    public boolean onMinusHardwareLimit() {
         return m_motor.getFault(FaultID.kHardLimitRev);
     }
 
@@ -432,6 +437,20 @@ public class RevTiltSubsystem extends SubsystemBase {
         izset = mPidController.getIZone(POSITION_SLOT);
         maxAccset = mPidController.getSmartMotionMaxAccel(POSITION_SLOT);
         maxVelset = mPidController.getSmartMotionMaxVelocity(POSITION_SLOT);
+
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType("Tilt");
+        builder.addBooleanProperty("tilt_lower_switch", this::onMinusHardwareLimit, null);
+        builder.addBooleanProperty("tilt_upper_switch", this::onPlusHardwareLimit, null);
+        builder.addBooleanProperty("soft_lim_en", this::getSoftwareLimitsEnabled, null);
+        builder.addDoubleProperty("angle_degrees", this::getAngle, null);
+        builder.addDoubleProperty("motor_out", this::getMotorOut, null);
+        builder.addBooleanProperty("at_plus_soft_lim", this::onPlusSoftwareLimit, null);
+        builder.addBooleanProperty("at_min_soft_lim", this::onMinusSoftwareLimit, null);
+        builder.addBooleanProperty("at_target", this::atTargetAngle, null);
 
     }
 

@@ -48,7 +48,7 @@ public class RunShooter extends CommandBase {
 
     m_shooter.runShooterPlusRoller(m_rpm);
 
-    m_shooter.atSpeed = Timer.getFPGATimestamp() > m_startTime + .75;
+    m_shooter.isAtSpeed = Timer.getFPGATimestamp() > m_startTime + .75;
 
   }
 

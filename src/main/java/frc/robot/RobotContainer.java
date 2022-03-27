@@ -27,6 +27,7 @@ import frc.robot.OI.LLVisionShuffleboard;
 import frc.robot.OI.SetUpAutoOI;
 import frc.robot.OI.SetUpOI;
 import frc.robot.OI.SetUpPreRoundOI;
+import frc.robot.OI.ShootSequenceDisplay;
 import frc.robot.OI.Show_Hide_Screens;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.CamMode;
@@ -128,6 +129,8 @@ public class RobotContainer {
 
       public VisionReferenceTarget m_vrt;
 
+      public ShootSequenceDisplay ssdisp;
+
       // Drive joystick
 
       // Co driver gamepad
@@ -155,15 +158,13 @@ public class RobotContainer {
       public POVButton driverRightButton = new POVButton(m_driverController, 90);
       public POVButton driverDownButton = new POVButton(m_driverController, 180);
       public POVButton driverLeftButton = new POVButton(m_driverController, 270);
-      public boolean isMatch;
 
       /**
        * The container for the robot. Contains subsysems, OI devices, and commands.
        */
       public RobotContainer() {
-            isMatch = Robot.getFMSConnected();
             // Preferences.removeAll();
-            // Pref.deleteUnused();
+            Pref.deleteUnused();
             Pref.addMissing();
             m_drive = new RevDrivetrain();
             m_transport = new CargoTransportSubsystem();
@@ -205,7 +206,7 @@ public class RobotContainer {
             m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
             m_trajectory = new FondyFireTrajectory(m_drive);
-
+            ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
             // test configuration
             // Show_Hide_Screens.setStates(false, false, false, true);
             // test configuration with hub vision
@@ -221,7 +222,7 @@ public class RobotContainer {
                         m_limelight, m_intake, m_climber, m_trajectory);
 
             m_autoOi = new SetUpAutoOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
-                        m_intake, m_climber, m_trajectory, m_rcv2);
+                        m_intake, m_climber, m_trajectory, m_rcv2, ssdisp);
 
             m_preOi = new SetUpPreRoundOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
                         m_intake, m_climber, m_trajectory, m_rcv2);
@@ -446,8 +447,9 @@ public class RobotContainer {
       }
 
       public void checkLimits() {
-            if (m_tilt.onMinusSoftwareLimit() || m_tilt.onPlusSoftwareLimit() || m_tilt.onMinusHardwarLimit()
+            if (m_tilt.onMinusSoftwareLimit() || m_tilt.onPlusSoftwareLimit() || m_tilt.onMinusHardwareLimit()
                         || m_turret.onPlusSoftwareLimit() || m_turret.onMinusSoftwareLimit()
+                        || m_turret.onPlusHardwareLimit() || m_turret.onMinusHardwareLimit()
                         || DriverStation.isDisabled())
                   m_limelight.useVision = false;
 

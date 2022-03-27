@@ -4,6 +4,8 @@
 
 package frc.robot.commands.Shooter;
 
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
@@ -47,6 +49,8 @@ public class ShootCargo extends CommandBase {
   @Override
   public void initialize() {
 
+    m_shooter.endShootFile = false;
+
     m_shooter.isShooting = true;
 
     frontIntakeRunning = false;
@@ -77,15 +81,12 @@ public class ShootCargo extends CommandBase {
   @Override
   public void execute() {
 
-    
     cargoAtShoot = m_transport.getCargoAtShoot();
-    
 
-    if ((cargoAtShoot && m_shooter.atSpeed() && m_shooter.getTopRollerAtSpeed())) {
+    if ((cargoAtShoot && m_shooter.getShooterAtSpeed() && m_shooter.getTopRollerAtSpeed())) {
 
       m_transport.releaseCargo();
 
-      
     }
 
     if (!cargoAtShoot && !rearIntakeRunning && (m_intake.getCargoAtFront() || frontIntakeRunning)) {
@@ -104,9 +105,9 @@ public class ShootCargo extends CommandBase {
     // no second cargo
 
     if (!cargoAtShoot && !frontIntakeRunning && !rearIntakeRunning) {
-   
+
       if (m_startTime == 0) {
-  
+
         m_startTime = Timer.getFPGATimestamp();
       }
 
@@ -133,7 +134,7 @@ public class ShootCargo extends CommandBase {
         m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
       }
       // second cargo end
-      
+
       endit2 = m_transport.latchCargoAtShoot && m_startTime != 0
 
           && Timer.getFPGATimestamp() > m_startTime + activeLowStopTime;
@@ -152,6 +153,7 @@ public class ShootCargo extends CommandBase {
     m_intake.stopFrontIntakeMotor();
     m_intake.stopRearIntakeMotor();
     cargoReleasing = false;
+    m_shooter.endShootFile = true;
   }
 
   // Returns true when the command should end.
