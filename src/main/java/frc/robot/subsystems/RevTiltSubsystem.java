@@ -140,6 +140,7 @@ public class RevTiltSubsystem extends SubsystemBase {
         // getVelGains();
 
         resetAngle();
+        
         m_motor.setIdleMode(IdleMode.kBrake);
 
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);

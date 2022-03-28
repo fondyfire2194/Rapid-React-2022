@@ -53,7 +53,7 @@ public class RunActiveIntake extends CommandBase {
 
       Shuffleboard.selectTab("FrontIntakeCamera");
 
-    else
+    if (DriverStation.isTeleop() && !m_intake.useFrontIntake)
 
       Shuffleboard.selectTab("RearIntakeCamera");
 

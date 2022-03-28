@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,7 +26,12 @@ import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.RetPuAdvShoot;
 import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
+import frc.robot.commands.AutoCommands.Common.SetupForShootLocation;
 import frc.robot.commands.RobotDrive.PositionStraight;
+import frc.robot.commands.RobotDrive.ResetEncoders;
+import frc.robot.commands.RobotDrive.ResetGyro;
+import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -57,7 +63,7 @@ public class Robot extends TimedRobot {
   // public static DoubleLogEntry rrDoubleLog;
   // public static StringLogEntry rrStringLog;
 
-  double[] data = { 0, 0, 0, 0, 0, 0, 0, 0 };
+  public static double[] data = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
   public static double matchTimeRemaining;
 
@@ -228,6 +234,56 @@ public class Robot extends TimedRobot {
         data[3] = Pref.getPref("autCTu");// turret
 
         data[4] = Pref.getPref("autCRPM");// rpm
+
+        m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+
+            new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
+
+                data));
+
+        break;
+
+      case 5://
+
+        // start under hub, shoot with teleop pref then retract
+
+        data[0] = Units.inchesToMeters(-110);
+
+        data[1] = 0;
+
+        data[2] = Pref.getPref("teleHubTilt");
+
+        data[4] = Pref.getPref("teleHubRPM");
+
+        m_autonomousCommand = new SequentialCommandGroup(
+
+            new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+
+            new ResetEncoders(drive), new ResetGyro(drive),
+
+            new SetupForShootLocation(shooter, tilt, turret, ll, 0),
+
+            new ShootCargo(shooter, transport, intake)
+
+                .deadlineWith(new RunShooter(shooter)),
+
+            new PositionStraight(drive, data[0], drive.positionRate));
+
+        break;
+
+      case 6:// left tarmac upper shoot from tarmac line
+
+        data = FieldMap.leftTarmacData;
+
+        data[0] = Pref.getPref("autLRtctPt");// retract point
+
+        data[1] = Pref.getPref("autLTShootPt");// shoot point
+
+        data[2] = Pref.getPref("teleTarTilt");// tilt
+
+        data[3] = Pref.getPref("autLTu");// turret
+
+        data[4] = Pref.getPref("teleTarRPM");// rpm
 
         m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 

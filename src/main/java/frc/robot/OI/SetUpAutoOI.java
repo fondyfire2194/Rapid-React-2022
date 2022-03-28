@@ -8,6 +8,7 @@ import java.util.Map;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -52,11 +53,11 @@ public class SetUpAutoOI {
                         // compet.addBoolean("IsShooting", () -> shooter.isShooting);
                         // compet.addBoolean("CargoAtRear", () -> intake.getCargoAtRear());
                         // compet.addBoolean("CargoAtFront", () -> intake.getCargoAtFront());
-                       // compet.addBoolean("TiltOnSwitch", () -> tilt.onMinusHardwarLimit());
+                        // compet.addBoolean("TiltOnSwitch", () -> tilt.onMinusHardwarLimit());
 
                         // ShuffleboardLayout compet1 = Shuffleboard.getTab("Competition")
-                        //                 .getLayout("Values", BuiltInLayouts.kList).withPosition(8, 0).withSize(2, 4)
-                        //                 .withProperties(Map.of("Label position", "TOP"));
+                        // .getLayout("Values", BuiltInLayouts.kList).withPosition(8, 0).withSize(2, 4)
+                        // .withProperties(Map.of("Label position", "TOP"));
                         // compet1.addNumber("TUAngle", () -> turret.getAngle());
                         // compet1.addNumber("TiltAngle", () -> tilt.getAngle());
                         // compet1.addNumber("ShooterRPM", () -> shooter.getRPM());
@@ -66,11 +67,10 @@ public class SetUpAutoOI {
                         // compet1.addNumber("WeightedAngle", () -> rcv2.weightedTargetAngle);
                         // compet1.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
 
-                      
-                //        compet1.addBoolean("LLHasTarget", () -> ll.getIsTargetFound());
+                        // compet1.addBoolean("LLHasTarget", () -> ll.getIsTargetFound());
                         // ShuffleboardLayout compet2 = Shuffleboard.getTab("Competition")
-                        //                 .getLayout("Colors", BuiltInLayouts.kList).withPosition(2, 0).withSize(1, 6)
-                        //                 .withProperties(Map.of("Label position", "TOP"));
+                        // .getLayout("Colors", BuiltInLayouts.kList).withPosition(2, 0).withSize(1, 6)
+                        // .withProperties(Map.of("Label position", "TOP"));
                         // compet2.addBoolean("Blue Alliance", () -> Robot.getAllianceColorBlue());
                         // compet2.addBoolean("Red Alliance", () -> !Robot.getAllianceColorBlue());
                         // compet2.addBoolean("WrongColorCargo", () -> transport.wrongCargoColor);
@@ -84,7 +84,20 @@ public class SetUpAutoOI {
                                         .withProperties(Map.of("Label position", "TOP"));
                         compet3.addNumber("BatteryVolts", () -> RobotController.getBatteryVoltage());
                         compet3.addNumber("Match Time", () -> Robot.matchTimeRemaining);
-               
+
+                        ShuffleboardLayout compet5 = Shuffleboard.getTab("Competition")
+                                        .getLayout("AutoData", BuiltInLayouts.kList).withPosition(2, 0).withSize(1, 6)
+                                        .withProperties(Map.of("Label position", "TOP"));
+
+                        compet5.addNumber("AutoRPM", () -> Robot.data[4]);
+                        compet5.addNumber("AutoTiltDeg", () -> Robot.data[2]);
+                        compet5.addNumber("AutoTurretDeg", () -> Robot.data[3]);
+                        compet5.addNumber("RetctPosnInch",
+                                        () -> Math.round(Units.metersToInches(Robot.data[0]) * 10) / 10);
+                        compet5.addNumber("ShootPosnInch",
+                                        () -> Math.round(Units.metersToInches(Robot.data[1]) * 10)
+                                                        / 10);
+
                         ShuffleboardLayout compet4 = Shuffleboard.getTab("Competition")
                                         .getLayout("PresetData", BuiltInLayouts.kList).withPosition(3, 0).withSize(1, 6)
                                         .withProperties(Map.of("Label position", "TOP"));

@@ -46,7 +46,7 @@ public class SetUpPreRoundOI {
                         // The first argument is the root container
                         // The second argument is whether logging and config should be given separate
                         // tabs
-                        Shuffleboard.getTab("Pre-Round").add("Auto Commands", autoChooser).withSize(2, 1)
+                        Shuffleboard.getTab("Pre-Round").add("Auto Commands", autoChooser).withSize(3, 1)
                                         .withPosition(0, 0); // place it in the top-left corner
 
                         autoChooser.setDefaultOption("Do Nothing", 0);
@@ -62,8 +62,14 @@ public class SetUpPreRoundOI {
                         autoChooser.addOption("Right Tarmac Center Retract Pickup Shoot",
                                         4);
 
+                        autoChooser.addOption("Shoot from under Hub then Retract",
+                                        5);
+
+                        autoChooser.addOption("Left Tarmac, Retract, Pickup, to Tarmac, Shoot",
+                                        6);
+
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
-                                        .withPosition(2, 0); //
+                                        .withPosition(3, 0); //
 
                         startDelayChooser.setDefaultOption("No Delay", 0.);
                         startDelayChooser.addOption("One Second", 1.);

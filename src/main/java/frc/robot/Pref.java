@@ -121,13 +121,15 @@ public class Pref {
     
     prefDict.put("autLRtctPt", Units.inchesToMeters(-51.));
 
-    prefDict.put("autLShootPt", Units.inchesToMeters(-6.));
+    prefDict.put("autLShootPt", Units.inchesToMeters(0.));
 
     prefDict.put("autLTilt", 5.);
 
     prefDict.put("autLTu", 0.);
 
     prefDict.put("autLRPM", 3500.);
+
+    prefDict.put("autLTShootPt", Units.inchesToMeters(-20.));
 
     // right start
 
@@ -139,7 +141,7 @@ public class Pref {
 
     prefDict.put("autRRtctPt", Units.inchesToMeters(-51.));
 
-    prefDict.put("autRShootPt", Units.inchesToMeters(-6.));
+    prefDict.put("autRShootPt", Units.inchesToMeters(0.));
 
     // center start
 
