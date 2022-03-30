@@ -19,9 +19,10 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.CANConstants;
 import frc.robot.Pref;
-import frc.robot.SimpleCSVLogger;
+import frc.robot.Constants.CANConstants;
+
+
 
 public class RevShooterSubsystem extends SubsystemBase {
 
@@ -113,7 +114,6 @@ public class RevShooterSubsystem extends SubsystemBase {
     public int shootSetup;
     public String presetModeName = "Not Assigned";
     public int ShootMode;
-    public SimpleCSVLogger shootLogger = new SimpleCSVLogger();
     public boolean shootLogInProgress;
     public boolean logShooterItems;
     public boolean endShootFile;
