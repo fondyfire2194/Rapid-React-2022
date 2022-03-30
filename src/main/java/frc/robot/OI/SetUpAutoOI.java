@@ -108,6 +108,9 @@ public class SetUpAutoOI {
                         compet4.addNumber("DriverAdjustRPM",
                                         () -> shooter.shooterRPMAdder[shooter.shootMode]);
                         compet4.addNumber("VisionAngle", () -> rcv2.weightedTargetAngle);
+                        compet4.addNumber("TUAngle", () -> turret.getAngle());
+                        compet4.addNumber("Visiondistance", () -> shooter.calculatedCameraDistance);
+                        compet4.addBoolean("LLHasTarget", () -> ll.getIsTargetFound());
 
                         ShuffleboardTab llFeed = Shuffleboard.getTab("Competition");
 

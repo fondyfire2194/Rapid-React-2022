@@ -1,4 +1,7 @@
 {
+  "download": {
+    "serverTeam": "2194"
+  },
   "output": {
     "outputFolder": "C:\\Users\\John\\Downloads\\LogWPI\\CSVs"
   }

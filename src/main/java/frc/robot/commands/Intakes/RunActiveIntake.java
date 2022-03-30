@@ -57,7 +57,9 @@ public class RunActiveIntake extends CommandBase {
 
       Shuffleboard.selectTab("RearIntakeCamera");
 
-    m_intake.lowerActiveArm();
+    
+    
+      m_intake.lowerActiveArm();
 
     // m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
 
@@ -121,11 +123,8 @@ public class RunActiveIntake extends CommandBase {
     m_transport.stopLowerRoller();
     m_intake.stopLowerRoller = true;
 
-    if (DriverStation.isAutonomous()) {
+    Shuffleboard.selectTab("Competition");
 
-      Shuffleboard.selectTab("Competition");
-
-    }
   }
 
   // Returns true when the command should end.

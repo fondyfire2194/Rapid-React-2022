@@ -65,11 +65,11 @@ public class CalculateTargetDistance extends CommandBase {
 
       // m_cameraVerticalError = m_limelight.getdegVerticalToTarget() -
       // m_limelight.verticalOffset;
-      m_cameraVerticalError = m_limelight.getdegRotationToTarget()- m_limelight.horizontalOffset;
+      m_cameraVerticalError = -m_limelight.getdegRotationToTarget();// - m_limelight.horizontalOffset;
       SmartDashboard.putNumber("CAMVE", m_cameraVerticalError);
       SmartDashboard.putNumber("HeightDiff", FieldConstants.heightDifference);
       SmartDashboard.putNumber("CamAng", cameraAngle);
-    SmartDashboard.putNumber("CamOFM_LI", m_limelight.horizontalOffset);
+      SmartDashboard.putNumber("CamOFM_LI", m_limelight.horizontalOffset);
 
       if (RobotBase.isSimulation()) {
 
@@ -78,11 +78,11 @@ public class CalculateTargetDistance extends CommandBase {
       }
 
       double tanAngleSum = Math.tan((Math.toRadians(m_cameraVerticalError +
-          cameraAngle))); 
-           SmartDashboard.putNumber("TanSum", tanAngleSum);
+          cameraAngle)));
+      SmartDashboard.putNumber("TanSum", tanAngleSum);
 
-      m_shooter.calculatedCameraDistance = (int) (FieldConstants.heightDifference /
-          tanAngleSum);
+      m_shooter.calculatedCameraDistance = FieldConstants.heightDifference /
+          tanAngleSum;
 
       // m_shooter.calculatedCameraDistance = (int)
       // Math.round(FieldConstants.heightDifference

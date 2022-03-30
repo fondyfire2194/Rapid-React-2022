@@ -41,6 +41,9 @@ public class RunCargoOutShooter extends CommandBase {
 
     m_transport.runLowerAtVelocity(800);
 
+    m_intake.runRearIntakeMotor();
+    m_intake.runFrontIntakeMotor();
+
   }
 
   // Called once the command ends or is interrupted.

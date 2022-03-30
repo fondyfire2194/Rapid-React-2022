@@ -11,9 +11,7 @@
 package frc.robot.commands.Turret;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
-import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.subsystems.RevTurretSubsystem;
 
 public class PositionTurretToVision extends CommandBase {
@@ -37,7 +35,7 @@ public class PositionTurretToVision extends CommandBase {
   @Override
   public void initialize() {
 
-    m_turret.targetAngle = m_rcv2.weightedTargetAngle;
+    m_turret.targetAngle = m_turret.getAngle() + m_rcv2.weightedTargetAngle;
 
     if (m_turret.targetAngle < -10) {
 

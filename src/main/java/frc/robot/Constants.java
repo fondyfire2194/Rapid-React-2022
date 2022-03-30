@@ -55,7 +55,7 @@ public final class Constants {
       public static final int LOWER_ROLLER = 12;
 
       public static final int CLIMB_MOTOR = 15;
-      
+
    }
 
    public static class SolenoidConstants {
@@ -205,11 +205,11 @@ public final class Constants {
       public static double leadScrewPitch = Units.metersToInches(0.004);
 
       public static double tiltArmLength = 12.375;
-//lsp/tal = .15748/12.375 = .01272
+      // lsp/tal = .15748/12.375 = .01272
       public static double motorGearRatio = 20;
-//    atan .1272 = .7288
+      // atan .1272 = .7288
       public static double anglePerScrewRev = Units.radiansToDegrees(Math.atan(leadScrewPitch / tiltArmLength));
-//.03645
+      // .03645
       public static double tiltDegreesPerRev = anglePerScrewRev / motorGearRatio;
    }
 
@@ -220,7 +220,8 @@ public final class Constants {
        * 1.6216
        * = 28.189 degrees and one motor rev is 1.38996 degrees
        * 
-       * At 10,000 motor rpm = 170 rps the turret rotates at 1.421 * 170 = 242 deg per sec
+       * At 10,000 motor rpm = 170 rps the turret rotates at 1.421 * 170 = 242 deg per
+       * sec
        * ff = 1/ max deg per sec = 1/242 = .004
        * 
        * With end to end travel of 100 degrees = 100/142 = .7 second
@@ -278,21 +279,21 @@ public final class Constants {
 
       public static final double hubTargetHeight = 104 / 12;
 
-      public static final double CAMERA_HEIGHT = 90. / 12;
+      public static final double CAMERA_HEIGHT = 42. / 12;
 
       public static final double heightDifference = hubTargetHeight - CAMERA_HEIGHT;
 
-      public static final double CAMERA_ANGLE = 128.-90.;
+      public static final double CAMERA_ANGLE = 128. - 90.;
 
    }
 
    public static class PipelinesConstants {
 
       public static final int noZoom960720 = 1;
-      
+
       public static final int x2Zoom320240 = 2;
       public static final int x3ZoomPipeline = 3;
-      
+
       public static final int ledsOffPipeline = 8;
 
       public static final double noZoomMinBoundingBoxHeight = 3;

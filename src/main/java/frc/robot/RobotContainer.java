@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
@@ -36,6 +37,7 @@ import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.TurnLedsOnOff;
 import frc.robot.Vision.VisionReferenceTarget;
+import frc.robot.commands.TimeDelay;
 import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.AutoCommands.Common.SetupForShootLocation;
 import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
@@ -63,6 +65,7 @@ import frc.robot.commands.Tilt.TiltWaitForStop;
 import frc.robot.commands.Turret.PositionHoldTurret;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.PositionTurretIncremental;
+import frc.robot.commands.Turret.PositionTurretToVision;
 import frc.robot.commands.Turret.TurretJog;
 import frc.robot.commands.Turret.TurretJogVelocity;
 import frc.robot.commands.Turret.TurretWaitForStop;
@@ -297,11 +300,14 @@ public class RobotContainer {
 
                         .whileHeld(new RunCargoOutShooter(m_shooter, m_intake, m_transport));
 
-            // new JoystickButton(m_driverController, 10).
-
             new JoystickButton(m_driverController, 9)
 
-                        .whenPressed(new AcquireTarget(m_limelight, m_tilt, m_turret, m_rcv2));
+                        .whenPressed(new SequentialCommandGroup(
+                              new AcquireTarget(m_limelight, m_tilt, m_turret, m_rcv2), 
+                              new TimeDelay(0.5), 
+                              new PositionTurretToVision(m_turret, m_rcv2)));
+
+            //new JoystickButton(m_driverController, 10)
 
             new JoystickButton(m_driverController, 11).whileHeld(
 

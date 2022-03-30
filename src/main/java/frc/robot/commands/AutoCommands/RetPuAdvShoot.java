@@ -56,7 +56,7 @@ public class RetPuAdvShoot extends SequentialCommandGroup {
                                                 new ResetGyro(drive)),
 
                                 new ParallelCommandGroup(new PositionStraight(drive, drivePickupPosition,
-                                                pickUpRate), new TimeDelay(3))
+                                                pickUpRate), new TimeDelay(2))
 
                                                                 // new ParallelRaceGroup(
 
@@ -84,11 +84,11 @@ public class RetPuAdvShoot extends SequentialCommandGroup {
 
                                 new ParallelRaceGroup(
 
-                                                new SequentialCommandGroup(new TimeDelay(2),
+                                                new SequentialCommandGroup(new TimeDelay(.2),
                                                                 new ShootCargo(shooter, transport, intake),
-                                                                new TimeDelay(2),
+                                                                new TimeDelay(.2),
                                                                 new ShootCargo(shooter, transport, intake),
-                                                                new TimeDelay(2)),
+                                                                new TimeDelay(1)),
 
                                                 new RunShooter(shooter))
 

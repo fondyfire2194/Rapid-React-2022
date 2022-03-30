@@ -76,7 +76,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public double startDistance;
 
-    public int calculatedCameraDistance;
+    public double calculatedCameraDistance;
 
     public boolean tuneOn = false;
     public boolean lastTuneOn;

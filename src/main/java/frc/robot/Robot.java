@@ -25,6 +25,7 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.RetPuAdvShoot;
+import frc.robot.commands.AutoCommands.ThreeBallCenter;
 import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
 import frc.robot.commands.AutoCommands.Common.SetupForShootLocation;
 import frc.robot.commands.RobotDrive.PositionStraight;
@@ -128,6 +129,8 @@ public class Robot extends TimedRobot {
     }
     m_robotContainer.m_limelight.useVision = false;
     m_robotContainer.checkCANDevices();
+
+    m_robotContainer.m_limelight.setPipeline(8);
 
   }
 
@@ -290,6 +293,11 @@ public class Robot extends TimedRobot {
             new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
 
                 data));
+
+        break;
+      
+      case 7:
+        m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt), new ThreeBallCenter(intake, drive, transport, shooter, tilt, turret, ll, comp));
 
         break;
 

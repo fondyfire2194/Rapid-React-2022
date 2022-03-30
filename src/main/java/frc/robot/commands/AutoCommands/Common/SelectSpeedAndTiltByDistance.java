@@ -21,8 +21,8 @@ public class SelectSpeedAndTiltByDistance extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooter.cameraCalculatedSpeed = m_shooter.rpmFromCameraDistance[m_shooter.calculatedCameraDistance];
-    m_tilt.cameraCalculatedTiltPosition = m_shooter.tiltAngleFromCamerDistance[m_shooter.calculatedCameraDistance];
+    m_shooter.cameraCalculatedSpeed = m_shooter.rpmFromCameraDistance[(int)m_shooter.calculatedCameraDistance];
+    m_tilt.cameraCalculatedTiltPosition = m_shooter.tiltAngleFromCamerDistance[(int)m_shooter.calculatedCameraDistance];
   }
 
   // Called every time the scheduler runs while the command is scheduled.

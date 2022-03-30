@@ -65,8 +65,10 @@ public class SetUpPreRoundOI {
                         autoChooser.addOption("Shoot from under Hub then Retract",
                                         5);
 
-                        autoChooser.addOption("Left Tarmac, Retract, Pickup, to Tarmac, Shoot",
+                        autoChooser.addOption("Left Tarmac, Retract, Pickup, to Tarmac Line, Shoot",
                                         6);
+
+                        autoChooser.addOption("Center 3 Ball", 7);
 
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
                                         .withPosition(3, 0); //
@@ -77,6 +79,13 @@ public class SetUpPreRoundOI {
                         startDelayChooser.addOption("Three Seconds", 3.);
                         startDelayChooser.addOption("Four Seconds", 4.);
                         startDelayChooser.addOption("Five Seconds", 5.);
+
+
+                        ShuffleboardLayout checkStuff = Shuffleboard.getTab("Pre-Round")
+                        .getLayout("While There's Still Time", BuiltInLayouts.kList).withPosition(3,2).withSize(3,1)
+                        .withProperties(Map.of("Label position", "TOP"));
+
+                        checkStuff.addString("Message from Mark", ()->"Has Everything Been Checked - Twice?");
 
                 }
 
