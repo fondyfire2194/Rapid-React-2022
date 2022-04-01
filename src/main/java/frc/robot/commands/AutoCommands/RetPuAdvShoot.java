@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.TimeDelay;
-import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
@@ -56,13 +55,8 @@ public class RetPuAdvShoot extends SequentialCommandGroup {
                                                 new ResetEncoders(drive),
                                                 new ResetGyro(drive)),
 
-                                new ParallelCommandGroup(
-
-                                                new PositionStraight(drive, drivePickupPosition,
-
-                                                                pickUpRate),
-
-                                                new TimeDelay(3))
+                                new ParallelCommandGroup(new PositionStraight(drive, drivePickupPosition,
+                                                pickUpRate), new TimeDelay(2))
 
                                                                 // new ParallelRaceGroup(
 
@@ -88,17 +82,12 @@ public class RetPuAdvShoot extends SequentialCommandGroup {
 
                                                 new PositionTurret(turret, upperTurretAngle)),
 
-
                                 new ParallelRaceGroup(
 
                                                 new SequentialCommandGroup(new TimeDelay(.2),
-
                                                                 new ShootCargo(shooter, transport, intake),
-
                                                                 new TimeDelay(.2),
-
                                                                 new ShootCargo(shooter, transport, intake),
-
                                                                 new TimeDelay(1)),
 
                                                 new RunShooter(shooter))

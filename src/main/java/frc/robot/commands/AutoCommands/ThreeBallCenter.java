@@ -90,7 +90,6 @@ public class ThreeBallCenter extends SequentialCommandGroup {
                                 new ParallelRaceGroup(
 
                                                 new SequentialCommandGroup(
-
                                                                 new ShootCargo(shooter, transport, intake),
 
                                                                 new ShootCargo(shooter, transport, intake)),
@@ -103,17 +102,11 @@ public class ThreeBallCenter extends SequentialCommandGroup {
                                 new TurnToAngleProfiled(drive, turnToThrirdBall),
 
                                 new ParallelCommandGroup(
-                                        
                                                 new LimelightSetPipeline(ll, 8),
-
                                                 new SetShootSpeedSource(shooter, shooter.fromPreset),
-
                                                 new SetPresetRPM(shooter, thirdBallRPM),
-
                                                 new PositionStraight(drive, driveToThirdBall, positionRate),
-
                                                 new PositionTurret(turret, thirdBallTurret),
-
                                                 new PositionTilt(tilt, thirdBallTilt)),
 
                                 new RunActiveIntake(intake, transport),
@@ -123,11 +116,8 @@ public class ThreeBallCenter extends SequentialCommandGroup {
                                 new LimelightSetPipeline(ll, 2),
 
                                 new ParallelRaceGroup(
-
                                                 new ShootCargo(shooter, transport, intake),
-
                                                 new RunShooter(shooter))
-
                                                                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret,
                                                                                 ll)),
 

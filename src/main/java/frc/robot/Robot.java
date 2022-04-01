@@ -26,7 +26,6 @@ import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.RetPuAdvShoot;
 import frc.robot.commands.AutoCommands.ThreeBallCenter;
-import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
 import frc.robot.commands.AutoCommands.Common.SetupForShootLocation;
 import frc.robot.commands.RobotDrive.PositionStraight;
@@ -269,49 +268,13 @@ public class Robot extends TimedRobot {
 
             new ShootCargo(shooter, transport, intake)
 
-                .deadlineWith(new RunShooter(shooter),
+                .deadlineWith(new RunShooter(shooter)),
 
-                    new PositionHoldTiltTurret(tilt, turret, ll)),
-
-            new PositionStraight(drive, data[0], drive.positionRate)
-
-                .deadlineWith(
-
-                    new PositionHoldTiltTurret(tilt, turret, ll)));
-
-      case 6://
-
-        // start under hub, retract then shoot with teleop prefs
-
-        data[0] = Units.inchesToMeters(-110);
-
-        data[1] = 0;
-
-        data[2] = Pref.getPref("teleTarTilt");
-
-        data[4] = Pref.getPref("teleTarRPM");
-
-        m_autonomousCommand = new SequentialCommandGroup(
-
-            new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
-
-            new ResetEncoders(drive), new ResetGyro(drive),
-
-            new PositionStraight(drive, data[0], drive.positionRate),
-
-            new SetupForShootLocation(shooter, tilt, turret, ll, 0),
-
-            new ShootCargo(shooter, transport, intake)
-
-                .deadlineWith(new RunShooter(shooter),
-
-                    new PositionHoldTiltTurret(tilt, turret, ll))
-
-        );
+            new PositionStraight(drive, data[0], drive.positionRate));
 
         break;
 
-      case 7:// left tarmac upper shoot from tarmac line
+      case 6:// left tarmac upper shoot from tarmac line
 
         data = FieldMap.leftTarmacData;
 
@@ -332,10 +295,9 @@ public class Robot extends TimedRobot {
                 data));
 
         break;
-
-      case 8:
-        m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
-            new ThreeBallCenter(intake, drive, transport, shooter, tilt, turret, ll, comp));
+      
+      case 7:
+        m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt), new ThreeBallCenter(intake, drive, transport, shooter, tilt, turret, ll, comp));
 
         break;
 

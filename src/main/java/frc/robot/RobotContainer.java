@@ -304,7 +304,7 @@ public class RobotContainer {
 
                         .whenPressed(new SequentialCommandGroup(
                               new AcquireTarget(m_limelight, m_tilt, m_turret, m_rcv2), 
-                              new TimeDelay(0.25), 
+                              new TimeDelay(0.5), 
                               new PositionTurretToVision(m_turret, m_rcv2)));
 
             //new JoystickButton(m_driverController, 10)

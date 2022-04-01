@@ -46,35 +46,32 @@ public class SetUpPreRoundOI {
                         // The first argument is the root container
                         // The second argument is whether logging and config should be given separate
                         // tabs
-                        Shuffleboard.getTab("Pre-Round").add("Auto Commands", autoChooser).withSize(4, 1)
+                        Shuffleboard.getTab("Pre-Round").add("Auto Commands", autoChooser).withSize(3, 1)
                                         .withPosition(0, 0); // place it in the top-left corner
 
                         autoChooser.setDefaultOption("Do Nothing", 0);
 
                         autoChooser.addOption("Taxi", 1);
 
-                        autoChooser.addOption("Left Tarmac Retract Pickup Ret'n Shoot 2",
+                        autoChooser.addOption("Left Tarmac Retract Pickup Advance Shoot",
                                         2);
 
-                        autoChooser.addOption("Right Tarmac Edge Retract Pickup Ret'n Shoot 2",
+                        autoChooser.addOption("Right Tarmac Edge Retract Pickup Shoot",
                                         3);
 
-                        autoChooser.addOption("Right Tarmac Center Retract Pickup Ret'n Shoot 2",
+                        autoChooser.addOption("Right Tarmac Center Retract Pickup Shoot",
                                         4);
 
-                        autoChooser.addOption("Shoot 1 from under Hub then Retract",
+                        autoChooser.addOption("Shoot from under Hub then Retract",
                                         5);
 
-                        autoChooser.addOption("Retract to Tarmac Line, Shoot 1",
+                        autoChooser.addOption("Left Tarmac, Retract, Pickup, to Tarmac Line, Shoot",
                                         6);
 
-                        autoChooser.addOption("Left Tarmac, Retract, Pickup, Ret'n to Tarmac Line, Shoot 2",
-                                        7);
-
-                        autoChooser.addOption("Center 3 Ball", 8);
+                        autoChooser.addOption("Center 3 Ball", 7);
 
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
-                                        .withPosition(4, 0); //
+                                        .withPosition(3, 0); //
 
                         startDelayChooser.setDefaultOption("No Delay", 0.);
                         startDelayChooser.addOption("One Second", 1.);
@@ -83,35 +80,14 @@ public class SetUpPreRoundOI {
                         startDelayChooser.addOption("Four Seconds", 4.);
                         startDelayChooser.addOption("Five Seconds", 5.);
 
-                        ShuffleboardLayout tiltValues2 = Shuffleboard.getTab("SetupTilt")
-                                        .getLayout("TiStates", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 5)
-                                        .withProperties(Map.of("Label position", "TOP"));
 
-                        tiltValues2.addBoolean("TiInPosition", () -> tilt.atTargetAngle());
-
-                        tiltValues2.addBoolean("TiOnBottomLS", () -> tilt.m_reverseLimit.isPressed());
-
-                        tiltValues2.addBoolean("TiOnTopLS", () -> tilt.m_forwardLimit.isPressed());
-
-                        tiltValues2.addBoolean("TiPosResetDone", () -> tilt.positionResetDone);
-
-                        tiltValues2.addBoolean("Ti+SWLimit", () -> tilt.onPlusSoftwareLimit());
-
-                        tiltValues2.addBoolean("Ti-SWLimit", () -> tilt.onMinusSoftwareLimit());
-
-                        tiltValues2.addBoolean("TiSWLimitEn", () -> tilt.getSoftwareLimitsEnabled());
-
-                        ShuffleboardLayout tiltValues3 = Shuffleboard.getTab("SetupTilt")
-                        .getLayout("TuStates", BuiltInLayouts.kList).withPosition(4, 0).withSize(2, 3)
+                        ShuffleboardLayout checkStuff = Shuffleboard.getTab("Pre-Round")
+                        .getLayout("While There's Still Time", BuiltInLayouts.kList).withPosition(3,2).withSize(3,1)
                         .withProperties(Map.of("Label position", "TOP"));
 
-
-                        tiltValues3.addBoolean("TuPlusLimit", () -> turret.onPlusSoftwareLimit());
-
-                        tiltValues3.addBoolean("TuMinusLimit", () -> turret.onMinusSoftwareLimit());
-
-                        tiltValues3.addBoolean("TuSWLimitEn", () -> turret.getSoftwareLimitsEnabled());
+                        checkStuff.addString("Message from Mark", ()->"Has Everything Been Checked - Twice?");
 
                 }
+
         }
 }
