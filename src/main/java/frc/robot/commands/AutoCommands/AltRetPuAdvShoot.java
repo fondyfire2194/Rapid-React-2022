@@ -29,10 +29,10 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
-public class RetPuAdvShoot extends SequentialCommandGroup {
+public class AltRetPuAdvShoot extends SequentialCommandGroup {
 
         /** Creates a new LRetPuShoot. */
-        public RetPuAdvShoot(IntakesSubsystem intake, RevDrivetrain drive,
+        public AltRetPuAdvShoot(IntakesSubsystem intake, RevDrivetrain drive,
                         CargoTransportSubsystem transport, RevShooterSubsystem shooter, RevTiltSubsystem tilt,
                         RevTurretSubsystem turret, LimeLight ll, Compressor comp, double[] data) {
                 addRequirements(intake, drive, transport, shooter, turret, tilt);
@@ -59,16 +59,14 @@ public class RetPuAdvShoot extends SequentialCommandGroup {
 
                                                 new PositionStraight(drive, drivePickupPosition,
                                                                 pickUpRate),
+                                                                
+                                                new PositionTilt(tilt, upperTiltAngle),
+
+                                                new PositionTurret(turret, upperTurretAngle),
 
                                                 new TimeDelay(2))
 
-                                                                .deadlineWith(
-
-                                                                                new RunActiveIntake(intake, transport),
-
-                                                                                new PositionHoldTiltTurret(
-                                                                                                tilt, turret,
-                                                                                                ll)),
+                                                                .deadlineWith(new RunActiveIntake(intake, transport)),
 
                                 new ParallelCommandGroup(
 
@@ -76,11 +74,11 @@ public class RetPuAdvShoot extends SequentialCommandGroup {
 
                                                 new SetPresetRPM(shooter, upperRPM),
 
-                                                new PositionStraight(drive, shootPosition, positionRate),
+                                                new PositionStraight(drive, shootPosition, positionRate))
 
-                                                new PositionTilt(tilt, upperTiltAngle),
-
-                                                new PositionTurret(turret, upperTurretAngle)),
+                                                                .deadlineWith(new PositionHoldTiltTurret(
+                                                                                tilt, turret,
+                                                                                ll)),
 
                                 new ParallelRaceGroup(
 
@@ -95,9 +93,7 @@ public class RetPuAdvShoot extends SequentialCommandGroup {
                                                                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret,
                                                                                 ll)),
 
-                                // new ParallelCommandGroup(new PositionTilt(tilt, 0), new
-                                // PositionTurret(turret, 0)));
-
                                 new PositionTurret(turret, 0));
+
         }
 }

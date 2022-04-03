@@ -110,7 +110,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public void reverseLowRoller() {
 
-    runLowerAtVelocity(-100);
+    runLowerAtVelocity(-500);
 
   }
 
