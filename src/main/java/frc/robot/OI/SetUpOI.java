@@ -31,11 +31,11 @@ import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.StopRobot;
 import frc.robot.commands.RobotDrive.TurnToAngleProfiled;
+import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.ClearShFaults;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.RunTopRoller;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Shooter.StopTopRoller;
 import frc.robot.commands.Tilt.ClearFaults;
@@ -288,9 +288,9 @@ public class SetUpOI {
                         shooterCommands.add("Start Shooter", new RunShooter(shooter));
 
                         shooterCommands.add("ShootOne",
-                                        new ShootCargo(shooter, transport, intake));
+                                        new AltShootCargo(shooter, transport, intake));
                         shooterCommands.add("ShootTwo",
-                                        new ShootCargo(shooter, transport, intake));
+                                        new AltShootCargo(shooter, transport, intake));
 
                         shooterCommands.add("ClearFaults", new ClearShFaults(shooter));
 

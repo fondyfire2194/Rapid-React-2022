@@ -18,10 +18,10 @@ import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.TurnToAngleProfiled;
+import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
@@ -90,9 +90,9 @@ public class ThreeBallCenter extends SequentialCommandGroup {
                                 new ParallelRaceGroup(
 
                                                 new SequentialCommandGroup(
-                                                                new ShootCargo(shooter, transport, intake),
+                                                                new AltShootCargo(shooter, transport, intake),
 
-                                                                new ShootCargo(shooter, transport, intake)),
+                                                                new AltShootCargo(shooter, transport, intake)),
 
                                                 new RunShooter(shooter))
 
@@ -116,7 +116,7 @@ public class ThreeBallCenter extends SequentialCommandGroup {
                                 new LimelightSetPipeline(ll, 2),
 
                                 new ParallelRaceGroup(
-                                                new ShootCargo(shooter, transport, intake),
+                                                new AltShootCargo(shooter, transport, intake),
                                                 new RunShooter(shooter))
                                                                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret,
                                                                                 ll)),

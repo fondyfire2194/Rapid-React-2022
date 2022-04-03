@@ -24,15 +24,15 @@ import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.MessageCommand;
-import frc.robot.commands.AutoCommands.RetPuAdvShoot;
+import frc.robot.commands.AutoCommands.AltRetPuAdvShoot;
 import frc.robot.commands.AutoCommands.ThreeBallCenter;
 import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
 import frc.robot.commands.AutoCommands.Common.SetupForShootLocation;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
+import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
-import frc.robot.commands.Shooter.ShootCargo;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -197,7 +197,7 @@ public class Robot extends TimedRobot {
 
         m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
-            new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            new AltRetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
 
                 data));
 
@@ -219,7 +219,7 @@ public class Robot extends TimedRobot {
 
         m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
-            new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            new AltRetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
 
                 data));
         break;
@@ -240,7 +240,7 @@ public class Robot extends TimedRobot {
 
         m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
-            new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            new AltRetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
 
                 data));
 
@@ -266,7 +266,7 @@ public class Robot extends TimedRobot {
 
             new SetupForShootLocation(shooter, tilt, turret, ll, 0),
 
-            new ShootCargo(shooter, transport, intake)
+            new AltShootCargo(shooter, transport, intake)
 
                 .deadlineWith(new RunShooter(shooter)),
 
@@ -290,7 +290,7 @@ public class Robot extends TimedRobot {
 
         m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
-            new RetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            new AltRetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
 
                 data));
 

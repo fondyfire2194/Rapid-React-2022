@@ -11,9 +11,10 @@ import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
+import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Shooter.ShootCargo;
+
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -44,7 +45,7 @@ public class ShootWithVision extends SequentialCommandGroup {
 
         new ParallelRaceGroup(
 
-            new ShootCargo(shooter, transport, intake),
+            new AltShootCargo(shooter, transport, intake),
 
             new RunShooter(shooter))
 

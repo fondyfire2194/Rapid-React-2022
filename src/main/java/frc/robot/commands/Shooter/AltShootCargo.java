@@ -24,7 +24,6 @@ public class AltShootCargo extends CommandBase {
   private boolean cargoAtShoot;
   private boolean noCargoAtStart;
 
-  private double shotExitTimer;
   private double timeCargoToLowRoller;
 
   private boolean secondCargoAtLowRoller;
@@ -57,8 +56,6 @@ public class AltShootCargo extends CommandBase {
     m_intake.cargoAtBothIntakes = m_intake.getCargoAtFront() && m_intake.getCargoAtRear();
 
     noCargoAtStart = !m_intake.getCargoAtFront() && !m_intake.getCargoAtRear() && !m_transport.getCargoAtShoot();
-
-    shotExitTimer = 0;
 
     timeCargoToLowRoller = 0;
 
@@ -110,10 +107,12 @@ public class AltShootCargo extends CommandBase {
 
       m_transport.releaseCargo();// low rollers start
 
-      cargoReleasing = true;
+      if (cargoReleaseTimer == 0) {
 
-      cargoReleaseTimer = Timer.getFPGATimestamp();
-
+        cargoReleaseTimer = Timer.getFPGATimestamp();
+        
+        cargoReleasing = true;
+      }
     }
 
     if (cargoReleasing && Timer.getFPGATimestamp() > cargoReleaseTimer + cargoReleaseTime) {
@@ -184,7 +183,7 @@ public class AltShootCargo extends CommandBase {
     m_shooter.isShooting = false;
     m_intake.stopFrontIntakeMotor();
     m_intake.stopRearIntakeMotor();
-    m_shooter.endShootFile = true;
+
   }
 
   // Returns true when the command should end.
@@ -192,7 +191,7 @@ public class AltShootCargo extends CommandBase {
   public boolean isFinished() {
 
     return noCargoAtStart || m_transport.wrongCargoColor || secondCargoAtLowRoller || noMoreCargo
-    
+
         || m_transport.latchCargoAtShoot;
   }
 }
