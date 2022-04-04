@@ -7,12 +7,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -24,6 +25,7 @@ import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.MessageCommand;
+import frc.robot.commands.TimeDelay;
 import frc.robot.commands.AutoCommands.AltRetPuAdvShoot;
 import frc.robot.commands.AutoCommands.ThreeBallCenter;
 import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
@@ -31,6 +33,7 @@ import frc.robot.commands.AutoCommands.Common.SetupForShootLocation;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
+import frc.robot.commands.RobotDrive.SetRobotPose;
 import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
@@ -67,6 +70,8 @@ public class Robot extends TimedRobot {
   public static double[] data = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
   public static double matchTimeRemaining;
+
+  private Pose2d startingPose;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -176,7 +181,9 @@ public class Robot extends TimedRobot {
 
       case 1:// taxi start anywhere as agreed with other teams inside a tarmac facing in
 
-        m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+        m_autonomousCommand = new SequentialCommandGroup(
+            new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+            new ResetEncoders(m_robotContainer.m_drive), new ResetGyro(m_robotContainer.m_drive),
             new PositionStraight(m_robotContainer.m_drive, -1.5, .3));
 
         break;
@@ -184,6 +191,8 @@ public class Robot extends TimedRobot {
       case 2:// left tarmac upper shoot
 
         data = FieldMap.leftTarmacData;
+
+        startingPose = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
 
         data[0] = Pref.getPref("autLRtctPt");// retract point
 
@@ -195,7 +204,11 @@ public class Robot extends TimedRobot {
 
         data[4] = Pref.getPref("autLRPM");// rpm
 
-        m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+        m_autonomousCommand = new SequentialCommandGroup(
+
+            new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+
+            new SetRobotPose(m_robotContainer.m_drive, startingPose),
 
             new AltRetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
 
@@ -295,9 +308,10 @@ public class Robot extends TimedRobot {
                 data));
 
         break;
-      
+
       case 7:
-        m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt), new ThreeBallCenter(intake, drive, transport, shooter, tilt, turret, ll, comp));
+        m_autonomousCommand = new SequentialCommandGroup(new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+            new ThreeBallCenter(intake, drive, transport, shooter, tilt, turret, ll, comp));
 
         break;
 
@@ -351,7 +365,7 @@ public class Robot extends TimedRobot {
 
     CommandScheduler.getInstance().cancelAll();
 
-    if (RobotBase.isReal() && !m_robotContainer.m_tilt.positionResetDone)
+    if (!m_robotContainer.m_tilt.positionResetDone)
 
       new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(false);
 

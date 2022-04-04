@@ -173,7 +173,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     @Override
     public void simulationPeriodic() {
         REVPhysicsSim.getInstance().run();
-        SmartDashboard.putNumber("POS", getAngle());
+        SmartDashboard.putNumber("POSTU", getAngle());
 
     }
 

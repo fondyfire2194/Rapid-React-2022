@@ -7,6 +7,8 @@
 
 package frc.robot.commands.Tilt;
 
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RevTiltSubsystem;
 
@@ -37,12 +39,13 @@ public class TiltMoveToReverseLimit extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    simCtr++;
+    if (RobotBase.isSimulation())
+      simCtr++;
     if (!endIt) {
       m_tilt.moveManually(-.2);
     }
-    endIt = m_tilt.m_reverseLimit.isPressed() || m_tilt.getAngle() < m_startAngle - 10 || simCtr > 2500;
-
+    endIt = m_tilt.m_reverseLimit.isPressed() || m_tilt.getAngle() < m_startAngle - 10 || simCtr > 50;
+    SmartDashboard.putNumber("Tisimctr", simCtr);
   }
 
   // Called once the command ends or is interrupted.
@@ -57,6 +60,6 @@ public class TiltMoveToReverseLimit extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return endIt && Math.abs(m_tilt.getSpeed()) < .01;
+    return endIt && (RobotBase.isSimulation() || Math.abs(m_tilt.getSpeed()) < .01);
   }
 }

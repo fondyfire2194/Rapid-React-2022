@@ -1,7 +1,18 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "SPARK MAX [9]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/CanBus/Scheduler/Scheduler": "Scheduler",
+      "/Shuffleboard/CanBus/Subs 1/Climber": "Subsystem",
       "/Shuffleboard/CompetitionMisc/Misc1/Reset to 0": "Command",
       "/Shuffleboard/CompetitionMisc/Misc2/Hold Cargo": "Command",
       "/Shuffleboard/CompetitionMisc/Misc2/LowerLeft": "Command",
@@ -109,12 +120,8 @@
       "/SmartDashboard/Field": "Field2d"
     },
     "windows": {
-      "/SmartDashboard/Arm Sim": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Field": {
+        "image": "C:\\Users\\John\\Desktop\\2022-field.png",
         "window": {
           "visible": true
         }
@@ -122,7 +129,18 @@
     }
   },
   "NetworkTables": {
-    "limelight": {
+    "Shuffleboard": {
+      "Competition": {
+        "Values": {
+          "open": true
+        },
+        "open": true
+      },
+      "Pre-Round": {
+        "Auto Commands": {
+          "open": true
+        }
+      },
       "open": true
     }
   }

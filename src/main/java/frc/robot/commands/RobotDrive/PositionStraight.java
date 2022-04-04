@@ -4,6 +4,8 @@
 
 package frc.robot.commands.RobotDrive;
 
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
 import frc.robot.subsystems.RevDrivetrain;
@@ -37,14 +39,34 @@ public class PositionStraight extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double yawKp = 0;
+
+    if (RobotBase.isReal())
+
+      yawKp = Pref.getPref("dRStKp");
+
+    else
+
+      yawKp = .015;
 
     leftOut = m_drive.driveDistance(m_endpoint)[0];
 
     rightOut = m_drive.driveDistance(m_endpoint)[1];
+    double yawError = 0;
 
-    double yawError = m_drive.getYaw() - m_startAngle;
+    double yawCorrection = 0;
 
-    double yawCorrection = yawError * Pref.getPref("dRStKp");
+    if (RobotBase.isReal()) {
+
+      yawError = m_drive.getYaw() - m_startAngle;
+
+      yawCorrection = yawError * yawKp;
+
+    }
+
+    else
+
+      yawCorrection = 0;
 
     if (leftOut > m_max)
       leftOut = m_max;
@@ -59,6 +81,12 @@ public class PositionStraight extends CommandBase {
     m_drive.driveLeftSide(leftOut - .5 * yawCorrection);
 
     m_drive.driveRightSide(rightOut + .5 * yawCorrection);
+
+
+    SmartDashboard.putNumber("Lout", leftOut);
+    SmartDashboard.putNumber("Rout", rightOut);
+    SmartDashboard.putNumber("LPos", m_drive.getLeftDistance());
+    SmartDashboard.putNumber("RPos", m_drive.getRightDistance());
 
   }
 
@@ -75,6 +103,6 @@ public class PositionStraight extends CommandBase {
 
         && Math.abs(m_endpoint - m_drive.getRightDistance()) < .1;
 
-      //  && m_drive.isStopped();
+    // && m_drive.isStopped();
   }
 }

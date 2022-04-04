@@ -107,11 +107,12 @@ public class AltShootCargo extends CommandBase {
 
       m_transport.releaseCargo();// low rollers start
 
-      if (cargoReleaseTimer == 0) {
+      cargoReleasing = true;
+      
+      if (!cargoAtShoot && cargoReleaseTimer == 0) {
 
         cargoReleaseTimer = Timer.getFPGATimestamp();
-        
-        cargoReleasing = true;
+
       }
     }
 

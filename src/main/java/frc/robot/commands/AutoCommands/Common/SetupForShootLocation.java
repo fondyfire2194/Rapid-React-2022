@@ -4,16 +4,15 @@
 
 package frc.robot.commands.AutoCommands.Common;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.RevShooterSubsystem;
-import frc.robot.subsystems.RevTiltSubsystem;
-import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Tilt.PositionTiltToPreset;
 import frc.robot.commands.Turret.PositionTurret;
+import frc.robot.subsystems.RevShooterSubsystem;
+import frc.robot.subsystems.RevTiltSubsystem;
+import frc.robot.subsystems.RevTurretSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

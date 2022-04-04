@@ -140,7 +140,7 @@ public class RevTiltSubsystem extends SubsystemBase {
         // getVelGains();
 
         resetAngle();
-        
+
         m_motor.setIdleMode(IdleMode.kBrake);
 
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
@@ -159,7 +159,6 @@ public class RevTiltSubsystem extends SubsystemBase {
         if (RobotBase.isSimulation()) {
 
             REVPhysicsSim.getInstance().addSparkMax(m_motor, DCMotor.getNeo550(1));
-
         }
 
         enableSoftLimits(false);
@@ -196,6 +195,8 @@ public class RevTiltSubsystem extends SubsystemBase {
     @Override
     public void simulationPeriodic() {
         REVPhysicsSim.getInstance().run();
+        SmartDashboard.putNumber("POSTI", getAngle());
+        
 
     }
 
@@ -218,10 +219,15 @@ public class RevTiltSubsystem extends SubsystemBase {
     }
 
     public void moveManually(double speed) {
+        
         targetAngle = getAngle();
+
         if (RobotBase.isReal())
+
             m_motor.set(speed);
+
         else
+
             mPidController.setReference(speed * 12, ControlType.kVoltage, POSITION_SLOT);
 
     }
@@ -229,6 +235,8 @@ public class RevTiltSubsystem extends SubsystemBase {
     public void goToPosition(double degrees) {
         if (RobotBase.isReal())
             mPidController.setReference(degrees, ControlType.kPosition, POSITION_SLOT);
+
+            
 
     }
 

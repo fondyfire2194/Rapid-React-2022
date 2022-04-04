@@ -39,7 +39,6 @@ public class RevDrivetrain extends SubsystemBase {
     // private static final DrivetrainConstants DRIVETRAIN_CONSTANTS = new
     // NeoDrivetrainConstants();
 
- 
     private final CANSparkMax mLeadLeft; // NOPMD
     private final CANSparkMax mFollowerLeft; // NOPMD
 
@@ -48,9 +47,6 @@ public class RevDrivetrain extends SubsystemBase {
 
     public final RelativeEncoder mRightEncoder;
     public final RelativeEncoder mLeftEncoder;
-
-    // private final SparkMaxPIDController mLeftPidController;
-    // private final SparkMaxPIDController mRightPidController;
 
     private final AHRS mGyro;
 
@@ -63,7 +59,7 @@ public class RevDrivetrain extends SubsystemBase {
 
     private final DifferentialDrive mDrive;
     private final DifferentialDriveOdometry mOdometry;
-
+    private Pose2d savedPose;
     public double leftTargetPosition;
     public double rightTargetPosition;
 
@@ -100,7 +96,7 @@ public class RevDrivetrain extends SubsystemBase {
     private int robotStoppedCtr;
 
     public boolean robotStoppedForOneSecond;
-   
+
     public final double pickUpRate = .3;
     public final double positionRate = .4;
 
@@ -122,19 +118,20 @@ public class RevDrivetrain extends SubsystemBase {
         mRightEncoder = mLeadRight.getEncoder();
         mLeftEncoder = mLeadLeft.getEncoder();
 
-        if (RobotBase.isReal()) {
+        // if (RobotBase.isReal()) {
 
-            mLeftEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
-            mRightEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
+        mLeftEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
+        mRightEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
 
-            mLeftEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
-            mRightEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
+        mLeftEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
+        mRightEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
 
-        }
+        // }
 
         mLeadLeft.setOpenLoopRampRate(1);
+
         mLeadRight.setOpenLoopRampRate(1);
-        
+
         mGyro = new AHRS();
         mOdometry = new DifferentialDriveOdometry(mGyro.getRotation2d(), new Pose2d(0, 0, new Rotation2d()));
         m_field = new Field2d();
@@ -176,23 +173,16 @@ public class RevDrivetrain extends SubsystemBase {
 
         if (RobotBase.isSimulation()) {
 
-            // Except for all the extra Java verbiage this is just
-            // map(CANEncoderSim::new, motorIDs)
-            // private final CANEncoderSim[] motorIDsToCANEncodersSim(Integer[] motorIDs,
-            // boolean invert) {
-            // return Stream.of(motorIDs).map(m -> new CANEncoderSim(m,
-            // invert)).toArray(CANEncoderSim[]::new);
-
-            // CANSparkMaxWithSim mLeftMotorSim = new
-            // CANSparkMaxWithSim(CANConstants.DRIVETRAIN_LEFT_MASTER,
-            // CANSparkMaxLowLevel.MotorType.kBrushless);
-
             m_leftEncodersSim = new CANEncoderSim(mLeadLeft.getDeviceId(), false);
+
             m_rightEncodersSim = new CANEncoderSim(mLeadRight.getDeviceId(), false);
 
             var dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+
             m_simAngle = new SimDouble((SimDeviceDataJNI.getSimValueHandle(dev, "Yaw")));
+
             m_dts = DifferentialDrivetrainSim.createKitbotSim(KitbotMotor.kDualCIMPerSide, KitbotGearing.k12p75,
+
                     KitbotWheelSize.kSixInch, null);
         }
     }
@@ -201,7 +191,11 @@ public class RevDrivetrain extends SubsystemBase {
     public void periodic() {
 
         mOdometry.update(mGyro.getRotation2d(), getLeftDistance(), getRightDistance());
+
         m_field.setRobotPose(mOdometry.getPoseMeters());
+
+        SmartDashboard.putString("Pose", mOdometry.getPoseMeters().toString());
+
         checkTune();
 
         if (!isStopped()) {
@@ -217,15 +211,22 @@ public class RevDrivetrain extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
+
+        SmartDashboard.putNumber("LPOS", getLeftDistance());
         var voltage = RobotController.getInputVoltage();
+        SmartDashboard.putNumber("LOUT", mLeadLeft.get() * voltage);
+
         var currHdg = m_dts.getHeading();
         m_dts.setInputs(mLeadLeft.get() * voltage,
                 mLeadRight.get() * voltage);
         m_dts.update(Constants.kRobotPeriod);
         var newHdg = m_dts.getHeading();
         var hdgDiff = newHdg.minus(currHdg);
+
         m_leftEncodersSim.setPosition(m_dts.getLeftPositionMeters());
-        m_rightEncodersSim.setVelocity(-m_dts.getRightPositionMeters());
+
+        m_rightEncodersSim.setPosition(m_dts.getRightPositionMeters());
+
         m_simAngle.set(m_simAngle.get() - hdgDiff.getDegrees());
     }
 
@@ -300,17 +301,29 @@ public class RevDrivetrain extends SubsystemBase {
         mDrive.feed();
     }
 
+    public void tankDrive(double left, double right) {
+        mDrive.tankDrive(left, right);
+        mDrive.feed();
+    }
+
     public double[] driveDistance(double endPosition) {
 
         double[] temp = { 0, 0 };
+
         double ival = kI;
+
         if (Math.abs(endPosition - getLeftDistance()) > kIz) {
+
             ival = 0;
+
             mleftPID.setI(ival);
+
             mrightPID.setI(ival);
 
         }
+
         temp[0] = mleftPID.calculate(getLeftDistance(), endPosition);
+
         temp[1] = mrightPID.calculate(getRightDistance(), endPosition);
 
         mDrive.feed();
@@ -319,14 +332,41 @@ public class RevDrivetrain extends SubsystemBase {
     }
 
     public void driveLeftSide(double value) {
+
         double batteryVolts = RobotController.getBatteryVoltage();
 
-        mLeadLeft.setVoltage(value * batteryVolts);
+        mLeadLeft.set(value);
+
     }
 
     public void driveRightSide(double value) {
+
         double batteryVolts = RobotController.getBatteryVoltage();
-        mLeadRight.setVoltage(value * batteryVolts);
+
+        mLeadRight.set(value);
+
+    }
+
+    /**
+     * Resets the current pose to the specified pose. This should ONLY be called
+     * when the robot's position on the field is known, like at the beginnig of
+     * a match. This will also reset the saved pose since the old pose could be
+     * invalidated.
+     * 
+     * @param newPose new pose
+     */
+    public void setCurrentPose(Pose2d newPose) {
+        resetEncoders();
+        savedPose = newPose;
+        mOdometry.resetPosition(newPose, Rotation2d.fromDegrees(getHeading()));
+    }
+
+    public void saveCurrentPose() {
+        savedPose = getPose();
+    }
+
+    public Pose2d getSavedPose() {
+        return savedPose;
     }
 
     public void resetPID() {
@@ -338,6 +378,9 @@ public class RevDrivetrain extends SubsystemBase {
         if (RobotBase.isReal()) {
             mLeftEncoder.setPosition(0);
             mRightEncoder.setPosition(0);
+        } else {
+            m_leftEncodersSim.setPosition(0);
+            m_rightEncodersSim.setPosition(0);
         }
 
     }
@@ -388,7 +431,12 @@ public class RevDrivetrain extends SubsystemBase {
 
     public void resetGyro() {
         if (RobotBase.isReal())
+
             mGyro.reset();
+
+        else
+
+            m_simAngle.set(0);
     }
 
     public void resetOdometry(Pose2d pose) {
@@ -482,6 +530,11 @@ public class RevDrivetrain extends SubsystemBase {
         kD = Pref.getPref("dRKd");
 
         kIz = Pref.getPref("dRKiz");
+
+        if (RobotBase.isSimulation()) {
+
+            kP = .25;
+        }
 
         mleftPID.setP(kP);
         mleftPID.setI(kI);
