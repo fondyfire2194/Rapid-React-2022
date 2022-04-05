@@ -17,7 +17,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -45,17 +44,11 @@ public class RevTurretSubsystem extends SubsystemBase {
     private static final double DEG_PER_MOTOR_REV = TurretConstants.TURRET_DEG_PER_MOTOR_REV;
     private static final int SMART_MOTION_SLOT = 1;
     public final int POSITION_SLOT = 2;
-    //  public final int VELOCITY_SLOT = 0;
+    // public final int VELOCITY_SLOT = 0;
 
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
     public double lastkP, lastkI, lastkD, lastkIz, lastkFF, lastkMaxOutput, lastkMinOutput, lastmaxRPM, lastmaxVel,
             lastminVel, lastmaxAcc, lastallowedErr;
-
-    // public double kPv, kIv, kDv, kIzv, kFFv, maxRPMv, maxVelv, minVelv, maxAccv,
-    // allowedErrv;
-    // public double lastkPv, lastkIv, lastkDv, lastkIzv, lastkFFv, lastkMaxOutputv,
-    // lastmaxRPMv, lastmaxVelv, lastmv,
-    // lastmaxAccv, lastallowedErrv;
 
     private final CANSparkMax m_motor; // NOPMD
     private final RelativeEncoder mEncoder;
@@ -63,7 +56,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     public final PIDController m_turretLockController = new PIDController(.03, 0, 0);
     public SparkMaxLimitSwitch m_reverseLimit;
     public SparkMaxLimitSwitch m_forwardLimit;
-    
+
     public double targetAngle;
     private double inPositionBandwidth = 2;
     public double targetHorizontalOffset;
@@ -140,7 +133,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         if (RobotBase.isSimulation()) {
             REVPhysicsSim.getInstance().addSparkMax(m_motor, DCMotor.getNeo550(1));
         }
-       
+
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
         m_reverseLimit.enableLimitSwitch(true);
 
@@ -201,17 +194,12 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     }
 
-
     public double getTargetHorOffset() {
         return targetHorizontalOffset;
     }
 
     public void goToPositionMotionMagic(double angle) {
-        if (RobotBase.isSimulation()) {
-            m_motor.set(.1);
-        } else
-            mPidController.setReference(angle, ControlType.kSmartMotion, SMART_MOTION_SLOT);
-
+        mPidController.setReference(angle, ControlType.kSmartMotion, SMART_MOTION_SLOT);
     }
 
     public void lockTurretToVision(double cameraError) {
@@ -394,11 +382,11 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     private void tunePosGains() {
-        kFF = 0;//Pref.getPref("tURKff");// 10,000/60 rps* 1.39 = 231. and 1/237 = .004
+        kFF = 0;// Pref.getPref("tURKff");// 10,000/60 rps* 1.39 = 231. and 1/237 = .004
         double p = Pref.getPref("tURKp");
         double i = Pref.getPref("tURKi");
         double d = Pref.getPref("tURKd");
-        double iz = Pref.getPref("tURKiz"); 
+        double iz = Pref.getPref("tURKiz");
         kMinOutput = -.5;
         kMaxOutput = .5;
         mPidController.setOutputRange(kMinOutput, kMaxOutput, POSITION_SLOT);
@@ -460,7 +448,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         iset = mPidController.getI(POSITION_SLOT);
         dset = mPidController.getD(POSITION_SLOT);
         izset = mPidController.getIZone(POSITION_SLOT);
-      
+
     }
 
     public void getLockGains() {
@@ -484,36 +472,4 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     }
 
-}
-
-
-class turretSim {
-    // distance per pulse = (angle per revolution) / (pulses per revolution)
-    // = (2 * PI rads) / (4096 pulses)
-    private static final double kArmEncoderDistPerPulse = 2.0 * Math.PI / 4096;
-
-    // The arm gearbox represents a gearbox containing two Vex 775pro motors.
-    // private final DCMotor m_armGearbox = DCMotor.getVex775Pro(2);
-    private final static DCMotor m_armGearbox = DCMotor.getNeo550(1);
-
-    // Simulation classes help us simulate what's going on, including gravity.
-    private static final double m_armReduction = 600;
-    private static final double m_armMass = 5.0; // Kilograms
-    private static final double m_armLength = Units.inchesToMeters(30);
-    // This arm sim represents an arm that can travel from -75 degrees (rotated down
-    // front)
-    // to 255 degrees (rotated down in the back).
-    final static SingleJointedArmSim m_armSim = new SingleJointedArmSim(
-            m_armGearbox,
-            m_armReduction,
-            SingleJointedArmSim.estimateMOI(m_armLength, m_armMass),
-            m_armLength,
-            Units.degreesToRadians(-75),
-            Units.degreesToRadians(75),
-            m_armMass,
-            true,
-            VecBuilder.fill(kArmEncoderDistPerPulse) // Add noise with a std-dev of 1 tick
-    );
-
- 
 }

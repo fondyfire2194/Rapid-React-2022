@@ -211,6 +211,9 @@ public final class Constants {
       public static double anglePerScrewRev = Units.radiansToDegrees(Math.atan(leadScrewPitch / tiltArmLength));
       // .03645
       public static double tiltDegreesPerRev = anglePerScrewRev / motorGearRatio;
+
+      public static final double kVVoltSecondsPerRotation = 0.0774; 
+      public static final double kA = 0.00003;
    }
 
    public static class TurretConstants {

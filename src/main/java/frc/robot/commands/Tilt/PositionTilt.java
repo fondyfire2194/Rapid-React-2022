@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Tilt;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RevTiltSubsystem;
 
@@ -38,9 +39,8 @@ public class PositionTilt extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putNumber("TILPCR", loopCtr);
     loopCtr++;
-
-    // m_tilt.goToPositionMotionMagic(m_tilt.targetAngle);
 
     m_tilt.goToPosition(m_tilt.targetAngle);
 
