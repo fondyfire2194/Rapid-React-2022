@@ -15,14 +15,17 @@ import com.revrobotics.ColorSensorV3;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
-import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
+import frc.robot.Sim.CANEncoderSim;
+import frc.robot.Sim.CANSparkMaxWithSim;
 import frc.robot.Pref;
 import frc.robot.RevColorSensor;
 import frc.robot.Robot;
@@ -32,7 +35,11 @@ public class CargoTransportSubsystem extends SubsystemBase {
    * Creates a new CargoTransport.
    */
 
-  private final CANSparkMax m_lowerRollerMotor;
+  private final CANSparkMaxWithSim m_lowerRollerMotor;
+
+  private CANEncoderSim mEncoderSim;
+
+  private PIDController m_simpid;
 
   public boolean lowerRollerMotorConnected;
 
@@ -70,7 +77,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public CargoTransportSubsystem() {
 
-    m_lowerRollerMotor = new CANSparkMax(CANConstants.LOWER_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
+    m_lowerRollerMotor = new CANSparkMaxWithSim(CANConstants.LOWER_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
 
     m_lowerPID = m_lowerRollerMotor.getPIDController();
 
@@ -89,6 +96,12 @@ public class CargoTransportSubsystem extends SubsystemBase {
     setLowerRollerBrakeOn(true);
 
     calibrateLowerPID();
+
+    if (RobotBase.isSimulation()) {
+
+      mEncoderSim = new CANEncoderSim(m_lowerRollerMotor.getDeviceId(), false);
+      m_simpid = new PIDController(.0001, 0, 0);
+    }
 
   }
 
@@ -115,7 +128,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   public double cargoAboveShoot() {
-    
+
     return cargoAboveLowRoll.getAverageVoltage();
   }
 
@@ -167,7 +180,17 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     lowerRequiredRPM = rpm;
 
-    m_lowerPID.setReference(rpm, ControlType.kVelocity, VELOCITY_SLOT);
+    double pidout = 0;
+
+    if (RobotBase.isReal())
+
+      m_lowerPID.setReference(rpm, ControlType.kVelocity, VELOCITY_SLOT);
+
+    else
+
+      pidout = m_simpid.calculate(getLowerRPM(), rpm);
+
+    m_lowerRollerMotor.set(pidout);
   }
 
   public boolean getLowerRollerAtSpeed() {

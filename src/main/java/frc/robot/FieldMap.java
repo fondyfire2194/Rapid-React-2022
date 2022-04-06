@@ -73,9 +73,9 @@ public class FieldMap {
         // perimeter and centered on target and cargo
 
         public static final double leftTarmacPickupPosition = Units.inchesToMeters(-50);
-        public static final double leftTarmacShootPosition = Units.inchesToMeters(-6.);
+        public static final double leftTarmacShootPosition = Units.inchesToMeters(-40.);
 
-        public static final double leftTarmacTiltUpperAngle = 5;
+        public static final double leftTarmacTiltUpperAngle = 15;
         public static final double leftTarmacTurretUpperAngle = 0;
         public static double leftTarmacUpperRPM = 3750;
 

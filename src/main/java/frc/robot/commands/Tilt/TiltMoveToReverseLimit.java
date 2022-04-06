@@ -44,7 +44,8 @@ public class TiltMoveToReverseLimit extends CommandBase {
     if (!endIt) {
       m_tilt.moveManually(-.2);
     }
-    endIt = m_tilt.m_reverseLimit.isPressed() || m_tilt.getAngle() < m_startAngle - 10 || simCtr > 50;
+    endIt = m_tilt.m_reverseLimit.isPressed() || m_tilt.getAngle() < m_startAngle - 10 || simCtr > 150;
+
     SmartDashboard.putNumber("Tisimctr", simCtr);
   }
 
@@ -60,6 +61,6 @@ public class TiltMoveToReverseLimit extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return endIt && (RobotBase.isSimulation() || Math.abs(m_tilt.getSpeed()) < .01);
+    return RobotBase.isSimulation() || endIt && Math.abs(m_tilt.getSpeed()) < .1;
   }
 }

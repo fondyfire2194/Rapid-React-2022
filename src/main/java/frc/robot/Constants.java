@@ -213,6 +213,7 @@ public final class Constants {
       public static double tiltDegreesPerRev = anglePerScrewRev / motorGearRatio;
 
       public static final double kVVoltSecondsPerRotation = 0.0774; 
+      
       public static final double kA = 0.00003;
    }
 
@@ -238,6 +239,10 @@ public final class Constants {
       public static final double TURRET_MIN_ANGLE = -55;
 
       public static final double TURRET_DEG_PER_MOTOR_REV = 1.38996;
+
+      public static final double kVVoltSecondsPerRotation = 0.0774;
+
+      public static final double kA = 0.00003;
 
    }
 

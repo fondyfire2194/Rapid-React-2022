@@ -496,8 +496,7 @@ public class SetUpOI {
 
                         canBus.addBoolean("FrontIntakeConnected (13)", () -> intake.frontIntakeMotorConnected);
                         canBus.addBoolean("RearIntakeConnected (14)", () -> intake.rearIntakeMotorConnected);
-                        canBus.addBoolean("ClimberConnected (15)", () -> climber.climberMotorConnected);
-
+              
                 }
         }
 

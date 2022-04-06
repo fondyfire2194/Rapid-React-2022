@@ -13,6 +13,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -194,6 +195,8 @@ public class Robot extends TimedRobot {
 
         startingPose = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
 
+        if(RobotBase.isReal()){
+
         data[0] = Pref.getPref("autLRtctPt");// retract point
 
         data[1] = Pref.getPref("autLShootPt");// shoot point
@@ -203,6 +206,8 @@ public class Robot extends TimedRobot {
         data[3] = Pref.getPref("autLTu");// turret
 
         data[4] = Pref.getPref("autLRPM");// rpm
+
+        }
 
         m_autonomousCommand = new SequentialCommandGroup(
 

@@ -40,7 +40,9 @@ public class TiltJog extends CommandBase {
       temp = m_xaxisSpeedSupplier.get();
     if (pressed)
       temp = temp / 2;
+
     m_tilt.moveManually(temp);
+    
     m_tilt.enableSoftLimits(!pressed);
   }
 

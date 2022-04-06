@@ -39,7 +39,7 @@ public class PositionTilt extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("TILPCR", loopCtr);
+    SmartDashboard.putNumber("TILPCR", m_tilt.getAngle());
     loopCtr++;
 
     m_tilt.goToPosition(m_tilt.targetAngle);
@@ -50,7 +50,7 @@ public class PositionTilt extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (loopCtr > 10 && !endIt)
+     if (loopCtr > 10 && !endIt)
 
       m_tilt.targetAngle = m_tilt.getAngle();
 

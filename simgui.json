@@ -50,6 +50,8 @@
       "/Shuffleboard/Intake/IntakeValues/Stop Motor": "Command",
       "/Shuffleboard/Pre-Round/Auto Commands": "String Chooser",
       "/Shuffleboard/Pre-Round/Auto Delay": "String Chooser",
+      "/Shuffleboard/Pre-Round/While There's Still Time/Position To Entry": "Command",
+      "/Shuffleboard/Pre-Round/While There's Still Time/PositionToSwitch": "Command",
       "/Shuffleboard/SetupRobot/Robot/ClearFaults": "Command",
       "/Shuffleboard/SetupRobot/Robot/Cmd": "Subsystem",
       "/Shuffleboard/SetupRobot/Robot/EndLog": "Command",
@@ -133,13 +135,13 @@
       "Competition": {
         "Values": {
           "open": true
-        },
-        "open": true
+        }
       },
       "Pre-Round": {
         "Auto Commands": {
           "open": true
-        }
+        },
+        "open": true
       },
       "open": true
     }

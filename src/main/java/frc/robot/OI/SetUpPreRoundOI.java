@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.RawContoursV2;
+import frc.robot.commands.Tilt.PositionTilt;
+import frc.robot.commands.Tilt.PositionTiltToEntry;
+import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -81,11 +84,13 @@ public class SetUpPreRoundOI {
                         startDelayChooser.addOption("Five Seconds", 5.);
 
 
-                        ShuffleboardLayout checkStuff = Shuffleboard.getTab("Pre-Round")
+                        ShuffleboardLayout tiltCommands = Shuffleboard.getTab("Pre-Round")
                         .getLayout("While There's Still Time", BuiltInLayouts.kList).withPosition(3,2).withSize(3,1)
                         .withProperties(Map.of("Label position", "TOP"));
 
-                        checkStuff.addString("Message from Mark", ()->"Has Everything Been Checked - Twice?");
+                        tiltCommands.add("Position To Entry", new PositionTilt(tilt,12));
+                        tiltCommands.add("PositionToSwitch", new TiltMoveToReverseLimit(tilt));
+                       
 
                 }
 

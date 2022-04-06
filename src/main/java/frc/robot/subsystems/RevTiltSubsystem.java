@@ -13,6 +13,7 @@ import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
@@ -51,6 +52,7 @@ public class RevTiltSubsystem extends SubsystemBase {
     public SparkMaxLimitSwitch m_reverseLimit;
     public SparkMaxLimitSwitch m_forwardLimit;
     private CANEncoderSim mEncoderSim;
+    private PIDController m_simpid;
     public boolean positionResetDone;
     public double targetAngle;
     private double inPositionBandwidth = 1;
@@ -131,6 +133,7 @@ public class RevTiltSubsystem extends SubsystemBase {
         aimCenter();
         mEncoder.setPosition(0);
         targetAngle = 0;
+        positionResetDone = false;
 
         mEncoder.setPositionConversionFactor(degreesPerRev);
         mEncoder.setVelocityConversionFactor(degreesPerRev / 60);
@@ -142,8 +145,6 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         getPosGains();
 
-        resetAngle();
-
         m_motor.setIdleMode(IdleMode.kBrake);
 
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
@@ -154,14 +155,17 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         m_forwardLimit.enableLimitSwitch(true);
 
-        if (RobotBase.isReal() && m_reverseLimit.isPressed()) {
-
-            resetAngle();
-        }
-
         if (RobotBase.isSimulation()) {
 
             mEncoderSim = new CANEncoderSim(m_motor.getDeviceId(), false);
+
+            m_simpid = new PIDController(.0001, 0, 0);
+
+        }
+
+        if (RobotBase.isReal() && m_reverseLimit.isPressed()) {
+
+            resetAngle();
         }
 
         enableSoftLimits(false);
@@ -193,6 +197,8 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("TIMTRGETT", m_motor.get());
 
+        SmartDashboard.putBoolean("RefDone", positionResetDone);
+
     }
 
     @Override
@@ -203,7 +209,6 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         // Next, we update it. The standard loop time is 20ms.
         m_tiltPositionSim.update(0.020);
-
         // Finally, we set our simulated encoder's readings and simulated battery
         // voltage
         mEncoderSim.setPosition(m_tiltPositionSim.getOutput(0));
@@ -237,21 +242,35 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         targetAngle = getAngle();
 
-        if (RobotBase.isReal())
-
-            m_motor.set(speed);
-
-        else
-
-            mPidController.setReference(speed * 12, ControlType.kVoltage, POSITION_SLOT);
-
+        m_motor.set(speed);
     }
 
     public void goToPosition(double degrees) {
 
-        mPidController.setReference(degrees, ControlType.kPosition, POSITION_SLOT);
+        double pidout = 0;
 
-        
+        if (RobotBase.isReal()) {
+
+            mPidController.setReference(degrees, ControlType.kPosition, POSITION_SLOT);
+
+        }
+
+        else {
+
+            pidout = m_simpid.calculate(getAngle(), degrees);
+
+            if (pidout > .5)
+                pidout = .5;
+            if (pidout < -.5)
+                pidout = -.5;
+
+            SmartDashboard.putNumber("TIANG", getAngle());
+            SmartDashboard.putNumber("TIDEC ", degrees);
+
+            SmartDashboard.putNumber("TIPIDO", pidout);
+
+            m_motor.set(pidout);
+        }
 
     }
 
@@ -263,9 +282,13 @@ public class RevTiltSubsystem extends SubsystemBase {
     }
 
     public void resetAngle() {
+
         mEncoder.setPosition(0);
+
         targetAngle = 0;
+
         mPidController.setIAccum(0);
+
     }
 
     public boolean isAtHeight(double inches, double allowableError) {
@@ -285,7 +308,12 @@ public class RevTiltSubsystem extends SubsystemBase {
     }
 
     public double getAngle() {
-        return getMotorDegrees();
+
+        if (RobotBase.isReal())
+
+            return getMotorDegrees();
+        else
+            return getMotorDegrees() * degreesPerRev;
     }
 
     public double getCameraAngle() {
@@ -321,10 +349,9 @@ public class RevTiltSubsystem extends SubsystemBase {
     }
 
     public void stop() {
-        if (RobotBase.isReal())
-            m_motor.set(0);
-        else
-            m_motor.setVoltage(0);
+
+        m_motor.set(0);
+
     }
 
     public void setSoftwareLimits() {
