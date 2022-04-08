@@ -5,6 +5,7 @@
 package frc.robot.commands.Intakes;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -123,7 +124,13 @@ public class RunActiveIntake extends CommandBase {
     m_transport.stopLowerRoller();
     m_intake.stopLowerRoller = true;
 
-    Shuffleboard.selectTab("Competition");
+    if (RobotBase.isReal())
+
+      Shuffleboard.selectTab("Competition");
+
+    else
+
+      Shuffleboard.selectTab("Simulation");
 
   }
 

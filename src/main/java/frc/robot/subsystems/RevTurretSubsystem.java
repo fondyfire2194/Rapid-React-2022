@@ -6,22 +6,16 @@ import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.revrobotics.SparkMaxPIDController;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.numbers.N0;
 import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N16;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -30,14 +24,12 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.TurretConstants;
+import frc.robot.Pref;
 import frc.robot.Sim.CANEncoderSim;
 import frc.robot.Sim.CANSparkMaxWithSim;
-import frc.robot.Pref;
 
 /**
  * 21:1 gearing
@@ -62,7 +54,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     public double lastkP, lastkI, lastkD, lastkIz, lastkFF, lastkMaxOutput, lastkMinOutput, lastmaxRPM, lastmaxVel,
             lastminVel, lastmaxAcc, lastallowedErr;
 
-    private final CANSparkMaxWithSim m_motor; // NOPMD
+    public final CANSparkMaxWithSim m_motor; // NOPMD
     private final RelativeEncoder mEncoder;
     private CANEncoderSim mEncoderSim;
     private PIDController m_simpid;
@@ -154,7 +146,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
             mEncoderSim = new CANEncoderSim(m_motor.getDeviceId(), false);
 
-            m_simpid = new PIDController(.0001, 0, 0);
+            m_simpid = new PIDController(.01, 0, 0);
 
         }
 
@@ -164,7 +156,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         m_forwardLimit = m_motor.getForwardLimitSwitch(Type.kNormallyClosed);
         m_forwardLimit.enableLimitSwitch(true);
 
-        SmartDashboard.putNumber("TUdegPerRev", DEG_PER_MOTOR_REV);
+
 
     }
 
@@ -184,7 +176,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         } else {
             testHorOffset = 0;
         }
-        SmartDashboard.putNumber("TUMGETT", m_motor.getAppliedOutput());
+      
     }
 
     @Override
@@ -202,7 +194,6 @@ public class RevTurretSubsystem extends SubsystemBase {
         RoboRioSim.setVInVoltage(
                 BatterySim.calculateDefaultBatteryLoadedVoltage(m_turretPositionSim.getCurrentDrawAmps()));
 
-        SmartDashboard.putNumber("POSTU", getAngle());
 
     }
 
@@ -236,10 +227,10 @@ public class RevTurretSubsystem extends SubsystemBase {
 
             pidout = m_simpid.calculate(getAngle(), degrees);
 
-            if (pidout > .5)
-                pidout = .5;
-            if (pidout < -.5)
-                pidout = -.5;
+            if (pidout > .75)
+                pidout = .75;
+            if (pidout < -.75)
+                pidout = -.75;
 
             m_motor.set(pidout);
         }
@@ -247,11 +238,21 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     public double getTargetHorOffset() {
+        
         return targetHorizontalOffset;
     }
 
-    public void goToPositionMotionMagic(double angle) {
-        mPidController.setReference(angle, ControlType.kSmartMotion, SMART_MOTION_SLOT);
+    public void goToPositionMotionMagic(double degrees) {
+
+        if (RobotBase.isReal())
+
+        mPidController.setReference(degrees, ControlType.kSmartMotion, SMART_MOTION_SLOT);
+
+    else
+
+        goToPosition(degrees);
+
+
     }
 
     public void lockTurretToVision(double cameraError) {
@@ -364,6 +365,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     public boolean atTargetAngle() {
+
         return Math.abs(targetAngle - getAngle()) < inPositionBandwidth;
     }
 
@@ -373,6 +375,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
             return mEncoder.getPosition();
         else
+
             return mEncoder.getPosition() * DEG_PER_MOTOR_REV;
 
     }
@@ -382,7 +385,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     public void runAtVelocity(double speed) {
-        SmartDashboard.putNumber("PIDATRUN", speed);
+        
         targetAngle = getAngle();
         mPidController.setReference(speed, ControlType.kVelocity, SMART_MOTION_SLOT);
     }

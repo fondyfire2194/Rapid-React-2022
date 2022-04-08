@@ -11,6 +11,20 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/LiveWindow/ClimberSubsystem": "Subsystem",
+      "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
+      "/LiveWindow/Ungrouped/DigitalInput[0]": "Digital Input",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[6]": "PIDController",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/Ungrouped/Talon SRX [13]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon SRX [14]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon SRX [15]": "Motor Controller",
+      "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
       "/Shuffleboard/CanBus/Scheduler/Scheduler": "Scheduler",
       "/Shuffleboard/CanBus/Subs 1/Climber": "Subsystem",
       "/Shuffleboard/CompetitionMisc/Misc1/Reset to 0": "Command",
@@ -50,6 +64,11 @@
       "/Shuffleboard/Intake/IntakeValues/Stop Motor": "Command",
       "/Shuffleboard/Pre-Round/Auto Commands": "String Chooser",
       "/Shuffleboard/Pre-Round/Auto Delay": "String Chooser",
+      "/Shuffleboard/Pre-Round/While There's Still Time/Position TI To 1": "Command",
+      "/Shuffleboard/Pre-Round/While There's Still Time/Position TI To 12": "Command",
+      "/Shuffleboard/Pre-Round/While There's Still Time/Position TU To 1": "Command",
+      "/Shuffleboard/Pre-Round/While There's Still Time/Position TU To 11": "Command",
+      "/Shuffleboard/Pre-Round/While There's Still Time/Position TU To 12": "Command",
       "/Shuffleboard/Pre-Round/While There's Still Time/Position To Entry": "Command",
       "/Shuffleboard/Pre-Round/While There's Still Time/PositionToSwitch": "Command",
       "/Shuffleboard/SetupRobot/Robot/ClearFaults": "Command",
@@ -104,6 +123,7 @@
       "/Shuffleboard/SetupTurret/Turret/PositionToVision -10": "Command",
       "/Shuffleboard/SetupTurret/Turret/Reset to 0": "Command",
       "/Shuffleboard/SetupTurret/Turret/StopTurret": "Command",
+      "/Shuffleboard/Simulation/Field": "Field2d",
       "/Shuffleboard/Vision/Camera/DriverCam": "Command",
       "/Shuffleboard/Vision/Camera/MainPIP": "Command",
       "/Shuffleboard/Vision/Camera/SecIP": "Command",
@@ -123,6 +143,10 @@
     },
     "windows": {
       "/SmartDashboard/Field": {
+        "Robot": {
+          "length": 0.8820000290870667,
+          "width": 0.828000009059906
+        },
         "image": "C:\\Users\\John\\Desktop\\2022-field.png",
         "window": {
           "visible": true

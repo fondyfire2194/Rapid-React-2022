@@ -166,9 +166,12 @@ public final class Constants {
 
    }
 
-   public static class HoodedShooterConstants {
+   public static class ShooterConstants {
 
       public static final double MAX_SHOOTER_RPM = 5700;
+      public static double kVVoltSecondsPerRotation;
+      public static double kA = .00004;
+      public static double kV = .08;
 
    }
 
@@ -212,8 +215,8 @@ public final class Constants {
       // .03645
       public static double tiltDegreesPerRev = anglePerScrewRev / motorGearRatio;
 
-      public static final double kVVoltSecondsPerRotation = 0.0774; 
-      
+      public static final double kVVoltSecondsPerRotation = 0.0774;
+
       public static final double kA = 0.00003;
    }
 

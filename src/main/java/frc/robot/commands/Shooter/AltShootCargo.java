@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Shooter;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
@@ -32,6 +33,8 @@ public class AltShootCargo extends CommandBase {
   private double cargoReleaseTime = .25;
   private boolean cargoReleasing;
   private double cargoReleaseTimer;
+  private double simTime;
+  private boolean simEnd;
 
   public AltShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
       IntakesSubsystem intake) {
@@ -73,6 +76,9 @@ public class AltShootCargo extends CommandBase {
 
       activeLowStopTime = Pref.getPref("LowRollStopTimeBlue");
 
+    if (RobotBase.isSimulation())
+      simTime = Timer.getFPGATimestamp();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -108,7 +114,7 @@ public class AltShootCargo extends CommandBase {
       m_transport.releaseCargo();// low rollers start
 
       cargoReleasing = true;
-      
+
       if (!cargoAtShoot && cargoReleaseTimer == 0) {
 
         cargoReleaseTimer = Timer.getFPGATimestamp();
@@ -173,6 +179,8 @@ public class AltShootCargo extends CommandBase {
 
         && Timer.getFPGATimestamp() > timeCargoToLowRoller + activeLowStopTime;
 
+    simEnd = simTime != 0 && Timer.getFPGATimestamp() > simTime + 2;
+
   }
 
   // Called once the command ends or is interrupted.
@@ -193,6 +201,6 @@ public class AltShootCargo extends CommandBase {
 
     return noCargoAtStart || m_transport.wrongCargoColor || secondCargoAtLowRoller || noMoreCargo
 
-        || m_transport.latchCargoAtShoot;
+        || m_transport.latchCargoAtShoot || simEnd;
   }
 }

@@ -159,7 +159,7 @@ public class RevTiltSubsystem extends SubsystemBase {
 
             mEncoderSim = new CANEncoderSim(m_motor.getDeviceId(), false);
 
-            m_simpid = new PIDController(.0001, 0, 0);
+            m_simpid = new PIDController(.1, 0, 0);
 
         }
 
@@ -172,7 +172,6 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         setSoftwareLimits();
 
-        SmartDashboard.putNumber("TIdegPerRev", degreesPerRev);
 
         tiltTarget = Shuffleboard.getTab("SetupTilt")
                 .add("TargetDegrees", 0)
@@ -195,7 +194,6 @@ public class RevTiltSubsystem extends SubsystemBase {
         if (faultSeen != 0)
             faultSeen = getFaults();
 
-        SmartDashboard.putNumber("TIMTRGETT", m_motor.get());
 
         SmartDashboard.putBoolean("RefDone", positionResetDone);
 
@@ -216,8 +214,6 @@ public class RevTiltSubsystem extends SubsystemBase {
         RoboRioSim.setVInVoltage(
                 BatterySim.calculateDefaultBatteryLoadedVoltage(m_tiltPositionSim.getCurrentDrawAmps()));
 
-        SmartDashboard.putNumber("POSTI", getAngle());
-
     }
 
     public boolean checkCAN() {
@@ -234,7 +230,6 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     public void runAtVelocity(double speed) {
         targetAngle = getAngle();
-        SmartDashboard.putNumber("TILSPEED", speed);
         mPidController.setReference(speed, ControlType.kVelocity, SMART_MOTION_SLOT);
     }
 
@@ -259,15 +254,10 @@ public class RevTiltSubsystem extends SubsystemBase {
 
             pidout = m_simpid.calculate(getAngle(), degrees);
 
-            if (pidout > .5)
-                pidout = .5;
-            if (pidout < -.5)
-                pidout = -.5;
-
-            SmartDashboard.putNumber("TIANG", getAngle());
-            SmartDashboard.putNumber("TIDEC ", degrees);
-
-            SmartDashboard.putNumber("TIPIDO", pidout);
+            if (pidout > .75)
+                pidout = .75;
+            if (pidout < -.75)
+                pidout = -.75;
 
             m_motor.set(pidout);
         }
@@ -277,8 +267,14 @@ public class RevTiltSubsystem extends SubsystemBase {
     public void goToPositionMotionMagic(double degrees) {
 
         // convert angle to motor turns
+        if (RobotBase.isReal())
+        
+            mPidController.setReference(degrees, ControlType.kSmartMotion, SMART_MOTION_SLOT);
 
-        mPidController.setReference(degrees, ControlType.kSmartMotion, SMART_MOTION_SLOT);
+        else
+
+            goToPosition(degrees);
+
     }
 
     public void resetAngle() {

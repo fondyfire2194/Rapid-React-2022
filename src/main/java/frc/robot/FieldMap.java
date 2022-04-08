@@ -79,51 +79,40 @@ public class FieldMap {
         public static final double leftTarmacTurretUpperAngle = 0;
         public static double leftTarmacUpperRPM = 3750;
 
-        public static final double leftTarmacTiltLowerAngle = 1;
-        public static final double leftTarmacTurretLowerAngle = 0;
-        public static double leftTarmacLowerRPM = 2100;
 
         public static final double[] leftTarmacData = { leftTarmacPickupPosition,
                         leftTarmacShootPosition, leftTarmacTiltUpperAngle,
-                        leftTarmacTurretUpperAngle, leftTarmacUpperRPM,
-                        leftTarmacTiltLowerAngle, leftTarmacTurretLowerAngle,
-                        leftTarmacLowerRPM
+                        leftTarmacTurretUpperAngle, leftTarmacUpperRPM
+                       
         };
 
         public static final double rightTarmacPickupPosition = Units.inchesToMeters(-41);
-        public static final double rightTarmacShootPosition = Units.inchesToMeters(0);
+        public static final double rightTarmacShootPosition = Units.inchesToMeters(-35);
 
-        public static final double rightTarmacTiltUpperAngle = 5;
+        public static final double rightTarmacTiltUpperAngle = 15;
         public static final double rightTarmacTurretUpperAngle = 20;
         public static double rightTarmacUpperRPM = 3750;
 
-        public static final double rightTarmacTiltLowerAngle = 4;
-        public static final double rightTarmacTurretLowerAngle = 0;
-        public static double rightTarmacLowerRPM = 2100;
+  
 
         public static final double[] rightTarmacData = { rightTarmacPickupPosition,
                         rightTarmacShootPosition, rightTarmacTiltUpperAngle,
-                        rightTarmacTurretUpperAngle, rightTarmacUpperRPM,
-                        rightTarmacTiltLowerAngle, rightTarmacTurretLowerAngle,
-                        rightTarmacLowerRPM
+                        rightTarmacTurretUpperAngle, rightTarmacUpperRPM
+                        
         };
 
         public static final double centerTarmacPickupPosition = Units.inchesToMeters(-51);
         public static final double centerTarmacShootPosition = Units.inchesToMeters(-4);
 
-        public static final double centerTarmacTiltUpperAngle = 5;
+        public static final double centerTarmacTiltUpperAngle = 15;
         public static final double centerTarmacTurretUpperAngle = -17;
         public static double centerTarmacUpperRPM = 3750;
 
-        public static final double centerTarmacTiltLowerAngle = 4;
-        public static final double centerTarmacTurretLowerAngle = 0;
-        public static double centerTarmacLowerRPM = 2100;
 
         public static final double[] centerTarmacData = { centerTarmacPickupPosition,
                         centerTarmacShootPosition, centerTarmacTiltUpperAngle,
                         centerTarmacTurretUpperAngle, centerTarmacUpperRPM,
-                        centerTarmacTiltLowerAngle, centerTarmacTurretLowerAngle,
-                        centerTarmacLowerRPM };
+                        };
 
         public static final double[] shootMode_0 = { 1, 3500 };// 40" at hub "lob"
         public static final double[] shootMode_1 = { 6, 4000 };// 100" at tarmac line

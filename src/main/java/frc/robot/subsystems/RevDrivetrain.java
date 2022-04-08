@@ -50,7 +50,7 @@ public class RevDrivetrain extends SubsystemBase {
 
     private final AHRS mGyro;
 
-    private final Field2d m_field;
+    public final Field2d m_field;
     // Simulation
     private CANEncoderSim m_leftEncodersSim;
     private CANEncoderSim m_rightEncodersSim;
@@ -228,6 +228,8 @@ public class RevDrivetrain extends SubsystemBase {
         m_rightEncodersSim.setPosition(m_dts.getRightPositionMeters());
 
         m_simAngle.set(m_simAngle.get() - hdgDiff.getDegrees());
+
+        m_field.setRobotPose(getPose());
     }
 
     /////////////////////////////////////

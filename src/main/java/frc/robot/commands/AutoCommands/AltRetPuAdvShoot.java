@@ -62,7 +62,7 @@ public class AltRetPuAdvShoot extends SequentialCommandGroup {
                                                                 
                                                 new PositionTilt(tilt, upperTiltAngle),
 
-                                               // new PositionTurret(turret, upperTurretAngle),
+                                                new PositionTurret(turret, upperTurretAngle),
 
                                                 new TimeDelay(2))
 

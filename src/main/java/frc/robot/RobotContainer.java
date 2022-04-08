@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,6 +31,7 @@ import frc.robot.OI.SetUpOI;
 import frc.robot.OI.SetUpPreRoundOI;
 import frc.robot.OI.ShootSequenceDisplay;
 import frc.robot.OI.Show_Hide_Screens;
+import frc.robot.OI.SimulationOI;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
@@ -117,6 +119,8 @@ public class RobotContainer {
       public SetUpAutoOI m_autoOi;
 
       public SetUpPreRoundOI m_preOi;
+
+      public SimulationOI m_simOI;
 
       public HubVisionShuffleboard m_hvis;
 
@@ -229,6 +233,10 @@ public class RobotContainer {
 
             m_preOi = new SetUpPreRoundOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
                         m_intake, m_climber, m_trajectory, m_rcv2);
+
+            if (RobotBase.isSimulation())
+                  m_simOI = new SimulationOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
+                              m_limelight, m_intake, m_climber, m_trajectory);
 
             m_hvis = new HubVisionShuffleboard(m_limelight, m_rcv2, m_vrt, m_turret, m_tilt, m_shooter,
                         m_transport, m_compressor);

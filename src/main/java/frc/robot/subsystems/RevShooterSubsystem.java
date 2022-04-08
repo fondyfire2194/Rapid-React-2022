@@ -7,31 +7,38 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.REVLibError;
-import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Pref;
-
+import frc.robot.Sim.CANEncoderSim;
+import frc.robot.Sim.CANSparkMaxWithSim;
 
 public class RevShooterSubsystem extends SubsystemBase {
 
-    public final CANSparkMax mLeftMotor; // NOPMD
-    private CANSparkMax mRightMotor; // NOPMD
+    public final CANSparkMaxWithSim mLeftMotor; // NOPMD
+    private CANSparkMaxWithSim mRightMotor; // NOPMD
     private final RelativeEncoder mEncoder;
     private final RelativeEncoder mRightEncoder;
     private final SparkMaxPIDController mPidController;
 
-    private final CANSparkMax m_topRollerMotor;
+    private CANEncoderSim mEncoderSim;
+
+    private final CANSparkMaxWithSim m_topRollerMotor;
+    private CANEncoderSim m_topEncoderSim;
     public boolean topRollerMotorConnected;
     public boolean haltTopRollerMotor;
     private SparkMaxPIDController m_topPID;
@@ -43,6 +50,8 @@ public class RevShooterSubsystem extends SubsystemBase {
     public double shootTime;
     public double shootTimeRemaining;
     public static DCMotor kGearbox = DCMotor.getNeo550(2);
+    private FlywheelSim flywheel;
+    private FlywheelSim topRollerSim;
     public static double kGearing = 1;
     public static double kInertia = 0.008;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, acc;
@@ -113,11 +122,12 @@ public class RevShooterSubsystem extends SubsystemBase {
     public int shootSetup;
     public String presetModeName = "Not Assigned";
     public int ShootMode;
-    
+
     public RevShooterSubsystem() {
 
-        mLeftMotor = new CANSparkMax(CANConstants.LEFT_SHOOTER_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mRightMotor = new CANSparkMax(CANConstants.RIGHT_SHOOTER_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mLeftMotor = new CANSparkMaxWithSim(CANConstants.LEFT_SHOOTER_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mRightMotor = new CANSparkMaxWithSim(CANConstants.RIGHT_SHOOTER_MOTOR,
+                CANSparkMaxLowLevel.MotorType.kBrushless);
 
         mEncoder = mLeftMotor.getEncoder();
         mRightEncoder = mRightMotor.getEncoder();
@@ -131,7 +141,7 @@ public class RevShooterSubsystem extends SubsystemBase {
         mRightMotor.restoreFactoryDefaults();
         mRightMotor.follow(mLeftMotor, true);
 
-        m_topRollerMotor = new CANSparkMax(CANConstants.TOP_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
+        m_topRollerMotor = new CANSparkMaxWithSim(CANConstants.TOP_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
         m_topPID = m_topRollerMotor.getPIDController();
         m_topEncoder = m_topRollerMotor.getEncoder();
         m_topRollerMotor.restoreFactoryDefaults();
@@ -167,7 +177,18 @@ public class RevShooterSubsystem extends SubsystemBase {
 
         if (RobotBase.isSimulation()) {
 
-            REVPhysicsSim.getInstance().addSparkMax(mLeftMotor, DCMotor.getNEO(2));
+            flywheel = new FlywheelSim(
+                    LinearSystemId.identifyVelocitySystem(ShooterConstants.kV, ShooterConstants.kA),
+                    DCMotor.getNEO(2),
+                    4096);
+            mEncoderSim = new CANEncoderSim(mLeftMotor.getDeviceId(), false);
+
+            topRollerSim = new FlywheelSim(
+                    LinearSystemId.identifyVelocitySystem(ShooterConstants.kV, ShooterConstants.kA),
+                    DCMotor.getNeo550(1),
+                    4096);
+            m_topEncoderSim = new CANEncoderSim(m_topRollerMotor.getDeviceId(), false);
+
         }
 
     }
@@ -178,15 +199,21 @@ public class RevShooterSubsystem extends SubsystemBase {
 
         checkTune();
 
-        SmartDashboard.putString("LeftFaults", "SS");// faultAsBitString());
-        SmartDashboard.putNumber("TopOut", getTopRoller());
-        SmartDashboard.putNumber("ThrRPM", getRPMfromThrottle());
     }
 
     @Override
     public void simulationPeriodic() {
-        REVPhysicsSim.getInstance().run();
-        SmartDashboard.putNumber("VelSim", getRPM());
+        var vin = mLeftMotor.getAppliedOutput() * RobotController.getInputVoltage();
+
+        flywheel.setInputVoltage(vin);
+        flywheel.update(0.02);
+        mEncoderSim.setVelocity(flywheel.getAngularVelocityRPM());
+
+        vin = m_topRollerMotor.getAppliedOutput() * RobotController.getInputVoltage();
+
+        topRollerSim.setInputVoltage(vin);
+        topRollerSim.update(0.02);
+        m_topEncoderSim.setVelocity(topRollerSim.getAngularVelocityRPM());
 
     }
 
@@ -217,11 +244,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     }
 
     public void moveManually(double speed) {
-        if (RobotBase.isReal())
-            mLeftMotor.set(speed);
-        else
-            mPidController.setReference(speed * 12, ControlType.kVoltage, VELOCITY_SLOT);
-
+        mLeftMotor.set(speed);
     }
 
     public boolean checkCAN() {
@@ -263,16 +286,14 @@ public class RevShooterSubsystem extends SubsystemBase {
     }
 
     public void stop() {
-        if (RobotBase.isReal()) {
-            mLeftMotor.stopMotor();
-            mRightMotor.stopMotor();
-            mLeftMotor.set(0);
-            m_topRollerMotor.stopMotor();
-        } else {
-            mLeftMotor.setVoltage(0);
-            mRightMotor.setVoltage(0);
-            m_topRollerMotor.setVoltage(0);
-        }
+
+        mLeftMotor.stopMotor();
+        mRightMotor.stopMotor();
+        mLeftMotor.set(0);
+
+        m_topRollerMotor.stopMotor();
+        m_topRollerMotor.set(0);
+
         startShooter = false;
     }
 
@@ -525,6 +546,6 @@ public class RevShooterSubsystem extends SubsystemBase {
         builder.addDoubleProperty("shoot_rpm", this::getRPM, null);
         builder.addDoubleProperty("top_roll_rpm", this::getTopRPM, null);
         builder.addBooleanProperty("top_at_speed", this::getTopRollerAtSpeed, null);
-        
+
     }
 }

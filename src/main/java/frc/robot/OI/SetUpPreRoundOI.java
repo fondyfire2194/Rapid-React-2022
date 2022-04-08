@@ -16,6 +16,7 @@ import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Tilt.PositionTiltToEntry;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
+import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -65,14 +66,6 @@ public class SetUpPreRoundOI {
                         autoChooser.addOption("Right Tarmac Center Retract Pickup Shoot",
                                         4);
 
-                        autoChooser.addOption("Shoot from under Hub then Retract",
-                                        5);
-
-                        autoChooser.addOption("Left Tarmac, Retract, Pickup, to Tarmac Line, Shoot",
-                                        6);
-
-                        autoChooser.addOption("Center 3 Ball", 7);
-
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
                                         .withPosition(3, 0); //
 
@@ -83,15 +76,7 @@ public class SetUpPreRoundOI {
                         startDelayChooser.addOption("Four Seconds", 4.);
                         startDelayChooser.addOption("Five Seconds", 5.);
 
-
-                        ShuffleboardLayout tiltCommands = Shuffleboard.getTab("Pre-Round")
-                        .getLayout("While There's Still Time", BuiltInLayouts.kList).withPosition(3,2).withSize(3,1)
-                        .withProperties(Map.of("Label position", "TOP"));
-
-                        tiltCommands.add("Position To Entry", new PositionTilt(tilt,12));
-                        tiltCommands.add("PositionToSwitch", new TiltMoveToReverseLimit(tilt));
-                       
-
+                      
                 }
 
         }

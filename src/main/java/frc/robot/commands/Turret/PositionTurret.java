@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Turret;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RevTurretSubsystem;
 
@@ -36,9 +37,9 @@ public class PositionTurret extends CommandBase {
   @Override
   public void execute() {
     m_turret.goToPosition(m_turret.targetAngle);
+    SmartDashboard.putNumber("TUTARG", m_turret.targetAngle);
     loopCtr++;
-    endIt = m_turret.atTargetAngle() && loopCtr > 10 && Math.abs(m_turret.getSpeed()) < 1;// ||
-                                                                                          // !m_tilt.positionResetDone;
+    endIt = m_turret.atTargetAngle() && loopCtr > 10 && Math.abs(m_turret.getSpeed()) < 1;
   }
 
   // Called once the command ends or is interrupted.
