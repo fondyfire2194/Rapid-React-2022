@@ -62,14 +62,12 @@ import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Tilt.PositionHoldTilt;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Tilt.TiltJog;
-import frc.robot.commands.Tilt.TiltJogVelocity;
 import frc.robot.commands.Tilt.TiltWaitForStop;
 import frc.robot.commands.Turret.PositionHoldTurret;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.PositionTurretIncremental;
 import frc.robot.commands.Turret.PositionTurretToVision;
 import frc.robot.commands.Turret.TurretJog;
-import frc.robot.commands.Turret.TurretJogVelocity;
 import frc.robot.commands.Turret.TurretWaitForStop;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -417,13 +415,6 @@ public class RobotContainer {
        * @return
        */
 
-      public Command getJogTurretVelocityCommand(XboxController gamepad) {
-            return new TurretJogVelocity(m_turret, () -> -gamepad.getRawAxis(0) / 5, gamepad);
-      }
-
-      public Command getJogTiltVelocityCommand(XboxController gamepad) {
-            return new TiltJogVelocity(m_tilt, () -> -gamepad.getRawAxis(1), gamepad);
-      }
 
       public Command getJogShooterCommand() {
 

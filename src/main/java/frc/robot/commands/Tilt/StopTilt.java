@@ -27,6 +27,7 @@ public class StopTilt extends CommandBase {
   @Override
   public void execute() {
     m_tilt.stop();
+    m_tilt.m_motor.set(0);
     m_tilt.targetAngle = m_tilt.getAngle();
   }
 

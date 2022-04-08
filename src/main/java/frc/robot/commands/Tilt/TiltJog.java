@@ -50,6 +50,7 @@ public class TiltJog extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_tilt.stop();
+    m_tilt.m_motor.set(0);
     m_tilt.targetAngle = m_tilt.getAngle();
   }
 

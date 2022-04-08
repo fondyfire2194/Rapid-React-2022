@@ -287,7 +287,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     public double getMotorOut() {
-        return m_motor.getAppliedOutput();
+        return m_motor.get();
     }
 
     public boolean isStopped() {
