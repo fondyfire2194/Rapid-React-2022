@@ -102,7 +102,7 @@ public class FieldMap {
         };
 
         public static final double centerTarmacPickupPosition = Units.inchesToMeters(-51);
-        public static final double centerTarmacShootPosition = Units.inchesToMeters(-4);
+        public static final double centerTarmacShootPosition = Units.inchesToMeters(-35);
 
         public static final double centerTarmacTiltUpperAngle = 15;
         public static final double centerTarmacTurretUpperAngle = -17;

@@ -227,7 +227,7 @@ public class Robot extends TimedRobot {
 
         data = FieldMap.rightTarmacData;
 
-        startingPose = new Pose2d(7.43, 2.03, Rotation2d.fromDegrees(90));
+        startingPose = new Pose2d(7.65, 2.03, Rotation2d.fromDegrees(90));
 
         if (RobotBase.isReal()) {
 
@@ -256,7 +256,7 @@ public class Robot extends TimedRobot {
 
         data = FieldMap.centerTarmacData;
 
-        startingPose = new Pose2d(6.78, 2.82, Rotation2d.fromDegrees(34.32));
+        startingPose = new Pose2d(6.78, 3, Rotation2d.fromDegrees(34.32));
 
         if (RobotBase.isReal()) {
 

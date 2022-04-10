@@ -19,6 +19,7 @@ public class PositionStraight extends CommandBase {
   private double m_startAngle;
   private double leftOut;
   private double rightOut;
+  private int loopCtr;
 
   public PositionStraight(RevDrivetrain drive, double endPoint, double max) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -34,13 +35,14 @@ public class PositionStraight extends CommandBase {
   public void initialize() {
     m_startAngle = m_drive.getYaw();
     m_min = -m_max;
+    loopCtr = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double yawKp = 0;
-
+    loopCtr++;
     if (RobotBase.isReal())
 
       yawKp = Pref.getPref("dRStKp");
@@ -82,7 +84,6 @@ public class PositionStraight extends CommandBase {
 
     m_drive.driveRightSide(rightOut + .5 * yawCorrection);
 
-
     SmartDashboard.putNumber("Lout", leftOut);
     SmartDashboard.putNumber("Rout", rightOut);
     SmartDashboard.putNumber("LPos", m_drive.getLeftDistance());
@@ -99,7 +100,7 @@ public class PositionStraight extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(m_endpoint - m_drive.getLeftDistance()) < .1
+    return loopCtr > 5 && Math.abs(m_endpoint - m_drive.getLeftDistance()) < .1
 
         && Math.abs(m_endpoint - m_drive.getRightDistance()) < .1;
 

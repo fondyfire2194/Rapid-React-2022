@@ -159,7 +159,7 @@ public class RevTiltSubsystem extends SubsystemBase {
 
             mEncoderSim = new CANEncoderSim(m_motor.getDeviceId(), false);
 
-            m_simpid = new PIDController(.1, 0, 0);
+            m_simpid = new PIDController(.11, 0, 0);
 
         }
 

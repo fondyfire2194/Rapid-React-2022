@@ -146,7 +146,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
             mEncoderSim = new CANEncoderSim(m_motor.getDeviceId(), false);
 
-            m_simpid = new PIDController(.01, 0, 0);
+            m_simpid = new PIDController(.003, 0, 0);
 
         }
 
