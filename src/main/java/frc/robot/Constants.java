@@ -151,7 +151,7 @@ public final class Constants {
        * 
        */
       public static double kvVoltSecondsPerMeter = 2;
-      public static double kaVoltSecondsSquaredPerMeter = .208;
+      public static double kaVoltSecondsSquaredPerMeter = .408;
       public static final double kvVoltSecondsPerRadian = 3.0;
       public static final double kaVoltSecondsSquaredPerRadian = 0.3;
 
