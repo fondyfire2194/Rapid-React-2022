@@ -35,7 +35,7 @@ public class HubVisionShuffleboard {
         public HubVisionShuffleboard(LimeLight ll, RawContoursV2 rcv2,
                         VisionReferenceTarget vrt, RevTurretSubsystem turret,
                         RevTiltSubsystem tilt, RevShooterSubsystem shooter,
-                        CargoTransportSubsystem transport, Compressor compressor) {
+                        CargoTransportSubsystem transport, Compressor compressor, HubTargetDisplay hubTargetDisplay) {
 
                 if (m_showHubVision) {
 
@@ -109,6 +109,12 @@ public class HubVisionShuffleboard {
                                         .withPosition(5, 0).withSize(3, 3)
                                         .withProperties(Map.of("Show Crosshair", true,
                                                         "Show Controls", true, "Rotation", "QUARTER_CW"));
+
+                        ShuffleboardLayout logValues = Shuffleboard.getTab("HubVision")
+                                        .getLayout("logdata", BuiltInLayouts.kList).withPosition(8, 0)
+                                        .withSize(2, 5).withProperties(Map.of("Label position", "TOP")); // labels)
+
+                        logValues.add("Logged", hubTargetDisplay);
                 }
         }
 

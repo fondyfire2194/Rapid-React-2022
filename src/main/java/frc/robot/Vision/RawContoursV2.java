@@ -14,7 +14,7 @@ import frc.robot.SmartDashboard;
 /** Add your docs here. */
 public class RawContoursV2 {
 
-	static int ZOOM_IMG_WIDTH = 320;
+    static int ZOOM_IMG_WIDTH = 320;
     static int ZOOM_IMG_HEIGHT = 240;
 
     static int NO_ZOOM_IMG_WIDTH = 960;
@@ -63,7 +63,6 @@ public class RawContoursV2 {
     public boolean lookForTarget = true;
 
     private LimeLight m_ll;
-
 
     String horCoord;
 
@@ -134,7 +133,7 @@ public class RawContoursV2 {
             active_IMG_HEIGHT = NO_ZOOM_IMG_WIDTH;
             activeHFOV = NO_ZOOM_CAMERA_VFOV;
             activeVFOV = NO_ZOOM_CAMERA_HFOV;
-            ;
+
         }
 
         active_vpw = 2 * Math.tan(Units.degreesToRadians(activeHFOV / 2));
@@ -161,7 +160,7 @@ public class RawContoursV2 {
      *
      *
      */
-    public void getAreaData() {
+    public double[] getAreaData() {
 
         areas0_1_2[0] = m_ll.get("ta0") * 1000;
 
@@ -176,6 +175,8 @@ public class RawContoursV2 {
         dash.putNumber("CON0O", areas0_1_2[0]);
         dash.putNumber("CON1O", areas0_1_2[1]);
         dash.putNumber("CON2O", areas0_1_2[2]);
+
+        return areas0_1_2;
 
     }
 
@@ -197,11 +198,13 @@ public class RawContoursV2 {
 
     }
 
-    public void getMedianTX() {
+    public double[] getMedianTX() {
 
         medianTx[0] = (int) ltx.calculate(contourTx[0]);
         medianTx[1] = (int) ctx.calculate(contourTx[1]);
         medianTx[2] = (int) rtx.calculate(contourTx[2]);
+
+        return medianTx;
     }
 
     public void getTyValues() {
@@ -212,11 +215,13 @@ public class RawContoursV2 {
 
     }
 
-    public void getMedianTY() {
+    public double[] getMedianTY() {
 
         medianTy[0] = (int) cty.calculate(contourTy[0]);
         medianTy[1] = (int) lty.calculate(contourTy[1]);
         medianTy[2] = (int) rty.calculate(contourTy[2]);
+
+        return medianTy;
     }
 
     public int[] getHubVisionData() {
@@ -236,7 +241,7 @@ public class RawContoursV2 {
         ltoRTyValues[1] = (int) medianTy[1];
         ltoRTyValues[2] = (int) medianTy[2];
 
-        getTyValues(); // TODO Why do we get the values twice?
+        // getTyValues(); // TODO Why do we get the values twice?
 
         int range = contourTx.length;
         int j = 0;
@@ -450,10 +455,20 @@ public class RawContoursV2 {
     public void runTarget() {
 
         targetValue = calculateTargetX();
+
         weightedTargetValue = weightedAverageX();
 
         targetAngle = getTargetAngle(targetValue);
+
         weightedTargetAngle = getTargetAngle(weightedTargetValue);
+    }
+
+    public double getWeightedX(){
+        return weightedTargetValue;
+    }
+
+    public double getWeightedAngle() {
+        return weightedTargetAngle;
     }
 
     public int calculateTargetX() {
@@ -648,29 +663,7 @@ public class RawContoursV2 {
         return String.valueOf(points[0]) + "," + String.valueOf(points[1]);
     }
 
-    boolean getLRAreasEqual(double tol) {
-        return Math.abs(getLeftArea() - getRightArea()) < tol;
-    }
-
-    public boolean getLRTyValuesEqual(double tol) {
-        return Math.abs(getLeftTy() - getRightTy()) < tol;
-    }
-
-    public boolean getTiltOnTarget(int tol) {
-        int tiltAngle = 0;
-        return Math.abs(tiltAngle - getCenterTy()) < tol;
-    }
-
-    public boolean getTurrettOnTarget(int tol) {
-        int turretAngle = 0;
-        return Math.abs(turretAngle - getCenterTx()) < tol;
-    }
-
-    public boolean OKToShoot() {
-        int tol = 1;
-        return getTurrettOnTarget(tol) && getTiltOnTarget(tol) && getLRAreasEqual(tol);
-    }
-
+   
     private void displayData() {
 
         dash.putNumber("Left Area", getLeftArea());
@@ -684,13 +677,6 @@ public class RawContoursV2 {
         dash.putNumber("Left Ty", getLeftTy());
         dash.putNumber("Center Ty", getCenterTy());
         dash.putNumber("Right Ty", getRightTy());
-
-        dash.putBoolean("LRAreasSame", getLRAreasEqual(1));
-        dash.putBoolean("LRTYsSame", getLRTyValuesEqual(5));
-
-        dash.putBoolean("TiltOnTarget", getTiltOnTarget(1));
-        dash.putBoolean("TurretOntargt", getTurrettOnTarget(1));
-        dash.putBoolean("OkToShoot", OKToShoot());
 
     }
 

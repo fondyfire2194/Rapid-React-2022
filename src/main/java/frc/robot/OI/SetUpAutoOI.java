@@ -36,6 +36,8 @@ public class SetUpAutoOI {
 
         public SendableChooser<Command> autoChooser = new SendableChooser<>();
         public SendableChooser<Integer> startDelayChooser = new SendableChooser<>();
+        private boolean useFrontCamera;
+        private boolean useRearCamera;
         public static boolean m_showAuto;
 
         public SetUpAutoOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
@@ -120,28 +122,33 @@ public class SetUpAutoOI {
                                                 .withPosition(5, 0).withSize(3, 4)
                                                 .withProperties(Map.of("Show Crosshair", true,
                                                                 "Show Controls", true, "Rotation", "QUARTER_CW"));
+                                if (useFrontCamera) {
+                                        UsbCamera frontIntakeCamera = CameraServer.startAutomaticCapture("FrontCam", 0);
+                                        frontIntakeCamera.setResolution(320, 240);
+                                        frontIntakeCamera.setFPS(20);
 
-                                UsbCamera frontIntakeCamera = CameraServer.startAutomaticCapture("FrontCam", 0);
-                                frontIntakeCamera.setResolution(320, 240);
-                                frontIntakeCamera.setFPS(20);
+                                        ShuffleboardTab frontFeed = Shuffleboard.getTab("FrontIntakeCamera");
 
-                                ShuffleboardTab frontFeed = Shuffleboard.getTab("FrontIntakeCamera");
+                                        frontFeed.add("FrontCamera", frontIntakeCamera)
+                                                        .withWidget(BuiltInWidgets.kCameraStream)
+                                                        .withPosition(2, 0).withSize(6, 4)
+                                                        .withProperties(Map.of("Show Crosshair", false, "Show Controls",
+                                                                        true));
+                                }
 
-                                frontFeed.add("FrontCamera", frontIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
-                                                .withPosition(2, 0).withSize(6, 4)
-                                                .withProperties(Map.of("Show Crosshair", false, "Show Controls", true));
+                                if (useRearCamera) {
+                                        ShuffleboardTab rearFeed = Shuffleboard.getTab("RearIntakeCamera");
 
-                                ShuffleboardTab rearFeed = Shuffleboard.getTab("RearIntakeCamera");
+                                        UsbCamera rearIntakeCamera = CameraServer.startAutomaticCapture("RearCam", 1);
+                                        rearIntakeCamera.setResolution(320, 240);
+                                        rearIntakeCamera.setFPS(20);
 
-                                UsbCamera rearIntakeCamera = CameraServer.startAutomaticCapture("RearCam", 1);
-                                rearIntakeCamera.setResolution(320, 240);
-                                rearIntakeCamera.setFPS(20);
-
-                                rearFeed.add("RearCamera", rearIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
-                                                .withPosition(2, 0).withSize(6, 4)
-                                                .withProperties(Map.of("Show Crosshair", false, "Show Controls",
-                                                                false));
-
+                                        rearFeed.add("RearCamera", rearIntakeCamera)
+                                                        .withWidget(BuiltInWidgets.kCameraStream)
+                                                        .withPosition(2, 0).withSize(6, 4)
+                                                        .withProperties(Map.of("Show Crosshair", false, "Show Controls",
+                                                                        false));
+                                }
                         }
                 }
 

@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Constants.TiltConstants;
+import frc.robot.OI.HubTargetDisplay;
 import frc.robot.OI.HubVisionShuffleboard;
 import frc.robot.OI.LLVisionShuffleboard;
 import frc.robot.OI.SetUpAutoOI;
@@ -126,6 +127,8 @@ public class RobotContainer {
 
       public Show_Hide_Screens m_sh;
 
+      public HubTargetDisplay m_hts;
+
       public LimeLight m_limelight;
 
       public Compressor m_compressor;
@@ -217,11 +220,11 @@ public class RobotContainer {
             // test configuration with hub vision
             // Show_Hide_Screens.setStates(false, false, true, true);
 
-            // competition configuration
-            Show_Hide_Screens.setStates(true, false, false, false);
+            // // competition configuration
+            // Show_Hide_Screens.setStates(true, false, false, false);
 
             // competition with hub vision configuration
-            // Show_Hide_Screens.setStates(true, false,true, false);
+            Show_Hide_Screens.setStates(true, false, true, false);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intake, m_climber, m_trajectory);
@@ -236,8 +239,10 @@ public class RobotContainer {
                   m_simOI = new SimulationOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                               m_limelight, m_intake, m_climber, m_trajectory);
 
+            m_hts = new HubTargetDisplay(m_limelight, m_rcv2);
+
             m_hvis = new HubVisionShuffleboard(m_limelight, m_rcv2, m_vrt, m_turret, m_tilt, m_shooter,
-                        m_transport, m_compressor);
+                        m_transport, m_compressor, m_hts);
 
             m_llVis = new LLVisionShuffleboard(m_limelight, m_rcv2, m_turret, m_tilt, m_shooter);
 
@@ -414,7 +419,6 @@ public class RobotContainer {
        * @param gamepad
        * @return
        */
-
 
       public Command getJogShooterCommand() {
 
