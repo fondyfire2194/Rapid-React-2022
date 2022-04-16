@@ -105,7 +105,7 @@ public final class Constants {
 
       public final static double WHEELBASE_WIDTH = .69;
 
-      public static double ksVolts = .171;
+      public static double ksVolts = .207;
 
       public static final double kPDriveVeSl = 1.15;
 
@@ -142,17 +142,23 @@ public final class Constants {
        */
 
       public static double kMaxTrajectoryMetersPerSecond = 2;
+
       public static double kMaxTrajectoryAccelerationMetersPerSquared = 5.;
+
       public static double kPDriveVel = 5;
+
       public static double kPickupSpeedMetersPerSecond = 1;
 
       /**
-       * Simulation parameters FAKE!!
+       * Simulation parameters 
        * 
        */
-      public static double kvVoltSecondsPerMeter = 2;
-      public static double kaVoltSecondsSquaredPerMeter = .408;
+      public static double kvVoltSecondsPerMeter = 2.63;//27;//2;
+
+      public static double kaVoltSecondsSquaredPerMeter = .329;//3.48;//.408;
+
       public static final double kvVoltSecondsPerRadian = 3.0;
+
       public static final double kaVoltSecondsSquaredPerRadian = 0.3;
 
       public static final LinearSystem<N2, N2, N2> kDrivetrainPlant = LinearSystemId.identifyDrivetrainSystem(
@@ -170,8 +176,10 @@ public final class Constants {
 
       public static final double MAX_SHOOTER_RPM = 5700;
       public static double kVVoltSecondsPerRotation;
-      public static double kA = .00004;
-      public static double kV = .08;
+      public static double kA = 0.0061592;
+      public static double kV = 0.13622;
+
+      public static double kS = 0.38817;
 
    }
 

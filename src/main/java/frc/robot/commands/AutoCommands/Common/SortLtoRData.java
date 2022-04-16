@@ -13,7 +13,8 @@ import frc.robot.Vision.RawContoursV2;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class SortLtoRData extends InstantCommand {
   private RawContoursV2 m_rcv2;
-private double startTime;
+  private double startTime;
+
   public SortLtoRData(RawContoursV2 rcv2) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_rcv2 = rcv2;
@@ -23,10 +24,11 @@ private double startTime;
   @Override
   public void initialize() {
 
-    m_rcv2.startTime=m_rcv2.getStartTime();
+    m_rcv2.startTime = m_rcv2.getStartTime();
 
-    
-    m_rcv2.getHubVisionData();
+    m_rcv2.sortHubVisionDataLToR();
+
+    m_rcv2.runAngleValues();
 
     SmartDashboard.putNumber("SortCmdTime", m_rcv2.getEndTime(m_rcv2.startTime));
 

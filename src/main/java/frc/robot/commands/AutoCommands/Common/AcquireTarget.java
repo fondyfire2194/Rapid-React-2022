@@ -15,15 +15,27 @@ import frc.robot.subsystems.RevTurretSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AcquireTarget extends SequentialCommandGroup {
 
-        /** Creates a new Acquire target. */
+        /**
+         * Creates a new Acquire target.
+         * 
+         * this will be run when about to shoot. A set of 5 readings will be taken of
+         * tx,ty and areas
+         * 
+         * The medians of these values will be taken and used in future decisions
+         * 
+         * 
+         * 
+         * 
+         * 
+         */
 
         public AcquireTarget(LimeLight ll, RevTiltSubsystem tilt, RevTurretSubsystem turret, RawContoursV2 rcv2) {
                 // Add your commands in the addCommands() call, e.g.
                 // addCommands(new FooCommand(), new BarCommand());
 
-        
+                addCommands(new GetMedianOfContourValues(rcv2),
 
-                addCommands( new GetNumberOfContourValues(rcv2),
+                                new SortLtoRData(rcv2),
 
                                 new CalculateTarget(rcv2));
 

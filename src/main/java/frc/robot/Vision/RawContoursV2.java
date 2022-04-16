@@ -33,8 +33,8 @@ public class RawContoursV2 {
     int active_IMG_WIDTH = NO_ZOOM_IMG_WIDTH;
     int active_IMG_HEIGHT = NO_ZOOM_IMG_HEIGHT;
 
-    double active_vpw;
-    double active_vph;
+    double active_vpw;// view plane width
+    double active_vph;// view plane height
 
     private boolean showDebug = false;
 
@@ -182,11 +182,23 @@ public class RawContoursV2 {
 
     // sort areas by size in
 
-    public void getMedianAreas() {
+    public double[] calcMedianAreas() {
 
         medianAreas[0] = larea.calculate(areas0_1_2[0]);
         medianAreas[1] = carea.calculate(areas0_1_2[1]);
         medianAreas[2] = rarea.calculate(areas0_1_2[2]);
+
+        return medianAreas;
+
+    }
+
+    public double[] getMedianAreas() {
+
+        // medianAreas[0] = larea.calculate(areas0_1_2[0]);
+        // medianAreas[1] = carea.calculate(areas0_1_2[1]);
+        // medianAreas[2] = rarea.calculate(areas0_1_2[2]);
+
+        return medianAreas;
 
     }
 
@@ -198,7 +210,7 @@ public class RawContoursV2 {
 
     }
 
-    public double[] getMedianTX() {
+    public double[] calcMedianTX() {
 
         medianTx[0] = (int) ltx.calculate(contourTx[0]);
         medianTx[1] = (int) ctx.calculate(contourTx[1]);
@@ -207,15 +219,25 @@ public class RawContoursV2 {
         return medianTx;
     }
 
-    public void getTyValues() {
+    public double[] getMedianTX() {
+
+        // medianTx[0] = (int) ltx.calculate(contourTx[0]);
+        // medianTx[1] = (int) ctx.calculate(contourTx[1]);
+        // medianTx[2] = (int) rtx.calculate(contourTx[2]);
+
+        return medianTx;
+    }
+
+    public double[] getTyValues() {
 
         contourTy[0] = (((1 + (m_ll.get(vertCoord + String.valueOf(0)))) / 2) * active_IMG_HEIGHT);
         contourTy[1] = (((1 + (m_ll.get(vertCoord + String.valueOf(1)))) / 2) * active_IMG_HEIGHT);
         contourTy[2] = (((1 + (m_ll.get(vertCoord + String.valueOf(2)))) / 2) * active_IMG_HEIGHT);
 
+        return contourTy;
     }
 
-    public double[] getMedianTY() {
+    public double[] calcMedianTY() {
 
         medianTy[0] = (int) cty.calculate(contourTy[0]);
         medianTy[1] = (int) lty.calculate(contourTy[1]);
@@ -224,24 +246,30 @@ public class RawContoursV2 {
         return medianTy;
     }
 
-    public int[] getHubVisionData() {
+    public double[] getMedianTY() {
+
+        // medianTy[0] = (int) cty.calculate(contourTy[0]);
+        // medianTy[1] = (int) lty.calculate(contourTy[1]);
+        // medianTy[2] = (int) rty.calculate(contourTy[2]);
+
+        return medianTy;
+    }
+
+    public int[] sortHubVisionDataLToR() {
 
         lTRIndex[0] = 0;
         lTRIndex[1] = 1;
         lTRIndex[2] = 2;
 
         double swD;
+
         int swI;
 
-        lToRAreas = medianAreas;
-
-        getTyValues();
+        lToRAreas = getMedianAreas();
 
         ltoRTyValues[0] = (int) medianTy[0];
         ltoRTyValues[1] = (int) medianTy[1];
         ltoRTyValues[2] = (int) medianTy[2];
-
-        // getTyValues(); // TODO Why do we get the values twice?
 
         int range = contourTx.length;
         int j = 0;
@@ -371,39 +399,24 @@ public class RawContoursV2 {
 
     public double[] getTxVpAngles() {
 
-        // dash.putNumberArray("LTXAI", showAsDoubleArray(index));
-
         double[] temp = { 0, 0, 0 };
+
         double x = 0;
+        
         double ax = 0;// rads
 
-        x = xCoordsToVP(medianTx[0]);
+        for (int j = 0; j < 3; j++) {
 
-        ax = Math.atan2(1, x);
+            x = xCoordsToVP(medianTx[j]);
 
-        temp[0] = Units.radiansToDegrees(ax);
+            ax = Math.atan2(1, x);
 
-        x = xCoordsToVP(medianTx[1]);
+            temp[j] = Units.radiansToDegrees(ax);
 
-        ax = Math.atan2(1, x);
+            temp[j] = 90 - temp[j];
 
-        temp[1] = Units.radiansToDegrees(ax);
-
-        x = xCoordsToVP(medianTx[2]);
-
-        ax = Math.atan2(1, x);
-
-        temp[2] = Units.radiansToDegrees(ax);
-
-        temp[0] = 90 - temp[0];
-
-        temp[1] = 90 - temp[1];
-
-        temp[2] = 90 - temp[2];
-
-        temp[0] = Math.round(temp[0] * 1000) / 1000.;
-        temp[1] = Math.round(temp[1] * 1000) / 1000.;
-        temp[2] = Math.round(temp[2] * 1000) / 1000.;
+            temp[j] = Math.round(temp[j] * 1000) / 1000.;
+        }
 
         return temp;
     }
@@ -463,7 +476,7 @@ public class RawContoursV2 {
         weightedTargetAngle = getTargetAngle(weightedTargetValue);
     }
 
-    public double getWeightedX(){
+    public double getWeightedX() {
         return weightedTargetValue;
     }
 
@@ -514,19 +527,26 @@ public class RawContoursV2 {
         double totaArea = leftArea + centerArea + rightArea;
 
         int leftX = (int) medianTx[0];
+
         int centerX = (int) medianTx[1];
+
         int rightX = (int) medianTx[2];
 
         double leftWeight = leftX * leftArea;
+
         double centerWeight = centerX * centerArea;
+
         double rightWeight = rightX * rightArea;
 
         return (int) ((leftWeight + centerWeight + rightWeight) / totaArea);
     }
 
     public double getTargetAngle(int xValue) {
+
         dash.putNumber("taxval", xValue);
+
         double xAsNx = xCoordsToVP(xValue);
+
         dash.putNumber("taxsvpval", xAsNx);
 
         double x = xAsNx * active_vpw / 2f;
@@ -663,7 +683,6 @@ public class RawContoursV2 {
         return String.valueOf(points[0]) + "," + String.valueOf(points[1]);
     }
 
-   
     private void displayData() {
 
         dash.putNumber("Left Area", getLeftArea());

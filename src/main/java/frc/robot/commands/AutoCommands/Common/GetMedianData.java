@@ -11,10 +11,10 @@ import frc.robot.Vision.RawContoursV2;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class GetAreaTXData extends InstantCommand {
+public class GetMedianData extends InstantCommand {
   private RawContoursV2 m_rcv2;
 
-  public GetAreaTXData(RawContoursV2 rcv2) {
+  public GetMedianData(RawContoursV2 rcv2) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_rcv2 = rcv2;
   }
@@ -27,15 +27,19 @@ public class GetAreaTXData extends InstantCommand {
 
     m_rcv2.getAreaData();
 
-    m_rcv2.getMedianAreas();
+    m_rcv2.calcMedianAreas();
 
     m_rcv2.getTxValues();
 
-    m_rcv2.getMedianTX();
+    m_rcv2.calcMedianTX();
 
-    m_rcv2.getHubVisionData();
+    m_rcv2.getTyValues();
 
-    m_rcv2.runAngleValues();
+    m_rcv2.calcMedianTY();
+
+    // m_rcv2.sortHubVisionData();
+
+    // m_rcv2.runAngleValues();
 
     SmartDashboard.putNumber("AreaTxCmdTime", m_rcv2.getEndTime(m_rcv2.startTime));
 

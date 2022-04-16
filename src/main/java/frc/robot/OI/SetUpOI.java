@@ -371,8 +371,8 @@ public class SetUpOI {
 
                         transportValues1.addBoolean("LowerRollerConnected (14)",
                                         () -> transport.lowerRollerMotorConnected);
-                        transportValues1.addBoolean("BlueCargo", () -> transport.getCargoIsBlue());
-                        transportValues1.addBoolean("RedCargo", () -> transport.getCargoIsRed());
+                        transportValues1.addBoolean("BlueCargo", () -> transport.cargoIsBlue);
+                        transportValues1.addBoolean("RedCargo", () -> transport.cargoIsRed);
                         transportValues1.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
 
                 }

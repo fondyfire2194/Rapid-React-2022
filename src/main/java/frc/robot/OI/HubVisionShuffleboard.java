@@ -21,7 +21,8 @@ import frc.robot.Vision.VisionReferenceTarget;
 import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.AutoCommands.Common.CalculateTarget;
 import frc.robot.commands.AutoCommands.Common.CalculateTestTarget;
-import frc.robot.commands.AutoCommands.Common.GetNumberOfContourValues;
+import frc.robot.commands.AutoCommands.Common.GetMedianOfContourValues;
+import frc.robot.commands.AutoCommands.Common.SortLtoRData;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
@@ -58,9 +59,10 @@ public class HubVisionShuffleboard {
                                         .getLayout("Dist", BuiltInLayouts.kList).withPosition(1, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "TOP")); //
 
-                        // contourDist.add("GetVisionData", new GetVisionValues(rcv2));
 
-                        contourDist.add("Get6", new GetNumberOfContourValues(rcv2));
+                        contourDist.add("Get6", new GetMedianOfContourValues(rcv2));
+
+                        contourDist.add("Sort L to R", new SortLtoRData(rcv2));
 
                         contourDist.add("CalcTestTarget", new CalculateTestTarget(vrt));
 

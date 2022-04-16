@@ -31,7 +31,7 @@ public class ShootSequenceDisplay implements Sendable {
         builder.addDoubleProperty("low_roll_rpm", m_transport::getLowerRPM, null);
         builder.addBooleanProperty("cargo_is_blue", m_transport::getCargoIsBlue,
                 null);
-        builder.addBooleanProperty("cargo_is_red", m_transport::getCargoIsRed, null);
+        builder.addBooleanProperty("cargo_is_red", m_transport::getCargoRed, null);
         builder.addBooleanProperty("cargo_wrong_color",
                 m_transport::getCargoAllianceMisMatch, null);
 

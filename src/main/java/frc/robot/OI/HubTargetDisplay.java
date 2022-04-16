@@ -35,6 +35,8 @@ public class HubTargetDisplay implements Sendable {
                 builder.addDoubleArrayProperty("tx_medianVP", m_rcv2::getTxVpAngles, null);
 
                 builder.addDoubleArrayProperty("areas_0_1_2", m_rcv2::getAreaData, null);
+ 
+                builder.addDoubleArrayProperty("areas_median", m_rcv2::getMedianAreas, null);               
 
                 builder.addDoubleProperty("weightedX", m_rcv2::getWeightedX, null);
 

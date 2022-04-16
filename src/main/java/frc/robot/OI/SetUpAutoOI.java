@@ -76,8 +76,8 @@ public class SetUpAutoOI {
                         compet2.addBoolean("Blue Alliance", () -> Robot.getAllianceColorBlue());
                         compet2.addBoolean("Red Alliance", () -> !Robot.getAllianceColorBlue());
                         compet2.addBoolean("WrongColorCargo", () -> transport.wrongCargoColor);
-                        compet2.addBoolean("BlueCargo", () -> transport.getCargoIsBlue());
-                        compet2.addBoolean("RedCargo", () -> transport.getCargoIsRed());
+                        compet2.addBoolean("BlueCargo", () -> transport.cargoIsBlue);
+                        compet2.addBoolean("RedCargo", () -> transport.cargoIsRed);
                         compet2.addBoolean("TwoCargoOnBoard", () -> intake.twoCargoOnBoard);
                         compet2.addBoolean("FrontIntake", () -> intake.useFrontIntake);
 

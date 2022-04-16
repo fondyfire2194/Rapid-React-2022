@@ -133,6 +133,7 @@ public class RevDrivetrain extends SubsystemBase {
         mLeadRight.setOpenLoopRampRate(1);
 
         mGyro = new AHRS();
+        
         mOdometry = new DifferentialDriveOdometry(mGyro.getRotation2d(), new Pose2d(0, 0, new Rotation2d()));
         m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);

@@ -79,6 +79,10 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean latchCargoAtShoot;
 
+  public boolean cargoIsBlue;
+
+  public boolean cargoIsRed;
+
   public CargoTransportSubsystem() {
 
     m_lowerRollerMotor = new CANSparkMaxWithSim(CANConstants.LOWER_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -157,7 +161,9 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   public void positionLowerRoller(double distance) {
+
     m_lowerPID.setReference(distance, ControlType.kPosition, VELOCITY_SLOT);
+
   }
 
   public void setLowerRollerBrakeOn(boolean on) {
@@ -182,9 +188,23 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean getCargoAllianceMisMatch() {
 
-    return getCargoAtShoot() && ((getAllianceBlue() && getCargoIsRed())
+    cargoIsBlue = getCargoIsBlue();
 
-        || (!getAllianceBlue() && getCargoIsBlue()));
+    cargoIsRed = getCargoIsRed();
+
+    return getCargoAtShoot() && ((getAllianceBlue() && cargoIsRed)
+
+        || (!getAllianceBlue() && cargoIsBlue));
+  }
+
+  public boolean getCargoRed() {
+
+    return cargoIsRed;
+  }
+
+  public boolean getCargoBlue() {
+    
+    return cargoIsBlue;
   }
 
   public void releaseCargo() {
@@ -270,8 +290,8 @@ public class CargoTransportSubsystem extends SubsystemBase {
     builder.addBooleanProperty("cargo_at_shoot", this::getCargoAtShoot, null);
     builder.addDoubleProperty("low_roll_out", this::getLowerRoller, null);
     builder.addDoubleProperty("low_roll_rpm", this::getLowerRPM, null);
-    builder.addBooleanProperty("cargo_is_blue", this::getCargoIsBlue, null);
-    builder.addBooleanProperty("cargo_is_red", this::getCargoIsRed, null);
+    builder.addBooleanProperty("cargo_is_blue", this::getCargoBlue, null);
+    builder.addBooleanProperty("cargo_is_red", this::getCargoRed, null);
     builder.addBooleanProperty("cargo_wrong_color", this::getCargoAllianceMisMatch, null);
 
   }
