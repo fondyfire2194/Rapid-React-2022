@@ -26,7 +26,7 @@ public class RawContoursV2 {
     static double ZOOM_CAMERA_HFOV = NO_ZOOM_CAMERA_HFOV / 2;
     static double ZOOM_CAMERA_VFOV = NO_ZOOM_CAMERA_VFOV / 2;
 
-    static boolean cameraAt90 = true;
+    public static boolean cameraAt90 = true;
 
     SmartDashboard dash = new SmartDashboard();
 
@@ -115,6 +115,12 @@ public class RawContoursV2 {
 
     public double activeVFOV;
 
+    public double leftWeight;
+
+    public double centerWeight;
+
+    public double rightWeight;
+
     public RawContoursV2(LimeLight ll) {
 
         m_ll = ll;
@@ -180,7 +186,10 @@ public class RawContoursV2 {
 
     }
 
-    // sort areas by size in
+    public double[] getltorareas() {
+
+        return lToRAreas;
+    }
 
     public double[] calcMedianAreas() {
 
@@ -402,7 +411,7 @@ public class RawContoursV2 {
         double[] temp = { 0, 0, 0 };
 
         double x = 0;
-        
+
         double ax = 0;// rads
 
         for (int j = 0; j < 3; j++) {
@@ -532,13 +541,21 @@ public class RawContoursV2 {
 
         int rightX = (int) medianTx[2];
 
-        double leftWeight = leftX * leftArea;
+        leftWeight = leftX * leftArea;
 
-        double centerWeight = centerX * centerArea;
+        centerWeight = centerX * centerArea;
 
-        double rightWeight = rightX * rightArea;
+        rightWeight = rightX * rightArea;
 
         return (int) ((leftWeight + centerWeight + rightWeight) / totaArea);
+    }
+
+    public double[] getltorWeights() {
+        double[] temp = { 0, 0, 0 };
+        temp[0] = leftWeight;
+        temp[1] = centerWeight;
+        temp[2] = rightWeight;
+        return temp;
     }
 
     public double getTargetAngle(int xValue) {
@@ -677,6 +694,13 @@ public class RawContoursV2 {
         return String.valueOf(getLeftTyAngle() + " ," + String.valueOf(getCenterTyAngle()) + " ,"
                 + String.valueOf(getRightTyAngle()));
 
+    }
+
+    public double getSmartTX() {
+        if (!cameraAt90)
+            return m_ll.get("tx");
+        else
+            return m_ll.get("ty");
     }
 
     public String getXYPoints(double[] points) {

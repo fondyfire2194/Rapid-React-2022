@@ -8,6 +8,7 @@ import java.util.Map;
 
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -42,7 +43,7 @@ public class HubVisionShuffleboard {
 
                         ShuffleboardLayout contourPX = Shuffleboard.getTab("HubVision")
                                         .getLayout("allXY", BuiltInLayouts.kList).withPosition(0, 0)
-                                        .withSize(1, 4).withProperties(Map.of("Label position", "TOP")); //
+                                        .withSize(2, 4).withProperties(Map.of("Label position", "TOP")); //
 
                         contourPX.addString("LtoRTx", () -> rcv2.getLCRTx());
                         contourPX.addString("LtoRTy", () -> rcv2.getMedLCRTy());
@@ -52,13 +53,18 @@ public class HubVisionShuffleboard {
                         contourPX.addString("LtoRTxMedAngle", () -> rcv2.getLCRTxMedAngle());
 
                         // contourPX.addNumber("AreaRatLR", () -> rcv2.getLRAreaRatio());
-                        contourPX.addNumber("TX", () -> ll.get("tx"));
-                        contourPX.addNumber("TY", () -> ll.get("ty"));
+
+                        if (!RawContoursV2.cameraAt90) {
+                                contourPX.addNumber("TX", () -> ll.get("tx"));
+                                contourPX.addNumber("TY", () -> ll.get("ty"));
+                        } else {
+                                contourPX.addNumber("TX", () -> ll.get("ty"));
+                                contourPX.addNumber("TY", () -> ll.get("tx"));
+                        }
 
                         ShuffleboardLayout contourDist = Shuffleboard.getTab("HubVision")
-                                        .getLayout("Dist", BuiltInLayouts.kList).withPosition(1, 0)
-                                        .withSize(2, 4).withProperties(Map.of("Label position", "TOP")); //
-
+                                        .getLayout("Dist", BuiltInLayouts.kList).withPosition(2, 0)
+                                        .withSize(1, 4).withProperties(Map.of("Label position", "TOP")); //
 
                         contourDist.add("Get6", new GetMedianOfContourValues(rcv2));
 
@@ -91,32 +97,32 @@ public class HubVisionShuffleboard {
 
                 }
 
-                if (m_showHubVision) {
-                        ShuffleboardLayout targetValues = Shuffleboard.getTab("HubVision")
-                                        .getLayout("bullseye", BuiltInLayouts.kList).withPosition(4, 0)
-                                        .withSize(1, 4).withProperties(Map.of("Label position", "TOP")); // labels)
+                // ShuffleboardLayout targetValues = Shuffleboard.getTab("HubVision")
+                //                 .getLayout("bullseye", BuiltInLayouts.kList).withPosition(4, 0)
+                //                 .withSize(1, 4).withProperties(Map.of("Label position", "TOP")); // labels)
 
-                        targetValues.addNumber("AreaX", () -> rcv2.targetValue);
-                        targetValues.addNumber("AreaAngle", () -> rcv2.targetAngle);
+                // targetValues.addNumber("AreaX", () -> rcv2.targetValue);
+                // targetValues.addNumber("AreaAngle", () -> rcv2.targetAngle);
 
-                        targetValues.addNumber("WeightedX", () -> rcv2.weightedTargetValue);
-                        targetValues.addNumber("WeightedAngle", () -> rcv2.weightedTargetAngle);
-                        targetValues.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
-                        HttpCamera llght = new HttpCamera("CoCam",
-                                        "http://10.21.94.11:5800/stream.mjpg");
+                // targetValues.addNumber("WeightedX", () -> rcv2.weightedTargetValue);
+                // targetValues.addNumber("WeightedAngle", () -> rcv2.weightedTargetAngle);
+                // targetValues.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
 
-                        ShuffleboardTab llFeed = Shuffleboard.getTab("HubVision");
+                ShuffleboardTab llFeed1 = Shuffleboard.getTab("HubVision");
 
-                        llFeed.add("Limelight-90", llght).withWidget(BuiltInWidgets.kCameraStream)
-                                        .withPosition(5, 0).withSize(3, 3)
+                if (RobotBase.isReal()) {
+
+                        llFeed1.addCamera("LL", "CoproCam", "http://10.21.94.11:5800/stream.mjpg")
+                                        .withPosition(4, 0).withSize(3, 4)
                                         .withProperties(Map.of("Show Crosshair", true,
                                                         "Show Controls", true, "Rotation", "QUARTER_CW"));
 
                         ShuffleboardLayout logValues = Shuffleboard.getTab("HubVision")
-                                        .getLayout("logdata", BuiltInLayouts.kList).withPosition(8, 0)
-                                        .withSize(2, 5).withProperties(Map.of("Label position", "TOP")); // labels)
+                                        .getLayout("logdata", BuiltInLayouts.kList).withPosition(7, 0)
+                                        .withSize(3, 5).withProperties(Map.of("Label position", "TOP")); // labels)
 
                         logValues.add("Logged", hubTargetDisplay);
+
                 }
         }
 

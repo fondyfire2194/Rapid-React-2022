@@ -391,6 +391,10 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     }
 
+    public double getTargetDistance(){
+        return calculatedCameraDistance;
+    }
+
     public double getBatteryVoltage() {
         return pdp.getVoltage();
     }

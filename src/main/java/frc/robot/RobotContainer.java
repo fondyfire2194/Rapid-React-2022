@@ -239,7 +239,7 @@ public class RobotContainer {
                   m_simOI = new SimulationOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                               m_limelight, m_intake, m_climber, m_trajectory);
 
-            m_hts = new HubTargetDisplay(m_limelight, m_rcv2);
+            m_hts = new HubTargetDisplay(m_limelight, m_rcv2, m_shooter, m_turret);
 
             m_hvis = new HubVisionShuffleboard(m_limelight, m_rcv2, m_vrt, m_turret, m_tilt, m_shooter,
                         m_transport, m_compressor, m_hts);
