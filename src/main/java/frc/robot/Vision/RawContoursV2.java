@@ -704,6 +704,7 @@ public class RawContoursV2 {
     }
 
     public String getXYPoints(double[] points) {
+        
         return String.valueOf(points[0]) + "," + String.valueOf(points[1]);
     }
 

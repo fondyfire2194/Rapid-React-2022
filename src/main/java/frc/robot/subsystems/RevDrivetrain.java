@@ -90,6 +90,10 @@ public class RevDrivetrain extends SubsystemBase {
     private PIDController mleftPID = new PIDController(kP, kI, kD);
     private PIDController mrightPID = new PIDController(kP, kI, kD);
 
+    public double kTurnP = .05;
+    public double kTurnI = 0.;
+    public double kTurnD = 0.;
+
     private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts,
             DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter);
 
@@ -133,7 +137,7 @@ public class RevDrivetrain extends SubsystemBase {
         mLeadRight.setOpenLoopRampRate(1);
 
         mGyro = new AHRS();
-        
+
         mOdometry = new DifferentialDriveOdometry(mGyro.getRotation2d(), new Pose2d(0, 0, new Rotation2d()));
         m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
@@ -384,6 +388,8 @@ public class RevDrivetrain extends SubsystemBase {
         } else {
             m_leftEncodersSim.setPosition(0);
             m_rightEncodersSim.setPosition(0);
+            m_dts.setPose(new Pose2d());
+                
         }
 
     }
@@ -534,6 +540,12 @@ public class RevDrivetrain extends SubsystemBase {
 
         kIz = Pref.getPref("dRKiz");
 
+        kTurnP = Pref.getPref("dRTurnkP");
+
+        kTurnI = Pref.getPref("dRTurnkI");
+
+        kTurnD = Pref.getPref("dRTurnkD");
+
         if (RobotBase.isSimulation()) {
 
             kP = .25;
@@ -592,7 +604,5 @@ public class RevDrivetrain extends SubsystemBase {
         builder.addDoubleProperty("gyro_angle", this::getYaw, null);
 
     }
-
-    
 
 }

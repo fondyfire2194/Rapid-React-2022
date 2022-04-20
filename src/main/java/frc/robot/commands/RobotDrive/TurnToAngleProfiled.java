@@ -27,7 +27,7 @@ public class TurnToAngleProfiled extends ProfiledPIDCommand {
    */
   public TurnToAngleProfiled(RevDrivetrain drive, double targetAngleDegrees) {
     super(
-        new ProfiledPIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD,
+        new ProfiledPIDController(drive.kTurnP, drive.kTurnI, drive.kTurnD,
             new TrapezoidProfile.Constraints(DriveConstants.kMaxTurnRateDegPerS,
                 DriveConstants.kMaxTurnAccelerationDegPerSSquared)),
         // Close loop on heading

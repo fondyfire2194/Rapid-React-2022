@@ -50,17 +50,15 @@ public class RunActiveIntake extends CommandBase {
 
       loopctr++;
 
-    if (DriverStation.isTeleop() && m_intake.useFrontIntake)
+    if (DriverStation.isTeleop() && m_intake.useFrontIntake && m_intake.useFrontCamera)
 
       Shuffleboard.selectTab("FrontIntakeCamera");
 
-    if (DriverStation.isTeleop() && !m_intake.useFrontIntake)
+    if (DriverStation.isTeleop() && !m_intake.useFrontIntake && m_intake.useRearCamera)
 
       Shuffleboard.selectTab("RearIntakeCamera");
 
-    
-    
-      m_intake.lowerActiveArm();
+    m_intake.lowerActiveArm();
 
     // m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
 

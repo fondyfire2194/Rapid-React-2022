@@ -218,13 +218,13 @@ public class RobotContainer {
             // test configuration
             // Show_Hide_Screens.setStates(false, false, false, true);
             // test configuration with hub vision
-            // Show_Hide_Screens.setStates(false, false, true, true);
+            Show_Hide_Screens.setStates(false, true, true, true);
 
             // // competition configuration
             // Show_Hide_Screens.setStates(true, false, false, false);
 
             // competition with hub vision configuration
-            Show_Hide_Screens.setStates(true, false, true, false);
+            // Show_Hide_Screens.setStates(true, false, true, false);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intake, m_climber, m_trajectory);

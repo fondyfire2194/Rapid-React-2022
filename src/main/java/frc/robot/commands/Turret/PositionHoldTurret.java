@@ -65,12 +65,16 @@ public class PositionHoldTurret extends CommandBase {
 
     if (targetSeen && m_turret.validTargetSeen) {
 
-      cameraHorizontalError = m_limelight.getdegRotationToTarget();
+      // cameraHorizontalError = m_limelight.getdegRotationToTarget();
+
+      cameraHorizontalError = m_limelight.getdegVerticalToTarget();
 
       m_turret.adjustedCameraError = cameraHorizontalError
+
           - (m_turret.targetHorizontalOffset + m_turret.driverHorizontalOffsetDegrees + m_turret.testHorOffset);
 
       m_limelight.setHorizontalOffset(
+
           +(m_turret.targetHorizontalOffset + m_turret.driverHorizontalOffsetDegrees + m_turret.testHorOffset));
 
     } else {
@@ -98,14 +102,15 @@ public class PositionHoldTurret extends CommandBase {
       visionFoundCounter = 0;
       cameraHorizontalError = 0;
     }
-   
+
     if (!m_turret.validTargetSeen) {
 
       m_turret.goToPositionMotionMagic(m_turret.targetAngle);
     }
 
     else {
-      m_turret.lockTurretToVision(lastHorizontalError);
+      m_turret.lockTurretToVision(cameraHorizontalError);
+
       m_turret.targetAngle = m_turret.getAngle();
     }
   }

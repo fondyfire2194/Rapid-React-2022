@@ -43,32 +43,27 @@ public class PositionStraight extends CommandBase {
   public void execute() {
     double yawKp = 0;
     loopCtr++;
+
     if (RobotBase.isReal())
 
       yawKp = Pref.getPref("dRStKp");
 
     else
 
-      yawKp = .015;
+      yawKp = .0;
 
     leftOut = m_drive.driveDistance(m_endpoint)[0];
 
     rightOut = m_drive.driveDistance(m_endpoint)[1];
+
     double yawError = 0;
 
     double yawCorrection = 0;
-
-    if (RobotBase.isReal()) {
 
       yawError = m_drive.getYaw() - m_startAngle;
 
       yawCorrection = yawError * yawKp;
 
-    }
-
-    else
-
-      yawCorrection = 0;
 
     if (leftOut > m_max)
       leftOut = m_max;

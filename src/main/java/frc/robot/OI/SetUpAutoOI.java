@@ -36,8 +36,7 @@ public class SetUpAutoOI {
 
         public SendableChooser<Command> autoChooser = new SendableChooser<>();
         public SendableChooser<Integer> startDelayChooser = new SendableChooser<>();
-        private boolean useFrontCamera;
-        private boolean useRearCamera;
+     
         public static boolean m_showAuto;
 
         public SetUpAutoOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
@@ -122,7 +121,7 @@ public class SetUpAutoOI {
                                                 .withPosition(5, 0).withSize(3, 4)
                                                 .withProperties(Map.of("Show Crosshair", true,
                                                                 "Show Controls", true, "Rotation", "QUARTER_CW"));
-                                if (useFrontCamera) {
+                                if (intake.useFrontCamera) {
                                         UsbCamera frontIntakeCamera = CameraServer.startAutomaticCapture("FrontCam", 0);
                                         frontIntakeCamera.setResolution(320, 240);
                                         frontIntakeCamera.setFPS(20);
@@ -136,7 +135,7 @@ public class SetUpAutoOI {
                                                                         true));
                                 }
 
-                                if (useRearCamera) {
+                                if (intake.useRearCamera) {
                                         ShuffleboardTab rearFeed = Shuffleboard.getTab("RearIntakeCamera");
 
                                         UsbCamera rearIntakeCamera = CameraServer.startAutomaticCapture("RearCam", 1);

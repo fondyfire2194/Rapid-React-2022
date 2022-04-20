@@ -44,6 +44,7 @@ import frc.robot.commands.Turret.ClearTurFaults;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.ResetTurretAngle;
 import frc.robot.commands.Turret.StopTurret;
+import frc.robot.commands.Vision.UseVision;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -106,22 +107,29 @@ public class SetUpOI {
                         intakeValues.addBoolean("CargoAtRearIn", () -> intake.getCargoAtRear());
                         intakeValues.addBoolean("CargoAtFrontIn", () -> intake.getCargoAtFront());
                         intakeActions.add("IntakeCmd", intake);
-                        UsbCamera frontIntakeCamera = CameraServer.startAutomaticCapture("FrontCam", 0);
 
-                        ShuffleboardTab frontFeed = Shuffleboard.getTab("FrontIntakeCamera");
+                        if (intake.useFrontCamera) {
+                                UsbCamera frontIntakeCamera = CameraServer.startAutomaticCapture("FrontCam", 0);
 
-                        frontFeed.add("FrontCamera", frontIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
-                                        .withPosition(2, 0).withSize(6, 4)
-                                        .withProperties(Map.of("Show Crosshair", false, "Show Controls", true));
+                                ShuffleboardTab frontFeed = Shuffleboard.getTab("FrontIntakeCamera");
 
-                        ShuffleboardTab rearFeed = Shuffleboard.getTab("RearIntakeCamera");
+                                frontFeed.add("FrontCamera", frontIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
+                                                .withPosition(2, 0).withSize(6, 4)
+                                                .withProperties(Map.of("Show Crosshair", false, "Show Controls", true));
+                        }
 
-                        UsbCamera rearIntakeCamera = CameraServer.startAutomaticCapture("RearCam", 1);
+                        if (intake.useRearCamera) {
 
-                        rearFeed.add("RearCamera", rearIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
-                                        .withPosition(2, 0).withSize(6, 4)
-                                        .withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
+                                ShuffleboardTab rearFeed = Shuffleboard.getTab("RearIntakeCamera");
 
+                                UsbCamera rearIntakeCamera = CameraServer.startAutomaticCapture("RearCam", 1);
+
+                                rearFeed.add("RearCamera", rearIntakeCamera).withWidget(BuiltInWidgets.kCameraStream)
+                                                .withPosition(2, 0).withSize(6, 4)
+                                                .withProperties(Map.of("Show Crosshair", false, "Show Controls",
+                                                                false));
+
+                        }
                 }
 
                 if (showTurret) {
@@ -141,8 +149,9 @@ public class SetUpOI {
                         turretCommands.add("ClearFaults", new ClearTurFaults(turret));
                         turretCommands.add("Cmd", turret);
                         turretCommands.addNumber("Faults", () -> turret.getFaults());
-                        turretCommands.addString("To Jog", () -> "SetupXBox Btn A left X");
-                        turretCommands.addString("OvrRideSoftLim", () -> "Setup RightBmpr");
+                        
+                        turretCommands.add("Vision On", new UseVision(limelight, true));
+                        turretCommands.add("Vision Off", new UseVision(limelight, false));
 
                         ShuffleboardLayout turretValues = Shuffleboard.getTab("SetupTurret")
                                         .getLayout("TurretValues", BuiltInLayouts.kList).withPosition(2, 0)
@@ -496,7 +505,7 @@ public class SetUpOI {
 
                         canBus.addBoolean("FrontIntakeConnected (13)", () -> intake.frontIntakeMotorConnected);
                         canBus.addBoolean("RearIntakeConnected (14)", () -> intake.rearIntakeMotorConnected);
-              
+
                 }
         }
 
