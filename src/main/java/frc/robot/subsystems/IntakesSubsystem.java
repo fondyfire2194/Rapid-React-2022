@@ -290,17 +290,4 @@ public class IntakesSubsystem extends SubsystemBase {
     m_rearIntakeMotor.configPeakCurrentLimit(amps);
   }
 
-  @Override
-  public void initSendable(SendableBuilder builder) {
-    builder.setSmartDashboardType("Intake");
-    builder.addBooleanProperty("cargo_at_front", this::getCargoAtFront, null);
-    builder.addBooleanProperty("cargo_at_rear", this::getCargoAtRear, null);
-    builder.addDoubleProperty("front_out", this::getFrontMotor, null);
-    builder.addDoubleProperty("rear_out", this::getRearMotor, null);
-    builder.addBooleanProperty("front_arm_down", this::getFrontArmLowered, null);
-    builder.addBooleanProperty("front_arm_up", this::getFrontArmRaised, null);
-    builder.addBooleanProperty("rear_arm_down", this::getRearArmLowered, null);
-    builder.addBooleanProperty("rear_arm_up", this::getRearArmRaised, null);
-
-  }
 }

@@ -277,7 +277,7 @@ public class SetUpOI {
                         tiltValues.addNumber("VertDegToTarget", () -> limelight.getdegVerticalToTarget());
 
                         ShuffleboardLayout tiltValues2 = Shuffleboard.getTab("SetupTilt")
-                                        .getLayout("States", BuiltInLayouts.kGrid).withPosition(4, 0).withSize(3, 2)
+                                        .getLayout("States", BuiltInLayouts.kGrid).withPosition(4, 0).withSize(2, 3)
                                         .withProperties(Map.of("Label position", "TOP"));
 
                         tiltValues2.addBoolean("InPosition", () -> tilt.atTargetAngle());
@@ -286,24 +286,48 @@ public class SetUpOI {
                         tiltValues2.addBoolean("OnTopLS", () -> tilt.m_forwardLimit.isPressed());
 
                         tiltValues2.addBoolean("PosResetDone", () -> tilt.positionResetDone);
-                        tiltValues2.addBoolean("OKTune", () -> (tilt.tuneOn && tilt.lastTuneOn));
+                        tiltValues2.addBoolean("OKTune", () -> (tilt.tuneOnv && tilt.lastTuneOnv));
                         tiltValues2.addBoolean("Connected (9)", () -> tilt.tiltMotorConnected);
                         tiltValues2.addBoolean("+SWLimit", () -> tilt.onPlusSoftwareLimit());
                         tiltValues2.addBoolean("-SWLimit", () -> tilt.onMinusSoftwareLimit());
                         tiltValues2.addBoolean("SWLimitEn", () -> tilt.getSoftwareLimitsEnabled());
 
-                        ShuffleboardLayout tiltGains = Shuffleboard.getTab("SetupTilt")
+                        ShuffleboardLayout tiltVelGains = Shuffleboard.getTab("SetupTilt")
 
-                                        .getLayout("PosGains", BuiltInLayouts.kList).withPosition(7, 0).withSize(1, 3)
+                                        .getLayout("VelGains", BuiltInLayouts.kList).withPosition(6, 0).withSize(1, 3)
+                                        .withProperties(Map.of("Label position", "LEFT")); // labels
+
+                        tiltVelGains.addNumber("tiVKff", () -> Pref.getPref("tiVKff"));
+                        tiltVelGains.addNumber("tiVKp", () -> Pref.getPref("tiVKp"));
+                        tiltVelGains.addNumber("tiVKi", () -> Pref.getPref("tiVKi"));
+                        tiltVelGains.addNumber("tiVKd", () -> Pref.getPref("tiVKd"));
+                        tiltVelGains.addNumber("tiVKiz", () -> Pref.getPref("tiVKiz"));
+                        tiltVelGains.addNumber("MaxAcc", () -> tilt.maxAccset);
+                        tiltVelGains.addNumber("MaxV", () -> tilt.maxVelset);
+                        tiltVelGains.addNumber("tiVTune", () -> Pref.getPref("tiVTune"));
+
+                        ShuffleboardLayout tiltVactGains = Shuffleboard.getTab("SetupTilt")
+
+                                        .getLayout("VActGains", BuiltInLayouts.kList).withPosition(7, 0).withSize(1, 2)
+                                        .withProperties(Map.of("Label position", "LEFT")); // labels
+
+                        tiltVactGains.addNumber("FF", () -> tilt.ffsetv);
+                        tiltVactGains.addNumber("P", () -> tilt.psetv);
+                        tiltVactGains.addNumber("D", () -> tilt.dsetv);
+                        tiltVactGains.addNumber("I", () -> tilt.isetv);
+                        tiltVactGains.addNumber("IZ", () -> tilt.izsetv);
+
+                      
+
+                        ShuffleboardLayout tiltPosGains = Shuffleboard.getTab("SetupTilt")
+                                        .getLayout("PosGains", BuiltInLayouts.kList)
+                                        .withPosition(8, 0).withSize(1, 2)
                                         .withProperties(Map.of("Label position", "LEFT"));
-
-                        tiltGains.addNumber("FF", () -> tilt.ffset);
-                        tiltGains.addNumber("P", () -> tilt.pset);
-                        tiltGains.addNumber("I", () -> tilt.iset);
-                        tiltGains.addNumber("D", () -> tilt.dset);
-                        tiltGains.addNumber("IZ", () -> tilt.izset);
-                        tiltGains.addNumber("MaxAcc", () -> tilt.maxAccset);
-                        tiltGains.addNumber("MaxV", () -> tilt.maxVelset);
+                        tiltPosGains.addNumber("tiPkp", () -> Pref.getPref("tiPkp"));
+                        tiltPosGains.addNumber("tiPki", () -> Pref.getPref("tiPki"));
+                        tiltPosGains.addNumber("tiPkd", () -> Pref.getPref("tiPkd"));
+                        tiltPosGains.addNumber("tiPkiz", () -> Pref.getPref("tiPkiz"));
+                        tiltPosGains.addNumber("tiPTune", () -> Pref.getPref("tiPTune"));
 
                 }
 

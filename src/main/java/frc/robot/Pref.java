@@ -33,22 +33,30 @@ public class Pref {
 
   static {
 
-    // Tilt smart motion
-    prefDict.put("tIKff", .0);
-    prefDict.put("tIKp", .4);
-    prefDict.put("tIKi", .0005);
-    prefDict.put("tIKd", 0.6);
-    prefDict.put("tIKiz", 0.75);
-    prefDict.put("tIMaxV", 550.);// deg per sec
-    prefDict.put("tIMaxA", 150.);// deg per sec/sec
-    prefDict.put("tITune", 0.);
+    // Tilt velocity
+    prefDict.put("tiVKff", .0);
+    prefDict.put("tiVKp", .4);
+    prefDict.put("tiVKi", .0005);
+    prefDict.put("tiVKd", 0.6);
+    prefDict.put("tiVKiz", 0.75);
+    prefDict.put("tiVMaxV", 550.);// deg per sec
+    prefDict.put("tiVMaxA", 150.);// deg per sec/sec
+    prefDict.put("tiVTune", 0.);
+
+    // tilt position
+
+    prefDict.put("tiPkp", .001);
+    prefDict.put("tiPki", .00);
+    prefDict.put("tiPkd", 0.);
+    prefDict.put("tiPkiz", 0.9);
+    prefDict.put("tiPTune", 0.);
 
     // Turret velocity
 
     prefDict.put("tuVKff", 0.);
     prefDict.put("tuVKp", .02);
-    prefDict.put("tuVKi", .00001);
-    prefDict.put("tuVKd", 2.);
+    prefDict.put("tuVKi", .0000);
+    prefDict.put("tuVKd", 0.);
     prefDict.put("tuVKiz", 1.5);
 
     prefDict.put("tuVMaxV", 50.);// deg/sec
@@ -58,7 +66,7 @@ public class Pref {
 
     // Turret Position
 
-    prefDict.put("tuPkp", 16.0);
+    prefDict.put("tuPkp", .001);
     prefDict.put("tuPki", .001);
     prefDict.put("tuPkd", 0.);
     prefDict.put("tuPkiz", 0.9);
@@ -66,8 +74,8 @@ public class Pref {
 
     // Turret Lock
 
-    prefDict.put("tuLkp", 16.0);
-    prefDict.put("tuLki", .001);
+    prefDict.put("tuLkp", .001);
+    prefDict.put("tuLki", .00);
     prefDict.put("tuLkd", 0.);
     prefDict.put("tuLkiz", 0.9);
     prefDict.put("tuLTune", 0.);

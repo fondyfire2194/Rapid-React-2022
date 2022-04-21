@@ -542,14 +542,4 @@ public class RevShooterSubsystem extends SubsystemBase {
         driverOKShoot = false;
     }
 
-    @Override
-    public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Shooter");
-        builder.addBooleanProperty("shoot_at_speed", this::getShooterAtSpeed, null);
-        builder.addBooleanProperty("is_shooting", this::getShooterIsShooting, null);
-        builder.addDoubleProperty("shoot_rpm", this::getRPM, null);
-        builder.addDoubleProperty("top_roll_rpm", this::getTopRPM, null);
-        builder.addBooleanProperty("top_at_speed", this::getTopRollerAtSpeed, null);
-
-    }
 }

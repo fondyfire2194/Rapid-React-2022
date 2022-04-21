@@ -591,18 +591,5 @@ public class RevDrivetrain extends SubsystemBase {
         return new DifferentialDriveWheelSpeeds(getLeftRate(), getRightRate());
     }
 
-    @Override
-    public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Drive_train");
-        builder.addBooleanProperty("in_position", this::getInPosition, null);
-        builder.addBooleanProperty("in_pos_left", this::getInPositionLeft, null);
-        builder.addBooleanProperty("in_pos_right", this::getInPositionRight, null);
-        builder.addDoubleProperty("left_posn", this::getLeftDistance, null);
-        builder.addDoubleProperty("right_posn", this::getRightDistance, null);
-        builder.addDoubleProperty("left_vel_mps", this::getLeftRate, null);
-        builder.addDoubleProperty("right_vel_mps", this::getRightRate, null);
-        builder.addDoubleProperty("gyro_angle", this::getYaw, null);
-
-    }
 
 }

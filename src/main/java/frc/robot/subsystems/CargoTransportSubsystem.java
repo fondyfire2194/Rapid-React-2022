@@ -284,15 +284,4 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   }
 
-  @Override
-  public void initSendable(SendableBuilder builder) {
-    builder.setSmartDashboardType("Cargo_transport");
-    builder.addBooleanProperty("cargo_at_shoot", this::getCargoAtShoot, null);
-    builder.addDoubleProperty("low_roll_out", this::getLowerRoller, null);
-    builder.addDoubleProperty("low_roll_rpm", this::getLowerRPM, null);
-    builder.addBooleanProperty("cargo_is_blue", this::getCargoBlue, null);
-    builder.addBooleanProperty("cargo_is_red", this::getCargoRed, null);
-    builder.addBooleanProperty("cargo_wrong_color", this::getCargoAllianceMisMatch, null);
-
-  }
 }

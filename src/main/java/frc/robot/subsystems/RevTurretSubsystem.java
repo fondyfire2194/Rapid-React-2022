@@ -74,7 +74,6 @@ public class RevTurretSubsystem extends SubsystemBase {
     public boolean validTargetSeen;
     public double adjustedCameraError;
 
-   
     public boolean tuneOnv = false;
     public boolean lastTuneOnv;
 
@@ -118,7 +117,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     LinearSystem<N2, N1, N1> m_turretPosition = LinearSystemId
             .identifyPositionSystem(TurretConstants.kVVoltSecondsPerRotation, TurretConstants.kA);
     LinearSystemSim<N2, N1, N1> m_turretPositionSim = new LinearSystemSim<>(m_turretPosition);
- 
+
     public RevTurretSubsystem() {
         m_motor = new CANSparkMaxWithSim(CANConstants.TURRET_ROTATE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
         mEncoder = m_motor.getEncoder();
@@ -228,19 +227,15 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         double pidout = 0;
 
-        double degPerSec = 0;
-
         pidout = mPosController.calculate(getAngle(), degrees);
 
-        if (pidout > kMaxOutput)
-            pidout = kMaxOutput;
+        if (RobotBase.isReal())
 
-        if (pidout < kMinOutput)
-            pidout = kMinOutput;
+            runAtVelocity(-pidout * maxVel);
 
-        degPerSec = pidout * maxVel;
+        else
 
-        runAtVelocity(degPerSec);
+            moveManually(-pidout);
     }
 
     public double getTargetHorOffset() {
@@ -251,14 +246,6 @@ public class RevTurretSubsystem extends SubsystemBase {
     public void lockTurretToVision(double cameraError) {
 
         lockPIDOut = mLockController.calculate(cameraError, 0);
-
-        double limit = .25;
-
-        if (lockPIDOut > limit)
-            lockPIDOut = limit;
-
-        if (lockPIDOut < -limit)
-            lockPIDOut = -limit;
 
         runAtVelocity(lockPIDOut * maxVel);
 
@@ -422,18 +409,12 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     private void setFF_MaxOuts() {
-        kMinOutput = -.5;
-        kMaxOutput = .5;
+        kMinOutput = -.75;
+        kMaxOutput = .75;
         mVelController.setOutputRange(kMinOutput, kMaxOutput, VELOCITY_SLOT);
         mVelController.setFF(kFF, VELOCITY_SLOT);
 
     }
-
-    // prefDict.put("tUvKff", 0.);
-    // prefDict.put("tUvKp", .02);
-    // prefDict.put("tUvKi", .00001);
-    // prefDict.put("tUvKd", 2.);
-    // prefDict.put("tUvKiz", 1.5);
 
     private void setVelGains() {
         kFF = Pref.getPref("tuVKff");// 10,000/60 rps* 1.39 = 231. and 1/237 = .004
@@ -441,11 +422,11 @@ public class RevTurretSubsystem extends SubsystemBase {
         double i = Pref.getPref("tuVKi");
         double d = Pref.getPref("tuVKd");
         double iz = Pref.getPref("tuVKiz");
-        kMinOutput = -.5;
-        kMaxOutput = .5;
+        kMinOutput = -.75;
+        kMaxOutput = .75;
         mVelController.setOutputRange(kMinOutput, kMaxOutput, VELOCITY_SLOT);
-        maxVel = Pref.getPref("tuVMaxV");//deg per sec
-        maxAcc = Pref.getPref("tuVMaxA");//deg per sec per sec
+        maxVel = Pref.getPref("tuVMaxV");// deg per sec
+        maxAcc = Pref.getPref("tuVMaxA");// deg per sec per sec
         allowedErr = .1;
         calibratePID(p, i, d, iz, VELOCITY_SLOT);
 

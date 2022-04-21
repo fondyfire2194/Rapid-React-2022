@@ -31,7 +31,7 @@ public class PositionHoldTilt extends CommandBase {
   @Override
   public void execute() {  
     
-      m_tilt.goToPositionMotionMagic(m_tilt.targetAngle);
+      m_tilt.goToPosition(m_tilt.targetAngle);
    
   }
 

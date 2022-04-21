@@ -48,7 +48,7 @@ public class PositionHoldTiltTest extends CommandBase {
   
     if (!m_tilt.testLock) {
 
-      m_tilt.goToPositionMotionMagic(m_tilt.targetAngle);
+      m_tilt.goToPosition(m_tilt.targetAngle);
     }
 
    

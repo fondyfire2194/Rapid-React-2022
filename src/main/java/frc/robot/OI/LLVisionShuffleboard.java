@@ -7,9 +7,11 @@ package frc.robot.OI;
 import java.util.Map;
 
 import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.CamMode;
@@ -113,7 +115,16 @@ public class LLVisionShuffleboard {
 
                         visionBools.addBoolean("Use Vision", () -> ll.useVision);
 
-                        
+                }
+
+                if (RobotBase.isReal()) {
+
+                        ShuffleboardTab llvFeed = Shuffleboard.getTab("LLVision");
+
+                        llvFeed.addCamera("LL", "CoproCam", "http://10.21.94.11:5800/stream.mjpg")
+                                        .withPosition(6, 0).withSize(3, 4)
+                                        .withProperties(Map.of("Show Crosshair", true,
+                                                        "Show Controls", true, "Rotation", "QUARTER_CW"));
                 }
         }
 
