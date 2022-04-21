@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Vision.LimeLight;
-import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Tilt.PositionTiltToEntry;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
@@ -37,7 +36,7 @@ public class SetUpPreRoundOI {
         public SetUpPreRoundOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
                         LimeLight ll, IntakesSubsystem intake, ClimberSubsystem climber,
-                        FondyFireTrajectory traj, RawContoursV2 rcv2) {
+                        FondyFireTrajectory traj) {
 
                 /**
                  * 

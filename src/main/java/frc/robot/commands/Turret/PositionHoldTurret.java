@@ -105,7 +105,7 @@ public class PositionHoldTurret extends CommandBase {
 
     if (!m_turret.validTargetSeen) {
 
-      m_turret.goToPositionMotionMagic(m_turret.targetAngle);
+      m_turret.goToPosition(m_turret.targetAngle);
     }
 
     else {

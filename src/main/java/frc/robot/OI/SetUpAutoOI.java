@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.Vision.LimeLight;
-import frc.robot.Vision.RawContoursV2;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -42,7 +41,7 @@ public class SetUpAutoOI {
         public SetUpAutoOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
                         LimeLight ll, IntakesSubsystem intake, ClimberSubsystem climber,
-                        FondyFireTrajectory traj, RawContoursV2 rcv2, ShootSequenceDisplay ssdisp) {
+                        FondyFireTrajectory traj, ShootSequenceDisplay ssdisp) {
 
                 if (m_showAuto) {
 
@@ -65,7 +64,7 @@ public class SetUpAutoOI {
                         compet1.addNumber("LeftAmps", () -> shooter.getLeftAmps());
                         compet1.addNumber("RightAmps", () -> shooter.getRightAmps());
                         compet1.addNumber("RobotPosn", () -> drive.getAverageDistance());
-                        compet1.addNumber("WeightedAngle", () -> rcv2.weightedTargetAngle);
+                        
                         compet1.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
 
                         compet1.addBoolean("LLHasTarget", () -> ll.getIsTargetFound());
@@ -108,7 +107,7 @@ public class SetUpAutoOI {
                         compet4.addNumber("TiltPreset", () -> tilt.presetPosition);
                         compet4.addNumber("DriverAdjustRPM",
                                         () -> shooter.shooterRPMAdder[shooter.shootMode]);
-                        compet4.addNumber("VisionAngle", () -> rcv2.weightedTargetAngle);
+                        
                         compet4.addNumber("TUAngle", () -> turret.getAngle());
                         compet4.addNumber("Visiondistance", () -> shooter.calculatedCameraDistance);
                         compet4.addBoolean("LLHasTarget", () -> ll.getIsTargetFound());

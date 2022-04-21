@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.FieldMap;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Vision.LimeLight;
-import frc.robot.Vision.RawContoursV2;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
@@ -21,12 +20,11 @@ public class CalculateTargetDistance extends CommandBase {
   private final RevTiltSubsystem m_tilt;
   private final RevShooterSubsystem m_shooter;
   private final RevTurretSubsystem m_turret;
-  private final RawContoursV2 m_rcv2;
 
   private double m_cameraVerticalError;
   private double cameraAngle;
 
-  public CalculateTargetDistance(LimeLight limelight, RawContoursV2 rcv2, RevTiltSubsystem tilt,
+  public CalculateTargetDistance(LimeLight limelight, RevTiltSubsystem tilt,
       RevTurretSubsystem turret,
       RevShooterSubsystem shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -34,7 +32,7 @@ public class CalculateTargetDistance extends CommandBase {
     m_tilt = tilt;
     m_shooter = shooter;
     m_turret = turret;
-    m_rcv2 = rcv2;
+
   }
 
   // Called when the command is initially scheduled.
@@ -84,13 +82,6 @@ public class CalculateTargetDistance extends CommandBase {
       m_shooter.calculatedCameraDistance = FieldConstants.heightDifference /
           tanAngleSum;
 
-      // m_shooter.calculatedCameraDistance = (int)
-      // Math.round(FieldConstants.heightDifference
-
-      // / (Math.tan(m_rcv2.getCenterTxAngle() *
-      // Math.cos(m_rcv2.getCenterTyAngle()))));
-
-      // m_shooter.calculatedCameraDistance += (FieldMap.visionStripRingDiameter / 2);
     }
 
   }

@@ -18,14 +18,11 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Constants.TiltConstants;
-import frc.robot.OI.HubTargetDisplay;
-import frc.robot.OI.HubVisionShuffleboard;
 import frc.robot.OI.LLVisionShuffleboard;
 import frc.robot.OI.SetUpAutoOI;
 import frc.robot.OI.SetUpOI;
@@ -37,11 +34,7 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
-import frc.robot.Vision.RawContoursV2;
 import frc.robot.Vision.TurnLedsOnOff;
-import frc.robot.Vision.VisionReferenceTarget;
-import frc.robot.commands.TimeDelay;
-import frc.robot.commands.AutoCommands.Common.AcquireTarget;
 import frc.robot.commands.AutoCommands.Common.SetupForShootLocation;
 import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
@@ -63,12 +56,14 @@ import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Tilt.PositionHoldTilt;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Tilt.TiltJog;
+import frc.robot.commands.Tilt.TiltJogVelocity;
 import frc.robot.commands.Tilt.TiltWaitForStop;
 import frc.robot.commands.Turret.PositionHoldTurret;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.PositionTurretIncremental;
-import frc.robot.commands.Turret.PositionTurretToVision;
 import frc.robot.commands.Turret.TurretJog;
+import frc.robot.commands.Turret.TurretJogVelocity;
+
 import frc.robot.commands.Turret.TurretWaitForStop;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -109,7 +104,7 @@ public class RobotContainer {
 
       public final ClimberSubsystem m_climber;
 
-      public final RawContoursV2 m_rcv2;
+      // public final RawContoursV2 m_rcv2;
 
       public static boolean autoSelected;
 
@@ -121,21 +116,15 @@ public class RobotContainer {
 
       public SimulationOI m_simOI;
 
-      public HubVisionShuffleboard m_hvis;
-
       public LLVisionShuffleboard m_llVis;
 
       public Show_Hide_Screens m_sh;
-
-      public HubTargetDisplay m_hts;
 
       public LimeLight m_limelight;
 
       public Compressor m_compressor;
 
       public FondyFireTrajectory m_trajectory;
-
-      public VisionReferenceTarget m_vrt;
 
       public ShootSequenceDisplay ssdisp;
 
@@ -207,9 +196,9 @@ public class RobotContainer {
             m_limelight.setPipeline(PipelinesConstants.ledsOffPipeline);
             m_limelight.useVision = false;
 
-            m_rcv2 = new RawContoursV2(m_limelight);
+            // m_rcv2 = new RawContoursV2(m_limelight);
 
-            m_vrt = new VisionReferenceTarget(m_rcv2, m_limelight);
+            // m_vrt = new VisionReferenceTarget(m_rcv2, m_limelight);
 
             m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
@@ -218,33 +207,28 @@ public class RobotContainer {
             // test configuration
             // Show_Hide_Screens.setStates(false, false, false, true);
             // test configuration with hub vision
-            Show_Hide_Screens.setStates(false, true, true, true);
+            Show_Hide_Screens.setStates(false, true, true);
 
             // // competition configuration
-            // Show_Hide_Screens.setStates(true, false, false, false);
+            // Show_Hide_Screens.setStates(true, false, false);
 
             // competition with hub vision configuration
-            // Show_Hide_Screens.setStates(true, false, true, false);
+            // Show_Hide_Screens.setStates(true, true, false);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intake, m_climber, m_trajectory);
 
             m_autoOi = new SetUpAutoOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
-                        m_intake, m_climber, m_trajectory, m_rcv2, ssdisp);
+                        m_intake, m_climber, m_trajectory, ssdisp);
 
             m_preOi = new SetUpPreRoundOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
-                        m_intake, m_climber, m_trajectory, m_rcv2);
+                        m_intake, m_climber, m_trajectory);
 
             if (RobotBase.isSimulation())
                   m_simOI = new SimulationOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                               m_limelight, m_intake, m_climber, m_trajectory);
 
-            m_hts = new HubTargetDisplay(m_limelight, m_rcv2, m_shooter, m_turret);
-
-            m_hvis = new HubVisionShuffleboard(m_limelight, m_rcv2, m_vrt, m_turret, m_tilt, m_shooter,
-                        m_transport, m_compressor, m_hts);
-
-            m_llVis = new LLVisionShuffleboard(m_limelight, m_rcv2, m_turret, m_tilt, m_shooter);
+            m_llVis = new LLVisionShuffleboard(m_limelight, m_turret, m_tilt, m_shooter);
 
             configureButtonBindings();
 
@@ -311,12 +295,7 @@ public class RobotContainer {
 
                         .whileHeld(new RunCargoOutShooter(m_shooter, m_intake, m_transport));
 
-            new JoystickButton(m_driverController, 9)
-
-                        .whenPressed(new SequentialCommandGroup(
-                                    new AcquireTarget(m_limelight, m_tilt, m_turret, m_rcv2),
-                                    new TimeDelay(0.5),
-                                    new PositionTurretToVision(m_turret, m_rcv2)));
+            // new JoystickButton(m_driverController, 9)
 
             // new JoystickButton(m_driverController, 10)
 
@@ -343,7 +322,8 @@ public class RobotContainer {
 
             codriverStart.whileHeld(m_transport::reverseLowRoller);
 
-            // codriverX.
+             codriverX.whileHeld(getJogTiltVelocityCommand()).whileHeld(getJogTurretVelocityCommand())
+                         .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));
 
             codriverY.whileHeld(getJogTiltCommand(codriverGamepad)).whileHeld(getJogTurretCommand(codriverGamepad))
                         .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));
@@ -419,6 +399,16 @@ public class RobotContainer {
        * @param gamepad
        * @return
        */
+
+      public Command getJogTurretVelocityCommand() {
+
+            return new TurretJogVelocity(m_turret, () -> codriverGamepad.getRawAxis(0));
+      }
+
+      public Command getJogTiltVelocityCommand() {
+
+            return new TiltJogVelocity(m_tilt, () -> -codriverGamepad.getRawAxis(1) / 2);
+      }
 
       public Command getJogShooterCommand() {
 

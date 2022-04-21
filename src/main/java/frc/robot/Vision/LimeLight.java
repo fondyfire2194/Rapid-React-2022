@@ -35,6 +35,8 @@ public class LimeLight {
 
     private double useVisionTimer;
 
+    private boolean cameraAt90 = true;
+
     class PeriodicRunnable implements java.lang.Runnable {
         public void run() {
             resetPilelineLatency();
@@ -109,6 +111,10 @@ public class LimeLight {
      */
     public double getdegRotationToTarget() {
         NetworkTableEntry tx = m_table.getEntry("tx");
+
+        if (!cameraAt90) {
+            tx = m_table.getEntry("ty");
+        }
         double x = tx.getDouble(0.0);
         return x;
     }
@@ -129,6 +135,9 @@ public class LimeLight {
      */
     public double getdegVerticalToTarget() {
         NetworkTableEntry ty = m_table.getEntry("ty");
+        if (!cameraAt90) {
+            ty = m_table.getEntry("tx");
+        }
         double y = ty.getDouble(0.0);
         return y;
     }
@@ -499,9 +508,5 @@ public class LimeLight {
         }
 
     }
-
-    // public int getFilterddegRotationToTarget() {
-    // return 0;
-    // }
 
 }

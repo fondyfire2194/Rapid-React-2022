@@ -9,13 +9,11 @@ public final class Show_Hide_Screens {
   private Show_Hide_Screens() {
   }
 
-  public static void setStates(boolean auto, boolean vision, boolean hubVision, boolean test) {
+  public static void setStates(boolean auto, boolean vision, boolean test) {
 
     boolean autoMode = auto;
 
     boolean showVision = vision;
-
-    boolean showHubVision= hubVision;
 
     boolean testing = test;
 
@@ -29,8 +27,6 @@ public final class Show_Hide_Screens {
     SetUpOI.showIntake = testing;
 
     LLVisionShuffleboard.m_showVision = showVision;
-
-    HubVisionShuffleboard.m_showHubVision = showHubVision;
 
     SetUpPreRoundOI.m_showPreRound = autoMode;
 

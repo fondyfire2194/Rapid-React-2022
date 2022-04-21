@@ -116,9 +116,9 @@ public final class Constants {
        * 
        * Robot turn constants
        */
-      
-      public static double kMaxTurnRateDegPerS = 10.;
-      public static double kMaxTurnAccelerationDegPerSSquared = 5.;
+
+      public static double kMaxTurnRateDegPerS = 20.;
+      public static double kMaxTurnAccelerationDegPerSSquared = 25.;
       public static double kTurnRateToleranceDegPerS = 1.;
       public static double kTurnToleranceDeg = 2.;
 
@@ -148,12 +148,12 @@ public final class Constants {
       public static double kPickupSpeedMetersPerSecond = 1;
 
       /**
-       * Simulation parameters 
+       * Simulation parameters
        * 
        */
-      public static double kvVoltSecondsPerMeter = 2.63;//27;//2;
+      public static double kvVoltSecondsPerMeter = 2.63;// 27;//2;
 
-      public static double kaVoltSecondsSquaredPerMeter = .329;//3.48;//.408;
+      public static double kaVoltSecondsSquaredPerMeter = .329;// 3.48;//.408;
 
       public static final double kvVoltSecondsPerRadian = 3.0;
 
@@ -252,6 +252,7 @@ public final class Constants {
       public static final double kVVoltSecondsPerRotation = 0.0774;
 
       public static final double kA = 0.00003;
+
 
    }
 

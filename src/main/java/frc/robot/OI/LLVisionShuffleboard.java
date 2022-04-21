@@ -15,7 +15,6 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
-import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.Vision.LimelightCamMode;
 import frc.robot.commands.Vision.LimelightLeds;
 import frc.robot.commands.Vision.LimelightSetPipeline;
@@ -32,7 +31,7 @@ public class LLVisionShuffleboard {
 
         HttpCamera LLFeed;
 
-        public LLVisionShuffleboard(LimeLight ll, RawContoursV2 rCV2, RevTurretSubsystem turret,
+        public LLVisionShuffleboard(LimeLight ll, RevTurretSubsystem turret,
                         RevTiltSubsystem tilt, RevShooterSubsystem shooter) {
 
                 /**

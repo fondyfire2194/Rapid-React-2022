@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Pref;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.CargoTransport.RunLowerRoller;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
@@ -149,7 +150,7 @@ public class SetUpOI {
                         turretCommands.add("ClearFaults", new ClearTurFaults(turret));
                         turretCommands.add("Cmd", turret);
                         turretCommands.addNumber("Faults", () -> turret.getFaults());
-                        
+
                         turretCommands.add("Vision On", new UseVision(limelight, true));
                         turretCommands.add("Vision Off", new UseVision(limelight, false));
 
@@ -178,7 +179,7 @@ public class SetUpOI {
                         turretValues3.addNumber("IAccum", () -> turret.getIaccum());
 
                         turretValues3.addNumber("LockOutput", () -> turret.lockPIDOut);
-                        turretValues3.addNumber("LockError", () -> turret.m_turretLockController.getPositionError());
+                        turretValues3.addNumber("LockError", () -> turret.mLockController.getPositionError());
                         turretValues3.addBoolean("LockController", () -> turret.validTargetSeen);
 
                         ShuffleboardLayout turretValues2 = Shuffleboard.getTab("SetupTurret")
@@ -202,27 +203,50 @@ public class SetUpOI {
 
                         turretValues2.addBoolean("LockAtTarget", () -> turret.getLockAtTarget());
 
-                        ShuffleboardLayout turretGains = Shuffleboard.getTab("SetupTurret")
+                        ShuffleboardLayout turretVelGains = Shuffleboard.getTab("SetupTurret")
 
-                                        .getLayout("PosGains", BuiltInLayouts.kList).withPosition(6, 0).withSize(1, 3)
+                                        .getLayout("VelGains", BuiltInLayouts.kList).withPosition(6, 0).withSize(1, 3)
                                         .withProperties(Map.of("Label position", "LEFT")); // labels
 
-                        turretGains.addNumber("FF", () -> turret.ffset);
-                        turretGains.addNumber("P", () -> turret.pset);
-                        turretGains.addNumber("I", () -> turret.iset);
-                        turretGains.addNumber("D", () -> turret.dset);
-                        turretGains.addNumber("IZ", () -> turret.izset);
-                        turretGains.addNumber("MaxAcc", () -> turret.maxAccset);
-                        turretGains.addNumber("MaxV", () -> turret.maxVelset);
+                        turretVelGains.addNumber("tuVKff", () -> Pref.getPref("tuVKff"));
+                        turretVelGains.addNumber("tuVKp", () -> Pref.getPref("tuVKp"));
+                        turretVelGains.addNumber("tuVKi", () -> Pref.getPref("tuVKi"));
+                        turretVelGains.addNumber("tuVKd", () -> Pref.getPref("tuVKd"));
+                        turretVelGains.addNumber("tuVKiz", () -> Pref.getPref("tuVKiz"));
+                        turretVelGains.addNumber("MaxAcc", () -> turret.maxAccset);
+                        turretVelGains.addNumber("MaxV", () -> turret.maxVelset);
+                        turretVelGains.addNumber("tuVTune", () -> Pref.getPref("tuVTune"));
+
+                        ShuffleboardLayout turretVactGains = Shuffleboard.getTab("SetupTurret")
+
+                                        .getLayout("VActGains", BuiltInLayouts.kList).withPosition(7, 0).withSize(1, 2)
+                                        .withProperties(Map.of("Label position", "LEFT")); // labels
+
+                        turretVactGains.addNumber("FF", () -> turret.ffsetv);
+                        turretVactGains.addNumber("P", () -> turret.psetv);
+                        turretVactGains.addNumber("D", () -> turret.dsetv);
+                        turretVactGains.addNumber("I", () -> turret.isetv);
+                        turretVactGains.addNumber("IZ", () -> turret.izsetv);
 
                         ShuffleboardLayout turretLockGains = Shuffleboard.getTab("SetupTurret")
                                         .getLayout("LockGains", BuiltInLayouts.kList)
-                                        .withPosition(7, 0).withSize(1, 2)
+                                        .withPosition(8, 0).withSize(1, 2)
                                         .withProperties(Map.of("Label position", "LEFT"));
-                        turretLockGains.addNumber("LP", () -> turret.lpset);
-                        turretLockGains.addNumber("LI", () -> turret.liset);
-                        turretLockGains.addNumber("LD", () -> turret.ldset);
-                        turretGains.addNumber("LIZ", () -> turret.lizset);
+                        turretLockGains.addNumber("tuLkp", () -> Pref.getPref("tuLkp"));
+                        turretLockGains.addNumber("tuLki", () -> Pref.getPref("tuLki"));
+                        turretLockGains.addNumber("tuLkd", () -> Pref.getPref("tuLkd"));
+                        turretLockGains.addNumber("tuLkiz", () -> Pref.getPref("tuLkiz"));
+                        turretLockGains.addNumber("tuLTune", () -> Pref.getPref("tuLTune"));
+
+                        ShuffleboardLayout turretPosGains = Shuffleboard.getTab("SetupTurret")
+                                        .getLayout("PosGains", BuiltInLayouts.kList)
+                                        .withPosition(8, 2).withSize(1, 2)
+                                        .withProperties(Map.of("Label position", "LEFT"));
+                        turretPosGains.addNumber("tuPkp", () -> Pref.getPref("tuPkp"));
+                        turretPosGains.addNumber("tuPki", () -> Pref.getPref("tuPki"));
+                        turretPosGains.addNumber("tuPkd", () -> Pref.getPref("tuPkd"));
+                        turretPosGains.addNumber("tuPkiz", () -> Pref.getPref("tuPkiz"));
+                        turretPosGains.addNumber("tuPTune", () -> Pref.getPref("tuPTune"));
 
                 }
 

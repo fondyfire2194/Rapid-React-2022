@@ -10,6 +10,7 @@ package frc.robot.commands.Shooter;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import frc.robot.subsystems.RevShooterSubsystem;
 
 public class JogShooter extends CommandBase {

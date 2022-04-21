@@ -207,6 +207,9 @@
     }
   },
   "NetworkTables": {
+    "Preferences": {
+      "open": true
+    },
     "Shuffleboard": {
       "Competition": {
         "Values": {
@@ -218,6 +221,17 @@
           "open": true
         },
         "open": true
+      },
+      "SetupTurret": {
+        "LockGains": {
+          "open": true
+        },
+        "PIDValues": {
+          "open": true
+        },
+        "Turret": {
+          "open": true
+        }
       },
       "open": true
     }

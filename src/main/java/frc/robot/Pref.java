@@ -43,23 +43,33 @@ public class Pref {
     prefDict.put("tIMaxA", 150.);// deg per sec/sec
     prefDict.put("tITune", 0.);
 
-    // Turret smart motion
+    // Turret velocity
 
-    prefDict.put("tURKff", 0.);
-    prefDict.put("tURKp", .02);
-    prefDict.put("tURKi", .00001);
-    prefDict.put("tURKd", 2.);
-    prefDict.put("tURKiz", 1.5);
-    prefDict.put("tURMaxV", 550.);// deg/sec
-    prefDict.put("tURMaxA", 250.);// deg/sec
-    prefDict.put("tURTune", 0.);
+    prefDict.put("tuVKff", 0.);
+    prefDict.put("tuVKp", .02);
+    prefDict.put("tuVKi", .00001);
+    prefDict.put("tuVKd", 2.);
+    prefDict.put("tuVKiz", 1.5);
+
+    prefDict.put("tuVMaxV", 50.);// deg/sec
+    prefDict.put("tuVMaxA", 250.);// deg/sec/sec
+
+    prefDict.put("tuVTune", 0.);
+
+    // Turret Position
+
+    prefDict.put("tuPkp", 16.0);
+    prefDict.put("tuPki", .001);
+    prefDict.put("tuPkd", 0.);
+    prefDict.put("tuPkiz", 0.9);
+    prefDict.put("tuPTune", 0.);
 
     // Turret Lock
 
-    prefDict.put("TuLkP", 16.0);
-    prefDict.put("TuLkI", .001);
-    prefDict.put("TuLkD", 0.);
-    prefDict.put("TuLkIZ", 0.9);
+    prefDict.put("tuLkp", 16.0);
+    prefDict.put("tuLki", .001);
+    prefDict.put("tuLkd", 0.);
+    prefDict.put("tuLkiz", 0.9);
     prefDict.put("tuLTune", 0.);
 
     // shooter velocity
@@ -86,7 +96,6 @@ public class Pref {
     prefDict.put("dRTurnkP", .05);
     prefDict.put("dRTurnkD", .0);
     prefDict.put("dRTurnkI", .0);
-
 
     prefDict.put("dRTune", 0.);
 
@@ -123,7 +132,7 @@ public class Pref {
     prefDict.put("HubTgtGn", 10.);
 
     // left start
-    
+
     prefDict.put("autLRtctPt", Units.inchesToMeters(-51.));
 
     prefDict.put("autLShootPt", Units.inchesToMeters(0.));

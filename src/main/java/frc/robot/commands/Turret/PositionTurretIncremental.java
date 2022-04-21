@@ -12,7 +12,6 @@ public class PositionTurretIncremental extends CommandBase {
 
   private final RevTurretSubsystem m_turret;
   private double m_increment;
-  private double m_endpoint;
   private int loopCtr;
   private boolean endIt;
 

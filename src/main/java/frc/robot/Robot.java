@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
-import frc.robot.Vision.RawContoursV2;
 import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.AltRetPuAdvShoot;
 import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
@@ -111,7 +110,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
 
-    m_robotContainer.m_limelight.periodic();
+   // m_robotContainer.m_limelight.periodic();
 
     loopCtr++;
 
@@ -171,7 +170,6 @@ public class Robot extends TimedRobot {
     RevDrivetrain drive = m_robotContainer.m_drive;
     CargoTransportSubsystem transport = m_robotContainer.m_transport;
     IntakesSubsystem intake = m_robotContainer.m_intake;
-    RawContoursV2 rcv2 = m_robotContainer.m_rcv2;
     Compressor comp = m_robotContainer.m_compressor;
 
     ll.setPipeline(PipelinesConstants.ledsOffPipeline);
@@ -348,7 +346,7 @@ public class Robot extends TimedRobot {
         .schedule();
     ;
 
-    new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_rcv2, m_robotContainer.m_tilt,
+    new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_tilt,
         m_robotContainer.m_turret, m_robotContainer.m_shooter).schedule();
 
   }
