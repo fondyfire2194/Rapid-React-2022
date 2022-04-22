@@ -27,6 +27,12 @@
       "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
       "/Shuffleboard/CanBus/Scheduler/Scheduler": "Scheduler",
       "/Shuffleboard/CanBus/Subs 1/Climber": "Subsystem",
+      "/Shuffleboard/CanBus/Subs 1/Drive": "Subsystem",
+      "/Shuffleboard/CanBus/Subs 1/Shooter": "Subsystem",
+      "/Shuffleboard/CanBus/Subs 2/Intakes": "Subsystem",
+      "/Shuffleboard/CanBus/Subs 2/Tilt": "Subsystem",
+      "/Shuffleboard/CanBus/Subs 2/Transport": "Subsystem",
+      "/Shuffleboard/CanBus/Subs 2/Turret": "Subsystem",
       "/Shuffleboard/CompetitionMisc/Misc1/Reset to 0": "Command",
       "/Shuffleboard/CompetitionMisc/Misc2/Hold Cargo": "Command",
       "/Shuffleboard/CompetitionMisc/Misc2/LowerLeft": "Command",
@@ -65,6 +71,7 @@
       "/Shuffleboard/HubVision/Zoom/No Zoom": "Command",
       "/Shuffleboard/Intake/IntakeActions/ArmLower": "Command",
       "/Shuffleboard/Intake/IntakeActions/ArmRaise": "Command",
+      "/Shuffleboard/Intake/IntakeActions/IntakeCmd": "Subsystem",
       "/Shuffleboard/Intake/IntakeActions/Run Motor": "Command",
       "/Shuffleboard/Intake/IntakeActions/Stop Motor": "Command",
       "/Shuffleboard/Intake/IntakeSelect/Select Front": "Command",
@@ -128,6 +135,7 @@
       "/Shuffleboard/SetupShooter/MAXMPS 50/Stop Shoot": "Command",
       "/Shuffleboard/SetupShooter/MAXMPS 50/UseSpeedSlider": "Command",
       "/Shuffleboard/SetupShooter/MAXRPM 5500/ClearFaults": "Command",
+      "/Shuffleboard/SetupShooter/MAXRPM 5500/Cmd": "Subsystem",
       "/Shuffleboard/SetupShooter/MAXRPM 5500/RunShooterFromSlider": "Command",
       "/Shuffleboard/SetupShooter/MAXRPM 5500/RunTopRoll": "Command",
       "/Shuffleboard/SetupShooter/MAXRPM 5500/ShootOne": "Command",
@@ -235,5 +243,8 @@
       },
       "open": true
     }
+  },
+  "NetworkTables View": {
+    "visible": false
   }
 }

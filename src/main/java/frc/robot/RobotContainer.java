@@ -205,15 +205,15 @@ public class RobotContainer {
             m_trajectory = new FondyFireTrajectory(m_drive);
             ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
             // test configuration
-            // Show_Hide_Screens.setStates(false, false, false, true);
-            // test configuration with hub vision
-            Show_Hide_Screens.setStates(false, true, true);
+            // Show_Hide_Screens.setStates(false, false,true);
+            // test configuration with vision
+            // Show_Hide_Screens.setStates(false, true, true);
 
             // // competition configuration
             // Show_Hide_Screens.setStates(true, false, false);
 
-            // competition with hub vision configuration
-            // Show_Hide_Screens.setStates(true, true, false);
+            // all configuration
+            Show_Hide_Screens.setStates(true, true, true);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intake, m_climber, m_trajectory);
@@ -322,8 +322,8 @@ public class RobotContainer {
 
             codriverStart.whileHeld(m_transport::reverseLowRoller);
 
-             codriverX.whileHeld(getJogTiltVelocityCommand()).whileHeld(getJogTurretVelocityCommand())
-                         .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));
+            codriverX.whileHeld(getJogTiltVelocityCommand()).whileHeld(getJogTurretVelocityCommand())
+                        .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));
 
             codriverY.whileHeld(getJogTiltCommand(codriverGamepad)).whileHeld(getJogTurretCommand(codriverGamepad))
                         .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));

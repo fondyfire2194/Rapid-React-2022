@@ -4,7 +4,6 @@
 
 package frc.robot.commands.Tilt;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RevTiltSubsystem;
 
@@ -39,18 +38,19 @@ public class PositionTilt extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+
     loopCtr++;
 
     m_tilt.goToPosition(m_tilt.targetAngle);
 
-    endIt = m_tilt.atTargetAngle() && loopCtr > 10 && Math.abs(m_tilt.getSpeed()) < 1;// || !m_tilt.positionResetDone;
+    endIt = m_tilt.atTargetAngle() && loopCtr > 10 && Math.abs(m_tilt.getSpeed()) < 1;// ||
+                                                                                         // !m_tilt.positionResetDone;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-     if (loopCtr > 10 && !endIt)
+    if (loopCtr > 10 && !endIt)
 
       m_tilt.targetAngle = m_tilt.getAngle();
 

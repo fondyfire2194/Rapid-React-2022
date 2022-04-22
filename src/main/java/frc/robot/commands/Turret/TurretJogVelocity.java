@@ -35,13 +35,12 @@ public class TurretJogVelocity extends CommandBase {
 
     if (Math.abs(m_xaxisSpeedSupplier.get()) < .05)
 
-      m_turret.runAtVelocity(0);
+      m_turret.moveAtVelocity(0);
 
     else
 
-      m_turret.runAtVelocity(m_xaxisSpeedSupplier.get() * m_turret.maxVel);
+      m_turret.moveAtVelocity(m_xaxisSpeedSupplier.get() * m_turret.maxVel);
 
-    SmartDashboard.putNumber("TUSP", m_xaxisSpeedSupplier.get() * m_turret.maxVel);
   }
 
   // Called once the command ends or is interrupted.

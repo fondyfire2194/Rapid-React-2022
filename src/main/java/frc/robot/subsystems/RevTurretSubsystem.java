@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.TurretConstants;
@@ -126,24 +127,24 @@ public class RevTurretSubsystem extends SubsystemBase {
         m_motor.setInverted(true);
         m_motor.setOpenLoopRampRate(5);
         m_motor.setClosedLoopRampRate(2);
-        mPosController = new PIDController(.003, 0, 0);
+        mPosController = new PIDController(.01, 0, 0);
         mEncoder.setPosition(0);
         aimCenter();
-        setFF_MaxOuts();
-        setVelGains();
-        getVelGains();
-        setPosGains();
-        setLockGains();
-        mLockController.setTolerance(.25);
-        setSoftwareLimits();
 
         if (RobotBase.isReal()) {
-
-            mEncoder.setPositionConversionFactor(DEG_PER_MOTOR_REV);
-
-            mEncoder.setVelocityConversionFactor(DEG_PER_MOTOR_REV / 60);
+            setFF_MaxOuts();
+            setVelGains();
+            getVelGains();
+            setPosGains();
+            setLockGains();
+            mLockController.setTolerance(.25);
 
         }
+        setSoftwareLimits();
+
+        mEncoder.setPositionConversionFactor(DEG_PER_MOTOR_REV);
+
+        mEncoder.setVelocityConversionFactor(DEG_PER_MOTOR_REV / 60);
 
         if (RobotBase.isSimulation()) {
 
@@ -169,9 +170,11 @@ public class RevTurretSubsystem extends SubsystemBase {
         // SmartDashboard.putBoolean("tlat", getLockAtTarget());
         // SmartDashboard.putNumber("tlmo", getMotorOut());
 
-        tuneOnv = Pref.getPref("tuVTune") != 0.;
+        // SmartDashboard.putData("LockPID",mLockController);
 
-        checkTune();
+        if (RobotBase.isReal())
+
+            checkTune();
 
         if (DriverStation.isDisabled())
             targetAngle = getAngle();
@@ -209,15 +212,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         m_motor.close();
     }
 
-    public void moveAtVelocity(double degPerSec) {
-
-        mVelController.setReference(degPerSec, ControlType.kVelocity, VELOCITY_SLOT);
-
-    }
-
     public void moveManually(double speed) {
-
-        targetAngle = getAngle();
 
         m_motor.set(speed);
 
@@ -229,13 +224,15 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         pidout = mPosController.calculate(getAngle(), degrees);
 
+        SmartDashboard.putNumber("TUPIDOUT", pidout);
+
         if (RobotBase.isReal())
 
-            runAtVelocity(-pidout * maxVel);
+            moveAtVelocity(pidout * maxVel);
 
         else
 
-            moveManually(-pidout);
+            m_motor.set(pidout);
     }
 
     public double getTargetHorOffset() {
@@ -247,7 +244,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         lockPIDOut = mLockController.calculate(cameraError, 0);
 
-        runAtVelocity(lockPIDOut * maxVel);
+        moveAtVelocity(-lockPIDOut * maxVel);
 
         targetAngle = getAngle();
     }
@@ -256,7 +253,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         lockPIDOut = mLockController.calculate(throttleError, 0);
 
-        runAtVelocity(lockPIDOut);
+        moveAtVelocity(lockPIDOut);
 
         targetAngle = getAngle();
     }
@@ -373,11 +370,16 @@ public class RevTurretSubsystem extends SubsystemBase {
         m_motor.set(0);
     }
 
-    public void runAtVelocity(double speed) {
+    public void moveAtVelocity(double degPerSec) {
 
-        targetAngle = getAngle();
+        if (RobotBase.isReal())
 
-        mVelController.setReference(speed, ControlType.kVelocity, VELOCITY_SLOT);
+            mVelController.setReference(degPerSec, ControlType.kVelocity, VELOCITY_SLOT);
+
+        else
+
+            moveManually(degPerSec / maxVel);
+
     }
 
     public double getIaccum() {
@@ -417,7 +419,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     private void setVelGains() {
-        kFF = Pref.getPref("tuVKff");// 10,000/60 rps* 1.39 = 231. and 1/237 = .004
+        kFF = Pref.getPref("tuVKff");// 9,000/60 rps = 150rps * 1.39 degperrev = 210 and 1/210 = .004
         double p = Pref.getPref("tuVKp");
         double i = Pref.getPref("tuVKi");
         double d = Pref.getPref("tuVKd");
@@ -425,7 +427,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         kMinOutput = -.75;
         kMaxOutput = .75;
         mVelController.setOutputRange(kMinOutput, kMaxOutput, VELOCITY_SLOT);
-        maxVel = Pref.getPref("tuVMaxV");// deg per sec
+        maxVel = Pref.getPref("tuVMaxV");// deg per sec 150rps  *1.39 = 208 deg /sec
         maxAcc = Pref.getPref("tuVMaxA");// deg per sec per sec
         allowedErr = .1;
         calibratePID(p, i, d, iz, VELOCITY_SLOT);

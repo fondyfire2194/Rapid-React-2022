@@ -17,7 +17,6 @@ public class TiltJogVelocity extends CommandBase {
   private final RevTiltSubsystem m_tilt;
   private final Supplier<Double> m_xaxisSpeedSupplier;
   private double maxSpeed = 100;
- 
 
   public TiltJogVelocity(RevTiltSubsystem tilt, Supplier<Double> xaxisSpeedSupplier) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -36,10 +35,13 @@ public class TiltJogVelocity extends CommandBase {
   public void execute() {
 
     if (Math.abs(m_xaxisSpeedSupplier.get()) < .05)
-      m_tilt.moveManually(0);
+
+      m_tilt.moveAtVelocity(0);
+
     else
-      m_tilt.runAtVelocity(m_xaxisSpeedSupplier.get() * maxSpeed);
-     SmartDashboard.putNumber("TISP", m_xaxisSpeedSupplier.get() * maxSpeed);
+    
+      m_tilt.moveAtVelocity(m_xaxisSpeedSupplier.get() * maxSpeed);
+
   }
 
   // Called once the command ends or is interrupted.

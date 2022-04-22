@@ -53,6 +53,7 @@ public class RevTiltSubsystem extends SubsystemBase {
     public SparkMaxLimitSwitch m_forwardLimit;
     private CANEncoderSim mEncoderSim;
     private PIDController mPosController;
+
     public boolean positionResetDone;
     public double targetAngle;
     private double inPositionBandwidth = 1;
@@ -136,9 +137,11 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         m_motor.setSmartCurrentLimit(20);
 
-        setFF_MaxOuts();
-        setPosGains();
-
+        if (RobotBase.isReal()) {
+            setFF_MaxOuts();
+            setPosGains();
+            setVelGains();
+        }
         m_motor.setIdleMode(IdleMode.kBrake);
 
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
@@ -171,13 +174,17 @@ public class RevTiltSubsystem extends SubsystemBase {
                 .withProperties(Map.of("min", 0, "max", 14))
                 .getEntry();
 
+
+                SmartDashboard.putNumber("TIDeg/Rev", degreesPerRev);
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
 
-        checkTune();
+        if (RobotBase.isReal())
+
+            checkTune();
 
         if (RobotBase.isReal() && DriverStation.isDisabled())
             targetAngle = getAngle();
@@ -218,22 +225,21 @@ public class RevTiltSubsystem extends SubsystemBase {
         m_motor.close();
     }
 
-    public void runAtVelocity(double speed) {
-        targetAngle = getAngle();
-        mVelController.setReference(speed, ControlType.kVelocity, VELOCITY_SLOT);
+    public void moveAtVelocity(double degPerSec) {
+
+        if (RobotBase.isReal())
+
+            mVelController.setReference(degPerSec, ControlType.kVelocity, VELOCITY_SLOT);
+
+        else
+
+            moveManually(degPerSec / maxVel);
+
     }
 
     public void moveManually(double speed) {
 
-        targetAngle = getAngle();
-
         m_motor.set(speed);
-    }
-
-    public void moveAtVelocity(double degPerSec) {
-
-        mVelController.setReference(degPerSec, ControlType.kVelocity, VELOCITY_SLOT);
-
     }
 
     public void goToPosition(double degrees) {
@@ -242,13 +248,15 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         pidout = mPosController.calculate(getAngle(), degrees);
 
+        SmartDashboard.putNumber("TIPIDOUT", pidout);
+
         if (RobotBase.isReal())
 
-            runAtVelocity(pidout * maxVel);
+            moveAtVelocity(pidout * maxVel);
 
         else
 
-            moveManually(pidout);
+            m_motor.set(pidout);
     }
 
     public void resetAngle() {
@@ -418,7 +426,7 @@ public class RevTiltSubsystem extends SubsystemBase {
     }
 
     private void setVelGains() {
-        kFF = Pref.getPref("tuVKff");// 10,000/60 rps* 1.39 = 231. and 1/237 = .004
+        kFF = Pref.getPref("tiVKff");// 9,000/60 rps= 150rps * .036deg/rev = 5.4 and ff = 1/5.4 = .185
         double p = Pref.getPref("tiVKp");
         double i = Pref.getPref("tiVKi");
         double d = Pref.getPref("tiVKd");
@@ -445,10 +453,9 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     private void checkTune() {
 
-        tuneOnv = Pref.getPref("tITune") == 1. && tiltMotorConnected;
+        tuneOnv = Pref.getPref("tiVTune") == 1. && tiltMotorConnected;
 
         if (tuneOnv && !lastTuneOnv) {
-
             setVelGains();
             getVelGains();
             lastTuneOnv = true;
@@ -456,6 +463,18 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         if (lastTuneOnv)
             lastTuneOnv = tuneOnv;
+
+        // posn controller
+
+        posTuneOn = Pref.getPref("tiPTune") != 0.;
+
+        if (posTuneOn && !lastPosTuneOn) {
+            setPosGains();
+            lastPosTuneOn = true;
+        }
+
+        if (lastPosTuneOn)
+            lastPosTuneOn = posTuneOn;
 
     }
 

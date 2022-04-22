@@ -118,7 +118,7 @@ public final class Constants {
        */
 
       public static double kMaxTurnRateDegPerS = 20.;
-      public static double kMaxTurnAccelerationDegPerSSquared = 25.;
+      public static double kMaxTurnAccelerationDegPerSSquared = 250.;
       public static double kTurnRateToleranceDegPerS = 1.;
       public static double kTurnToleranceDeg = 2.;
 
@@ -185,16 +185,10 @@ public final class Constants {
     * Tilt axis is a leadscrew driven through a 14T to 28T or 2:1 belt and a 10:1
     * gearbox = 20:1
     * 
-    * The tilt has a mechanical base angle of around 60 degrees and a max angle of
-    * around 90
-    * 
-    * Accurate angle calculations for target distance purposes are done based on
-    * the tilt mechanical design
-    * 
-    * 
+    *
     * 
     * The calculated angle will be used for position display and closed loop
-    * purposed. The shoot angle counts down as the hood moves up. The angle is
+    * purposes. The shoot angle counts down as the hood moves up. The angle is
     * preset to max and the encoder is set to 0 on the bottom switch. Then the
     * encoder is subtracted from max so as it increases the angle decreases.
     * 

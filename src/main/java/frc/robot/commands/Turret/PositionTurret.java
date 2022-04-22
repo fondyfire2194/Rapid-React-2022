@@ -47,6 +47,7 @@ public class PositionTurret extends CommandBase {
   public void end(boolean interrupted) {
     if (loopCtr > 10 && !endIt)
       m_turret.targetAngle = m_turret.getAngle();
+
     
   }
 

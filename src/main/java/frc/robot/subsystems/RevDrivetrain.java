@@ -17,7 +17,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -389,7 +388,7 @@ public class RevDrivetrain extends SubsystemBase {
             m_leftEncodersSim.setPosition(0);
             m_rightEncodersSim.setPosition(0);
             m_dts.setPose(new Pose2d());
-                
+
         }
 
     }
@@ -590,6 +589,5 @@ public class RevDrivetrain extends SubsystemBase {
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(getLeftRate(), getRightRate());
     }
-
 
 }
