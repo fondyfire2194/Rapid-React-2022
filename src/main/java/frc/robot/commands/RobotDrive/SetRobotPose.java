@@ -14,10 +14,11 @@ import frc.robot.subsystems.RevDrivetrain;
 public class SetRobotPose extends InstantCommand {
   private RevDrivetrain m_drive;
   private Pose2d m_pose;
+
   public SetRobotPose(RevDrivetrain drive, Pose2d pose) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_drive=drive;
-    m_pose=pose;
+    m_drive = drive;
+    m_pose = pose;
   }
 
   // Called when the command is initially scheduled.

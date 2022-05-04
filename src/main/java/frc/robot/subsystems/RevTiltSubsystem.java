@@ -42,6 +42,7 @@ public class RevTiltSubsystem extends SubsystemBase {
     // public final int VELOCITY_SLOT = 2;
 
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
+
     public double lastkP, lastkI, lastkD, lastkIz, lastkFF, lastkMaxOutput, lastkMinOutput, lastmaxRPM, lastmaxVel,
             lastminVel, lastmaxAcc, lastallowedErr;
 
@@ -173,8 +174,7 @@ public class RevTiltSubsystem extends SubsystemBase {
                 .withProperties(Map.of("min", 0, "max", 14))
                 .getEntry();
 
-
-                SmartDashboard.putNumber("TIDeg/Rev", degreesPerRev);
+        // SmartDashboard.putNumber("TIDeg/Rev", degreesPerRev);
     }
 
     @Override
@@ -249,13 +249,7 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("TIPIDOUT", pidout);
 
-        if (RobotBase.isReal())
-
-            moveAtVelocity(pidout * maxVel);
-
-        else
-
-            m_motor.set(pidout);
+        moveAtVelocity(pidout * maxVel);
     }
 
     public void resetAngle() {
@@ -414,7 +408,7 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     private void setFF_MaxOuts() {
 
-        kFF = 0;// 10,000 rpm = (10000/60) * .03645 = 6.0 1/6.0 = .167
+        kFF = 0;// not used inside position loop
         kMinOutput = -.5;
         kMaxOutput = .6;
 
@@ -425,7 +419,8 @@ public class RevTiltSubsystem extends SubsystemBase {
     }
 
     private void setVelGains() {
-        kFF = Pref.getPref("tiVKff");// 9,000/60 rps= 150rps * .036deg/rev = 5.4 and ff = 1/5.4 = .185
+        // kFF = Pref.getPref("tiVKff");// 9,000/60 rps= 150rps * .036deg/rev = 5.4
+        // deg/sec and ff = 1/5.4 = .185
         double p = Pref.getPref("tiVKp");
         double i = Pref.getPref("tiVKi");
         double d = Pref.getPref("tiVKd");

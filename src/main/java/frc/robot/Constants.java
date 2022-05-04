@@ -241,28 +241,12 @@ public final class Constants {
 
       public static final double TURRET_MIN_ANGLE = -55;
 
-      public static final double TURRET_DEG_PER_MOTOR_REV = 1.38996;
+      public static final double TURRET_DEG_PER_MOTOR_REV = 1.38996;//max rps = 150 so 208 deg per sec
 
       public static final double kVVoltSecondsPerRotation = 0.0774;
 
       public static final double kA = 0.00003;
 
-
-   }
-
-   public static final class IntakeConstants {
-
-      public static final double REAR_SPEED = .5;
-
-   }
-
-   public static final class CargoTransportConstants {
-
-      public static final double FRONT_PASS_SPEED = .5;
-      public static final double FRONT_SHOOT_SPEED = .56;
-      public static final double REAR_PASS_SPEED = -.5;
-      public static final double REAR_SHOOT_SPEED = -.5;
-      public static final double BELT_SPEED = -.5;
 
    }
 

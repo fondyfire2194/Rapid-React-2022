@@ -301,6 +301,15 @@ public class RevDrivetrain extends SubsystemBase {
         mDrive.arcadeDrive(speed, rotation);
     }
 
+    public void curvatureDrive(double speed, double rotation) {
+
+        if (Math.abs(speed) < .1 || lockedForVision)
+            speed = 0;
+        if (Math.abs(rotation) < .1)
+            rotation = 0;
+        mDrive.curvatureDrive(speed, rotation, true);
+    }
+
     public void tankDriveVolts(double left, double right) {
         mLeadLeft.setVoltage(left);
         mLeadRight.setVoltage(right);

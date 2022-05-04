@@ -39,7 +39,7 @@ public class Pref {
     prefDict.put("tiVKi", .0005);
     prefDict.put("tiVKd", 0.6);
     prefDict.put("tiVKiz", 0.75);
-    prefDict.put("tiVMaxV", 550.);// deg per sec
+    prefDict.put("tiVMaxV", 5.);// deg per sec so 3.6 sec end to end
     prefDict.put("tiVMaxA", 150.);// deg per sec/sec
     prefDict.put("tiVTune", 0.);
 
@@ -59,7 +59,7 @@ public class Pref {
     prefDict.put("tuVKd", 0.);
     prefDict.put("tuVKiz", 1.5);
 
-    prefDict.put("tuVMaxV", 50.);// deg/sec
+    prefDict.put("tuVMaxV", 50.);// deg/sec = 2 seconds end to end travel
     prefDict.put("tuVMaxA", 250.);// deg/sec/sec
 
     prefDict.put("tuVTune", 0.);

@@ -225,13 +225,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("TUPIDOUT", pidout);
 
-        if (RobotBase.isReal())
-
-            moveAtVelocity(pidout * maxVel);
-
-        else
-
-            m_motor.set(pidout);
+        moveAtVelocity(pidout * maxVel);
     }
 
     public double getTargetHorOffset() {
@@ -410,6 +404,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     private void setFF_MaxOuts() {
+        kFF = 0;// not used inside position loop
         kMinOutput = -.75;
         kMaxOutput = .75;
         mVelController.setOutputRange(kMinOutput, kMaxOutput, VELOCITY_SLOT);
@@ -418,7 +413,8 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     private void setVelGains() {
-        kFF = Pref.getPref("tuVKff");// 9,000/60 rps = 150rps * 1.39 degperrev = 210 and 1/210 = .004
+        // kFF = Pref.getPref("tuVKff");// 9,000/60 rps = 150rps * 1.39 degperrev = 210
+        // and 1/210 = .004
         double p = Pref.getPref("tuVKp");
         double i = Pref.getPref("tuVKi");
         double d = Pref.getPref("tuVKd");
@@ -426,7 +422,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         kMinOutput = -.75;
         kMaxOutput = .75;
         mVelController.setOutputRange(kMinOutput, kMaxOutput, VELOCITY_SLOT);
-        maxVel = Pref.getPref("tuVMaxV");// deg per sec 150rps  *1.39 = 208 deg /sec
+        maxVel = Pref.getPref("tuVMaxV");// deg per sec 150rps *1.39 = 208 deg /sec
         maxAcc = Pref.getPref("tuVMaxA");// deg per sec per sec
         allowedErr = .1;
         calibratePID(p, i, d, iz, VELOCITY_SLOT);
