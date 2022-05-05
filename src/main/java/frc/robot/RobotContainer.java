@@ -402,12 +402,12 @@ public class RobotContainer {
 
       public Command getJogTurretVelocityCommand() {
 
-            return new TurretJogVelocity(m_turret, () -> codriverGamepad.getRawAxis(0) / 5);
+            return new TurretJogVelocity(m_turret, () -> codriverGamepad.getRawAxis(0) / 2);
       }
 
       public Command getJogTiltVelocityCommand() {
 
-            return new TiltJogVelocity(m_tilt, () -> -codriverGamepad.getRawAxis(1) / 5);
+            return new TiltJogVelocity(m_tilt, () -> -codriverGamepad.getRawAxis(1) / 2);
       }
 
       public Command getJogShooterCommand() {

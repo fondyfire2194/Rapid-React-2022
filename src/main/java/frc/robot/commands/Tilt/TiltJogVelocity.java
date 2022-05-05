@@ -16,7 +16,7 @@ public class TiltJogVelocity extends CommandBase {
 
   private final RevTiltSubsystem m_tilt;
   private final Supplier<Double> m_xaxisSpeedSupplier;
-  private double maxSpeed = 100;
+  private double maxSpeed = 5.4;
 
   public TiltJogVelocity(RevTiltSubsystem tilt, Supplier<Double> xaxisSpeedSupplier) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -33,6 +33,8 @@ public class TiltJogVelocity extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    SmartDashboard.putNumber("tiltJogVel", m_xaxisSpeedSupplier.get() * maxSpeed);
 
     if (Math.abs(m_xaxisSpeedSupplier.get()) < .05)
 

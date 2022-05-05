@@ -46,17 +46,17 @@ public class RunActiveIntake extends CommandBase {
 
   public void execute() {
 
-    if (loopctr < 50)
+    if (loopctr < 30)
 
       loopctr++;
 
-    if (DriverStation.isTeleop() && m_intake.useFrontIntake && m_intake.useFrontCamera)
+    // if (DriverStation.isTeleop() && m_intake.useFrontIntake && m_intake.useFrontCamera)
 
-      Shuffleboard.selectTab("FrontIntakeCamera");
+    //   Shuffleboard.selectTab("FrontIntakeCamera");
 
-    if (DriverStation.isTeleop() && !m_intake.useFrontIntake && m_intake.useRearCamera)
+    // if (DriverStation.isTeleop() && !m_intake.useFrontIntake && m_intake.useRearCamera)
 
-      Shuffleboard.selectTab("RearIntakeCamera");
+    //   Shuffleboard.selectTab("RearIntakeCamera");
 
     m_intake.lowerActiveArm();
 
@@ -64,7 +64,7 @@ public class RunActiveIntake extends CommandBase {
 
     // run intake until first cargo is at lower rollers
 
-    if (!m_transport.getCargoAtShoot() && loopctr > 25) {
+    if (!m_transport.getCargoAtShoot() && loopctr > 10) {
 
       // if (!stopActiveIntakeNow)
 

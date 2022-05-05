@@ -57,7 +57,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     public final CANSparkMaxWithSim m_motor; // NOPMD
     private final RelativeEncoder mEncoder;
     private CANEncoderSim mEncoderSim;
-    private PIDController mPosController;
+    public PIDController mPosController;
 
     public final SparkMaxPIDController mVelController;
     public final PIDController mLockController = new PIDController(.03, 0, 0);
@@ -108,7 +108,6 @@ public class RevTurretSubsystem extends SubsystemBase {
     public double testLockFromThrottle;
     public boolean testLock;
 
-    public boolean turretUseVision;
     public double turretOffsetAdder;
     public double turretOffsetChange;
     public double presetPosition;
@@ -125,7 +124,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         m_motor.restoreFactoryDefaults();
         m_motor.setInverted(true);
         m_motor.setOpenLoopRampRate(5);
-        m_motor.setClosedLoopRampRate(2);
+        m_motor.setClosedLoopRampRate(1);
         mPosController = new PIDController(.01, 0, 0);
         mEncoder.setPosition(0);
         aimCenter();
@@ -222,6 +221,8 @@ public class RevTurretSubsystem extends SubsystemBase {
         double pidout = 0;
 
         pidout = mPosController.calculate(getAngle(), degrees);
+        SmartDashboard.putNumber("TUPERR", mPosController.getPositionError());
+        SmartDashboard.putNumber("PosPGain", mPosController.getP());
 
         SmartDashboard.putNumber("TUPIDOUT", pidout);
 
@@ -236,6 +237,8 @@ public class RevTurretSubsystem extends SubsystemBase {
     public void lockTurretToVision(double cameraError) {
 
         lockPIDOut = mLockController.calculate(cameraError, 0);
+
+        SmartDashboard.putNumber("tulLockMove", -lockPIDOut * maxVel);
 
         moveAtVelocity(-lockPIDOut * maxVel);
 
@@ -365,9 +368,11 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     public void moveAtVelocity(double degPerSec) {
 
-        if (RobotBase.isReal())
+        if (RobotBase.isReal()){
 
             mVelController.setReference(degPerSec, ControlType.kVelocity, VELOCITY_SLOT);
+
+            SmartDashboard.putNumber("TURVEl", degPerSec);}
 
         else
 
@@ -431,20 +436,22 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     private void setPosGains() {
 
-        mPosController.setP(Pref.getPref("TuPkP"));
-        mPosController.setI(Pref.getPref("TuPkI"));
-        mPosController.setD(Pref.getPref("TuPkD"));
-        izsetp = Pref.getPref("TuPkIZ");
+        mPosController.setP(Pref.getPref("tuPkp"));
+        mPosController.setI(Pref.getPref("tuPki"));
+        mPosController.setD(Pref.getPref("tuPkd"));
+        izsetp = Pref.getPref("tuPkiz");
         mPosController.setIntegratorRange(-izsetp, izsetp);
         mPosController.setTolerance(.5);
+
+        SmartDashboard.putNumber("PREFTUPKP", Pref.getPref("tuPkp"));
     }
 
     private void setLockGains() {
 
-        mLockController.setP(Pref.getPref("TuLkP"));
-        mLockController.setI(Pref.getPref("TuLkI"));
-        mLockController.setD(Pref.getPref("TuLkD"));
-        izsetl = Pref.getPref("TuLkIZ");
+        mLockController.setP(Pref.getPref("tuLkp"));
+        mLockController.setI(Pref.getPref("tuLki"));
+        mLockController.setD(Pref.getPref("tuLkd"));
+        izsetl = Pref.getPref("tuLkiz");
         mLockController.setIntegratorRange(-izsetl, izsetl);
         mLockController.setTolerance(.5);
     }

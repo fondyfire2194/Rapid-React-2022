@@ -203,23 +203,9 @@ public class SetUpOI {
 
                         turretValues2.addBoolean("LockAtTarget", () -> turret.getLockAtTarget());
 
-                        ShuffleboardLayout turretVelGains = Shuffleboard.getTab("SetupTurret")
-
-                                        .getLayout("VelGains", BuiltInLayouts.kList).withPosition(6, 0).withSize(1, 3)
-                                        .withProperties(Map.of("Label position", "LEFT")); // labels
-
-                        turretVelGains.addNumber("tuVKff", () -> Pref.getPref("tuVKff"));
-                        turretVelGains.addNumber("tuVKp", () -> Pref.getPref("tuVKp"));
-                        turretVelGains.addNumber("tuVKi", () -> Pref.getPref("tuVKi"));
-                        turretVelGains.addNumber("tuVKd", () -> Pref.getPref("tuVKd"));
-                        turretVelGains.addNumber("tuVKiz", () -> Pref.getPref("tuVKiz"));
-                        turretVelGains.addNumber("MaxAcc", () -> turret.maxAccset);
-                        turretVelGains.addNumber("MaxV", () -> turret.maxVelset);
-                        turretVelGains.addNumber("tuVTune", () -> Pref.getPref("tuVTune"));
-
                         ShuffleboardLayout turretVactGains = Shuffleboard.getTab("SetupTurret")
 
-                                        .getLayout("VActGains", BuiltInLayouts.kList).withPosition(7, 0).withSize(1, 2)
+                                        .getLayout("VActGains", BuiltInLayouts.kList).withPosition(5, 0).withSize(1, 2)
                                         .withProperties(Map.of("Label position", "LEFT")); // labels
 
                         turretVactGains.addNumber("FF", () -> turret.ffsetv);
@@ -230,23 +216,23 @@ public class SetUpOI {
 
                         ShuffleboardLayout turretLockGains = Shuffleboard.getTab("SetupTurret")
                                         .getLayout("LockGains", BuiltInLayouts.kList)
-                                        .withPosition(8, 0).withSize(1, 2)
+                                        .withPosition(6, 0).withSize(1, 2)
                                         .withProperties(Map.of("Label position", "LEFT"));
-                        turretLockGains.addNumber("tuLkp", () -> Pref.getPref("tuLkp"));
-                        turretLockGains.addNumber("tuLki", () -> Pref.getPref("tuLki"));
-                        turretLockGains.addNumber("tuLkd", () -> Pref.getPref("tuLkd"));
-                        turretLockGains.addNumber("tuLkiz", () -> Pref.getPref("tuLkiz"));
-                        turretLockGains.addNumber("tuLTune", () -> Pref.getPref("tuLTune"));
+                        turretLockGains.addNumber("tuLkp", () -> turret.mLockController.getP());
+                        turretLockGains.addNumber("tuLki", () -> turret.mLockController.getI());
+                        turretLockGains.addNumber("tuLkd", () -> turret.mLockController.getD());
+                        turretLockGains.addNumber("tuLPosErr", () -> turret.mLockController.getPositionError());
+                        
 
                         ShuffleboardLayout turretPosGains = Shuffleboard.getTab("SetupTurret")
                                         .getLayout("PosGains", BuiltInLayouts.kList)
-                                        .withPosition(8, 2).withSize(1, 2)
+                                        .withPosition(7,0).withSize(1, 2)
                                         .withProperties(Map.of("Label position", "LEFT"));
-                        turretPosGains.addNumber("tuPkp", () -> Pref.getPref("tuPkp"));
-                        turretPosGains.addNumber("tuPki", () -> Pref.getPref("tuPki"));
-                        turretPosGains.addNumber("tuPkd", () -> Pref.getPref("tuPkd"));
-                        turretPosGains.addNumber("tuPkiz", () -> Pref.getPref("tuPkiz"));
-                        turretPosGains.addNumber("tuPTune", () -> Pref.getPref("tuPTune"));
+                        turretPosGains.addNumber("tuPkp", () -> turret.mPosController.getP());
+                        turretPosGains.addNumber("tuPki", () -> turret.mPosController.getI());
+                        turretPosGains.addNumber("tuPkd", () -> turret.mPosController.getD());
+                        turretPosGains.addNumber("tuPPoseErr", () -> turret.mPosController.getPositionError());
+                        
 
                 }
 
@@ -292,19 +278,6 @@ public class SetUpOI {
                         tiltValues2.addBoolean("-SWLimit", () -> tilt.onMinusSoftwareLimit());
                         tiltValues2.addBoolean("SWLimitEn", () -> tilt.getSoftwareLimitsEnabled());
 
-                        ShuffleboardLayout tiltVelGains = Shuffleboard.getTab("SetupTilt")
-
-                                        .getLayout("VelGains", BuiltInLayouts.kList).withPosition(6, 0).withSize(1, 3)
-                                        .withProperties(Map.of("Label position", "LEFT")); // labels
-
-                        tiltVelGains.addNumber("tiVKff", () -> Pref.getPref("tiVKff"));
-                        tiltVelGains.addNumber("tiVKp", () -> Pref.getPref("tiVKp"));
-                        tiltVelGains.addNumber("tiVKi", () -> Pref.getPref("tiVKi"));
-                        tiltVelGains.addNumber("tiVKd", () -> Pref.getPref("tiVKd"));
-                        tiltVelGains.addNumber("tiVKiz", () -> Pref.getPref("tiVKiz"));
-                        tiltVelGains.addNumber("MaxAcc", () -> tilt.maxAccset);
-                        tiltVelGains.addNumber("MaxV", () -> tilt.maxVelset);
-                        tiltVelGains.addNumber("tiVTune", () -> Pref.getPref("tiVTune"));
 
                         ShuffleboardLayout tiltVactGains = Shuffleboard.getTab("SetupTilt")
 
@@ -317,17 +290,14 @@ public class SetUpOI {
                         tiltVactGains.addNumber("I", () -> tilt.isetv);
                         tiltVactGains.addNumber("IZ", () -> tilt.izsetv);
 
-                      
-
                         ShuffleboardLayout tiltPosGains = Shuffleboard.getTab("SetupTilt")
                                         .getLayout("PosGains", BuiltInLayouts.kList)
                                         .withPosition(8, 0).withSize(1, 2)
                                         .withProperties(Map.of("Label position", "LEFT"));
-                        tiltPosGains.addNumber("tiPkp", () -> Pref.getPref("tiPkp"));
-                        tiltPosGains.addNumber("tiPki", () -> Pref.getPref("tiPki"));
-                        tiltPosGains.addNumber("tiPkd", () -> Pref.getPref("tiPkd"));
-                        tiltPosGains.addNumber("tiPkiz", () -> Pref.getPref("tiPkiz"));
-                        tiltPosGains.addNumber("tiPTune", () -> Pref.getPref("tiPTune"));
+                        tiltPosGains.addNumber("tiPkp", () -> tilt.mPosController.getP());
+                        tiltPosGains.addNumber("tiPki", () -> tilt.mPosController.getI());
+                        tiltPosGains.addNumber("tiPkd", () -> tilt.mPosController.getD());
+     
 
                 }
 

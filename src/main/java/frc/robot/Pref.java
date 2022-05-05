@@ -34,13 +34,12 @@ public class Pref {
   static {
 
     // Tilt velocity
-    prefDict.put("tiVKff", .185);
+
     prefDict.put("tiVKp", .004);
     prefDict.put("tiVKi", .0005);
     prefDict.put("tiVKd", 0.6);
     prefDict.put("tiVKiz", 0.75);
-    prefDict.put("tiVMaxV", 5.);// deg per sec so 3.6 sec end to end
-    prefDict.put("tiVMaxA", 150.);// deg per sec/sec
+ 
     prefDict.put("tiVTune", 0.);
 
     // tilt position
@@ -53,14 +52,11 @@ public class Pref {
 
     // Turret velocity
 
-    prefDict.put("tuVKff", 0.004);
+
     prefDict.put("tuVKp", .002);
     prefDict.put("tuVKi", .0000);
     prefDict.put("tuVKd", 0.);
     prefDict.put("tuVKiz", 1.5);
-
-    prefDict.put("tuVMaxV", 50.);// deg/sec = 2 seconds end to end travel
-    prefDict.put("tuVMaxA", 250.);// deg/sec/sec
 
     prefDict.put("tuVTune", 0.);
 

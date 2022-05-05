@@ -56,16 +56,17 @@ public class PositionHoldTurret extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    if (!m_limelight.useVision)
-    
-      visionFoundCounter = 0;
 
-    targetSeen = m_limelight.getIsTargetFound() && m_limelight.useVision;// && m_turret.turretUseVision;
+    if (!m_limelight.useVision) {
+
+      visionFoundCounter = 0;
+    }
+
+    targetSeen = m_limelight.getIsTargetFound() && m_limelight.useVision;
 
     if (targetSeen && m_turret.validTargetSeen) {
 
-       cameraHorizontalError = m_limelight.getdegRotationToTarget();
+      cameraHorizontalError = m_limelight.getdegRotationToTarget();
 
       m_turret.adjustedCameraError = cameraHorizontalError
 
@@ -88,8 +89,9 @@ public class PositionHoldTurret extends CommandBase {
       visionFoundCounter++;
     }
 
-    if (m_limelight.useVision && visionFoundCounter >= filterCount)
+    if (m_limelight.useVision && visionFoundCounter >= filterCount) {
       m_turret.validTargetSeen = true;
+    }
 
     if (!targetSeen && m_turret.validTargetSeen) {
       visionFoundCounter--;

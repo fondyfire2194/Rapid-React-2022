@@ -52,7 +52,7 @@ public class RevTiltSubsystem extends SubsystemBase {
     public SparkMaxLimitSwitch m_reverseLimit;
     public SparkMaxLimitSwitch m_forwardLimit;
     private CANEncoderSim mEncoderSim;
-    private PIDController mPosController;
+    public PIDController mPosController;
 
     public boolean positionResetDone;
     public double targetAngle;
@@ -125,6 +125,7 @@ public class RevTiltSubsystem extends SubsystemBase {
         m_motor.restoreFactoryDefaults();
         m_motor.setInverted(false);
         m_motor.setOpenLoopRampRate(1);
+        m_motor.setClosedLoopRampRate(1);
 
         mPosController = new PIDController(.003, 0, 0);
         aimCenter();
@@ -409,8 +410,8 @@ public class RevTiltSubsystem extends SubsystemBase {
     private void setFF_MaxOuts() {
 
         kFF = 0;// not used inside position loop
-        kMinOutput = -.5;
-        kMaxOutput = .6;
+        kMinOutput = -.75;
+        kMaxOutput = .75;
 
         mVelController.setFF(kFF, VELOCITY_SLOT);
 
@@ -437,10 +438,10 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     private void setPosGains() {
 
-        mPosController.setP(Pref.getPref("TiPkP"));
-        mPosController.setI(Pref.getPref("TiPkI"));
-        mPosController.setD(Pref.getPref("TiPkD"));
-        izsetp = Pref.getPref("TiPkIZ");
+        mPosController.setP(Pref.getPref("tiPkp"));
+        mPosController.setI(Pref.getPref("tiPki"));
+        mPosController.setD(Pref.getPref("tiPkd"));
+        izsetp = Pref.getPref("tiPkiz");
         mPosController.setIntegratorRange(-izsetp, izsetp);
         mPosController.setTolerance(.5);
     }

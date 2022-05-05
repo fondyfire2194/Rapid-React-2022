@@ -42,7 +42,7 @@ public class TiltMoveToReverseLimit extends CommandBase {
     if (RobotBase.isSimulation())
       simCtr++;
     if (!endIt) {
-      m_tilt.moveManually(-.2);
+      m_tilt.moveManually(-.4);
     }
     endIt = m_tilt.m_reverseLimit.isPressed() || m_tilt.getAngle() < m_startAngle - 10 || simCtr > 150;
 
