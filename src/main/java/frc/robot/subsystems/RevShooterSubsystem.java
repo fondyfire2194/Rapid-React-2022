@@ -5,6 +5,7 @@ import java.util.Arrays;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
@@ -139,10 +140,22 @@ public class RevShooterSubsystem extends SubsystemBase {
         mRightMotor.restoreFactoryDefaults();
         mRightMotor.follow(mLeftMotor, true);
 
+        mLeftMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+        mLeftMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+
+        mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
+        mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+        mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+
         m_topRollerMotor = new CANSparkMaxWithSim(CANConstants.TOP_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
         m_topPID = m_topRollerMotor.getPIDController();
         m_topEncoder = m_topRollerMotor.getEncoder();
         m_topRollerMotor.restoreFactoryDefaults();
+
+        m_topRollerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
+        m_topRollerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+        m_topRollerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+
         m_topEncoder.setPositionConversionFactor(.1);
         m_topEncoder.setVelocityConversionFactor(.1);
 
@@ -389,7 +402,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     }
 
-    public double getTargetDistance(){
+    public double getTargetDistance() {
         return calculatedCameraDistance;
     }
 

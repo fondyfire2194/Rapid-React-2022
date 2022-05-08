@@ -163,12 +163,8 @@ public class SetUpOI {
                         turretValues.addNumber("Pct", () -> turret.getMotorOut());
                         turretValues.addNumber("Amps", () -> turret.getAmps());
                         turretValues.addNumber("Speed", () -> turret.getSpeed());
-                        turretValues.addNumber("Vision Offset", () -> turret.targetHorizontalOffset);
-                        turretValues.addNumber("AdjTarget", () -> turret.adjustedCameraError);
                         turretValues.addNumber("Vision Error", () -> limelight.getdegRotationToTarget());
-                        turretValues.addNumber("DriverOffset", () -> turret.driverHorizontalOffsetDegrees);
-                        turretValues.addNumber("LockPosnErr", () -> turret.getLockPositionError());
-                        turretValues.addBoolean("MinHWLim", () -> turret.onMinusHardwareLimit());
+                       turretValues.addBoolean("MinHWLim", () -> turret.onMinusHardwareLimit());
                         turretValues.addBoolean("PlusHWLim", () -> turret.onPlusHardwareLimit());
 
                         ShuffleboardLayout turretValues3 = Shuffleboard.getTab("SetupTurret")

@@ -66,6 +66,8 @@ public class IntakesSubsystem extends SubsystemBase {
 
     m_frontIntakeMotor.setNeutralMode(NeutralMode.Brake);
 
+    setStatusFramePeriods();
+
     raiseRearArm();
 
     raiseFrontArm();
@@ -219,6 +221,17 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public double getRearMotorAmps() {
     return m_rearIntakeMotor.getStatorCurrent();
+  }
+
+  public void setStatusFramePeriods() {
+
+    m_frontIntakeMotor.setStatusFramePeriod(2, 200);
+
+    m_frontIntakeMotor.setStatusFramePeriod(3, 200);
+
+    m_rearIntakeMotor.setStatusFramePeriod(2, 200);
+
+    m_rearIntakeMotor.setStatusFramePeriod(3, 200);
   }
 
   public void setRearBrakeOn(boolean on) {

@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.RelativeEncoder;
@@ -85,11 +86,14 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     m_lowerRollerMotor = new CANSparkMaxWithSim(CANConstants.LOWER_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
 
+    m_lowerRollerMotor.restoreFactoryDefaults();
+
+    m_lowerRollerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+    m_lowerRollerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+
     m_lowerPID = m_lowerRollerMotor.getPIDController();
 
     m_lowerEncoder = m_lowerRollerMotor.getEncoder();
-
-    m_lowerRollerMotor.restoreFactoryDefaults();
 
     m_lowerEncoder.setPositionConversionFactor(.1);
 
@@ -201,7 +205,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   public boolean getCargoBlue() {
-    
+
     return cargoIsBlue;
   }
 

@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
@@ -72,7 +73,6 @@ public class RevTurretSubsystem extends SubsystemBase {
     public double psetl, isetl, dsetl, izsetl;
 
     public boolean validTargetSeen;
-    public double adjustedCameraError;
 
     public boolean tuneOnv = false;
     public boolean lastTuneOnv;
@@ -87,18 +87,6 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     public double lockPIDOut;
     public boolean visionOnTarget;
-    public double adjustMeters = .15;// 6"
-    private double maxAdjustMeters = .5;
-    private double minAdjustMeters = -.5;
-    public double driverAdjustAngle;
-    public double driverAdjustDistance;
-    public NetworkTableEntry setupHorOffset;
-    public double driverHorizontalOffsetDegrees;
-    public double driverHorizontalOffsetMeters;
-    public double turretSetupOffset;
-
-    public boolean useSetupHorOffset;
-    public double testHorOffset;
     public double positionError;
     public double correctedEndpoint;
     public double visionErrorDifference;
@@ -125,10 +113,13 @@ public class RevTurretSubsystem extends SubsystemBase {
         m_motor.setInverted(true);
         m_motor.setOpenLoopRampRate(5);
         m_motor.setClosedLoopRampRate(1);
+        
+        m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+        m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+
         mPosController = new PIDController(.01, 0, 0);
         mEncoder.setPosition(0);
-        aimCenter();
-
+ 
         if (RobotBase.isReal()) {
             setFF_MaxOuts();
             setVelGains();
@@ -176,12 +167,6 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         if (DriverStation.isDisabled())
             targetAngle = getAngle();
-
-        if (useSetupHorOffset) {
-            testHorOffset = 0;// setupHorOffset.getDouble(0);
-        } else {
-            testHorOffset = 0;
-        }
 
     }
 
@@ -322,24 +307,6 @@ public class RevTurretSubsystem extends SubsystemBase {
         return m_motor.getFault(FaultID.kHardLimitFwd);
     }
 
-    public void aimFurtherLeft() {
-        if (driverHorizontalOffsetMeters > minAdjustMeters) {
-            driverHorizontalOffsetDegrees -= driverAdjustAngle;
-            driverHorizontalOffsetMeters -= adjustMeters;
-        }
-    }
-
-    public void aimFurtherRight() {
-        if (driverHorizontalOffsetMeters < maxAdjustMeters) {
-            driverHorizontalOffsetDegrees += driverAdjustAngle;
-            driverHorizontalOffsetMeters += adjustMeters;
-        }
-    }
-
-    public void aimCenter() {
-        driverHorizontalOffsetMeters = 0;
-        driverHorizontalOffsetDegrees = 0;
-    }
 
     public boolean isAtHeight(double angle, double allowableError) {
         return Math.abs(angle - getAngle()) < allowableError;

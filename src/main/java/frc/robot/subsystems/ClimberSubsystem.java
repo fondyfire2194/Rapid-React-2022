@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 
-
 public class ClimberSubsystem extends SubsystemBase {
   /** Creates a new Climber. */
 
@@ -26,11 +25,11 @@ public class ClimberSubsystem extends SubsystemBase {
 
     m_climberMotor.setNeutralMode(NeutralMode.Brake);
 
-
+    setStatusFramePeriods();
   }
 
   public void runMotor(double speed) {
-    
+
     m_climberMotor.set(ControlMode.PercentOutput, speed);
   }
 
@@ -66,5 +65,11 @@ public class ClimberSubsystem extends SubsystemBase {
 
   }
 
- 
+  public void setStatusFramePeriods() {
+
+    m_climberMotor.setStatusFramePeriod(2, 200);
+
+    m_climberMotor.setStatusFramePeriod(3, 200);
+  }
+
 }

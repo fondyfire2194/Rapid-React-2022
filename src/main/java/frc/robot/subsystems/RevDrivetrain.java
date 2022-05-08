@@ -5,6 +5,7 @@ import java.util.Arrays;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 
@@ -129,7 +130,21 @@ public class RevDrivetrain extends SubsystemBase {
         mLeftEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
         mRightEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
 
-        // }
+
+        mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+        mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+
+        mFollowerLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
+        mFollowerLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+        mFollowerLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+
+
+        mLeadRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+        mLeadRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+
+        mFollowerRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
+        mFollowerRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+        mFollowerRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
 
         mLeadLeft.setOpenLoopRampRate(1);
 

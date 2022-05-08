@@ -30,8 +30,8 @@ public class PositionHoldTurret extends CommandBase {
   private double cameraHorizontalError;
   private int visionFoundCounter;
   private final int filterCount = 3;
-  private double deadband = .01;
-  private double lastHorizontalError;
+
+  
 
   public PositionHoldTurret(RevTurretSubsystem turret, LimeLight limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -68,32 +68,27 @@ public class PositionHoldTurret extends CommandBase {
 
       cameraHorizontalError = m_limelight.getdegRotationToTarget();
 
-      m_turret.adjustedCameraError = cameraHorizontalError
-
-          - (m_turret.targetHorizontalOffset + m_turret.driverHorizontalOffsetDegrees + m_turret.testHorOffset);
-
-      m_limelight.setHorizontalOffset(
-
-          +(m_turret.targetHorizontalOffset + m_turret.driverHorizontalOffsetDegrees + m_turret.testHorOffset));
-
+  
     } else {
       cameraHorizontalError = 0;
-      m_turret.adjustedCameraError = 0;
+
       m_limelight.setHorizontalOffset(0);
+
     }
 
-    if (Math.abs(m_turret.adjustedCameraError) < deadband)
-      m_turret.adjustedCameraError = 0;
 
     if (targetSeen && visionFoundCounter < filterCount) {
+
       visionFoundCounter++;
     }
 
     if (m_limelight.useVision && visionFoundCounter >= filterCount) {
+
       m_turret.validTargetSeen = true;
     }
 
     if (!targetSeen && m_turret.validTargetSeen) {
+      
       visionFoundCounter--;
     }
 
