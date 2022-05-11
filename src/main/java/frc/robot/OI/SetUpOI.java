@@ -164,7 +164,7 @@ public class SetUpOI {
                         turretValues.addNumber("Amps", () -> turret.getAmps());
                         turretValues.addNumber("Speed", () -> turret.getSpeed());
                         turretValues.addNumber("Vision Error", () -> limelight.getdegRotationToTarget());
-                       turretValues.addBoolean("MinHWLim", () -> turret.onMinusHardwareLimit());
+                        turretValues.addBoolean("MinHWLim", () -> turret.onMinusHardwareLimit());
                         turretValues.addBoolean("PlusHWLim", () -> turret.onPlusHardwareLimit());
 
                         ShuffleboardLayout turretValues3 = Shuffleboard.getTab("SetupTurret")
@@ -177,7 +177,8 @@ public class SetUpOI {
                         turretValues3.addNumber("LockOutput", () -> turret.lockPIDOut);
                         turretValues3.addNumber("LockError", () -> turret.mLockController.getPositionError());
                         turretValues3.addBoolean("LockController", () -> turret.validTargetSeen);
-
+                        turretValues3.addNumber("Firmware", () -> turret.m_motor.getFirmwareVersion());
+ 
                         ShuffleboardLayout turretValues2 = Shuffleboard.getTab("SetupTurret")
                                         .getLayout("States", BuiltInLayouts.kGrid).withPosition(4, 2).withSize(2, 3)
                                         .withProperties(Map.of("Label position", "TOP")); // labels
@@ -218,17 +219,15 @@ public class SetUpOI {
                         turretLockGains.addNumber("tuLki", () -> turret.mLockController.getI());
                         turretLockGains.addNumber("tuLkd", () -> turret.mLockController.getD());
                         turretLockGains.addNumber("tuLPosErr", () -> turret.mLockController.getPositionError());
-                        
 
                         ShuffleboardLayout turretPosGains = Shuffleboard.getTab("SetupTurret")
                                         .getLayout("PosGains", BuiltInLayouts.kList)
-                                        .withPosition(7,0).withSize(1, 2)
+                                        .withPosition(7, 0).withSize(1, 2)
                                         .withProperties(Map.of("Label position", "LEFT"));
                         turretPosGains.addNumber("tuPkp", () -> turret.mPosController.getP());
                         turretPosGains.addNumber("tuPki", () -> turret.mPosController.getI());
                         turretPosGains.addNumber("tuPkd", () -> turret.mPosController.getD());
                         turretPosGains.addNumber("tuPPoseErr", () -> turret.mPosController.getPositionError());
-                        
 
                 }
 
@@ -257,6 +256,8 @@ public class SetUpOI {
                         tiltValues.addNumber("Speed", () -> tilt.getSpeed());
                         tiltValues.addNumber("AdjTarget", () -> tilt.adjustedVerticalError);
                         tiltValues.addNumber("VertDegToTarget", () -> limelight.getdegVerticalToTarget());
+                        tiltValues.addNumber("Firmware", () -> turret.m_motor.getFirmwareVersion());
+
 
                         ShuffleboardLayout tiltValues2 = Shuffleboard.getTab("SetupTilt")
                                         .getLayout("States", BuiltInLayouts.kGrid).withPosition(4, 0).withSize(2, 3)
@@ -273,7 +274,6 @@ public class SetUpOI {
                         tiltValues2.addBoolean("+SWLimit", () -> tilt.onPlusSoftwareLimit());
                         tiltValues2.addBoolean("-SWLimit", () -> tilt.onMinusSoftwareLimit());
                         tiltValues2.addBoolean("SWLimitEn", () -> tilt.getSoftwareLimitsEnabled());
-
 
                         ShuffleboardLayout tiltVactGains = Shuffleboard.getTab("SetupTilt")
 
@@ -293,7 +293,6 @@ public class SetUpOI {
                         tiltPosGains.addNumber("tiPkp", () -> tilt.mPosController.getP());
                         tiltPosGains.addNumber("tiPki", () -> tilt.mPosController.getI());
                         tiltPosGains.addNumber("tiPkd", () -> tilt.mPosController.getD());
-     
 
                 }
 

@@ -17,21 +17,21 @@
 
 package frc.robot.commands.Turret;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Vision.LimeLight;
 import frc.robot.subsystems.RevTurretSubsystem;
 
 public class PositionHoldTurret extends CommandBase {
-  /** Creates a new Positionturret. */
+  /** Creates a new Position Hold Turret. */
 
   private final RevTurretSubsystem m_turret;
   private final LimeLight m_limelight;
   private boolean targetSeen;
   private double cameraHorizontalError;
-  private int visionFoundCounter;
-  private final int filterCount = 3;
 
-  
+  private Debouncer visionTargetDebounce = new Debouncer(.025, DebounceType.kBoth);
 
   public PositionHoldTurret(RevTurretSubsystem turret, LimeLight limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -46,61 +46,30 @@ public class PositionHoldTurret extends CommandBase {
 
     m_turret.programRunning = 1;
 
-    if (m_turret.validTargetSeen && m_limelight.useVision)
-      visionFoundCounter = filterCount;
-    else
-      visionFoundCounter = 0;
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    if (!m_limelight.useVision) {
+    targetSeen = m_limelight.getIsTargetFound();
 
-      visionFoundCounter = 0;
-    }
+    // To limit effect of possible Limelight jitter, valid target is held off for 25
+    // ms and will be held valid for 25 ms after if is lost. During the delay
+    // time after it is lost, the previous value of error will be used
 
-    targetSeen = m_limelight.getIsTargetFound() && m_limelight.useVision;
+    m_turret.validTargetSeen = m_limelight.useVision && visionTargetDebounce.calculate(targetSeen);
 
     if (targetSeen && m_turret.validTargetSeen) {
 
       cameraHorizontalError = m_limelight.getdegRotationToTarget();
-
-  
-    } else {
-      cameraHorizontalError = 0;
-
-      m_limelight.setHorizontalOffset(0);
-
     }
 
-
-    if (targetSeen && visionFoundCounter < filterCount) {
-
-      visionFoundCounter++;
-    }
-
-    if (m_limelight.useVision && visionFoundCounter >= filterCount) {
-
-      m_turret.validTargetSeen = true;
-    }
-
-    if (!targetSeen && m_turret.validTargetSeen) {
-      
-      visionFoundCounter--;
-    }
-
-    if (!m_limelight.useVision || !targetSeen && visionFoundCounter <= 0) {
-      m_turret.validTargetSeen = false;
-      visionFoundCounter = 0;
-      cameraHorizontalError = 0;
-    }
-
-    if (!m_turret.validTargetSeen) {
+    if (!targetSeen && !m_turret.validTargetSeen) {
 
       m_turret.goToPosition(m_turret.targetAngle);
+
+      cameraHorizontalError = 0;
     }
 
     else {

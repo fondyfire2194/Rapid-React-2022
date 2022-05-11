@@ -17,7 +17,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -113,13 +112,13 @@ public class RevTurretSubsystem extends SubsystemBase {
         m_motor.setInverted(true);
         m_motor.setOpenLoopRampRate(5);
         m_motor.setClosedLoopRampRate(1);
-        
+
         m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
         m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
 
         mPosController = new PIDController(.01, 0, 0);
         mEncoder.setPosition(0);
- 
+
         if (RobotBase.isReal()) {
             setFF_MaxOuts();
             setVelGains();
@@ -307,7 +306,6 @@ public class RevTurretSubsystem extends SubsystemBase {
         return m_motor.getFault(FaultID.kHardLimitFwd);
     }
 
-
     public boolean isAtHeight(double angle, double allowableError) {
         return Math.abs(angle - getAngle()) < allowableError;
     }
@@ -335,15 +333,22 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     public void moveAtVelocity(double degPerSec) {
 
-        if (RobotBase.isReal()){
+        if (RobotBase.isReal()) {
 
             mVelController.setReference(degPerSec, ControlType.kVelocity, VELOCITY_SLOT);
 
-            SmartDashboard.putNumber("TURVEl", degPerSec);}
+            SmartDashboard.putNumber("TURVEl", degPerSec);
 
-        else
+            SmartDashboard.putNumber("TuMAOut", m_motor.getAppliedOutput());
+
+            SmartDashboard.putNumber("TuMOut", m_motor.get());
+
+        }
+
+        else {
 
             moveManually(degPerSec / maxVel);
+        }
 
     }
 
