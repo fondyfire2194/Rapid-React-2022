@@ -112,7 +112,7 @@ public class LimeLight {
     public double getdegRotationToTarget() {
         NetworkTableEntry tx = m_table.getEntry("tx");
 
-        if (!cameraAt90) {
+        if (cameraAt90) {
             tx = m_table.getEntry("ty");
         }
         double x = tx.getDouble(0.0);
@@ -135,7 +135,7 @@ public class LimeLight {
      */
     public double getdegVerticalToTarget() {
         NetworkTableEntry ty = m_table.getEntry("ty");
-        if (!cameraAt90) {
+        if (cameraAt90) {
             ty = m_table.getEntry("tx");
         }
         double y = ty.getDouble(0.0);

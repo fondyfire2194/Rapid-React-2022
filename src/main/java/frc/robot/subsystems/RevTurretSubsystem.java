@@ -120,7 +120,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         mEncoder.setPosition(0);
 
         if (RobotBase.isReal()) {
-            setFF_MaxOuts();
+         //   setFF_MaxOuts();
             setVelGains();
             getVelGains();
             setPosGains();
@@ -222,9 +222,9 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         lockPIDOut = mLockController.calculate(cameraError, 0);
 
-        SmartDashboard.putNumber("tulLockMove", -lockPIDOut * maxVel);
+        SmartDashboard.putNumber("tulLockMove", lockPIDOut * maxVel);
 
-        moveAtVelocity(-lockPIDOut * maxVel);
+        moveAtVelocity(lockPIDOut * maxVel);
 
         targetAngle = getAngle();
     }
@@ -335,13 +335,13 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         if (RobotBase.isReal()) {
 
-            mVelController.setReference(degPerSec, ControlType.kVelocity, VELOCITY_SLOT);
+            mVelController.setReference(-degPerSec, ControlType.kVelocity, VELOCITY_SLOT);
 
-            SmartDashboard.putNumber("TURVEl", degPerSec);
+            SmartDashboard.putNumber("TURVEl", -degPerSec);
 
             SmartDashboard.putNumber("TuMAOut", m_motor.getAppliedOutput());
 
-            SmartDashboard.putNumber("TuMOut", m_motor.get());
+        
 
         }
 
@@ -399,7 +399,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         kMinOutput = -.75;
         kMaxOutput = .75;
         mVelController.setOutputRange(kMinOutput, kMaxOutput, VELOCITY_SLOT);
-        maxVel = Pref.getPref("tuVMaxV");// deg per sec 150rps *1.39 = 208 deg /sec
+        maxVel =100;// Pref.getPref("tuVMaxV");// deg per sec 150rps *1.39 = 208 deg /sec
         maxAcc = Pref.getPref("tuVMaxA");// deg per sec per sec
         allowedErr = .1;
         calibratePID(p, i, d, iz, VELOCITY_SLOT);
@@ -421,6 +421,10 @@ public class RevTurretSubsystem extends SubsystemBase {
     private void setLockGains() {
 
         mLockController.setP(Pref.getPref("tuLkp"));
+
+        SmartDashboard.putNumber("TulpPrkp", Pref.getPref("tuLkp"));
+
+        SmartDashboard.putNumber("TULRDP", mLockController.getP());
         mLockController.setI(Pref.getPref("tuLki"));
         mLockController.setD(Pref.getPref("tuLkd"));
         izsetl = Pref.getPref("tuLkiz");
