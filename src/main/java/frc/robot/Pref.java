@@ -39,7 +39,7 @@ public class Pref {
     prefDict.put("tiVKi", .0005);
     prefDict.put("tiVKd", 0.6);
     prefDict.put("tiVKiz", 0.75);
- 
+
     prefDict.put("tiVTune", 0.);
 
     // tilt position
@@ -52,11 +52,11 @@ public class Pref {
 
     // Turret velocity
 
-
     prefDict.put("tuVKp", .002);
     prefDict.put("tuVKi", .0000);
     prefDict.put("tuVKd", 0.);
     prefDict.put("tuVKiz", 1.5);
+    prefDict.put("tuVMaxV", 100.);
 
     prefDict.put("tuVTune", 0.);
 

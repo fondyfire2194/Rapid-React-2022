@@ -77,6 +77,7 @@ public class AltShootCargo extends CommandBase {
       activeLowStopTime = Pref.getPref("LowRollStopTimeBlue");
 
     if (RobotBase.isSimulation())
+    
       simTime = Timer.getFPGATimestamp();
 
   }

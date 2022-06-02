@@ -1,6 +1,11 @@
 {
   "SysId": {
-    "Analysis Type": "General Mechanism",
+    "Analysis Type": "Drivetrain",
+    "Generator": {
+      "window": {
+        "visible": false
+      }
+    },
     "NetworkTables Settings": {
       "serverTeam": "2194"
     },
@@ -9,6 +14,7 @@
         "visible": false
       }
     },
+    "mode": "Client",
     "serverTeam": "2194"
   }
 }

@@ -46,6 +46,8 @@ public final class Constants {
 
       public static final int TILT_MOTOR = 9;
 
+      public static final int TURRET_CANCODER = 31;
+
       // talons
 
       public static final int REAR_INTAKE_MOTOR = 14;
@@ -69,7 +71,7 @@ public final class Constants {
 
       public static final int REAR_INTAKE_1 = 1;
       public static final int REAR_INTAKE_2 = 0;
-
+      
    }
 
    public static final class PDPConstants {
@@ -241,12 +243,11 @@ public final class Constants {
 
       public static final double TURRET_MIN_ANGLE = -55;
 
-      public static final double TURRET_DEG_PER_MOTOR_REV = 1.38996;//max rps = 150 so 208 deg per sec
+      public static final double TURRET_DEG_PER_MOTOR_REV = 1.38996;// max rps = 150 so 208 deg per sec
 
       public static final double kVVoltSecondsPerRotation = 0.0774;
 
       public static final double kA = 0.00003;
-
 
    }
 
@@ -288,6 +289,7 @@ public final class Constants {
       public static final int noZoom960720 = 1;
 
       public static final int x2Zoom320240 = 2;
+      
       public static final int x3ZoomPipeline = 3;
 
       public static final int ledsOffPipeline = 8;

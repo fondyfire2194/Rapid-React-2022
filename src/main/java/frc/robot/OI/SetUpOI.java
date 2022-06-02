@@ -177,8 +177,7 @@ public class SetUpOI {
                         turretValues3.addNumber("LockOutput", () -> turret.lockPIDOut);
                         turretValues3.addNumber("LockError", () -> turret.mLockController.getPositionError());
                         turretValues3.addBoolean("LockController", () -> turret.validTargetSeen);
-                        turretValues3.addNumber("Firmware", () -> turret.m_motor.getFirmwareVersion());
- 
+
                         ShuffleboardLayout turretValues2 = Shuffleboard.getTab("SetupTurret")
                                         .getLayout("States", BuiltInLayouts.kGrid).withPosition(4, 2).withSize(2, 3)
                                         .withProperties(Map.of("Label position", "TOP")); // labels
@@ -210,6 +209,7 @@ public class SetUpOI {
                         turretVactGains.addNumber("D", () -> turret.dsetv);
                         turretVactGains.addNumber("I", () -> turret.isetv);
                         turretVactGains.addNumber("IZ", () -> turret.izsetv);
+                        turretVactGains.addNumber("maxVel", () -> turret.maxVel);
 
                         ShuffleboardLayout turretLockGains = Shuffleboard.getTab("SetupTurret")
                                         .getLayout("LockGains", BuiltInLayouts.kList)
@@ -256,9 +256,7 @@ public class SetUpOI {
                         tiltValues.addNumber("Speed", () -> tilt.getSpeed());
                         tiltValues.addNumber("AdjTarget", () -> tilt.adjustedVerticalError);
                         tiltValues.addNumber("VertDegToTarget", () -> limelight.getdegVerticalToTarget());
-                        tiltValues.addNumber("Firmware", () -> turret.m_motor.getFirmwareVersion());
-
-
+ 
                         ShuffleboardLayout tiltValues2 = Shuffleboard.getTab("SetupTilt")
                                         .getLayout("States", BuiltInLayouts.kGrid).withPosition(4, 0).withSize(2, 3)
                                         .withProperties(Map.of("Label position", "TOP"));
@@ -453,6 +451,7 @@ public class SetUpOI {
                         robotValues.addNumber("Gyro Yaw", () -> drive.getYaw());
                         robotValues.addNumber("Faults", () -> drive.getFaults());
                         robotValues.addNumber("Target", () -> drive.leftTargetPosition);
+                        
 
                         ShuffleboardLayout robotValues2 = Shuffleboard.getTab("SetupRobot")
                                         .getLayout("States", BuiltInLayouts.kGrid).withPosition(6, 0)
