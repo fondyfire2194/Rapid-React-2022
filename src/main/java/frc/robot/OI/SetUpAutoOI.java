@@ -102,11 +102,11 @@ public class SetUpAutoOI {
                                         .getLayout("PresetData", BuiltInLayouts.kList).withPosition(3, 0).withSize(1, 6)
                                         .withProperties(Map.of("Label position", "TOP"));
 
-                        compet4.addString("PresetMode", () -> shooter.presetModeName);
+                        compet4.addString("PresetLocation", () -> shooter.presetLocationName);
                         compet4.addNumber("PresetRPM", () -> shooter.presetRPM);
                         compet4.addNumber("TiltPreset", () -> tilt.presetPosition);
                         compet4.addNumber("DriverAdjustRPM",
-                                        () -> shooter.shooterRPMAdder[shooter.shootMode]);
+                                        () -> shooter.shooterRPMAdder[shooter.shootLocation]);
                         
                         compet4.addNumber("TUAngle", () -> turret.getAngle());
                         compet4.addNumber("Visiondistance", () -> shooter.calculatedCameraDistance);

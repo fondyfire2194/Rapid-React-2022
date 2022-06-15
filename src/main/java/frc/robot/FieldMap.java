@@ -79,11 +79,10 @@ public class FieldMap {
         public static final double leftTarmacTurretUpperAngle = 0;
         public static double leftTarmacUpperRPM = 3750;
 
-
         public static final double[] leftTarmacData = { leftTarmacPickupPosition,
                         leftTarmacShootPosition, leftTarmacTiltUpperAngle,
                         leftTarmacTurretUpperAngle, leftTarmacUpperRPM
-                       
+
         };
 
         public static final double rightTarmacPickupPosition = Units.inchesToMeters(-41);
@@ -93,12 +92,10 @@ public class FieldMap {
         public static final double rightTarmacTurretUpperAngle = 20;
         public static double rightTarmacUpperRPM = 3750;
 
-  
-
         public static final double[] rightTarmacData = { rightTarmacPickupPosition,
                         rightTarmacShootPosition, rightTarmacTiltUpperAngle,
                         rightTarmacTurretUpperAngle, rightTarmacUpperRPM
-                        
+
         };
 
         public static final double centerTarmacPickupPosition = Units.inchesToMeters(-51);
@@ -108,16 +105,18 @@ public class FieldMap {
         public static final double centerTarmacTurretUpperAngle = -17;
         public static double centerTarmacUpperRPM = 3750;
 
-
         public static final double[] centerTarmacData = { centerTarmacPickupPosition,
                         centerTarmacShootPosition, centerTarmacTiltUpperAngle,
                         centerTarmacTurretUpperAngle, centerTarmacUpperRPM,
-                        };
+        };
 
-        public static final double[] shootMode_0 = { 1, 3500 };// 40" at hub "lob"
-        public static final double[] shootMode_1 = { 6, 4000 };// 100" at tarmac line
-        public static final double[] shootMode_2 = { 14, 4500 };// 200" inner launch pad
-        public static final double[] shootMode_3 = { 0, 500 };// set by operator during test
+        public static final double[] shootLocation_0 = { 1, 3500 };// 40" at hub "lob"
+        public static final double[] shootLocation_1 = { 6, 4000 };// 100" at tarmac line
+        public static final double[] shootLocation_2 = { 14, 4500 };// 200" inner launch pad
+        public static final double[] shootLocation_3 = { 0, 500 };// set by operator during test
 
-        public static String[] shootModeName = { "At Hub", "Tarmac Line", "Inner Launchpad", "TestSetup" };
+        public static String[] shootLocationName = { "At Hub", "Tarmac Line", "Inner Launchpad", "TestSetup" };
+
+        public static final String[] shootModeName = { "Throttle", "Camera", "Preset" };
+
 }

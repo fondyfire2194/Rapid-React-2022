@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Pref;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.CargoTransport.RunLowerRoller;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
@@ -306,9 +305,9 @@ public class SetUpOI {
                         shooterCommands.add("Start Shooter", new RunShooter(shooter));
 
                         shooterCommands.add("ShootOne",
-                                        new AltShootCargo(shooter, transport, intake));
+                                        new AltShootCargo(shooter, transport, intake,limelight));
                         shooterCommands.add("ShootTwo",
-                                        new AltShootCargo(shooter, transport, intake));
+                                        new AltShootCargo(shooter, transport, intake,limelight));
 
                         shooterCommands.add("ClearFaults", new ClearShFaults(shooter));
 
@@ -341,6 +340,8 @@ public class SetUpOI {
                         shooterValues.addNumber("LeftFaults", () -> shooter.getLeftFaults());
                         shooterValues.addNumber("RightFaults", () -> shooter.getRightFaults());
                         shooterValues.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
+ 
+ 
                         ShuffleboardLayout shooterValues1 = Shuffleboard.getTab("SetupShooter")
 
                                         .getLayout("ShooterValues1", BuiltInLayouts.kList).withPosition(4, 0)
@@ -351,8 +352,8 @@ public class SetUpOI {
                         shooterValues.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
                         shooterValues1.addBoolean("TuneOn", () -> (shooter.tuneOn && shooter.lastTuneOn));
                         shooterValues1.addBoolean("BothConnected(6,7)", () -> shooter.allConnected);
-                        shooterValues1.addString("PresetMode", () -> shooter.presetModeName);
-                        shooterValues1.addNumber("PresetNumber", () -> shooter.shootMode);
+                        shooterValues1.addString("PresetLocation", () -> shooter.presetLocationName);
+                        shooterValues1.addString("ShooterMode", () -> shooter.shootModeName);                      
 
                         ShuffleboardLayout shooterValues2 = Shuffleboard.getTab("SetupShooter")
 

@@ -25,7 +25,7 @@ import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.AltRetPuAdvShoot;
-import frc.robot.commands.AutoCommands.Common.SetShootPositionSpeedTilt;
+import frc.robot.commands.AutoCommands.Common.SetPresetShootPositionSpeedTilt;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
@@ -84,6 +84,7 @@ public class Robot extends TimedRobot {
     getAllianceColorBlue();
 
     Shuffleboard.selectTab("Pre-Round");
+
 
   }
 
@@ -340,9 +341,9 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_intake.setFrontActive();
 
-    m_robotContainer.m_shooter.shootSpeedSource = m_robotContainer.m_shooter.fromPreset;
+    m_robotContainer.m_shooter.shootValuesSource = m_robotContainer.m_shooter.fromPreset;
 
-    new SetShootPositionSpeedTilt(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_limelight, 1)
+    new SetPresetShootPositionSpeedTilt(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_limelight, 1)
         .schedule();
     ;
 

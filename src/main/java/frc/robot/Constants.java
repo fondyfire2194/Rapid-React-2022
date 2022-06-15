@@ -300,17 +300,17 @@ public final class Constants {
 
       public static final int noZoom960720 = 1;
 
-      public static final int x2Zoom320240 = 2;
+       public static final int x2Zoom320240 = 2;
 
-      public static final int x3ZoomPipeline = 3;
+       public static final int x3ZoomPipeline = 3;
 
-      public static final int ledsOffPipeline = 8;
+       public static final int ledsOffPipeline = 8;
 
-      public static final double noZoomMinBoundingBoxHeight = 3;
+       public static final double noZoomMinBoundingBoxHeight = 3;
 
-      public static final double noZoomMaxBoundingBoxHeight = 10;
+       public static final double noZoomMaxBoundingBoxHeight = 10;
 
-      public static final double x2ZoomMinBoundingBoxHeight = 8;
+       public static final double x2ZoomMinBoundingBoxHeight = 8;
 
    }
 

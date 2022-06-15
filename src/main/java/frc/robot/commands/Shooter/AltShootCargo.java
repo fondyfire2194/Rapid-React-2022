@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
 import frc.robot.Robot;
+import frc.robot.Constants.PipelinesConstants;
+import frc.robot.Vision.LimeLight;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
@@ -35,13 +37,15 @@ public class AltShootCargo extends CommandBase {
   private double cargoReleaseTimer;
   private double simTime;
   private boolean simEnd;
+  private LimeLight m_ll;
 
   public AltShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
-      IntakesSubsystem intake) {
+      IntakesSubsystem intake, LimeLight ll) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_transport = transport;
     m_intake = intake;
+    m_ll = ll;
 
     addRequirements(m_intake, m_transport);
   }
@@ -190,8 +194,13 @@ public class AltShootCargo extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // m_shooter.stop();
-    // m_shooter.stopTopRoller();
+
+    if (noMoreCargo) {
+      m_shooter.stop();
+      m_shooter.stopTopRoller();
+      m_ll.setPipeline(PipelinesConstants.ledsOffPipeline);
+      m_ll.useVision = false;
+    }
     m_transport.stopLowerRoller();
     m_shooter.isShooting = false;
     m_intake.stopFrontIntakeMotor();
@@ -203,7 +212,7 @@ public class AltShootCargo extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    return noCargoAtStart || m_transport.wrongCargoColor || secondCargoAtLowRoller || noMoreCargo
+    return noCargoAtStart || secondCargoAtLowRoller || noMoreCargo
 
         || m_transport.latchCargoAtShoot || simEnd;
   }

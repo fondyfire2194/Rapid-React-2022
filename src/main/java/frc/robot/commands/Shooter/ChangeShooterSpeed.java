@@ -24,13 +24,13 @@ public class ChangeShooterSpeed extends InstantCommand {
   @Override
   public void initialize() {
 
-    m_shooter.shooterRPMAdder[m_shooter.shootMode] += m_rpm;
+    m_shooter.shooterRPMAdder[m_shooter.shootLocation] += m_rpm;
 
-    if (m_shooter.presetRPM + m_shooter.shooterRPMAdder[m_shooter.shootMode] > m_shooter.maxRPM)
+    if (m_shooter.presetRPM + m_shooter.shooterRPMAdder[m_shooter.shootLocation] > m_shooter.maxRPM)
 
       m_shooter.presetRPM = m_shooter.maxRPM;
 
-    if (m_shooter.presetRPM - m_shooter.shooterRPMAdder[m_shooter.shootMode] < m_shooter.minRPM)
+    if (m_shooter.presetRPM - m_shooter.shooterRPMAdder[m_shooter.shootLocation] < m_shooter.minRPM)
 
       m_shooter.presetRPM = m_shooter.minRPM;
 

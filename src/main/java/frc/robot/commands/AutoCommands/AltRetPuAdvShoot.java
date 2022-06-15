@@ -83,9 +83,9 @@ public class AltRetPuAdvShoot extends SequentialCommandGroup {
                                 new ParallelRaceGroup(
 
                                                 new SequentialCommandGroup(new TimeDelay(.2),
-                                                                new AltShootCargo(shooter, transport, intake),
+                                                                new AltShootCargo(shooter, transport, intake,ll),
                                                                 new TimeDelay(.2),
-                                                                new AltShootCargo(shooter, transport, intake),
+                                                                new AltShootCargo(shooter, transport, intake,ll),
                                                                 new TimeDelay(1)),
 
                                                 new RunShooter(shooter))

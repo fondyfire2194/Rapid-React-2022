@@ -90,9 +90,9 @@ public class ThreeBallCenter extends SequentialCommandGroup {
                                 new ParallelRaceGroup(
 
                                                 new SequentialCommandGroup(
-                                                                new AltShootCargo(shooter, transport, intake),
+                                                                new AltShootCargo(shooter, transport, intake,ll),
 
-                                                                new AltShootCargo(shooter, transport, intake)),
+                                                                new AltShootCargo(shooter, transport, intake,ll)),
 
                                                 new RunShooter(shooter))
 
@@ -116,7 +116,7 @@ public class ThreeBallCenter extends SequentialCommandGroup {
                                 new LimelightSetPipeline(ll, 2),
 
                                 new ParallelRaceGroup(
-                                                new AltShootCargo(shooter, transport, intake),
+                                                new AltShootCargo(shooter, transport, intake,ll),
                                                 new RunShooter(shooter))
                                                                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret,
                                                                                 ll)),

@@ -5,8 +5,8 @@ import java.util.Arrays;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -68,7 +68,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public double teleopSetupShooterSpeed;
 
-    public int shootMode;
+    public int shootLocation;
 
     public boolean wrongCargoColor;
 
@@ -79,9 +79,9 @@ public class RevShooterSubsystem extends SubsystemBase {
     public final int POSITION_SLOT = 2;
 
     public double[] rpmFromCameraDistance = {
-            1800, 1750, 1700, 1750, 1800, 2120, 2450,//1-7
-             2780, 2790, 2800, 2860, 2920, 3000, //8-13
-            3060, 3120, 3200, 3600, 4000, 4500, 5000 };//14-20
+            1800, 1750, 1700, 1750, 1800, 2120, 2450, // 1-7
+            2780, 2790, 2800, 2860, 2920, 3000, // 8-13
+            3060, 3120, 3200, 3600, 4000, 4500, 5000 };// 14-20
 
     public double startDistance;
 
@@ -116,11 +116,15 @@ public class RevShooterSubsystem extends SubsystemBase {
     public boolean correctCargoColor;
     public double topRequiredRPM;
     public double presetRPM = 1750;
-    public int shootSpeedSource = 0;
+    public int shootValuesSource = 0;
     public boolean haltTopRoller;
     public boolean isAtSpeed;
-    public String presetModeName = "Not Assigned";
-    public int ShootMode;
+    public String presetLocationName = "Not Assigned";
+    public String shootValuesSourceName = "Not_Assigned";
+    public int presetSource = 2;
+    public int cameraSource = 1;
+    public int setUpSource = 0;
+    public String shootModeName;
 
     public RevShooterSubsystem() {
 
@@ -314,13 +318,13 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public double getRPMFromSpeedSource() {
 
-        switch (shootSpeedSource) {
+        switch (shootValuesSource) {
             case 0:
                 return getRPMfromThrottle();
             case 1:
-                return cameraCalculatedSpeed + shooterRPMAdder[shootMode];
+                return cameraCalculatedSpeed;
             case 2:
-                return presetRPM + shooterRPMAdder[shootMode];
+                return presetRPM;
             default:
                 return 500;
 

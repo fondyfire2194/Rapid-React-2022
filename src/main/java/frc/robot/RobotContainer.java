@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
@@ -36,7 +37,8 @@ import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.TurnLedsOnOff;
 import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
-import frc.robot.commands.AutoCommands.Common.SetupForShootLocation;
+import frc.robot.commands.AutoCommands.Common.SetUpCameraShoot;
+import frc.robot.commands.AutoCommands.Common.SetupPresetShootLocation;
 import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Climber.RunClimber;
@@ -52,6 +54,7 @@ import frc.robot.commands.Shooter.ChangeShooterSpeed;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
 import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.SetShootSpeedSource;
 //import frc.robot.commands.Shooter.ShootTwoCargo;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Tilt.PositionHoldTilt;
@@ -274,7 +277,7 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 2)
                         .whenPressed(new RunShooter(m_shooter))
                         .whenPressed(new TurnLedsOnOff(m_limelight, true))
-                        .whenPressed(new AltShootCargo(m_shooter, m_transport, m_intake));
+                        .whenPressed(new AltShootCargo(m_shooter, m_transport, m_intake, m_limelight));
 
             new JoystickButton(m_driverController, 6).whenPressed(new SetFrontIntakeActive(m_intake, true));
 
@@ -297,7 +300,13 @@ public class RobotContainer {
 
                         .whileHeld(new RunCargoOutShooter(m_shooter, m_intake, m_transport));
 
-            new JoystickButton(m_driverController, 9).whenPressed(new SelectSpeedAndTiltByDistance(m_shooter, m_tilt));
+            new JoystickButton(m_driverController, 9).whenPressed(
+                  
+                        new SequentialCommandGroup(
+
+                                    new SetUpCameraShoot(m_shooter, m_tilt, m_limelight),
+
+                                    new AltShootCargo(m_shooter, m_transport, m_intake, m_limelight)));
 
             // new JoystickButton(m_driverController, 10)
 
@@ -314,15 +323,16 @@ public class RobotContainer {
                         .whenPressed(new PositionTurret(m_turret, 0));
 
             // close to hub
-            driverUpButton.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 0));
+            driverUpButton.whenPressed(new SetupPresetShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 0));
             // tarmac line
-            driverDownButton.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 1));// tarmac
+            driverDownButton.whenPressed(new SetupPresetShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 1));// tarmac
 
-            driverLeftButton.whenPressed(new TurnLedsOnOff(m_limelight, false))
-                        .whenPressed(new UseVision(m_limelight, false));
+            // driverLeftButton.whenPressed(new SetShootSpeedSource(m_shooter,
+            // shootValuesSource)
 
-            driverRightButton.whenPressed(new TurnLedsOnOff(m_limelight, true))
-                        .whenPressed(new UseVision(m_limelight, true));
+            driverRightButton.whenPressed(new SetUpCameraShoot(m_shooter, m_tilt, m_limelight));
+
+            // co driver gamepad
 
             codriverStart.whileHeld(m_transport::reverseLowRoller);
 
@@ -349,7 +359,7 @@ public class RobotContainer {
             codriverRightTrigger.whenPressed(new PositionTurretIncremental(m_turret, -1));
 
             // test allow low shoot speed
-            codriverLeftStick.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 3));
+            codriverLeftStick.whenPressed(new SetupPresetShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 3));
 
             LiveWindow.disableAllTelemetry();
 
