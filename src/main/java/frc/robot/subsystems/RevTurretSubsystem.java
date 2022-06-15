@@ -115,7 +115,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
         m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-
+        m_motor.setSmartCurrentLimit(20);
         mPosController = new PIDController(.01, 0, 0);
         mEncoder.setPosition(0);
 

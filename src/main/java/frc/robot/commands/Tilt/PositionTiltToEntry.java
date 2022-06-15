@@ -34,9 +34,9 @@ public class PositionTiltToEntry extends CommandBase {
       m_tilt.targetAngle = 0;
       m_tilt.tiltTarget.setNumber(0);
     }
-    if (m_tilt.targetAngle > 14) {
-      m_tilt.targetAngle = 14;
-      m_tilt.tiltTarget.setNumber(14);
+    if (m_tilt.targetAngle > 17) {
+      m_tilt.targetAngle = 17;
+      m_tilt.tiltTarget.setNumber(17);
     }
     loopCtr = 0;
 

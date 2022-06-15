@@ -314,7 +314,7 @@ public class SetUpOI {
 
                         shooterCommands.add("Cmd", shooter);
 
-                        shooterCommands.add("RunShooterFromSlider",
+                        shooterCommands.add("RunShooterFromThrottle",
                                         new SetShootSpeedSource(shooter, 0));
 
                         shooterCommands.add("RunTopRoll", new RunTopRoller(shooter, 750));

@@ -71,7 +71,7 @@ public final class Constants {
 
       public static final int REAR_INTAKE_1 = 1;
       public static final int REAR_INTAKE_2 = 0;
-      
+
    }
 
    public static final class PDPConstants {
@@ -274,13 +274,25 @@ public final class Constants {
 
       public static final double fieldLength = Units.inchesToMeters(626.25);
 
-      public static final double hubTargetHeight = 104 / 12;
+      public static final double hubTargetHeight = 105.5 / 12.;
 
       public static final double CAMERA_HEIGHT = 42. / 12;
 
       public static final double heightDifference = hubTargetHeight - CAMERA_HEIGHT;
 
-      public static final double CAMERA_ANGLE = 128. - 90.;
+      public static final double CAMERA_ANGLE = 128.5 - 90.;
+
+      public static final double CAMERA_TO_FRONT_BUMPER = 1.33;
+
+   }
+
+   public static class ShooterRangeConstants {
+      public static final int range1 = 8; 
+      public static final int range2 = 14;
+      public static final int range3 = 20;
+      public static final int tiltRange1 = 4;
+      public static final int tiltRange2 = 11;
+      public static final int tiltRange3 = 17;
 
    }
 
@@ -289,7 +301,7 @@ public final class Constants {
       public static final int noZoom960720 = 1;
 
       public static final int x2Zoom320240 = 2;
-      
+
       public static final int x3ZoomPipeline = 3;
 
       public static final int ledsOffPipeline = 8;

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Tilt.PositionTiltToPreset;
+import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
@@ -28,7 +29,7 @@ public class SetupForShootLocation extends SequentialCommandGroup {
         
           new SetShootPositionSpeedTilt(shooter, tilt, ll, shootMode),
 
-          new PositionTilt(tilt, 0),
+          new TiltMoveToReverseLimit(tilt),
  
           new ParallelCommandGroup(
 

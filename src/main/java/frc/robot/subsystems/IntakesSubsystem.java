@@ -101,6 +101,10 @@ public class IntakesSubsystem extends SubsystemBase {
       lowerRearArm();
   }
 
+  public boolean isIntaking() {
+    return getFrontArmLowered() || getRearArmLowered();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

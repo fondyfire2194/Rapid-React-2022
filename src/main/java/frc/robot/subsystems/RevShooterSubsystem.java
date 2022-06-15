@@ -70,17 +70,18 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public int shootMode;
 
+    public boolean wrongCargoColor;
+
     public PowerDistribution pdp = new PowerDistribution(1, ModuleType.kCTRE);
 
     public final int VELOCITY_SLOT = 0;
     private static final int SMART_MOTION_SLOT = 1;
     public final int POSITION_SLOT = 2;
 
-    public double[] tiltAngleFromCamerDistance = new double[] { 0.6, 1.2, 1.8, 2.4, 3, 3.6, 4.2, 4.8, 5.4, 6, 6.6, 7.2,
-            7.8, 8.4, 9, 9.6, 10.2, 10.8, 11.4, 12, 12.6, 13.2, 13.8, 14.4, 15 };
-
-    public double[] rpmFromCameraDistance = new double[] { 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400,
-            2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900 };
+    public double[] rpmFromCameraDistance = {
+            1800, 1750, 1700, 1750, 1800, 2120, 2450,//1-7
+             2780, 2790, 2800, 2860, 2920, 3000, //8-13
+            3060, 3120, 3200, 3600, 4000, 4500, 5000 };//14-20
 
     public double startDistance;
 
@@ -118,7 +119,6 @@ public class RevShooterSubsystem extends SubsystemBase {
     public int shootSpeedSource = 0;
     public boolean haltTopRoller;
     public boolean isAtSpeed;
-    public int shootSetup;
     public String presetModeName = "Not Assigned";
     public int ShootMode;
 
@@ -240,6 +240,10 @@ public class RevShooterSubsystem extends SubsystemBase {
     }
 
     public void runShooterPlusRoller(double rpm) {
+
+        if (wrongCargoColor)
+
+            rpm = 200;
 
         spinAtRPM(rpm);
 

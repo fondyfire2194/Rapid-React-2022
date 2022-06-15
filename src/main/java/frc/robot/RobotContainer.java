@@ -35,6 +35,7 @@ import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.TurnLedsOnOff;
+import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
 import frc.robot.commands.AutoCommands.Common.SetupForShootLocation;
 import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
@@ -65,6 +66,7 @@ import frc.robot.commands.Turret.TurretJog;
 import frc.robot.commands.Turret.TurretJogVelocity;
 
 import frc.robot.commands.Turret.TurretWaitForStop;
+import frc.robot.commands.Vision.UseVision;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -295,7 +297,7 @@ public class RobotContainer {
 
                         .whileHeld(new RunCargoOutShooter(m_shooter, m_intake, m_transport));
 
-            // new JoystickButton(m_driverController, 9)
+            new JoystickButton(m_driverController, 9).whenPressed(new SelectSpeedAndTiltByDistance(m_shooter, m_tilt));
 
             // new JoystickButton(m_driverController, 10)
 
@@ -316,9 +318,11 @@ public class RobotContainer {
             // tarmac line
             driverDownButton.whenPressed(new SetupForShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 1));// tarmac
 
-            driverLeftButton.whenPressed(new TurnLedsOnOff(m_limelight, false));
+            driverLeftButton.whenPressed(new TurnLedsOnOff(m_limelight, false))
+                        .whenPressed(new UseVision(m_limelight, false));
 
-            driverRightButton.whenPressed(new TurnLedsOnOff(m_limelight, true));
+            driverRightButton.whenPressed(new TurnLedsOnOff(m_limelight, true))
+                        .whenPressed(new UseVision(m_limelight, true));
 
             codriverStart.whileHeld(m_transport::reverseLowRoller);
 

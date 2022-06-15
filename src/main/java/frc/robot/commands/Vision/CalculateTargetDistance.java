@@ -63,7 +63,7 @@ public class CalculateTargetDistance extends CommandBase {
 
       // m_cameraVerticalError = m_limelight.getdegVerticalToTarget() -
       // m_limelight.verticalOffset;
-      m_cameraVerticalError = -m_limelight.getdegRotationToTarget();// - m_limelight.horizontalOffset;
+      m_cameraVerticalError = -m_limelight.getdegVerticalToTarget();// - m_limelight.horizontalOffset;
       SmartDashboard.putNumber("CAMVE", m_cameraVerticalError);
       SmartDashboard.putNumber("HeightDiff", FieldConstants.heightDifference);
       SmartDashboard.putNumber("CamAng", cameraAngle);
@@ -81,6 +81,8 @@ public class CalculateTargetDistance extends CommandBase {
 
       m_shooter.calculatedCameraDistance = FieldConstants.heightDifference /
           tanAngleSum;
+
+      m_shooter.calculatedCameraDistance = m_shooter.calculatedCameraDistance - FieldConstants.CAMERA_TO_FRONT_BUMPER;
 
     }
 

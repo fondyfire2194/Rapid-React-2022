@@ -77,14 +77,17 @@ public class AltShootCargo extends CommandBase {
       activeLowStopTime = Pref.getPref("LowRollStopTimeBlue");
 
     if (RobotBase.isSimulation())
-    
+
       simTime = Timer.getFPGATimestamp();
+
+    m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
+    m_shooter.wrongCargoColor = m_transport.wrongCargoColor;
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
 
-  // on start of command,f no cargo at shoot sensor or at either intake, routine
+  // on start of command, if no cargo at shoot sensor or at either intake, routine
   // ends immediatly
 
   // routine should normally start with cargo at the low rollers (at shoot sensor)

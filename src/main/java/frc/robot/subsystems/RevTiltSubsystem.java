@@ -142,6 +142,8 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         m_motor.setSmartCurrentLimit(20);
 
+        m_motor.setClosedLoopRampRate(2);
+
         if (RobotBase.isReal()) {
             setFF_MaxOuts();
             setPosGains();

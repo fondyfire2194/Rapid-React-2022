@@ -1,5 +1,7 @@
 package frc.robot.Vision;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -33,9 +35,10 @@ public class LimeLight {
 
     public boolean allianceIsBlue;
 
-    private double useVisionTimer;
-
     private boolean cameraAt90 = true;
+
+     private Debouncer useVisionDebounce = new Debouncer(5, DebounceType.kFalling);
+
 
     class PeriodicRunnable implements java.lang.Runnable {
         public void run() {
@@ -495,17 +498,9 @@ public class LimeLight {
 
     public void periodic() {
 
-        if (useVision && getIsTargetFound()) {
-            useVisionTimer = 0;
-        }
-        if (useVision && !getIsTargetFound() && useVisionTimer == 0) {
-            useVisionTimer = Timer.getFPGATimestamp();
-        }
+        useVision = useVision && useVisionDebounce.calculate(getIsTargetFound());
 
-        if (useVision && Timer.getFPGATimestamp() > useVisionTimer + 5) {
-            useVision = false;
-            useVisionTimer = 0;
-        }
+        
 
     }
 
