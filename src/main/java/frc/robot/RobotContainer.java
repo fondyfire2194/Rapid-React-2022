@@ -69,6 +69,7 @@ import frc.robot.commands.Turret.TurretJog;
 import frc.robot.commands.Turret.TurretJogVelocity;
 
 import frc.robot.commands.Turret.TurretWaitForStop;
+import frc.robot.commands.Vision.LimelightSetPipeline;
 import frc.robot.commands.Vision.UseVision;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -301,7 +302,7 @@ public class RobotContainer {
                         .whileHeld(new RunCargoOutShooter(m_shooter, m_intake, m_transport));
 
             new JoystickButton(m_driverController, 9).whenPressed(
-                  
+
                         new SequentialCommandGroup(
 
                                     new SetUpCameraShoot(m_shooter, m_tilt, m_limelight),
@@ -327,8 +328,11 @@ public class RobotContainer {
             // tarmac line
             driverDownButton.whenPressed(new SetupPresetShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 1));// tarmac
 
-            // driverLeftButton.whenPressed(new SetShootSpeedSource(m_shooter,
-            // shootValuesSource)
+            driverLeftButton.whenPressed(new SequentialCommandGroup(
+
+                        new UseVision(m_limelight, false),
+
+                        new LimelightSetPipeline(m_limelight, PipelinesConstants.ledsOffPipeline)));
 
             driverRightButton.whenPressed(new SetUpCameraShoot(m_shooter, m_tilt, m_limelight));
 

@@ -4,17 +4,15 @@
 
 package frc.robot.commands.AutoCommands.Common;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Tilt.PositionTilt;
-import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
-import frc.robot.commands.Turret.PositionTurret;
+import frc.robot.commands.Vision.SetUpLimelightForTarget;
 import frc.robot.commands.Vision.UseVision;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
-import frc.robot.subsystems.RevTurretSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -28,13 +26,11 @@ public class SetUpCameraShoot extends SequentialCommandGroup {
       // addCommands(new FooCommand(), new BarCommand());
       addCommands(
 
+          new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720, true),
+
           new SetShootSpeedSource(shooter, shooter.cameraSource),
 
-          new UseVision(ll, true),
-
           new SelectSpeedAndTiltByDistance(shooter, tilt),
-
-          new TiltMoveToReverseLimit(tilt),
 
           new PositionTilt(tilt, tilt.cameraCalculatedTiltPosition));
 

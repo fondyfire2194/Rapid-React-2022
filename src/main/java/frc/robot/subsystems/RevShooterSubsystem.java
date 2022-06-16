@@ -44,7 +44,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     private RelativeEncoder m_topEncoder;
 
     public double requiredRPMLast;
-    public double requiredRPM;
+  //  public double requiredRPM;
     public double shotDistance;
     public double shootTime;
     public double shootTimeRemaining;
@@ -124,7 +124,8 @@ public class RevShooterSubsystem extends SubsystemBase {
     public int presetSource = 2;
     public int cameraSource = 1;
     public int setUpSource = 0;
-    public String shootModeName;
+    public String shootModeName = "Unassigned";
+    public boolean runContinuous;
 
     public RevShooterSubsystem() {
 
@@ -179,7 +180,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
         calibrateTopPID();
 
-        requiredRPM = 2500;
+      //  requiredRPM = 2500;
 
         shootOne = false;
 
@@ -238,7 +239,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     }
 
     public void spinAtRPM(double rpm) {
-        requiredRPM = rpm;
+       // requiredRPM = rpm;
         mPidController.setReference(rpm, ControlType.kVelocity, VELOCITY_SLOT);
 
     }

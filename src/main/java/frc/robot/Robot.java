@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
+import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.AltRetPuAdvShoot;
 import frc.robot.commands.AutoCommands.Common.SetPresetShootPositionSpeedTilt;
@@ -85,7 +86,6 @@ public class Robot extends TimedRobot {
 
     Shuffleboard.selectTab("Pre-Round");
 
-
   }
 
   /**
@@ -111,7 +111,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
 
-   // m_robotContainer.m_limelight.periodic();
+    // m_robotContainer.m_limelight.periodic();
 
     loopCtr++;
 
@@ -173,19 +173,22 @@ public class Robot extends TimedRobot {
     IntakesSubsystem intake = m_robotContainer.m_intake;
     Compressor comp = m_robotContainer.m_compressor;
 
-    ll.setPipeline(PipelinesConstants.ledsOffPipeline);
+    ll.setLEDMode(LedMode.kpipeLine);
+    ll.setPipeline(PipelinesConstants.noZoom960720);
 
     switch (autoChoice) {
 
       case 0:
         m_autonomousCommand = new MessageCommand("Did Nothing Auto");
+        ll.setPipeline(PipelinesConstants.ledsOffPipeline);
         break;
 
       case 1:// taxi start anywhere as agreed with other teams inside a tarmac facing in
 
         m_autonomousCommand = new SequentialCommandGroup(
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
-            new ResetEncoders(m_robotContainer.m_drive), new ResetGyro(m_robotContainer.m_drive),
+            new ResetEncoders(m_robotContainer.m_drive),
+            new ResetGyro(m_robotContainer.m_drive),
             new PositionStraight(m_robotContainer.m_drive, -1.5, .3));
 
         break;
@@ -343,8 +346,9 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_shooter.shootValuesSource = m_robotContainer.m_shooter.fromPreset;
 
-    new SetPresetShootPositionSpeedTilt(m_robotContainer.m_shooter, m_robotContainer.m_tilt, m_robotContainer.m_limelight, 1)
-        .schedule();
+    new SetPresetShootPositionSpeedTilt(m_robotContainer.m_shooter, m_robotContainer.m_tilt,
+        m_robotContainer.m_limelight, 1)
+            .schedule();
     ;
 
     new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_tilt,

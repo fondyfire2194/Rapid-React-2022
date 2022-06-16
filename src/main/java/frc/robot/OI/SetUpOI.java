@@ -255,7 +255,7 @@ public class SetUpOI {
                         tiltValues.addNumber("Speed", () -> tilt.getSpeed());
                         tiltValues.addNumber("AdjTarget", () -> tilt.adjustedVerticalError);
                         tiltValues.addNumber("VertDegToTarget", () -> limelight.getdegVerticalToTarget());
- 
+
                         ShuffleboardLayout tiltValues2 = Shuffleboard.getTab("SetupTilt")
                                         .getLayout("States", BuiltInLayouts.kGrid).withPosition(4, 0).withSize(2, 3)
                                         .withProperties(Map.of("Label position", "TOP"));
@@ -305,13 +305,11 @@ public class SetUpOI {
                         shooterCommands.add("Start Shooter", new RunShooter(shooter));
 
                         shooterCommands.add("ShootOne",
-                                        new AltShootCargo(shooter, transport, intake,limelight));
+                                        new AltShootCargo(shooter, transport, intake, limelight));
                         shooterCommands.add("ShootTwo",
-                                        new AltShootCargo(shooter, transport, intake,limelight));
+                                        new AltShootCargo(shooter, transport, intake, limelight));
 
                         shooterCommands.add("ClearFaults", new ClearShFaults(shooter));
-
-                        shooterCommands.add("Cmd", shooter);
 
                         shooterCommands.add("RunShooterFromThrottle",
                                         new SetShootSpeedSource(shooter, 0));
@@ -325,8 +323,7 @@ public class SetUpOI {
                                         .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels
 
                         shooterValues.addNumber("ActualRPM", () -> shooter.getRPM());
-                        shooterValues.addNumber("Target RPM", () -> shooter.requiredRPM);
-                        shooterValues.addNumber("Preset RPM", () -> shooter.presetRPM);
+                        shooterValues.addNumber("Required RPM", () -> shooter.getRPMFromSpeedSource());
 
                         shooterValues.addNumber("TopRollerRPM", () -> shooter.getTopRPM());
                         shooterValues.addNumber("TopTargetRPM", () -> shooter.topRequiredRPM);
@@ -339,25 +336,33 @@ public class SetUpOI {
                         shooterValues.addNumber("RightAmps", () -> shooter.getRightAmps());
                         shooterValues.addNumber("LeftFaults", () -> shooter.getLeftFaults());
                         shooterValues.addNumber("RightFaults", () -> shooter.getRightFaults());
-                        shooterValues.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
- 
- 
+
                         ShuffleboardLayout shooterValues1 = Shuffleboard.getTab("SetupShooter")
 
                                         .getLayout("ShooterValues1", BuiltInLayouts.kList).withPosition(4, 0)
-                                        .withSize(2, 3).withProperties(Map.of("Label position", "LEFT"));
+                                        .withSize(2, 4).withProperties(Map.of("Label position", "LEFT"));
 
                         shooterValues1.addBoolean("ShooterAtSpeed", () -> shooter.getShooterAtSpeed());
                         shooterValues1.addBoolean("TopRollerAtSpeed", () -> shooter.getTopRollerAtSpeed());
                         shooterValues.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
                         shooterValues1.addBoolean("TuneOn", () -> (shooter.tuneOn && shooter.lastTuneOn));
                         shooterValues1.addBoolean("BothConnected(6,7)", () -> shooter.allConnected);
-                        shooterValues1.addString("PresetLocation", () -> shooter.presetLocationName);
-                        shooterValues1.addString("ShooterMode", () -> shooter.shootModeName);                      
+                        shooterValues1.add("Cmd", shooter);
+
+                        ShuffleboardLayout shooterValues3 = Shuffleboard.getTab("SetupShooter")
+
+                                        .getLayout("ShooterVlues3", BuiltInLayouts.kList).withPosition(6, 0)
+                                        .withSize(2, 2)
+                                        .withProperties(Map.of("Label position", "LEFT")); // labels
+                        shooterValues3.addString("PresetLocation", () -> shooter.presetLocationName);
+                        shooterValues3.addString("ShooterMode", () -> shooter.shootModeName);
+                        shooterValues3.addNumber("CalculatedDistance", () -> shooter.calculatedCameraDistance);
+                        shooterValues3.addNumber("CalculatedRPM", () -> shooter.cameraCalculatedSpeed);
+                        shooterValues3.addNumber("CalculatedTiltAngle", () -> tilt.cameraCalculatedTiltPosition);
 
                         ShuffleboardLayout shooterValues2 = Shuffleboard.getTab("SetupShooter")
 
-                                        .getLayout("Gains", BuiltInLayouts.kList).withPosition(6, 0).withSize(1, 2)
+                                        .getLayout("Gains", BuiltInLayouts.kList).withPosition(9, 0).withSize(1, 2)
                                         .withProperties(Map.of("Label position", "LEFT")); // labels
 
                         shooterValues2.addNumber("FF", () -> shooter.ffset);
@@ -452,7 +457,6 @@ public class SetUpOI {
                         robotValues.addNumber("Gyro Yaw", () -> drive.getYaw());
                         robotValues.addNumber("Faults", () -> drive.getFaults());
                         robotValues.addNumber("Target", () -> drive.leftTargetPosition);
-                        
 
                         ShuffleboardLayout robotValues2 = Shuffleboard.getTab("SetupRobot")
                                         .getLayout("States", BuiltInLayouts.kGrid).withPosition(6, 0)

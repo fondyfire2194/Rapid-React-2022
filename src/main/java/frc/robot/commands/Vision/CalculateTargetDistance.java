@@ -23,6 +23,7 @@ public class CalculateTargetDistance extends CommandBase {
 
   private double m_cameraVerticalError;
   private double cameraAngle;
+  private boolean useThrottle = true;
 
   public CalculateTargetDistance(LimeLight limelight, RevTiltSubsystem tilt,
       RevTurretSubsystem turret,
@@ -59,7 +60,17 @@ public class CalculateTargetDistance extends CommandBase {
   @Override
   public void execute() {
 
-    if ((m_limelight.getIsTargetFound() || RobotBase.isSimulation())) {
+    if (useThrottle) {
+      m_shooter.runContinuous = true;
+      double maxdistance = 20;
+      double mindist = 2;
+      double rpmRange = maxdistance - mindist;
+
+      m_shooter.calculatedCameraDistance = mindist + rpmRange * m_shooter.driverThrottleValue;
+
+    }
+
+    else if ((m_limelight.getIsTargetFound())) {
 
       // m_cameraVerticalError = m_limelight.getdegVerticalToTarget() -
       // m_limelight.verticalOffset;
@@ -83,6 +94,9 @@ public class CalculateTargetDistance extends CommandBase {
           tanAngleSum;
 
       m_shooter.calculatedCameraDistance = m_shooter.calculatedCameraDistance - FieldConstants.CAMERA_TO_FRONT_BUMPER;
+
+      if (m_shooter.calculatedCameraDistance < 0)
+        m_shooter.calculatedCameraDistance = 5;
 
     }
 

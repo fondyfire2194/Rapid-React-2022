@@ -336,6 +336,11 @@ public class RevDrivetrain extends SubsystemBase {
         mDrive.feed();
     }
 
+    public void tankDriveWithFeedforward(double leftVelocity, double rightVelocity) {
+        mLeadLeft.setVoltage(m_feedforward.calculate(leftVelocity));
+        mLeadRight.setVoltage(m_feedforward.calculate(rightVelocity));
+    }
+
     public double[] driveDistance(double endPosition) {
 
         double[] temp = { 0, 0 };

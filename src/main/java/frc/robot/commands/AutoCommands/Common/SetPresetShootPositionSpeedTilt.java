@@ -37,6 +37,7 @@ public class SetPresetShootPositionSpeedTilt extends InstantCommand {
     m_shooter.shootLocation = m_shootLocation;
     m_shooter.presetLocationName = FieldMap.shootLocationName[m_shooter.shootLocation];
     m_shooter.shootModeName = FieldMap.shootModeName[m_shooter.shootValuesSource];
+   
     switch (m_shooter.shootLocation) {
       // at hub
       case 0:
@@ -44,13 +45,7 @@ public class SetPresetShootPositionSpeedTilt extends InstantCommand {
         m_shooter.presetRPM = Pref.getPref("teleHubRPM");
 
         m_tilt.presetPosition = Pref.getPref("teleHubTilt");
-
-        // m_shooter.presetRPM = FieldMap.shootLocation_0[1];
-        // m_tilt.presetPosition = FieldMap.shootLocation_0[0];
-
-        m_ll.setPipeline(PipelinesConstants.noZoom960720);
-        m_ll.setLEDMode(LedMode.kforceOff);
-
+        
         break;
 
       // tarmac line
@@ -62,6 +57,7 @@ public class SetPresetShootPositionSpeedTilt extends InstantCommand {
 
         // m_shooter.presetRPM = FieldMap.shootLocation_1[1];
         // m_tilt.presetPosition = FieldMap.shootLocation_1[0];
+        
         m_ll.setPipeline(PipelinesConstants.noZoom960720);
         m_ll.setLEDMode(LedMode.kpipeLine);
 
