@@ -65,6 +65,7 @@ import frc.robot.commands.Tilt.TiltWaitForStop;
 import frc.robot.commands.Turret.PositionHoldTurret;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Turret.PositionTurretIncremental;
+import frc.robot.commands.Turret.ShiftAimLeftRight;
 import frc.robot.commands.Turret.TurretJog;
 import frc.robot.commands.Turret.TurretJogVelocity;
 
@@ -182,7 +183,7 @@ public class RobotContainer {
 
             // m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
             m_shooter.setDefaultCommand(getJogShooterCommand());
- 
+
             m_drive.setDefaultCommand(getArcadeDriveCommand());
 
             m_intake.setDefaultCommand((new StopActiveIntake(m_intake)));
@@ -201,6 +202,7 @@ public class RobotContainer {
             m_limelight.setStream((StreamType.kStandard));
 
             m_limelight.setPipeline(PipelinesConstants.ledsOffPipeline);
+            m_limelight.setHorizontalOffset(0);
             m_limelight.useVision = false;
 
             // m_rcv2 = new RawContoursV2(m_limelight);
@@ -349,9 +351,9 @@ public class RobotContainer {
 
             codriverDownButton.whenPressed(new ChangeShooterSpeed(m_shooter, -100));
 
-            codriverRightButton.whenPressed(new ChangeShooterSpeed(m_shooter, +250));
+            codriverRightButton.whenPressed(new ShiftAimLeftRight(m_limelight, false));
 
-            codriverLeftButton.whenPressed(new ChangeShooterSpeed(m_shooter, -250));
+            codriverLeftButton.whenPressed(new ShiftAimLeftRight(m_limelight, true));
 
             codriverA.whenPressed(new SetFrontIntakeActive(m_intake, true));
 

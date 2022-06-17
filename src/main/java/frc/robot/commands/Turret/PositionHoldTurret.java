@@ -30,8 +30,13 @@ public class PositionHoldTurret extends CommandBase {
   private final LimeLight m_limelight;
   private boolean targetSeen;
   private double cameraHorizontalError;
+  private double lastGoodCameraHorizontalError;
+  private boolean useLastError;
+  private boolean useCurrentError;
+  private boolean lockOnTarget;
 
-  private Debouncer visionTargetDebounce = new Debouncer(.025, DebounceType.kBoth);
+  private Debouncer visionTargetOnDebounce = new Debouncer(.025, DebounceType.kRising);
+  private Debouncer visionTargetOffDebounce = new Debouncer(.025, DebounceType.kFalling);
 
   public PositionHoldTurret(RevTurretSubsystem turret, LimeLight limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -58,32 +63,41 @@ public class PositionHoldTurret extends CommandBase {
     // ms and will be held valid for 25 ms after if is lost. During the delay
     // time after it is lost, the previous value of error will be used
 
-    m_turret.validTargetSeen = m_limelight.useVision && visionTargetDebounce.calculate(targetSeen);
 
-   
-   
-    if (m_limelight.useVision && targetSeen && m_turret.validTargetSeen) {
+    //
+    m_turret.validTargetSeen = m_limelight.useVision && visionTargetOnDebounce.calculate(targetSeen);
 
-      cameraHorizontalError = m_limelight.getdegRotationToTarget();
+    useCurrentError = m_turret.validTargetSeen;
 
+    useLastError = m_limelight.useVision && visionTargetOffDebounce.calculate(targetSeen);
 
-    } else
+    lockOnTarget = useCurrentError || useLastError;
 
-      cameraHorizontalError = 0;
-
-    if (!m_limelight.useVision || !targetSeen || !m_turret.validTargetSeen) {
+    if (!lockOnTarget) {
 
       m_turret.goToPosition(m_turret.targetAngle);
 
       cameraHorizontalError = 0;
     }
 
-    else {
+    if (useCurrentError) {
+
+      cameraHorizontalError = m_limelight.getdegRotationToTarget();
 
       m_turret.lockTurretToVision(cameraHorizontalError);
 
+      lastGoodCameraHorizontalError = cameraHorizontalError;
+
       m_turret.targetAngle = m_turret.getAngle();
     }
+
+    if (useLastError) {
+
+      m_turret.lockTurretToVision(lastGoodCameraHorizontalError);
+
+      m_turret.targetAngle = m_turret.getAngle();
+    }
+
   }
 
   // Called once the command ends or is interrupted.

@@ -5,24 +5,27 @@
 package frc.robot.commands.Turret;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.RevTurretSubsystem;
+import frc.robot.Vision.LimeLight;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class ShiftAimLeftRight extends InstantCommand {
+  private LimeLight m_ll;
+  private boolean m_left;
 
-public class ClearTurFaults extends InstantCommand {
-  private final RevTurretSubsystem m_turret;
-
-  public ClearTurFaults(RevTurretSubsystem turret) {
+  public ShiftAimLeftRight(LimeLight ll, boolean left) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_turret = turret;
-    addRequirements(m_turret);
+    m_ll = ll;
+    m_left = left;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_turret.clearFaults();
+    double temp = .01;
+    if (m_left)
+      temp = -temp;
+    m_ll.horizontalOffset += temp;
   }
 }

@@ -99,9 +99,8 @@ public class LLVisionShuffleboard {
                         visionData.addNumber("TargetArea", () -> ll.getTargetArea());
                         visionData.addNumber("BNDBoxWidth", () -> ll.getBoundingBoxWidth());
                         visionData.addNumber("BndBoxHeight", () -> ll.getBoundingBoxHeight());
-
                         visionData.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
-
+                        visionData.addNumber("TargetOffset", () -> ll.horizontalOffset);
                         ShuffleboardLayout visionBools = Shuffleboard.getTab("LLVision")
                                         .getLayout("States", BuiltInLayouts.kList).withPosition(5, 0)
                                         .withSize(1, 4).withProperties(Map.of("Label position", "TOP")); // labels
