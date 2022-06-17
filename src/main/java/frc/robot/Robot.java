@@ -346,11 +346,10 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_shooter.shootValuesSource = m_robotContainer.m_shooter.fromPreset;
 
-    new SetPresetShootPositionSpeedTilt(m_robotContainer.m_shooter, m_robotContainer.m_tilt,
-        m_robotContainer.m_limelight, 1)
-            .schedule();
-    ;
-
+    m_robotContainer.m_shooter.shootLocation = 1;
+    m_robotContainer.m_shooter.presetLocationName = FieldMap.shootLocationName[m_robotContainer.m_shooter.shootLocation];
+    m_robotContainer.m_shooter.shootModeName = FieldMap.shootModeName[m_robotContainer.m_shooter.shootValuesSource];
+    
     new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_tilt,
         m_robotContainer.m_turret, m_robotContainer.m_shooter).schedule();
 

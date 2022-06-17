@@ -33,7 +33,7 @@ public class SelectSpeedAndTiltByDistance extends CommandBase {
 
     if (m_shooter.calculatedCameraDistance < 3)
       m_shooter.calculatedCameraDistance = 3;
-    int distance = (int) Math.round(m_shooter.calculatedCameraDistance);
+    int distance = (int) m_shooter.calculatedCameraDistance;
     if (distance > 0 && distance < ShooterRangeConstants.range1) {
       m_tilt.cameraCalculatedTiltPosition = ShooterRangeConstants.tiltRange1;
     } else if (distance >= ShooterRangeConstants.range1 && distance < ShooterRangeConstants.range2) {
@@ -60,6 +60,6 @@ public class SelectSpeedAndTiltByDistance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !m_shooter.runContinuous;
+    return true;
   }
 }

@@ -180,8 +180,9 @@ public class RobotContainer {
             m_climber = new ClimberSubsystem();
             m_limelight = new LimeLight();
 
-            m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
-
+            // m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
+            m_shooter.setDefaultCommand(getJogShooterCommand());
+ 
             m_drive.setDefaultCommand(getArcadeDriveCommand());
 
             m_intake.setDefaultCommand((new StopActiveIntake(m_intake)));
@@ -283,7 +284,7 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 6).whenPressed(new SetFrontIntakeActive(m_intake, true));
 
             new JoystickButton(m_driverController, 3).whenPressed(new StopShoot(m_shooter, m_transport))
-                        .whenPressed(new TurnLedsOnOff(m_limelight, false))
+                        // .whenPressed(new TurnLedsOnOff(m_limelight, false))
                         .whenPressed(new StopLowerRoller(m_transport));
 
             new JoystickButton(m_driverController, 4).whenPressed(new SetFrontIntakeActive(m_intake, false));
@@ -303,11 +304,7 @@ public class RobotContainer {
 
             new JoystickButton(m_driverController, 9).whenPressed(
 
-                        new SequentialCommandGroup(
-
-                                    new SetUpCameraShoot(m_shooter, m_tilt, m_limelight),
-
-                                    new AltShootCargo(m_shooter, m_transport, m_intake, m_limelight)));
+                        new SetUpCameraShoot(m_shooter, m_tilt, m_limelight));
 
             // new JoystickButton(m_driverController, 10)
 
@@ -338,7 +335,7 @@ public class RobotContainer {
 
             // co driver gamepad
 
-            codriverStart.whileHeld(m_transport::reverseLowRoller);
+            // codriverStart.whileHeld(m_transport::reverseLowRoller);
 
             codriverX.whileHeld(getJogTiltVelocityCommand()).whileHeld(getJogTurretVelocityCommand())
                         .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));

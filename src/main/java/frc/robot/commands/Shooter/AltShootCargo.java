@@ -198,8 +198,8 @@ public class AltShootCargo extends CommandBase {
     if (noMoreCargo) {
       m_shooter.stop();
       m_shooter.stopTopRoller();
-      m_ll.setPipeline(PipelinesConstants.ledsOffPipeline);
-      m_ll.useVision = false;
+   //   m_ll.setPipeline(PipelinesConstants.ledsOffPipeline);
+     // m_ll.useVision = false;
     }
     m_transport.stopLowerRoller();
     m_shooter.isShooting = false;

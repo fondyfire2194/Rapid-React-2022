@@ -9,6 +9,7 @@ import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Tilt.PositionTilt;
+import frc.robot.commands.Tilt.PositionTiltToCamera;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
 import frc.robot.commands.Vision.UseVision;
 import frc.robot.subsystems.RevShooterSubsystem;
@@ -32,7 +33,7 @@ public class SetUpCameraShoot extends SequentialCommandGroup {
 
           new SelectSpeedAndTiltByDistance(shooter, tilt),
 
-          new PositionTilt(tilt, tilt.cameraCalculatedTiltPosition));
+          new PositionTiltToCamera(tilt));
 
     }
   }

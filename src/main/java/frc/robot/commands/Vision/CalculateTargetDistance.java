@@ -23,7 +23,7 @@ public class CalculateTargetDistance extends CommandBase {
 
   private double m_cameraVerticalError;
   private double cameraAngle;
-  private boolean useThrottle = true;
+  private boolean useThrottle = false;
 
   public CalculateTargetDistance(LimeLight limelight, RevTiltSubsystem tilt,
       RevTurretSubsystem turret,
