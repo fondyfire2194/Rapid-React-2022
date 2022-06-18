@@ -66,7 +66,9 @@ public class PositionTurretToPreset extends CommandBase {
 
     if (loopCtr > 10 && !endIt)
 
-      m_turret.targetAngle = m_turret.getAngle();
+      m_turret.holdAngle = m_turret.getAngle();
+
+    m_turret.targetAngle = m_turret.holdAngle;
   }
 
   // Returns true when the command should end.

@@ -72,7 +72,8 @@ public class PositionHoldTurret extends CommandBase {
 
     useCurrentError = m_limelight.useVision && m_turret.validTargetSeen;
 
-   // useLastError = m_limelight.useVision && visionTargetOffDebounce.calculate(targetSeen);
+    // useLastError = m_limelight.useVision &&
+    // visionTargetOffDebounce.calculate(targetSeen);
 
     lockOnTarget = useCurrentError || useLastError;
 
@@ -92,15 +93,15 @@ public class PositionHoldTurret extends CommandBase {
 
     if (useCurrentError) {
 
-      if(targetSeen){
+      if (targetSeen) {
 
-      cameraHorizontalError = m_limelight.getdegRotationToTarget();
+        cameraHorizontalError = m_limelight.getdegRotationToTarget();
 
       }
-      
-      else{
 
-        cameraHorizontalError=0;
+      else {
+
+        cameraHorizontalError = 0;
 
       }
 
@@ -117,7 +118,10 @@ public class PositionHoldTurret extends CommandBase {
 
       m_turret.lockTurretToVision(lastGoodCameraHorizontalError);
 
-      m_turret.targetAngle = m_turret.getAngle();
+
+      m_turret.holdAngle = m_turret.getAngle();
+
+      m_turret.targetAngle = m_turret.holdAngle;
     }
 
   }
@@ -125,7 +129,8 @@ public class PositionHoldTurret extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_turret.targetAngle = m_turret.getAngle();
+    m_turret.holdAngle = m_turret.getAngle();
+    m_turret.targetAngle = m_turret.holdAngle;
     m_turret.validTargetSeen = false;
     m_turret.visionOnTarget = false;
   }

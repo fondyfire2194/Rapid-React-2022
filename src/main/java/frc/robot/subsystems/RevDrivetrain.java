@@ -100,6 +100,7 @@ public class RevDrivetrain extends SubsystemBase {
     public double kTurnP = .05;
     public double kTurnI = 0.;
     public double kTurnD = 0.;
+    public double kTurnIz = 0;
 
     public final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts,
             DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter);
@@ -131,9 +132,13 @@ public class RevDrivetrain extends SubsystemBase {
         mRightVel = mLeadRight.getPIDController();
 
         mLeftVel.setFF(.01);
-        mLeftVel.setP(.025,0);
+        mLeftVel.setP(.025, 0);
         mRightVel.setFF(.01);
         mRightVel.setP(.025, 0);
+
+        mLeftVel.setOutputRange(-.25, .25, VELOCITY_SLOT);
+        mRightVel.setOutputRange(-.25, .25, VELOCITY_SLOT);
+
 
         mRightEncoder = mLeadRight.getEncoder();
         mLeftEncoder = mLeadLeft.getEncoder();
@@ -333,8 +338,9 @@ public class RevDrivetrain extends SubsystemBase {
 
     public void rotate(double rotation) {
 
-        mLeftVel.setReference(rotation * 200, ControlType.kVelocity, VELOCITY_SLOT);
-        mRightVel.setReference(-rotation * 200, ControlType.kVelocity, VELOCITY_SLOT);
+        mLeftVel.setReference(rotation * DriveConstants.kMaxTurnRateDegPerS, ControlType.kVelocity, VELOCITY_SLOT);
+ 
+        mRightVel.setReference(-rotation * DriveConstants.kMaxTurnRateDegPerS, ControlType.kVelocity, VELOCITY_SLOT);
     }
 
     public void curvatureDrive(double speed, double rotation) {
@@ -589,6 +595,8 @@ public class RevDrivetrain extends SubsystemBase {
         kTurnI = Pref.getPref("dRTurnkI");
 
         kTurnD = Pref.getPref("dRTurnkD");
+
+        kTurnIz = Pref.getPref("dRTurnkIz");
 
         if (RobotBase.isSimulation()) {
 

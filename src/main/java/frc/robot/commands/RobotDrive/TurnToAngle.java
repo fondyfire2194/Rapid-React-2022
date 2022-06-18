@@ -8,6 +8,7 @@ package frc.robot.commands.RobotDrive;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.Pref;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.RevDrivetrain;
 
@@ -16,7 +17,6 @@ import frc.robot.subsystems.RevDrivetrain;
  * profile.
  */
 public class TurnToAngle extends PIDCommand {
-
 
   /**
    * Turns to robot to the specified angle.
@@ -36,7 +36,7 @@ public class TurnToAngle extends PIDCommand {
         output -> drive.rotate(output),
         // Require the drive
         drive);
-    
+
     // Set the controller to be continuous (because it is an angle controller)
     getController().enableContinuousInput(-180, 180);
     // Set the controller tolerance - the delta tolerance ensures the robot is
@@ -44,9 +44,19 @@ public class TurnToAngle extends PIDCommand {
     // setpoint before it is considered as having reached the reference
     getController()
         .setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
-  }
-
+  
  
+      }
+
+  @Override
+
+  public void execute() {
+    if (getController().getPositionError() > Pref.getPref("dRTurnkizLim"))
+      getController().setI(0);
+    else
+      getController().setI(Pref.getPref("dRTurnkiz"));
+
+  }
 
   @Override
   public boolean isFinished() {

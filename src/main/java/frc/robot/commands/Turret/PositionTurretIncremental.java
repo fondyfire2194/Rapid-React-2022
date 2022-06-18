@@ -45,7 +45,9 @@ public class PositionTurretIncremental extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     if (loopCtr > 10 && !endIt)
-      m_turret.targetAngle = m_turret.getAngle();
+      m_turret.holdAngle = m_turret.getAngle();
+
+    m_turret.targetAngle = m_turret.holdAngle;
 
   }
 

@@ -121,7 +121,7 @@ public final class Constants {
 
       public static double kMaxTurnRateDegPerS = 50.;
       public static double kMaxTurnAccelerationDegPerSSquared = 250.;
-      public static double kTurnRateToleranceDegPerS = 5.;
+      public static double kTurnRateToleranceDegPerS = 2.;
       public static double kTurnToleranceDeg = 2.;
 
       /**

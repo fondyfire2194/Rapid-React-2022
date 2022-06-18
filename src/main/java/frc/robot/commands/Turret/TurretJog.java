@@ -49,7 +49,9 @@ public class TurretJog extends CommandBase {
   public void end(boolean interrupted) {
     m_turret.stop();
     m_turret.m_motor.set(0);
-    m_turret.targetAngle = m_turret.getAngle();
+    m_turret.holdAngle = m_turret.getAngle();
+
+    m_turret.targetAngle = m_turret.holdAngle;
   }
 
   // Returns true when the command should end.
