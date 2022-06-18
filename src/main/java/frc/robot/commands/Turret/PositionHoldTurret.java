@@ -34,6 +34,8 @@ public class PositionHoldTurret extends CommandBase {
   private boolean useLastError;
   private boolean useCurrentError;
   private boolean lockOnTarget;
+  private boolean oneShotLock;
+  private double holdAngle;
 
   private Debouncer visionTargetOnDebounce = new Debouncer(.025, DebounceType.kRising);
   private Debouncer visionTargetOffDebounce = new Debouncer(.025, DebounceType.kFalling);
@@ -50,6 +52,8 @@ public class PositionHoldTurret extends CommandBase {
   public void initialize() {
 
     m_turret.programRunning = 1;
+    oneShotLock = false;
+    holdAngle = m_turret.getAngle();
 
   }
 
@@ -57,38 +61,56 @@ public class PositionHoldTurret extends CommandBase {
   @Override
   public void execute() {
 
-    targetSeen = m_limelight.getIsTargetFound();
+    targetSeen = m_limelight.useVision && m_limelight.getIsTargetFound();
 
     // To limit effect of possible Limelight jitter, valid target is held off for 25
     // ms and will be held valid for 25 ms after if is lost. During the delay
     // time after it is lost, the previous value of error will be used
 
-
     //
     m_turret.validTargetSeen = m_limelight.useVision && visionTargetOnDebounce.calculate(targetSeen);
 
-    useCurrentError = m_turret.validTargetSeen;
+    useCurrentError = m_limelight.useVision && m_turret.validTargetSeen;
 
-    useLastError = m_limelight.useVision && visionTargetOffDebounce.calculate(targetSeen);
+   // useLastError = m_limelight.useVision && visionTargetOffDebounce.calculate(targetSeen);
 
     lockOnTarget = useCurrentError || useLastError;
 
     if (!lockOnTarget) {
+      if (!oneShotLock) {
 
-      m_turret.goToPosition(m_turret.targetAngle);
+        m_turret.holdAngle = m_turret.getAngle();
+        m_turret.targetAngle = m_turret.holdAngle;
+
+        oneShotLock = true;
+      }
+
+      m_turret.goToPosition(m_turret.holdAngle);
 
       cameraHorizontalError = 0;
     }
 
     if (useCurrentError) {
 
+      if(targetSeen){
+
       cameraHorizontalError = m_limelight.getdegRotationToTarget();
+
+      }
+      
+      else{
+
+        cameraHorizontalError=0;
+
+      }
 
       m_turret.lockTurretToVision(cameraHorizontalError);
 
       lastGoodCameraHorizontalError = cameraHorizontalError;
 
-      m_turret.targetAngle = m_turret.getAngle();
+      m_turret.holdAngle = m_turret.getAngle();
+
+      m_turret.targetAngle = m_turret.holdAngle;
     }
 
     if (useLastError) {

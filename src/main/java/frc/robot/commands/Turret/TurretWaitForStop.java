@@ -25,13 +25,13 @@ public class TurretWaitForStop extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_turret.stop();
+    m_turret.stop(); m_turret.targetAngle = m_turret.getAngle();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_turret.targetAngle = m_turret.getAngle();
+   
   }
 
   // Returns true when the command should end.

@@ -37,7 +37,7 @@ public class LimeLight {
 
     private boolean cameraAt90 = true;
 
-     private Debouncer useVisionDebounce = new Debouncer(5, DebounceType.kFalling);
+  //   private Debouncer useVisionDebounce = new Debouncer(5, DebounceType.kFalling);
 
 
     class PeriodicRunnable implements java.lang.Runnable {
@@ -498,7 +498,7 @@ public class LimeLight {
 
     public void periodic() {
 
-        useVision = useVision && useVisionDebounce.calculate(getIsTargetFound());
+       // useVision = useVision && useVisionDebounce.calculate(getIsTargetFound());
 
         
 

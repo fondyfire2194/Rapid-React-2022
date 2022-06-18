@@ -103,6 +103,7 @@ public class RevTurretSubsystem extends SubsystemBase {
     LinearSystem<N2, N1, N1> m_turretPosition = LinearSystemId
             .identifyPositionSystem(TurretConstants.kVVoltSecondsPerRotation, TurretConstants.kA);
     LinearSystemSim<N2, N1, N1> m_turretPositionSim = new LinearSystemSim<>(m_turretPosition);
+    public double holdAngle;
 
     public RevTurretSubsystem() {
         m_motor = new CANSparkMaxWithSim(CANConstants.TURRET_ROTATE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -198,6 +199,8 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         m_motor.set(speed);
 
+        targetAngle=getAngle();
+
     }
 
     public void goToPosition(double degrees) {
@@ -227,6 +230,8 @@ public class RevTurretSubsystem extends SubsystemBase {
         moveAtVelocity(lockPIDOut * maxVel);
 
         targetAngle = getAngle();
+
+        holdAngle = getAngle();
     }
 
     public void lockTurretToThrottle(double throttleError) {
@@ -236,6 +241,8 @@ public class RevTurretSubsystem extends SubsystemBase {
         moveAtVelocity(lockPIDOut);
 
         targetAngle = getAngle();
+
+        holdAngle = getAngle();
     }
 
     public double getLockPositionError() {

@@ -23,6 +23,7 @@ public class ResetTurretAngle extends CommandBase {
   @Override
   public void initialize() {
     loopCtr = 0;
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,8 +31,10 @@ public class ResetTurretAngle extends CommandBase {
   public void execute() {
 
     loopCtr++;
+    m_turret.moveManually(0);
     m_turret.resetAngle(0);
     m_turret.targetAngle = 0;
+    m_turret.holdAngle=0;
     if (RobotBase.isReal()) {
       m_turret.setSoftwareLimits();
 
@@ -47,6 +50,6 @@ public class ResetTurretAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return loopCtr > 0;
+    return m_turret.getAngle()==0;
   }
 }

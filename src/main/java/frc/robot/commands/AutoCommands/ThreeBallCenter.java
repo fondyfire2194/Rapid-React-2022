@@ -17,7 +17,7 @@ import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
-import frc.robot.commands.RobotDrive.TurnToAngleProfiled;
+import frc.robot.commands.RobotDrive.TurnToAngle;
 import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
@@ -99,7 +99,7 @@ public class ThreeBallCenter extends SequentialCommandGroup {
                                                                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret,
                                                                                 ll)),
 
-                                new TurnToAngleProfiled(drive, turnToThrirdBall),
+                                new TurnToAngle(drive, turnToThrirdBall),
 
                                 new ParallelCommandGroup(
                                                 new LimelightSetPipeline(ll, 8),

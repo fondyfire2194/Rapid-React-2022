@@ -429,7 +429,7 @@ public class RobotContainer {
 
       public Command getJogShooterCommand() {
 
-            return new JogShooter(m_shooter, () -> codriverGamepad.getRawAxis(4));
+            return new JogShooter(m_shooter, () -> codriverGamepad.getRawAxis(3));
       }
 
       public Command getJogShooterVelocityCommand() {

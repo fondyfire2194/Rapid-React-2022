@@ -32,7 +32,7 @@ public class TurretJogVelocity extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    m_turret.targetAngle = m_turret.getAngle();
     if (Math.abs(m_xaxisSpeedSupplier.get()) < .05)
 
       m_turret.moveAtVelocity(0);
@@ -40,7 +40,7 @@ public class TurretJogVelocity extends CommandBase {
     else
 
       m_turret.moveAtVelocity(m_xaxisSpeedSupplier.get() * m_turret.maxVel);
-SmartDashboard.putNumber("TUMAXV", m_turret.maxVel);
+    SmartDashboard.putNumber("TUMAXV", m_turret.maxVel);
 
   }
 

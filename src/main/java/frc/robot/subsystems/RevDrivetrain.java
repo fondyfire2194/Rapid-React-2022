@@ -7,7 +7,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
@@ -21,6 +23,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
@@ -39,6 +42,7 @@ public class RevDrivetrain extends SubsystemBase {
     // private static final DrivetrainConstants DRIVETRAIN_CONSTANTS = new
     // NeoDrivetrainConstants();
 
+    private static final int VELOCITY_SLOT = 0;
     private final CANSparkMax mLeadLeft; // NOPMD
     private final CANSparkMax mFollowerLeft; // NOPMD
 
@@ -90,11 +94,14 @@ public class RevDrivetrain extends SubsystemBase {
     private PIDController mleftPID = new PIDController(kP, kI, kD);
     private PIDController mrightPID = new PIDController(kP, kI, kD);
 
+    private SparkMaxPIDController mLeftVel;
+    private SparkMaxPIDController mRightVel;
+
     public double kTurnP = .05;
     public double kTurnI = 0.;
     public double kTurnD = 0.;
 
-    private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts,
+    public final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts,
             DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter);
 
     private int robotStoppedCtr;
@@ -103,6 +110,7 @@ public class RevDrivetrain extends SubsystemBase {
 
     public final double pickUpRate = .3;
     public final double positionRate = .4;
+    public double rotateStartTime;
 
     public RevDrivetrain() {
         mLeadLeft = new CANSparkMax(CANConstants.DRIVETRAIN_LEFT_MASTER,
@@ -119,6 +127,14 @@ public class RevDrivetrain extends SubsystemBase {
         mLeadRight.restoreFactoryDefaults();
         mFollowerRight.restoreFactoryDefaults();
 
+        mLeftVel = mLeadLeft.getPIDController();
+        mRightVel = mLeadRight.getPIDController();
+
+        mLeftVel.setFF(.01);
+        mLeftVel.setP(.025,0);
+        mRightVel.setFF(.01);
+        mRightVel.setP(.025, 0);
+
         mRightEncoder = mLeadRight.getEncoder();
         mLeftEncoder = mLeadLeft.getEncoder();
 
@@ -130,14 +146,12 @@ public class RevDrivetrain extends SubsystemBase {
         mLeftEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
         mRightEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
 
-
         mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
         mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
 
         mFollowerLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
         mFollowerLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
         mFollowerLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-
 
         mLeadRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
         mLeadRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
@@ -308,12 +322,19 @@ public class RevDrivetrain extends SubsystemBase {
     }
 
     public void arcadeDrive(double speed, double rotation) {
-
+        SmartDashboard.putNumber("ARCrot", rotation);
         if (Math.abs(speed) < .1 || lockedForVision)
             speed = 0;
         if (Math.abs(rotation) < .1)
             rotation = 0;
+
         mDrive.arcadeDrive(speed, rotation);
+    }
+
+    public void rotate(double rotation) {
+
+        mLeftVel.setReference(rotation * 200, ControlType.kVelocity, VELOCITY_SLOT);
+        mRightVel.setReference(-rotation * 200, ControlType.kVelocity, VELOCITY_SLOT);
     }
 
     public void curvatureDrive(double speed, double rotation) {
@@ -334,11 +355,6 @@ public class RevDrivetrain extends SubsystemBase {
     public void tankDrive(double left, double right) {
         mDrive.tankDrive(left, right);
         mDrive.feed();
-    }
-
-    public void tankDriveWithFeedforward(double leftVelocity, double rightVelocity) {
-        mLeadLeft.setVoltage(m_feedforward.calculate(leftVelocity));
-        mLeadRight.setVoltage(m_feedforward.calculate(rightVelocity));
     }
 
     public double[] driveDistance(double endPosition) {
@@ -604,6 +620,7 @@ public class RevDrivetrain extends SubsystemBase {
         if (tuneOn && !lastTuneOn) {
 
             tuneGains();
+
             lastTuneOn = true;
         }
 

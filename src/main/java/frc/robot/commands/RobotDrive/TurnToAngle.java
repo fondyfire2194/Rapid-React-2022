@@ -6,57 +6,51 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.commands.RobotDrive;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
-
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.DriveConstants;
-
 import frc.robot.subsystems.RevDrivetrain;
 
 /**
  * A command that will turn the robot to the specified angle using a motion
  * profile.
  */
-public class TurnToAngleProfiled extends ProfiledPIDCommand {
+public class TurnToAngle extends PIDCommand {
+
+
   /**
-   * Turns to robot to the specified angle using a motion profile.
+   * Turns to robot to the specified angle.
    *
    * @param targetAngleDegrees The angle to turn to
    * @param drive              The drive subsystem to use
    */
-  public TurnToAngleProfiled(RevDrivetrain drive, double targetAngleDegrees) {
+  public TurnToAngle(RevDrivetrain drive, double targetAngleDegrees) {
+
     super(
-        new ProfiledPIDController(drive.kTurnP, drive.kTurnI, drive.kTurnD,
-            new TrapezoidProfile.Constraints(DriveConstants.kMaxTurnRateDegPerS,
-                DriveConstants.kMaxTurnAccelerationDegPerSSquared)),
+        new PIDController(drive.kTurnP, drive.kTurnI, drive.kTurnD),
         // Close loop on heading
-        drive::getHeadingDegrees,
+        drive::getHeading,
         // Set reference to target
         targetAngleDegrees,
         // Pipe output to turn robot
-         (output, setpoint) -> drive.arcadeDrive(0, output),
-
-        // (output, setpoint) -> drive.tankDriveWithFeedforward(output * RobotController.getBatteryVoltage(), -output
-        //     * RobotController.getBatteryVoltage()),
-        
-
-
+        output -> drive.rotate(output),
         // Require the drive
         drive);
-
+    
     // Set the controller to be continuous (because it is an angle controller)
     getController().enableContinuousInput(-180, 180);
     // Set the controller tolerance - the delta tolerance ensures the robot is
     // stationary at the
     // setpoint before it is considered as having reached the reference
-    getController().setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
+    getController()
+        .setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
   }
+
+ 
 
   @Override
   public boolean isFinished() {
     // End when the controller is at the reference.
-    return getController().atGoal();
+    return getController().atSetpoint();
   }
 }
