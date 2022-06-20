@@ -44,16 +44,19 @@ public class TurnToAngle extends PIDCommand {
     // setpoint before it is considered as having reached the reference
     getController()
         .setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
-  
- 
-      }
+
+  }
 
   @Override
 
   public void execute() {
-    if (getController().getPositionError() > Pref.getPref("dRTurnkizLim"))
+    
+    if (Math.abs(getController().getPositionError()) > Pref.getPref("dRTurnkizLim"))
+
       getController().setI(0);
+
     else
+
       getController().setI(Pref.getPref("dRTurnkiz"));
 
   }
