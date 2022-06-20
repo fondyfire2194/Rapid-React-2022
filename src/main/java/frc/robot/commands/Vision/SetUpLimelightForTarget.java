@@ -7,6 +7,7 @@ package frc.robot.commands.Vision;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.LedMode;
+import frc.robot.commands.TimeDelay;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -18,6 +19,8 @@ public class SetUpLimelightForTarget extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new LimelightLeds(limelight, LedMode.kpipeLine),
-        new LimelightSetPipeline(limelight, pipeline), new UseVision(limelight, on));
+        new LimelightSetPipeline(limelight, pipeline), 
+        new TimeDelay(.25),
+        new UseVision(limelight, on));
   }
 }

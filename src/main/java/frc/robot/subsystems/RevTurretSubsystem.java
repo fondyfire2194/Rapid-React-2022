@@ -104,6 +104,7 @@ public class RevTurretSubsystem extends SubsystemBase {
             .identifyPositionSystem(TurretConstants.kVVoltSecondsPerRotation, TurretConstants.kA);
     LinearSystemSim<N2, N1, N1> m_turretPositionSim = new LinearSystemSim<>(m_turretPosition);
     public double holdAngle;
+    public boolean zeroLockOut;
 
     public RevTurretSubsystem() {
         m_motor = new CANSparkMaxWithSim(CANConstants.TURRET_ROTATE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -121,7 +122,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         mEncoder.setPosition(0);
 
         if (RobotBase.isReal()) {
-         //   setFF_MaxOuts();
+            // setFF_MaxOuts();
             setVelGains();
             getVelGains();
             setPosGains();
@@ -165,8 +166,10 @@ public class RevTurretSubsystem extends SubsystemBase {
 
             checkTune();
 
-        if (DriverStation.isDisabled())
-            targetAngle = getAngle();
+        if (DriverStation.isDisabled()) {
+            holdAngle = getAngle();
+            targetAngle = holdAngle;
+        }
 
     }
 
@@ -199,7 +202,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         m_motor.set(speed);
 
-        targetAngle=getAngle();
+        targetAngle = getAngle();
 
     }
 
@@ -211,9 +214,9 @@ public class RevTurretSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("TUPERR", mPosController.getPositionError());
         SmartDashboard.putNumber("PosPGain", mPosController.getP());
 
-        SmartDashboard.putNumber("TUPIDOUT", pidout);
+        SmartDashboard.putNumber("TUPIDOUT", -pidout);
 
-        moveAtVelocity(pidout * maxVel);
+        moveAtVelocity(-pidout * maxVel);
     }
 
     public double getTargetHorOffset() {
@@ -223,7 +226,13 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     public void lockTurretToVision(double cameraError) {
 
-        lockPIDOut = mLockController.calculate(cameraError, 0);
+        if (!zeroLockOut)
+
+            lockPIDOut = mLockController.calculate(cameraError, 0);
+
+        else
+
+            lockPIDOut = 0;
 
         SmartDashboard.putNumber("tulLockMove", lockPIDOut * maxVel);
 
@@ -232,6 +241,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         targetAngle = getAngle();
 
         holdAngle = getAngle();
+
     }
 
     public void lockTurretToThrottle(double throttleError) {
@@ -348,8 +358,6 @@ public class RevTurretSubsystem extends SubsystemBase {
 
             SmartDashboard.putNumber("TuMAOut", m_motor.getAppliedOutput());
 
-        
-
         }
 
         else {
@@ -406,7 +414,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         kMinOutput = -.75;
         kMaxOutput = .75;
         mVelController.setOutputRange(kMinOutput, kMaxOutput, VELOCITY_SLOT);
-        maxVel =100;// Pref.getPref("tuVMaxV");// deg per sec 150rps *1.39 = 208 deg /sec
+        maxVel = 100;// Pref.getPref("tuVMaxV");// deg per sec 150rps *1.39 = 208 deg /sec
         maxAcc = Pref.getPref("tuVMaxA");// deg per sec per sec
         allowedErr = .1;
         calibratePID(p, i, d, iz, VELOCITY_SLOT);

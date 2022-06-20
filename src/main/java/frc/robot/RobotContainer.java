@@ -36,6 +36,7 @@ import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.TurnLedsOnOff;
+import frc.robot.commands.TimeDelay;
 import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
 import frc.robot.commands.AutoCommands.Common.SetUpCameraShoot;
 import frc.robot.commands.AutoCommands.Common.SetupPresetShootLocation;
@@ -306,9 +307,11 @@ public class RobotContainer {
 
             new JoystickButton(m_driverController, 9).whenPressed(
 
-                        new SetUpCameraShoot(m_shooter, m_tilt, m_limelight));
+                        new LimelightSetPipeline(m_limelight, PipelinesConstants.noZoom960720));
 
-            // new JoystickButton(m_driverController, 10)
+            new JoystickButton(m_driverController, 10).whenPressed(
+
+                        new LimelightSetPipeline(m_limelight, PipelinesConstants.ledsOffPipeline));
 
             new JoystickButton(m_driverController, 11).whileHeld(
 
@@ -331,9 +334,13 @@ public class RobotContainer {
 
                         new UseVision(m_limelight, false),
 
+                        new TimeDelay(.5),
+
+                        new PositionTurret(m_turret, 0),
+
                         new LimelightSetPipeline(m_limelight, PipelinesConstants.ledsOffPipeline)));
 
-            driverRightButton.whenPressed(new SetUpCameraShoot(m_shooter, m_tilt, m_limelight));
+            driverRightButton.whileActiveContinuous(new SetUpCameraShoot(m_shooter, m_tilt, m_limelight));
 
             // co driver gamepad
 

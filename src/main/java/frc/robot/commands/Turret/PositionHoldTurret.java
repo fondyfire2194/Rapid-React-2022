@@ -34,8 +34,7 @@ public class PositionHoldTurret extends CommandBase {
   private boolean useLastError;
   private boolean useCurrentError;
   private boolean lockOnTarget;
-  private boolean oneShotLock;
-  private double holdAngle;
+  private boolean oneShotLatchHoldAngle;
 
   private Debouncer visionTargetOnDebounce = new Debouncer(.025, DebounceType.kRising);
   private Debouncer visionTargetOffDebounce = new Debouncer(.025, DebounceType.kFalling);
@@ -52,8 +51,8 @@ public class PositionHoldTurret extends CommandBase {
   public void initialize() {
 
     m_turret.programRunning = 1;
-    oneShotLock = false;
-    holdAngle = m_turret.getAngle();
+    oneShotLatchHoldAngle = false;
+    m_turret.holdAngle = m_turret.getAngle();
 
   }
 
@@ -77,15 +76,23 @@ public class PositionHoldTurret extends CommandBase {
 
     lockOnTarget = useCurrentError || useLastError;
 
+    if (!lockOnTarget && oneShotLatchHoldAngle)
+
+      oneShotLatchHoldAngle = false;
+
     if (!lockOnTarget) {
-      if (!oneShotLock) {
+
+      if (!oneShotLatchHoldAngle) {
 
         m_turret.holdAngle = m_turret.getAngle();
+
         m_turret.targetAngle = m_turret.holdAngle;
 
-        oneShotLock = true;
+        oneShotLatchHoldAngle = true;
       }
 
+      m_turret.zeroLockOut = true;
+      
       m_turret.goToPosition(m_turret.holdAngle);
 
       cameraHorizontalError = 0;
@@ -104,6 +111,7 @@ public class PositionHoldTurret extends CommandBase {
         cameraHorizontalError = 0;
 
       }
+      m_turret.zeroLockOut = false;
 
       m_turret.lockTurretToVision(cameraHorizontalError);
 
@@ -117,7 +125,6 @@ public class PositionHoldTurret extends CommandBase {
     if (useLastError) {
 
       m_turret.lockTurretToVision(lastGoodCameraHorizontalError);
-
 
       m_turret.holdAngle = m_turret.getAngle();
 

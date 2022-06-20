@@ -35,13 +35,8 @@ public class SetupPresetShootLocation extends SequentialCommandGroup {
 
           new SetPresetShootPositionSpeedTilt(shooter, tilt, ll, shootLocation),
 
-          new TiltMoveToReverseLimit(tilt),
+          new PositionTiltToPreset(tilt));
 
-          new ParallelCommandGroup(
-
-              new PositionTiltToPreset(tilt),
-
-              new PositionTurret(turret, 0)));
     }
   }
 }

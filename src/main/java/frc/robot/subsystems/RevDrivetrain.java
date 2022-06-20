@@ -4,10 +4,10 @@ import java.util.Arrays;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
-import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
@@ -23,7 +23,6 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
@@ -131,9 +130,9 @@ public class RevDrivetrain extends SubsystemBase {
         mLeftVel = mLeadLeft.getPIDController();
         mRightVel = mLeadRight.getPIDController();
 
-        mLeftVel.setFF(.01);
+        mLeftVel.setFF(.0);
         mLeftVel.setP(.025, 0);
-        mRightVel.setFF(.01);
+        mRightVel.setFF(.0);
         mRightVel.setP(.025, 0);
 
         mLeftVel.setOutputRange(-.25, .25, VELOCITY_SLOT);
@@ -345,7 +344,7 @@ public class RevDrivetrain extends SubsystemBase {
 
     public void curvatureDrive(double speed, double rotation) {
 
-        if (Math.abs(speed) < .1 || lockedForVision)
+        if (Math.abs(speed) < .1)
             speed = 0;
         if (Math.abs(rotation) < .1)
             rotation = 0;
