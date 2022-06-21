@@ -7,32 +7,25 @@ package frc.robot.commands.Vision;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.FieldMap;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.subsystems.RevShooterSubsystem;
-import frc.robot.subsystems.RevTiltSubsystem;
-import frc.robot.subsystems.RevTurretSubsystem;
 
 public class CalculateTargetDistance extends CommandBase {
   /** Creates a new CalculateTargetDistance. */
   private final LimeLight m_limelight;
-  private final RevTiltSubsystem m_tilt;
+
   private final RevShooterSubsystem m_shooter;
-  private final RevTurretSubsystem m_turret;
 
   private double m_cameraVerticalError;
   private double cameraAngle;
   private boolean useThrottle = false;
 
-  public CalculateTargetDistance(LimeLight limelight, RevTiltSubsystem tilt,
-      RevTurretSubsystem turret,
-      RevShooterSubsystem shooter) {
+  public CalculateTargetDistance(LimeLight limelight, RevShooterSubsystem shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_limelight = limelight;
-    m_tilt = tilt;
+
     m_shooter = shooter;
-    m_turret = turret;
 
   }
 
@@ -75,10 +68,10 @@ public class CalculateTargetDistance extends CommandBase {
       // m_cameraVerticalError = m_limelight.getdegVerticalToTarget() -
       // m_limelight.verticalOffset;
       m_cameraVerticalError = -m_limelight.getdegVerticalToTarget();// - m_limelight.horizontalOffset;
-      SmartDashboard.putNumber("CAMVE", m_cameraVerticalError);
-      SmartDashboard.putNumber("HeightDiff", FieldConstants.heightDifference);
-      SmartDashboard.putNumber("CamAng", cameraAngle);
-      SmartDashboard.putNumber("CamOFM_LI", m_limelight.horizontalOffset);
+      // SmartDashboard.putNumber("CAMVE", m_cameraVerticalError);
+      // SmartDashboard.putNumber("HeightDiff", FieldConstants.heightDifference);
+      // SmartDashboard.putNumber("CamAng", cameraAngle);
+      // SmartDashboard.putNumber("CamOFM_LI", m_limelight.horizontalOffset);
 
       if (RobotBase.isSimulation()) {
 

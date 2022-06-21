@@ -26,6 +26,8 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.AltRetPuAdvShoot;
+import frc.robot.commands.AutoCommands.RetPuAdvShootCamera;
+import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
 import frc.robot.commands.AutoCommands.Common.SetPresetShootPositionSpeedTilt;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
@@ -149,6 +151,10 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_drive.setIdleMode(true);
 
+    // new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_tilt,
+    //     m_robotContainer.m_turret, m_robotContainer.m_shooter).schedule();
+   // new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt).schedule();
+
     if (RobotBase.isReal())
 
       Shuffleboard.selectTab("Competition");
@@ -219,10 +225,10 @@ public class Robot extends TimedRobot {
 
             new SetRobotPose(m_robotContainer.m_drive, startingPose),
 
-            new AltRetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll, comp,
+            new AltRetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll,
+            comp, data));
 
-                data));
-
+            // new RetPuAdvShootCamera(intake, drive, transport, shooter, tilt, turret, ll, comp, data));
         break;
 
       case 3://
@@ -349,9 +355,10 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_shooter.shootLocation = 1;
     m_robotContainer.m_shooter.presetLocationName = FieldMap.shootLocationName[m_robotContainer.m_shooter.shootLocation];
     m_robotContainer.m_shooter.shootModeName = FieldMap.shootModeName[m_robotContainer.m_shooter.shootValuesSource];
-    
-    new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_tilt,
-        m_robotContainer.m_turret, m_robotContainer.m_shooter).schedule();
+
+    // new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_tilt,
+    //     m_robotContainer.m_turret, m_robotContainer.m_shooter).schedule();
+  //  new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt).schedule();
 
   }
 

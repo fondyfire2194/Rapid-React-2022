@@ -303,7 +303,7 @@ public class RobotContainer {
 
             new JoystickButton(m_driverController, 8)
 
-                        .whileHeld(new RunCargoOutShooter(m_shooter, m_intake, m_transport));
+                        .whileHeld(new RunCargoOutShooter(m_shooter, m_intake, m_transport, 1000));
 
             new JoystickButton(m_driverController, 9).whenPressed(
 

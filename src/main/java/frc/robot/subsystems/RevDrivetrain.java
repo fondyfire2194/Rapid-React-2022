@@ -138,7 +138,6 @@ public class RevDrivetrain extends SubsystemBase {
         mLeftVel.setOutputRange(-.25, .25, VELOCITY_SLOT);
         mRightVel.setOutputRange(-.25, .25, VELOCITY_SLOT);
 
-
         mRightEncoder = mLeadRight.getEncoder();
         mLeftEncoder = mLeadLeft.getEncoder();
 
@@ -338,7 +337,7 @@ public class RevDrivetrain extends SubsystemBase {
     public void rotate(double rotation) {
 
         mLeftVel.setReference(rotation * DriveConstants.kMaxTurnRateDegPerS, ControlType.kVelocity, VELOCITY_SLOT);
- 
+
         mRightVel.setReference(-rotation * DriveConstants.kMaxTurnRateDegPerS, ControlType.kVelocity, VELOCITY_SLOT);
     }
 
@@ -391,7 +390,7 @@ public class RevDrivetrain extends SubsystemBase {
 
         double batteryVolts = RobotController.getBatteryVoltage();
 
-        mLeadLeft.set(value);
+        mLeadLeft.setVoltage(value * batteryVolts);
 
     }
 
@@ -399,7 +398,7 @@ public class RevDrivetrain extends SubsystemBase {
 
         double batteryVolts = RobotController.getBatteryVoltage();
 
-        mLeadRight.set(value);
+        mLeadRight.setVoltage(value * batteryVolts);
 
     }
 

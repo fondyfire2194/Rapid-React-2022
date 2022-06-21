@@ -48,22 +48,26 @@ public class PositionStraight extends CommandBase {
 
       yawKp = Pref.getPref("dRStKp");
 
-    else
+    else {
 
       yawKp = .0;
 
-    leftOut = m_drive.driveDistance(m_endpoint)[0];
+      m_drive.driveDistance(m_endpoint);
 
-    rightOut = m_drive.driveDistance(m_endpoint)[1];
+      m_drive.driveDistance(m_endpoint);
+    }
 
     double yawError = 0;
 
     double yawCorrection = 0;
 
-      yawError = m_drive.getYaw() - m_startAngle;
+    yawError = m_drive.getYaw() - m_startAngle;
 
-      yawCorrection = yawError * yawKp;
+    yawCorrection = yawError * yawKp;
 
+    leftOut = m_endpoint - m_drive.getLeftDistance();
+
+    rightOut = m_endpoint - m_drive.getRightDistance();
 
     if (leftOut > m_max)
       leftOut = m_max;
@@ -89,12 +93,15 @@ public class PositionStraight extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    leftOut = 0;
+    rightOut = 0;
     m_drive.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+
     return loopCtr > 5 && Math.abs(m_endpoint - m_drive.getLeftDistance()) < .1
 
         && Math.abs(m_endpoint - m_drive.getRightDistance()) < .1;

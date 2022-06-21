@@ -119,10 +119,10 @@ public final class Constants {
        * Robot turn constants
        */
 
-      public static double kMaxTurnRateDegPerS = 50.;
-      public static double kMaxTurnAccelerationDegPerSSquared = 250.;
+      public static double kMaxTurnRateDegPerS = 5.;
+      public static double kMaxTurnAccelerationDegPerSSquared = 25.;
       public static double kTurnRateToleranceDegPerS = 2.;
-      public static double kTurnToleranceDeg = 2.;
+      public static double kTurnToleranceDeg = 3.;
 
       /**
        * 

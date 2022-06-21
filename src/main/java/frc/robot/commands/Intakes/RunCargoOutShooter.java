@@ -14,12 +14,14 @@ public class RunCargoOutShooter extends CommandBase {
   private RevShooterSubsystem m_shooter;
   private IntakesSubsystem m_intake;
   private CargoTransportSubsystem m_transport;
+  private double m_rpm;
 
-  public RunCargoOutShooter(RevShooterSubsystem shooter, IntakesSubsystem intake, CargoTransportSubsystem transport) {
+  public RunCargoOutShooter(RevShooterSubsystem shooter, IntakesSubsystem intake, CargoTransportSubsystem transport,double rpm) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_intake = intake;
     m_transport = transport;
+    m_rpm=rpm;
     addRequirements(m_intake, m_transport, m_shooter);
   }
 
@@ -35,7 +37,7 @@ public class RunCargoOutShooter extends CommandBase {
   @Override
   public void execute() {
 
-    m_shooter.spinAtRPM(1200);
+    m_shooter.spinAtRPM(m_rpm);
 
     m_shooter.runTopAtVelocity(800);
 

@@ -57,6 +57,10 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                                 new TurnToAngle(drive, pickUpAngle),
 
+                                new ResetEncoders(drive),
+
+                                new ResetGyro(drive),
+
                                 new ParallelCommandGroup(
 
                                                 new PositionStraight(drive, pickupPosition,
@@ -70,11 +74,9 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                                                                 .deadlineWith(new RunActiveIntake(intake, transport)),
 
-                                new PositionStraight(drive, returnDistance, positionRate),
-
                                 new ParallelRaceGroup(
 
-                                                new RunCargoOutShooter(shooter, intake, transport)
+                                                new RunCargoOutShooter(shooter, intake, transport, 600)
 
                                                                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret,
                                                                                 ll))),

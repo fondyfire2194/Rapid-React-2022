@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Constants.ShooterRangeConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.TimeDelay;
@@ -23,6 +25,7 @@ import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
+import frc.robot.commands.Vision.SetUpLimelightForTarget;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -55,35 +58,39 @@ public class RetPuAdvShootCamera extends SequentialCommandGroup {
                                                 new SetFrontIntakeActive(intake, false),
                                                 new ResetEncoders(drive),
                                                 new ResetGyro(drive)),
+                                new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720, false),
 
-                                new ParallelCommandGroup(
-
-                                                new SetUpCameraShoot(shooter, tilt, ll),                                                               
+                                new ParallelRaceGroup(
 
                                                 new PositionStraight(drive, drivePickupPosition,
                                                                 pickUpRate),
 
+                                                new PositionTilt(tilt, ShooterRangeConstants.range2),
+
                                                 new TimeDelay(2))
 
                                                                 .deadlineWith(new RunActiveIntake(intake, transport)),
+                                new WaitCommand(.25),
+                                
+                                new SetUpCameraShoot(shooter, tilt, ll),
 
                                 new ParallelCommandGroup(
 
                                                 new ParallelRaceGroup(
 
                                                                 new SequentialCommandGroup(
-                                                                                new TimeDelay(.2),
-                                                                                new AltShootCargo(
-                                                                                                shooter,
-                                                                                                transport,
-                                                                                                intake,
-                                                                                                ll),
-                                                                                new TimeDelay(.2),
-                                                                                new AltShootCargo(
-                                                                                                shooter,
-                                                                                                transport,
-                                                                                                intake,
-                                                                                                ll),
+                                                                                new TimeDelay(2),
+                                                                                // new AltShootCargo(
+                                                                                // shooter,
+                                                                                // transport,
+                                                                                // intake,
+                                                                                // ll),
+                                                                                new TimeDelay(2),
+                                                                                // new AltShootCargo(
+                                                                                // shooter,
+                                                                                // transport,
+                                                                                // intake,
+                                                                                // ll),
                                                                                 new TimeDelay(1)),
 
                                                                 new RunShooter(shooter))
@@ -91,9 +98,9 @@ public class RetPuAdvShootCamera extends SequentialCommandGroup {
                                                                                 .deadlineWith(new PositionHoldTiltTurret(
                                                                                                 tilt,
                                                                                                 turret,
-                                                                                                ll)),
+                                                                                                ll))),
 
-                                                new PositionTurret(turret, 0)));
+                                new PositionTurret(turret, 0));
 
         }
 }
