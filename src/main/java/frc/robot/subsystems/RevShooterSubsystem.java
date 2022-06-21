@@ -79,9 +79,9 @@ public class RevShooterSubsystem extends SubsystemBase {
     public final int POSITION_SLOT = 2;
 
     public double[] rpmFromCameraDistance = {
-            1800, 1750, 1700, 1750, 1800, 2120, 2450, // 1-7
-            2780, 2790, 2800, 2860, 2920, 3000, // 8-13
-            3060, 3120, 3200, 3600, 4000, 4500, 5000 };// 14-20
+            1850, 1850, 1850, 2150, 1900, 1950, 2000, // 1-7
+            2300, 2300, 2350, 2700, 2900, 2900, // 8-13
+            2950, 3100, 3250, 3450, 3450, 4500, 5000 };// 14-20
 
     public double startDistance;
 
@@ -248,7 +248,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
         if (wrongCargoColor)
 
-            rpm = 200;
+            rpm = 800;
 
         spinAtRPM(rpm);
 

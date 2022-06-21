@@ -136,6 +136,6 @@ public class RunActiveIntake extends CommandBase {
   @Override
   public boolean isFinished() {
     return stopActiveIntakeNow && m_startTime != 0 && Timer.getFPGATimestamp() > m_startTime + .1
-        || m_transport.wrongCargoColor;// stopActiveIntakeNow;
+        ;// stopActiveIntakeNow;
   }
 }
