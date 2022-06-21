@@ -119,5 +119,4 @@ public class FieldMap {
         public static String[] shootLocationName = { "At Hub", "Tarmac Line", "Inner Launchpad", "TestSetup" };
 
         public static final String[] shootModeName = { "Throttle", "Camera", "Preset" };
-
 }

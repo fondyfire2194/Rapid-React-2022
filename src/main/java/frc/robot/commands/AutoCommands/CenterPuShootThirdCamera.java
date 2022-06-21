@@ -12,13 +12,13 @@ import frc.robot.Constants.ShooterRangeConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.TimeDelay;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
-import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
 import frc.robot.commands.AutoCommands.Common.SetUpCameraShoot;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
+import frc.robot.commands.RobotDrive.TurnToAngle;
 import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Tilt.PositionTilt;
@@ -30,22 +30,23 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
-public class RetPuAdvShootCamera extends SequentialCommandGroup {
+public class CenterPuShootThirdCamera extends SequentialCommandGroup {
+
+        private double firstAngle;
+        private double secondAngle;
 
         /** Creates a new LRetPuShoot. */
-        public RetPuAdvShootCamera(IntakesSubsystem intake, RevDrivetrain drive,
+        public CenterPuShootThirdCamera(IntakesSubsystem intake, RevDrivetrain drive,
                         CargoTransportSubsystem transport, RevShooterSubsystem shooter, RevTiltSubsystem tilt,
-                        RevTurretSubsystem turret, LimeLight ll, Compressor comp, double[] data) {
+                        RevTurretSubsystem turret, LimeLight ll) {
                 addRequirements(intake, drive, transport, shooter, turret, tilt);
                 // Use addRequirements() here to declare subsystem dependencies.
 
-                double pickUpRate = drive.pickUpRate;
                 double positionRate = drive.positionRate;
 
-                double drivePickupPosition = data[0];
-                double shootPosition = data[1];
-                double upperTiltAngle = ShooterRangeConstants.range2;
-                double upperTurretAngle = data[3];
+                double drivePickupPosition =-2;
+                double shootPosition = -2;
+
                 // double upperRPM = data[4];
                 // remaining data used in shoot routine
 
@@ -56,16 +57,25 @@ public class RetPuAdvShootCamera extends SequentialCommandGroup {
                                                 new ResetEncoders(drive),
                                                 new ResetGyro(drive)),
 
-                                new ParallelCommandGroup(
+                                new TurnToAngle(drive, firstAngle)
+                                                .deadlineWith(new PositionHoldTiltTurret(tilt, turret, ll)),
 
-                                                new SetUpCameraShoot(shooter, tilt, ll),                                                               
+                                new PositionStraight(drive, drivePickupPosition, positionRate)
 
-                                                new PositionStraight(drive, drivePickupPosition,
-                                                                pickUpRate),
+                                                .deadlineWith(new PositionHoldTiltTurret(tilt, turret,
+                                                                ll)),
 
-                                                new TimeDelay(2))
+                                new TurnToAngle(drive, secondAngle)
 
-                                                                .deadlineWith(new RunActiveIntake(intake, transport)),
+                                                .deadlineWith(new PositionHoldTiltTurret(tilt, turret, ll)),
+
+                                new RunActiveIntake(intake, transport),
+
+                                new SetUpCameraShoot(shooter, tilt, ll),
+
+                                new PositionStraight(drive, shootPosition, positionRate)
+
+                                                .deadlineWith(new PositionHoldTiltTurret(tilt, turret, ll)),
 
                                 new ParallelCommandGroup(
 
@@ -73,12 +83,7 @@ public class RetPuAdvShootCamera extends SequentialCommandGroup {
 
                                                                 new SequentialCommandGroup(
                                                                                 new TimeDelay(.2),
-                                                                                new AltShootCargo(
-                                                                                                shooter,
-                                                                                                transport,
-                                                                                                intake,
-                                                                                                ll),
-                                                                                new TimeDelay(.2),
+
                                                                                 new AltShootCargo(
                                                                                                 shooter,
                                                                                                 transport,

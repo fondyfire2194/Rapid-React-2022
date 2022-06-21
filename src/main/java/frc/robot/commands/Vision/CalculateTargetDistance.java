@@ -39,7 +39,7 @@ public class CalculateTargetDistance extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooter.calculatedCameraDistance = -1;
+    m_shooter.calculatedCameraDistance = -9999;
     cameraAngle = FieldConstants.CAMERA_ANGLE;
   }
 

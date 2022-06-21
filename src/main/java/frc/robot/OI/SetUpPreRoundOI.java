@@ -4,10 +4,17 @@
 
 package frc.robot.OI;
 
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Vision.LimeLight;
+import frc.robot.commands.AutoCommands.LeftHideOppCargo;
+import frc.robot.commands.AutoCommands.CenterHideOppCargo;
+import frc.robot.commands.AutoCommands.CenterPuShootThirdCamera;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -67,7 +74,21 @@ public class SetUpPreRoundOI {
                         startDelayChooser.addOption("Four Seconds", 4.);
                         startDelayChooser.addOption("Five Seconds", 5.);
 
-                      
+                        ShuffleboardLayout oppCommands = Shuffleboard.getTab("Pre-Round")
+                                        .getLayout("OppTest", BuiltInLayouts.kList).withPosition(6, 0)
+                                        .withSize(2, 2)
+                                        .withProperties(Map.of("Label position", "LEFT")); // labels for
+
+                        oppCommands.add("LeftOpp",
+                                        new LeftHideOppCargo(intake, drive, transport, shooter, tilt, turret, ll));
+
+                        oppCommands.add("CenterOpp",
+                                        new CenterHideOppCargo(intake, drive, transport, shooter, tilt, turret, ll));
+
+                        oppCommands.add("CenterThird",
+                                        new CenterPuShootThirdCamera(intake, drive, transport, shooter, tilt, turret,
+                                                        ll));
+
                 }
 
         }

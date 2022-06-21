@@ -31,8 +31,6 @@ public class SetUpCameraShoot extends SequentialCommandGroup {
 
           new SetShootSpeedSource(shooter, shooter.cameraSource),
 
-          new SelectSpeedAndTiltByDistance(shooter, tilt),
-
           new PositionTiltToCamera(tilt));
 
     }

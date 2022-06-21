@@ -30,29 +30,30 @@ public class SelectSpeedAndTiltByDistance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (m_shooter.calculatedCameraDistance != -999) {
+      if (m_shooter.calculatedCameraDistance < 3)
+        m_shooter.calculatedCameraDistance = 3;
+      if (m_shooter.calculatedCameraDistance > 20)
+        m_shooter.calculatedCameraDistance = 20;
+      int distance = (int) m_shooter.calculatedCameraDistance;
+      if (distance < ShooterRangeConstants.range1) {
+        m_tilt.cameraCalculatedTiltPosition = ShooterRangeConstants.tiltRange1;
+      } else if (distance >= ShooterRangeConstants.range1 && distance < ShooterRangeConstants.range2) {
+        m_tilt.cameraCalculatedTiltPosition = ShooterRangeConstants.tiltRange2;
+      } else if (distance >= ShooterRangeConstants.range2 && distance < ShooterRangeConstants.range3) {
+        m_tilt.cameraCalculatedTiltPosition = ShooterRangeConstants.tiltRange3;
+      } else if (distance >= ShooterRangeConstants.range3 && distance < ShooterRangeConstants.range4) {
+        m_tilt.cameraCalculatedTiltPosition = ShooterRangeConstants.tiltRange4;
+      } else {
+        // out of range
+        m_tilt.cameraCalculatedTiltPosition = ShooterRangeConstants.tiltRange4;
+      }
 
-    if (m_shooter.calculatedCameraDistance < 3)
-      m_shooter.calculatedCameraDistance = 3;
-    if (m_shooter.calculatedCameraDistance > 20)
-      m_shooter.calculatedCameraDistance = 20;
-    int distance = (int) m_shooter.calculatedCameraDistance;
-    if (distance < ShooterRangeConstants.range1) {
-      m_tilt.cameraCalculatedTiltPosition = ShooterRangeConstants.tiltRange1;
-    } else if (distance >= ShooterRangeConstants.range1 && distance < ShooterRangeConstants.range2) {
-      m_tilt.cameraCalculatedTiltPosition = ShooterRangeConstants.tiltRange2;
-    } else if (distance >= ShooterRangeConstants.range2 && distance < ShooterRangeConstants.range3) {
-      m_tilt.cameraCalculatedTiltPosition = ShooterRangeConstants.tiltRange3;
-    } else if (distance >= ShooterRangeConstants.range3 && distance < ShooterRangeConstants.range4) {
-      m_tilt.cameraCalculatedTiltPosition = ShooterRangeConstants.tiltRange4;
-    } else {
-      // out of range
-      m_tilt.cameraCalculatedTiltPosition = ShooterRangeConstants.tiltRange4;
+      m_shooter.cameraCalculatedSpeed = m_shooter.rpmFromCameraDistance[(int) (m_shooter.calculatedCameraDistance - 1)];
+      SmartDashboard.putNumber("calcTilt", m_tilt.cameraCalculatedTiltPosition);
+      SmartDashboard.putNumber("calcRPM", m_shooter.cameraCalculatedSpeed);
+
     }
-
-    m_shooter.cameraCalculatedSpeed = m_shooter.rpmFromCameraDistance[(int) (m_shooter.calculatedCameraDistance - 1)];
-    SmartDashboard.putNumber("calcTilt", m_tilt.cameraCalculatedTiltPosition);
-    SmartDashboard.putNumber("calcRPM", m_shooter.cameraCalculatedSpeed);
-
   }
 
   // Called once the command ends or is interrupted.
@@ -63,6 +64,6 @@ public class SelectSpeedAndTiltByDistance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }
