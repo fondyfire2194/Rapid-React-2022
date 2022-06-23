@@ -1,6 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands.RobotDrive;
 
@@ -44,18 +41,19 @@ public class PositionStraight extends CommandBase {
     double yawKp = 0;
     loopCtr++;
 
-    if (RobotBase.isReal())
+    if (RobotBase.isReal()) {
 
-      yawKp = Pref.getPref("dRStKp");
+      // yawKp = Pref.getPref("dRStKp");
+    }
 
     else {
 
       yawKp = .0;
-
-      m_drive.driveDistance(m_endpoint);
-
-      m_drive.driveDistance(m_endpoint);
     }
+
+    leftOut = m_drive.driveDistance(m_endpoint)[0];
+
+    rightOut = m_drive.driveDistance(m_endpoint)[1];
 
     double yawError = 0;
 
@@ -63,11 +61,7 @@ public class PositionStraight extends CommandBase {
 
     yawError = m_drive.getYaw() - m_startAngle;
 
-    yawCorrection = yawError * yawKp;
-
-    leftOut = m_endpoint - m_drive.getLeftDistance();
-
-    rightOut = m_endpoint - m_drive.getRightDistance();
+    yawCorrection = 0;// yawError * yawKp;
 
     if (leftOut > m_max)
       leftOut = m_max;
@@ -93,18 +87,17 @@ public class PositionStraight extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_drive.stop();
     leftOut = 0;
     rightOut = 0;
-    m_drive.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    return loopCtr > 5 && Math.abs(m_endpoint - m_drive.getLeftDistance()) < .25;
 
-    return loopCtr > 5 && Math.abs(m_endpoint - m_drive.getLeftDistance()) < .1
-
-        && Math.abs(m_endpoint - m_drive.getRightDistance()) < .1;
+    // && Math.abs(m_endpoint - m_drive.getRightDistance()) < .25;
 
     // && m_drive.isStopped();
   }

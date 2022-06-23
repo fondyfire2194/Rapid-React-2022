@@ -23,49 +23,49 @@ import frc.robot.trajectories.FondyFireTrajectory;
 /** Add your docs here. */
 public class SimulationOI {
 
-        public SimulationOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
-                        RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
-                        LimeLight limelight, IntakesSubsystem intake,
-                        ClimberSubsystem climber,
-                        FondyFireTrajectory traj) {
+  public SimulationOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
+      RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
+      LimeLight limelight, IntakesSubsystem intake,
+      ClimberSubsystem climber,
+      FondyFireTrajectory traj) {
 
-                final Field2d m_field = new Field2d();
+    final Field2d m_field = new Field2d();
 
-                ShuffleboardTab sim = Shuffleboard.getTab("Simulation");
+    ShuffleboardTab sim = Shuffleboard.getTab("Simulation");
 
-                sim.add("Field", drive.m_field).withPosition(0, 0).withSize(6, 4).withWidget("Field");
+    sim.add("Field", drive.m_field).withPosition(1, 0).withSize(5, 4).withWidget("Field");
 
-                sim.addNumber("TiltAngle", () -> tilt.getAngle()).withPosition(6, 0)
-                                .withWidget("Number Bar").withProperties(Map.of("min", 0, "max", 16));
-                sim.addNumber("TiltOut", () -> tilt.getMotorOut()).withPosition(7, 0)
-                                .withWidget("Number Bar").withProperties(Map.of("min", -1, "max", 1));
+    sim.addNumber("TiltAngle", () -> tilt.getAngle()).withPosition(6, 0)
+        .withWidget("Number Bar").withProperties(Map.of("min", 0, "max", 16));
+    sim.addNumber("TiltOut", () -> tilt.getMotorOut()).withPosition(7, 0)
+        .withWidget("Number Bar").withProperties(Map.of("min", -1, "max", 1));
 
-                sim.addNumber("TurretAngle", () -> turret.getAngle()).withPosition(6, 1)
-                                .withWidget("Number Bar").withProperties(Map.of("min", -40, "max", 40));
-                sim.addNumber("TurretOut", () -> turret.getMotorOut()).withPosition(7, 1)
-                                .withWidget("Number Bar").withProperties(Map.of("min", -1, "max", 1));
+    sim.addNumber("TurretAngle", () -> turret.getAngle()).withPosition(6, 1)
+        .withWidget("Number Bar").withProperties(Map.of("min", -40, "max", 40));
+    sim.addNumber("TurretOut", () -> turret.getMotorOut()).withPosition(7, 1)
+        .withWidget("Number Bar").withProperties(Map.of("min", -1, "max", 1));
 
-                sim.addNumber("ShootRPM", () -> shooter.getRPM()).withPosition(8, 0)
-                                .withWidget("Number Bar").withProperties(Map.of("min", 0, "max", 5000));
-                sim.addNumber("TopRPM", () -> shooter.getTopRPM()).withPosition(8, 1)
-                                .withWidget("Number Bar").withProperties(Map.of("min", 0, "max", 1000));
+    sim.addNumber("ShootRPM", () -> shooter.getRPM()).withPosition(8, 0)
+        .withWidget("Number Bar").withProperties(Map.of("min", 0, "max", 5000));
+    sim.addNumber("TopRPM", () -> shooter.getTopRPM()).withPosition(8, 1)
+        .withWidget("Number Bar").withProperties(Map.of("min", 0, "max", 1000));
 
-                sim.addNumber("LowRollRPM", () -> transport.getLowerRPM()).withPosition(9, 0)
-                                .withWidget("Number Bar").withProperties(Map.of("min", 0, "max", 1000));
+    sim.addNumber("LowRollRPM", () -> transport.getLowerRPM()).withPosition(9, 0)
+        .withWidget("Number Bar").withProperties(Map.of("min", 0, "max", 1000));
 
-                sim.addNumber("FrontIntakeOut", () -> intake.getFrontMotor()).withPosition(6, 2)
-                                .withWidget("Number Bar").withProperties(Map.of("min", -1, "max", 1));
+    sim.addNumber("FrontIntakeOut", () -> intake.getFrontMotor()).withPosition(6, 2)
+        .withWidget("Number Bar").withProperties(Map.of("min", -1, "max", 1));
 
-                sim.addBoolean("FrontIntakeSol", () -> intake.getFrontArmLowered()).withPosition(6, 3);
+    sim.addBoolean("FrontIntakeSol", () -> intake.getFrontArmLowered()).withPosition(6, 3);
 
-                sim.addNumber("RearIntakeOut", () -> intake.getRearMotor()).withPosition(7, 2)
-                                .withWidget("Number Bar").withProperties(Map.of("min", -1, "max", 1));
+    sim.addNumber("RearIntakeOut", () -> intake.getRearMotor()).withPosition(7, 2)
+        .withWidget("Number Bar").withProperties(Map.of("min", -1, "max", 1));
 
-                sim.addBoolean("RearIntakeSol", () -> intake.getRearArmLowered()).withPosition(7, 3);
+    sim.addBoolean("RearIntakeSol", () -> intake.getRearArmLowered()).withPosition(7, 3);
 
-                sim.addNumber("ClimberOut", () -> climber.getMotorOut()).withPosition(8, 2)
-                                .withWidget("Number Bar").withProperties(Map.of("min", -1, "max", 1));
+    sim.addNumber("ClimberOut", () -> climber.getMotorOut()).withPosition(8, 2)
+        .withWidget("Number Bar").withProperties(Map.of("min", -1, "max", 1));
 
-        }
+  }
 
 }

@@ -424,10 +424,10 @@ public class SetUpOI {
 
                         robotCommands.add("ClearFaults", new ClearRobFaults(drive));
                         robotCommands.add("Stop Robot", new StopRobot(drive));
-                        robotCommands.add("To 4", new PositionStraight(drive, +4, .5));
-                        robotCommands.add("To -4", new PositionStraight(drive, -4, .6));
+                        robotCommands.add("To 3", new PositionStraight(drive, +3, .5));
+                        robotCommands.add("To -3", new PositionStraight(drive, -3, .5));
                         robotCommands.add("To 2", new PositionStraight(drive, 2, .3));
-                        robotCommands.add("To -1", new PositionStraight(drive, -1, .5));
+                        robotCommands.add("To -1", new PositionStraight(drive, -1, .3));
                         robotCommands.add("To 0", new PositionStraight(drive, 0, .5));
                         robotCommands.add("Cmd", drive);
 

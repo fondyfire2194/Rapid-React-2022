@@ -4,6 +4,8 @@
 
 package frc.robot.commands.Intakes;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
@@ -25,6 +27,10 @@ public class RunActiveIntake extends CommandBase {
 
   private int loopctr;
 
+  private Debouncer frontInDebouncer;
+
+  private Debouncer rearInDebouncer;
+
   public RunActiveIntake(IntakesSubsystem intake, CargoTransportSubsystem transport) {
 
     m_intake = intake;
@@ -39,6 +45,9 @@ public class RunActiveIntake extends CommandBase {
     stopActiveIntakeNow = false;
 
     loopctr = 0;
+
+    frontInDebouncer = new Debouncer(.2, DebounceType.kRising);
+    rearInDebouncer = new Debouncer(.2, DebounceType.kRising); 
 
   }
 
@@ -93,7 +102,7 @@ public class RunActiveIntake extends CommandBase {
 
         m_intake.runRearIntakeMotor();
 
-        stopActiveIntakeNow = m_intake.getCargoAtRear();
+        stopActiveIntakeNow = m_intake.getCargoAtFront();
 
         m_startTime = Timer.getFPGATimestamp();
 

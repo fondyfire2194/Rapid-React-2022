@@ -4,12 +4,11 @@
 
 package frc.robot.commands.AutoCommands;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.TimeDelay;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
@@ -70,7 +69,7 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
 
                                                 new PositionTurret(turret, turretAngle),
 
-                                                new TimeDelay(2))
+                                                new WaitCommand(2))
 
                                                                 .deadlineWith(new RunActiveIntake(intake, transport)),
 

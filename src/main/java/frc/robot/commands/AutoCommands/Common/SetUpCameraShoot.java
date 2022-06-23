@@ -4,16 +4,13 @@
 
 package frc.robot.commands.AutoCommands.Common;
 
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Tilt.PositionTiltToCamera;
 import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
-import frc.robot.commands.Vision.UseVision;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 
@@ -33,9 +30,9 @@ public class SetUpCameraShoot extends SequentialCommandGroup {
 
           new SetShootSpeedSource(shooter, shooter.cameraSource),
 
-          new CalculateTargetDistance(ll,  shooter),
+          new CalculateTargetDistance(ll, shooter),
 
-          new SelectSpeedAndTiltByDistance(shooter,tilt),
+          new SelectSpeedAndTiltByDistance(shooter, tilt),
 
           new PositionTiltToCamera(tilt));
 

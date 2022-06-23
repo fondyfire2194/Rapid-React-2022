@@ -36,8 +36,7 @@ import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.TurnLedsOnOff;
-import frc.robot.commands.TimeDelay;
-import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoCommands.Common.SetUpCameraShoot;
 import frc.robot.commands.AutoCommands.Common.SetupPresetShootLocation;
 import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
@@ -55,7 +54,6 @@ import frc.robot.commands.Shooter.ChangeShooterSpeed;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
 import frc.robot.commands.Shooter.RunShooter;
-import frc.robot.commands.Shooter.SetShootSpeedSource;
 //import frc.robot.commands.Shooter.ShootTwoCargo;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Tilt.PositionHoldTilt;
@@ -69,7 +67,6 @@ import frc.robot.commands.Turret.PositionTurretIncremental;
 import frc.robot.commands.Turret.ShiftAimLeftRight;
 import frc.robot.commands.Turret.TurretJog;
 import frc.robot.commands.Turret.TurretJogVelocity;
-
 import frc.robot.commands.Turret.TurretWaitForStop;
 import frc.robot.commands.Vision.LimelightSetPipeline;
 import frc.robot.commands.Vision.UseVision;
@@ -334,7 +331,7 @@ public class RobotContainer {
 
                         new UseVision(m_limelight, false),
 
-                        new TimeDelay(.5),
+                        new WaitCommand(.5),
 
                         new PositionTurret(m_turret, 0),
 

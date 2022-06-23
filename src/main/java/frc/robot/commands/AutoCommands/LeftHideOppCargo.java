@@ -4,12 +4,11 @@
 
 package frc.robot.commands.AutoCommands;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.TimeDelay;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
@@ -18,33 +17,28 @@ import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.TurnToAngle;
-import frc.robot.commands.Tilt.PositionTilt;
-import frc.robot.commands.Turret.PositionTurret;
+import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
-import frc.robot.subsystems.RevTiltSubsystem;
-import frc.robot.subsystems.RevTurretSubsystem;
 
 public class LeftHideOppCargo extends SequentialCommandGroup {
 
         private double pickUpAngle = 90;
-        private double tiltAngle = 17;
-        private double turretAngle = 50;
 
         final double pickupPosition = -1;
-        final double returnDistance = pickupPosition;
+
+        private double shootAngle = 150;
 
         /** Creates a new LRetPuShoot. */
         public LeftHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,
-                        CargoTransportSubsystem transport, RevShooterSubsystem shooter, RevTiltSubsystem tilt,
-                        RevTurretSubsystem turret, LimeLight ll) {
-                addRequirements(intake, drive, transport, shooter, turret, tilt);
+                        CargoTransportSubsystem transport, RevShooterSubsystem shooter,
+                        LimeLight ll) {
+                addRequirements(intake, drive, transport, shooter);
                 // Use addRequirements() here to declare subsystem dependencies.
 
                 double pickUpRate = drive.pickUpRate;
-                double positionRate = drive.positionRate;
 
                 // remaining data used in shoot routine
 
@@ -57,31 +51,32 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                                 new TurnToAngle(drive, pickUpAngle),
 
+                                new WaitCommand(.2),
+
                                 new ResetEncoders(drive),
 
                                 new ResetGyro(drive),
 
-                                new ParallelCommandGroup(
-
-                                                new PositionStraight(drive, pickupPosition,
-                                                                pickUpRate),
-
-                                                new PositionTilt(tilt, tiltAngle),
-
-                                                new PositionTurret(turret, turretAngle),
-
-                                                new TimeDelay(2))
-
+                                new PositionStraight(drive, pickupPosition,
+                                                pickUpRate)
                                                                 .deadlineWith(new RunActiveIntake(intake, transport)),
+
+                                // new RunActiveIntake(intake, transport)),
+                                new WaitCommand(.2),
+
+                                new TurnToAngle(drive, shootAngle),
+
+                                new WaitCommand(.2),
+
+                                new ResetEncoders(drive),
+
+                                new ResetGyro(drive),
 
                                 new ParallelRaceGroup(
 
-                                                new RunCargoOutShooter(shooter, intake, transport, 600)
+                                                new RunCargoOutShooter(shooter, intake, transport, 700),
 
-                                                                .deadlineWith(new PositionHoldTiltTurret(tilt, turret,
-                                                                                ll))),
-
-                                new PositionTurret(turret, 0));
+                                                new WaitCommand(3)));
 
         }
 }

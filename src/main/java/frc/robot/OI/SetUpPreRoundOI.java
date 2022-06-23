@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.AutoCommands.LeftHideOppCargo;
+import frc.robot.commands.AutoCommands.Common.LeftHidePRG;
 import frc.robot.commands.AutoCommands.CenterHideOppCargo;
 import frc.robot.commands.AutoCommands.CenterPuShootThirdCamera;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -80,14 +81,14 @@ public class SetUpPreRoundOI {
                                         .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                         oppCommands.add("LeftOpp",
-                                        new LeftHideOppCargo(intake, drive, transport, shooter, tilt, turret, ll));
+                                        new LeftHideOppCargo(intake, drive, transport, shooter, ll));
 
-                        oppCommands.add("CenterOpp",
-                                        new CenterHideOppCargo(intake, drive, transport, shooter, tilt, turret, ll));
+                        // oppCommands.add("CenterOpp",
+                        //                 new CenterHideOppCargo(intake, drive, transport, shooter, tilt, turret, ll));
 
-                        oppCommands.add("CenterThird",
-                                        new CenterPuShootThirdCamera(intake, drive, transport, shooter, tilt, turret,
-                                                        ll));
+                        // oppCommands.add("CenterThird",
+                        //                 new CenterPuShootThirdCamera(intake, drive, transport, shooter, tilt, turret,
+                        //                                 ll));
 
                 }
 

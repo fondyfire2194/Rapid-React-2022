@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.TimeDelay;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
@@ -28,6 +27,7 @@ import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class AltRetPuAdvShoot extends SequentialCommandGroup {
 
@@ -64,7 +64,7 @@ public class AltRetPuAdvShoot extends SequentialCommandGroup {
 
                                                 new PositionTurret(turret, upperTurretAngle),
 
-                                                new TimeDelay(2))
+                                                new WaitCommand(2))
 
                                                                 .deadlineWith(new RunActiveIntake(intake, transport)),
 
@@ -82,11 +82,11 @@ public class AltRetPuAdvShoot extends SequentialCommandGroup {
 
                                 new ParallelRaceGroup(
 
-                                                new SequentialCommandGroup(new TimeDelay(.2),
+                                                new SequentialCommandGroup(new WaitCommand(.2),
                                                                 new AltShootCargo(shooter, transport, intake,ll),
-                                                                new TimeDelay(.2),
+                                                                new WaitCommand(.2),
                                                                 new AltShootCargo(shooter, transport, intake,ll),
-                                                                new TimeDelay(1)),
+                                                                new WaitCommand(1)),
 
                                                 new RunShooter(shooter))
 

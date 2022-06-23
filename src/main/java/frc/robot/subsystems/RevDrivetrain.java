@@ -42,10 +42,10 @@ public class RevDrivetrain extends SubsystemBase {
     // NeoDrivetrainConstants();
 
     private static final int VELOCITY_SLOT = 0;
-    private final CANSparkMax mLeadLeft; // NOPMD
+    public final CANSparkMax mLeadLeft; // NOPMD
     private final CANSparkMax mFollowerLeft; // NOPMD
 
-    private final CANSparkMax mLeadRight; // NOPMD
+    public final CANSparkMax mLeadRight; // NOPMD
     private final CANSparkMax mFollowerRight; // NOPMD
 
     public final RelativeEncoder mRightEncoder;
@@ -170,8 +170,11 @@ public class RevDrivetrain extends SubsystemBase {
         mGyro = new AHRS();
 
         mOdometry = new DifferentialDriveOdometry(mGyro.getRotation2d(), new Pose2d(0, 0, new Rotation2d()));
+
         m_field = new Field2d();
-        SmartDashboard.putData("Field", m_field);
+    //    if (RobotBase.isReal()) {
+            SmartDashboard.putData("Field", m_field);
+   //     }
 
         mLeftEncoder.setPosition(0);
         mRightEncoder.setPosition(0);
@@ -201,11 +204,11 @@ public class RevDrivetrain extends SubsystemBase {
         Arrays.asList(mLeadLeft, mLeadRight, mFollowerLeft, mFollowerRight)
                 .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
 
-        kP = .4;
-        kI = .1;
-        kD = .5;
-        maxAcc = 8;
-        maxVel = 3;
+        // kP = .4;
+        // kI = .1;
+        // kD = .5;
+        // maxAcc = 8;
+        // maxVel = 3;
 
         if (RobotBase.isSimulation()) {
 
@@ -381,6 +384,7 @@ public class RevDrivetrain extends SubsystemBase {
 
         temp[1] = mrightPID.calculate(getRightDistance(), endPosition);
 
+
         mDrive.feed();
 
         return temp;
@@ -504,7 +508,7 @@ public class RevDrivetrain extends SubsystemBase {
     }
 
     public boolean isStopped() {
-        return Math.abs(mLeftEncoder.getVelocity()) < .2;
+        return Math.abs(mLeftEncoder.getVelocity()) < .2 && Math.abs(mRightEncoder.getVelocity()) < .2;
     }
 
     public boolean gyroStopped() {
@@ -636,6 +640,8 @@ public class RevDrivetrain extends SubsystemBase {
 
     public void stop() {
         arcadeDrive(0, 0);
+        mLeadLeft.setVoltage(0);
+        mLeadRight.setVoltage(0);        
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {

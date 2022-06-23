@@ -4,15 +4,12 @@
 
 package frc.robot.commands.AutoCommands;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.PipelinesConstants;
-import frc.robot.Constants.ShooterRangeConstants;
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.TimeDelay;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.AutoCommands.Common.SetUpCameraShoot;
 import frc.robot.commands.Intakes.RunActiveIntake;
@@ -24,7 +21,6 @@ import frc.robot.commands.RobotDrive.TurnToAngle;
 import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -38,6 +34,7 @@ public class CenterPuShootThirdCamera extends SequentialCommandGroup {
 
         private double firstAngle = 20;
         private double secondAngle = -20;
+        private double thirdAngle = 0;
 
         /** Creates a new LRetPuShoot. */
         public CenterPuShootThirdCamera(IntakesSubsystem intake, RevDrivetrain drive,
@@ -49,7 +46,7 @@ public class CenterPuShootThirdCamera extends SequentialCommandGroup {
                 double positionRate = drive.positionRate;
 
                 double drivePickupPosition = -1;
-                
+
                 double shootPosition = 2;
 
                 // double upperRPM = data[4];
@@ -87,6 +84,13 @@ public class CenterPuShootThirdCamera extends SequentialCommandGroup {
                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720, true),
 
                                 new SetShootSpeedSource(shooter, shooter.cameraSource),
+                                new TurnToAngle(drive, thirdAngle)
+
+                                                .deadlineWith(new PositionHoldTiltTurret(tilt, turret, ll)),
+
+                                new ResetEncoders(drive),
+
+                                new ResetGyro(drive),
 
                                 new PositionStraight(drive, shootPosition, positionRate)
 
@@ -100,14 +104,14 @@ public class CenterPuShootThirdCamera extends SequentialCommandGroup {
 
                                                 new SequentialCommandGroup(
 
-                                                                new TimeDelay(.2),
+                                                                new WaitCommand(.2),
 
                                                                 new AltShootCargo(
                                                                                 shooter,
                                                                                 transport,
                                                                                 intake,
                                                                                 ll),
-                                                                new TimeDelay(1)),
+                                                                new WaitCommand(1)),
 
                                                 new RunShooter(shooter)
 

@@ -5,7 +5,7 @@
 package frc.robot.commands.Intakes;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import frc.robot.commands.TimeDelay;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.CargoTransport.RunLowerRoller;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.RunTopRoller;
@@ -25,6 +25,6 @@ public class EmptyCargoFromShooter extends ParallelRaceGroup {
         new JogShooter(shooter, () -> 0.25),
         new RunTopRoller(shooter, 800),
         new RunLowerRoller(transport, 800),
-        new TimeDelay(3));
+        new WaitCommand(3));
   }
 }
