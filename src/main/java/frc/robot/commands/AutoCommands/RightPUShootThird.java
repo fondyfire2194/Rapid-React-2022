@@ -20,6 +20,7 @@ import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
+import frc.robot.commands.Vision.LimelightSetPipeline;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
 import frc.robot.commands.Vision.UseVision;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -29,10 +30,10 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
-public class RightPUShoot3 extends SequentialCommandGroup {
+public class RightPUShootThird extends SequentialCommandGroup {
 
         /** Creates a new LRetPuShoot. */
-        public RightPUShoot3(IntakesSubsystem intake, RevDrivetrain drive,
+        public RightPUShootThird(IntakesSubsystem intake, RevDrivetrain drive,
                         CargoTransportSubsystem transport, RevShooterSubsystem shooter, RevTiltSubsystem tilt,
                         RevTurretSubsystem turret, LimeLight ll, Compressor comp, double[] data) {
                 addRequirements(intake, drive, transport, shooter, turret, tilt);
@@ -47,42 +48,32 @@ public class RightPUShoot3 extends SequentialCommandGroup {
                 double upperTurretAngle = data[3];
                 double upperRPM = data[4];
                 // remaining data used in shoot routine
-                double targetAngleDegrees = -40;
+                double pickUpAngle = -40;
                 double shootAngleDegrees = 110;
 
                 addCommands(
                                 new ParallelCommandGroup(
 
-                                                new SetFrontIntakeActive(intake, false),
+                                                new SetFrontIntakeActive(intake, true),
                                                 new ResetEncoders(drive),
                                                 new ResetGyro(drive)),
 
                                 new ParallelCommandGroup(
+
+                                                new TurnToAngle(drive, pickUpAngle),
+
+                                                new ResetEncoders(drive),
 
                                                 new PositionStraight(drive, drivePickupPosition,
                                                                 pickUpRate),
 
                                                 new PositionTilt(tilt, upperTiltAngle),
 
-                                                new PositionTurret(turret, upperTurretAngle),
-
                                                 new WaitCommand(2)
 
                                                                 .deadlineWith(new RunActiveIntake(intake, transport))),
 
                                 new SequentialCommandGroup(
-                                                new WaitCommand(.2),
-                                                new AltShootCargo(
-                                                                shooter,
-                                                                transport,
-                                                                intake,
-                                                                ll),
-                                                new WaitCommand(.2),
-                                                new AltShootCargo(
-                                                                shooter,
-                                                                transport,
-                                                                intake,
-                                                                ll),
 
                                                 new ParallelCommandGroup(
                                                                 new SetUpLimelightForTarget(ll,
@@ -91,35 +82,28 @@ public class RightPUShoot3 extends SequentialCommandGroup {
                                                                 new ResetEncoders(drive),
                                                                 new ResetGyro(drive),
 
-                                                                new TurnToAngle(drive, targetAngleDegrees),
+                                                                new TurnToAngle(drive, shootAngleDegrees),
                                                                 new ResetEncoders(drive),
                                                                 new ResetGyro(drive)),
-
-                                                new PositionStraight(drive, shootPosition, pickUpRate),
-                                                new WaitCommand(2)
-                                                                .deadlineWith(new RunActiveIntake(intake, transport)),
 
                                                 new ParallelCommandGroup(
 
                                                                 new SetPresetRPM(shooter, upperRPM),
-                                                                new TurnToAngle(drive,
-                                                                                shootAngleDegrees),
+                                                                new LimelightSetPipeline(ll,
+                                                                                PipelinesConstants.noZoom960720),
                                                                 new UseVision(ll, true),
-                                                                new ResetEncoders(drive),
-                                                                new ResetGyro(drive),
-                                                                new UseVision(ll, true)),
-                                                                
-                                                new SequentialCommandGroup(
-                                                                new WaitCommand(.2),
-                                                                new AltShootCargo(
-                                                                                shooter,
-                                                                                transport,
-                                                                                intake,
-                                                                                ll),
 
-                                                                new WaitCommand(1))),
+                                                                new SequentialCommandGroup(
+                                                                                new WaitCommand(.2),
+                                                                                new AltShootCargo(
+                                                                                                shooter,
+                                                                                                transport,
+                                                                                                intake,
+                                                                                                ll),
 
-                                new PositionTurret(turret, 0));
+                                                                                new WaitCommand(.1))),
+
+                                                new PositionTurret(turret, 0)));
 
         }
 }

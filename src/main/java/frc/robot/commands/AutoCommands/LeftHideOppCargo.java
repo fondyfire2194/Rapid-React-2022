@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
@@ -17,7 +16,6 @@ import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.TurnToAngle;
-import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -29,18 +27,16 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
         final double pickupPosition = -1;
 
-        private double shootAngle = 150;
+        private double shootAngle = 10;
 
         /** Creates a new LRetPuShoot. */
         public LeftHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,
-                        CargoTransportSubsystem transport, RevShooterSubsystem shooter,
-                        LimeLight ll) {
+                        CargoTransportSubsystem transport, RevShooterSubsystem shooter) {
                 addRequirements(intake, drive, transport, shooter);
                 // Use addRequirements() here to declare subsystem dependencies.
 
                 double pickUpRate = drive.pickUpRate;
 
-                // remaining data used in shoot routine
 
                 addCommands(
                                 new ParallelCommandGroup(
@@ -55,13 +51,13 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                                 new ResetEncoders(drive),
 
-                                new ResetGyro(drive),
+                                
 
-                                new PositionStraight(drive, pickupPosition,
-                                                pickUpRate)
-                                                                .deadlineWith(new RunActiveIntake(intake, transport)),
+                                new PositionStraight(drive, pickupPosition, pickUpRate)
 
-                                // new RunActiveIntake(intake, transport)),
+                                                .deadlineWith(new RunActiveIntake(intake, transport)),
+
+                                
                                 new WaitCommand(.2),
 
                                 new TurnToAngle(drive, shootAngle),
@@ -70,7 +66,7 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                                 new ResetEncoders(drive),
 
-                                new ResetGyro(drive),
+                             
 
                                 new ParallelRaceGroup(
 

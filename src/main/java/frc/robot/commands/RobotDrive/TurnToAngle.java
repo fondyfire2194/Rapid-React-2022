@@ -48,22 +48,6 @@ public class TurnToAngle extends PIDCommand {
     getController().setIntegratorRange(-.01, .01);
   }
 
-  // @Override
-
-  // public void execute() {
-
-  // SmartDashboard.putNumber("turnp", getController().getPeriod());
-
-  // if (Math.abs(getController().getPositionError()) >
-  // Pref.getPref("dRTurnkizLim"))
-
-  // getController().setI(0);
-
-  // else
-
-  // getController().setI(Pref.getPref("dRTurnkiz"));
-
-  // }
 
   @Override
   public boolean isFinished() {

@@ -287,10 +287,11 @@ public final class Constants {
    }
 
    public static class ShooterRangeConstants {
-      public static final int range1 = 5; 
+      public static final int range1 = 5; //front bumper to hub fenders in feet
       public static final int range2 = 8;
       public static final int range3 = 14;
       public static final int range4 = 20;
+
       public static final int tiltRange1 = 4;
       public static final int tiltRange2 = 11;
       public static final int tiltRange3 = 14;

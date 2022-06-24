@@ -90,6 +90,9 @@ public class PositionStraight extends CommandBase {
     m_drive.stop();
     leftOut = 0;
     rightOut = 0;
+    m_drive.mLeadLeft.setVoltage(0);
+    m_drive.mLeadRight.setVoltage(0);
+
   }
 
   // Returns true when the command should end.

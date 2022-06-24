@@ -58,8 +58,8 @@ public class FieldMap {
         // Robot dimensions with bumpers
         public static final double robotWidth = Units.inchesToMeters(34.75);
         public static final double robotLength = Units.inchesToMeters(37.75);
-        public static double frontIntakeAdder = Units.inchesToMeters(.3);
-        public static double rearIntakeAdder = Units.inchesToMeters(.3);
+        public static double frontIntakeAdder = Units.inchesToMeters(9);
+        public static double rearIntakeAdder = Units.inchesToMeters(9);
         public static final double robotTiltPivotHeight = Units.inchesToMeters(40);
 
         // common values
@@ -74,7 +74,7 @@ public class FieldMap {
         // perimeter and centered on target and cargo
 
         public static final double leftTarmacPickupPosition = Units.inchesToMeters(-50);
-        public static final double leftTarmacShootPosition = Units.inchesToMeters(-50.);
+        public static final double leftTarmacShootPosition = Units.inchesToMeters(-40.);
 
         public static final double leftTarmacTiltUpperAngle = ShooterRangeConstants.tiltRange2;
         public static final double leftTarmacTurretUpperAngle = 0;

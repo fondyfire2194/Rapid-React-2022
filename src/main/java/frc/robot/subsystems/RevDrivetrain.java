@@ -172,9 +172,9 @@ public class RevDrivetrain extends SubsystemBase {
         mOdometry = new DifferentialDriveOdometry(mGyro.getRotation2d(), new Pose2d(0, 0, new Rotation2d()));
 
         m_field = new Field2d();
-    //    if (RobotBase.isReal()) {
-            SmartDashboard.putData("Field", m_field);
-   //     }
+        // if (RobotBase.isReal()) {
+        SmartDashboard.putData("Field", m_field);
+        // }
 
         mLeftEncoder.setPosition(0);
         mRightEncoder.setPosition(0);
@@ -268,7 +268,6 @@ public class RevDrivetrain extends SubsystemBase {
 
         m_simAngle.set(m_simAngle.get() - hdgDiff.getDegrees());
 
-        m_field.setRobotPose(getPose());
     }
 
     /////////////////////////////////////
@@ -339,9 +338,18 @@ public class RevDrivetrain extends SubsystemBase {
 
     public void rotate(double rotation) {
 
-        mLeftVel.setReference(rotation * DriveConstants.kMaxTurnRateDegPerS, ControlType.kVelocity, VELOCITY_SLOT);
+        if (RobotBase.isReal()) {
 
-        mRightVel.setReference(-rotation * DriveConstants.kMaxTurnRateDegPerS, ControlType.kVelocity, VELOCITY_SLOT);
+            mLeftVel.setReference(rotation * DriveConstants.kMaxTurnRateDegPerS, ControlType.kVelocity, VELOCITY_SLOT);
+
+            mRightVel.setReference(-rotation * DriveConstants.kMaxTurnRateDegPerS, ControlType.kVelocity,
+                    VELOCITY_SLOT);
+
+        } else {
+            mLeadLeft.set(rotation);
+            mLeadRight.set(-rotation);
+        }
+
     }
 
     public void curvatureDrive(double speed, double rotation) {
@@ -384,7 +392,6 @@ public class RevDrivetrain extends SubsystemBase {
 
         temp[1] = mrightPID.calculate(getRightDistance(), endPosition);
 
-
         mDrive.feed();
 
         return temp;
@@ -392,17 +399,13 @@ public class RevDrivetrain extends SubsystemBase {
 
     public void driveLeftSide(double value) {
 
-        double batteryVolts = RobotController.getBatteryVoltage();
-
-        mLeadLeft.setVoltage(value * batteryVolts);
+        mLeadLeft.set(value);
 
     }
 
     public void driveRightSide(double value) {
 
-        double batteryVolts = RobotController.getBatteryVoltage();
-
-        mLeadRight.setVoltage(value * batteryVolts);
+        mLeadRight.set(value);
 
     }
 
@@ -641,7 +644,7 @@ public class RevDrivetrain extends SubsystemBase {
     public void stop() {
         arcadeDrive(0, 0);
         mLeadLeft.setVoltage(0);
-        mLeadRight.setVoltage(0);        
+        mLeadRight.setVoltage(0);
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {

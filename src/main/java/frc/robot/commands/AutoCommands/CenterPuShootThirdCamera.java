@@ -30,13 +30,11 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 
+//Makes a couple of turns and a position move to end up with the rear intake at the Load station
+//Waits for 3 seconds to allow cargo to be rolled to intake by operator
+
 public class CenterPuShootThirdCamera extends SequentialCommandGroup {
 
-        private double firstAngle = 20;
-        private double secondAngle = -20;
-        private double thirdAngle = 0;
-
-        /** Creates a new LRetPuShoot. */
         public CenterPuShootThirdCamera(IntakesSubsystem intake, RevDrivetrain drive,
                         CargoTransportSubsystem transport, RevShooterSubsystem shooter, RevTiltSubsystem tilt,
                         RevTurretSubsystem turret, LimeLight ll) {
@@ -45,12 +43,15 @@ public class CenterPuShootThirdCamera extends SequentialCommandGroup {
 
                 double positionRate = drive.positionRate;
 
-                double drivePickupPosition = -1;
+                double drivePickupPosition = -.5;
 
-                double shootPosition = 2;
+                double shootPosition = 0;
 
-                // double upperRPM = data[4];
-                // remaining data used in shoot routine
+                double firstAngle = 20;
+
+                double secondAngle = -20;
+
+                double thirdAngle = 0;
 
                 addCommands(
                                 new ParallelCommandGroup(
@@ -84,6 +85,7 @@ public class CenterPuShootThirdCamera extends SequentialCommandGroup {
                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720, true),
 
                                 new SetShootSpeedSource(shooter, shooter.cameraSource),
+                                
                                 new TurnToAngle(drive, thirdAngle)
 
                                                 .deadlineWith(new PositionHoldTiltTurret(tilt, turret, ll)),

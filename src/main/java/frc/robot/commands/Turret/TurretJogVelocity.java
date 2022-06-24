@@ -6,6 +6,7 @@ package frc.robot.commands.Turret;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RevTurretSubsystem;
@@ -35,6 +36,8 @@ public class TurretJogVelocity extends CommandBase {
     m_turret.holdAngle = m_turret.getAngle();
 
     m_turret.targetAngle = m_turret.holdAngle;
+
+
     if (Math.abs(m_xaxisSpeedSupplier.get()) < .05)
 
       m_turret.moveAtVelocity(0);
@@ -42,6 +45,9 @@ public class TurretJogVelocity extends CommandBase {
     else
 
       m_turret.moveAtVelocity(m_xaxisSpeedSupplier.get() * m_turret.maxVel);
+
+
+
     SmartDashboard.putNumber("TUMAXV", m_turret.maxVel);
 
   }
