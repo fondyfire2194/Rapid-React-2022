@@ -111,8 +111,8 @@ public class FieldMap {
                         centerTarmacTurretUpperAngle, centerTarmacUpperRPM,
         };
 
-        public static final double[] shootLocation_0 = { 1, 3500 };// 40" at hub "lob"
-        public static final double[] shootLocation_1 = { 6, 4000 };// 100" at tarmac line
+        public static final double[] shootLocation_0 = { 4, 1850 };// { 1, 3500 };// 40" at hub "lob"
+        public static final double[] shootLocation_1 = { 8, 2150 };// { 6, 4000 };// 100" at tarmac line
         public static final double[] shootLocation_2 = { 14, 4500 };// 200" inner launch pad
         public static final double[] shootLocation_3 = { 0, 500 };// set by operator during test
 

@@ -43,7 +43,7 @@ public class CenterPuShootThirdCamera extends SequentialCommandGroup {
 
                 double positionRate = drive.positionRate;
 
-                double drivePickupPosition = -.5;
+                double drivePickupPosition = -1.5;
 
                 double shootPosition = 0;
 
