@@ -20,8 +20,10 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import frc.robot.Pref;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.RevDrivetrain;
@@ -35,6 +37,8 @@ public class FondyFireTrajectory {
         public Trajectory centerThirdCargoPickUp;
         public Trajectory centerThirdCargoShoot;
 
+
+
         public FondyFireTrajectory(RevDrivetrain drive) {
                 m_drive = drive;
 
@@ -43,15 +47,7 @@ public class FondyFireTrajectory {
                                                 DriveConstants.kaVoltSecondsSquaredPerMeter),
                                 DriveConstants.kDriveKinematics, 11); // 8
 
-                TrajectoryConfig configReversed = new TrajectoryConfig(DriveConstants.kMaxSpeedMetersPerSecond,
-                                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-                                                // Add kinematics to ensure max speed is actually obeyed
-                                                .setKinematics(DriveConstants.kDriveKinematics)
-                                                // Apply the voltage constraint
-                                                .addConstraint(autoVoltageConstraint);
-                configReversed.setReversed(true);
-
-                TrajectoryConfig configPickupReversed = new TrajectoryConfig(DriveConstants.kPickupSpeedMetersPerSecond,
+                TrajectoryConfig configReversed = new TrajectoryConfig(DriveConstants.kMaxTrajectoryMetersPerSecond,
                                 AutoConstants.kMaxAccelerationMetersPerSecondSquared)
                                                 // Add kinematics to ensure max speed is actually obeyed
                                                 .setKinematics(DriveConstants.kDriveKinematics)
@@ -66,19 +62,23 @@ public class FondyFireTrajectory {
                                                 // Apply the voltage constraint
                                                 .addConstraint(autoVoltageConstraint);
 
-
                 centerThirdCargoPickUp = TrajectoryGenerator.generateTrajectory(
-                                new Pose2d(5.08, 1.749, new Rotation2d(Units.degreesToRadians(Math.PI / 2 + 34))),
+                                new Pose2d(5.11, 2.12, new Rotation2d(Units.degreesToRadians(Math.PI / 2 + 25))),
                                 List.of(),
-                                new Pose2d(1.274, 2.216, new Rotation2d(Units.degreesToRadians(Math.PI / 2 + 45))),
+                                new Pose2d(2.71, 1.25, new Rotation2d(Units.degreesToRadians(Math.PI / 2 + 45))),
                                 configReversed);
 
                 centerThirdCargoShoot = TrajectoryGenerator.generateTrajectory(
-                                new Pose2d(1.274, 2.216, new Rotation2d(Units.degreesToRadians(45))),
+                                new Pose2d(2.85, 1.38, new Rotation2d(Units.degreesToRadians(45))),
                                 List.of(),
-                                new Pose2d(5.08, 1.749, new Rotation2d(Units.degreesToRadians(34))),
+                                new Pose2d(5.11, 2.12, new Rotation2d(Units.degreesToRadians(25))),
 
                                 configForward);
+
+                SmartDashboard.putNumber("ShootTrajTime", centerThirdCargoShoot.getTotalTimeSeconds());
+                SmartDashboard.putNumber("PickupTrajTime", centerThirdCargoPickUp.getTotalTimeSeconds());
+                SmartDashboard.putNumber("PUTrjsize", centerThirdCargoPickUp.getStates().size());
+                SmartDashboard.putNumber("ShootTrajSize", centerThirdCargoShoot.getStates().size());
         }
 
         public RamseteCommand getRamsete(Trajectory traj) {

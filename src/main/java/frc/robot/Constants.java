@@ -105,15 +105,18 @@ public final class Constants {
       public static double NEO550_COUNTS_PER_REV = 4096;// not used
       public static double DRIVE_GEAR_RATIO = 10.25;
 
+      public static double ksVolts = .227;
+
+      public static double kvVoltSecondsPerMeter = 2.63;// 27;//2;
+
+      public static double kaVoltSecondsSquaredPerMeter = .329;// 3.48;//.408;
+
       public final static double WHEELBASE_WIDTH = .69;
-
-      public static double ksVolts = .207;
-
-      public static final double kPDriveVeSl = 1.15;
 
       public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
             WHEELBASE_WIDTH);
-      public static final boolean kGyroReversed = false;
+
+      public static final boolean kGyroReversed = true;
       /**
        * 
        * Robot turn constants
@@ -133,29 +136,23 @@ public final class Constants {
       public static double kPositionI = 0.01;
       public static double kPositionP = .4;
       public static double kPositionD = .5;
-      public static final double kMaxSpeedMetersPerSecond = 4.0;
-      public static double kMaxPositionAccelerationMetersPerSSquared = 15;
+//       public static final double kMaxSpeedMetersPerSecond = 1.0;
+//       public static double kMaxPositionAccelerationMetersPerSSquared = 4;
 
       /**
        * 
        * Trajectory constants
        */
 
-      public static double kMaxTrajectoryMetersPerSecond = 2;
+      public static double kMaxTrajectoryMetersPerSecond = 3;
 
-      public static double kMaxTrajectoryAccelerationMetersPerSquared = 5.;
+      public static double kMaxTrajectoryAccelerationMetersPerSquared = 10.;
 
-      public static double kPDriveVel = 5;
+      public static double kPDriveVel = 3.5;
+
+      
 
       public static double kPickupSpeedMetersPerSecond = 1;
-
-      /**
-       * Simulation parameters
-       * 
-       */
-      public static double kvVoltSecondsPerMeter = 2.63;// 27;//2;
-
-      public static double kaVoltSecondsSquaredPerMeter = .329;// 3.48;//.408;
 
       public static final double kvVoltSecondsPerRadian = 3.0;
 
@@ -287,12 +284,12 @@ public final class Constants {
    }
 
    public static class ShooterRangeConstants {
-      public static final int range1 = 5; //front bumper to hub fenders in feet
+      public static final int range1 = 5; // front bumper to hub fenders in feet
       public static final int range2 = 8;
       public static final int range3 = 14;
       public static final int range4 = 20;
 
-      public static final int tiltRange1 = 4;//degrees
+      public static final int tiltRange1 = 4;// degrees
       public static final int tiltRange2 = 11;
       public static final int tiltRange3 = 14;
       public static final int tiltRange4 = 17;
@@ -303,17 +300,17 @@ public final class Constants {
 
       public static final int noZoom960720 = 1;
 
-       public static final int x2Zoom320240 = 2;
+      public static final int x2Zoom320240 = 2;
 
-       public static final int x3ZoomPipeline = 3;
+      public static final int x3ZoomPipeline = 3;
 
-       public static final int ledsOffPipeline = 8;
+      public static final int ledsOffPipeline = 8;
 
-       public static final double noZoomMinBoundingBoxHeight = 3;
+      public static final double noZoomMinBoundingBoxHeight = 3;
 
-       public static final double noZoomMaxBoundingBoxHeight = 10;
+      public static final double noZoomMaxBoundingBoxHeight = 10;
 
-       public static final double x2ZoomMinBoundingBoxHeight = 8;
+      public static final double x2ZoomMinBoundingBoxHeight = 8;
 
    }
 

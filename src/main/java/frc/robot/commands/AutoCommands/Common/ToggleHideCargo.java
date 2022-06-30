@@ -2,31 +2,26 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.trajectories;
+package frc.robot.commands.AutoCommands.Common;
 
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.RevDrivetrain;
+import frc.robot.Robot;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ResetOdometryToStartOfTrajectory extends InstantCommand {
-  private RevDrivetrain m_drive;
-  private Trajectory m_traj;
-
-  public ResetOdometryToStartOfTrajectory(RevDrivetrain drive, Trajectory traj) {
+public class ToggleHideCargo extends InstantCommand {
+  public ToggleHideCargo() {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_drive = drive;
-    m_traj = traj;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.resetOdometry(m_traj.getInitialPose());
-    SmartDashboard.putNumber("TrajTime", m_traj.getTotalTimeSeconds());
 
+    if (Robot.hideOppCargo)
+      Robot.hideOppCargo = false;
+    else
+      Robot.hideOppCargo = true;
   }
 }

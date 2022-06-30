@@ -29,7 +29,7 @@ public class SimulationOI {
       ClimberSubsystem climber,
       FondyFireTrajectory traj) {
 
-    final Field2d m_field = new Field2d();
+   // final Field2d m_field = new Field2d();
 
     ShuffleboardTab sim = Shuffleboard.getTab("Simulation");
 

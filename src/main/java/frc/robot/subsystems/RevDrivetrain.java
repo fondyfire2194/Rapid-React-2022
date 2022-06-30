@@ -20,14 +20,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,7 +34,6 @@ import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Pref;
 import frc.robot.Sim.CANEncoderSim;
-import frc.robot.trajectories.FondyFireTrajectory;
 
 public class RevDrivetrain extends SubsystemBase {
     // private static final DrivetrainConstants DRIVETRAIN_CONSTANTS = new
@@ -97,7 +94,7 @@ public class RevDrivetrain extends SubsystemBase {
     private SparkMaxPIDController mLeftVel;
     private SparkMaxPIDController mRightVel;
 
-    public double kTurnP = .05;
+    public double kTurnP = .03;
     public double kTurnI = 0.;
     public double kTurnD = 0.;
     public double kTurnIz = 0;
@@ -170,7 +167,7 @@ public class RevDrivetrain extends SubsystemBase {
 
         mGyro = new AHRS();
 
-        mOdometry = new DifferentialDriveOdometry(mGyro.getRotation2d(), new Pose2d(0, 0, new Rotation2d()));
+        mOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
         m_field = new Field2d();
         // if (RobotBase.isReal()) {
@@ -220,22 +217,24 @@ public class RevDrivetrain extends SubsystemBase {
             var dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
 
             m_simAngle = new SimDouble((SimDeviceDataJNI.getSimValueHandle(dev, "Yaw")));
+            m_dts = new DifferentialDrivetrainSim(
+                    DriveConstants.kDrivetrainPlant, DCMotor.getNEO(2), 8, .69, 0.0508, null);
 
-            m_dts = DifferentialDrivetrainSim.createKitbotSim(KitbotMotor.kDualCIMPerSide, KitbotGearing.k12p75,
+             mleftPID.setP(3);
+             mrightPID.setP(3);
 
-                    KitbotWheelSize.kSixInch, null);
-
-            mleftPID.setP(3);
-            mrightPID.setP(3);
         }
     }
 
     @Override
     public void periodic() {
 
-        mOdometry.update(mGyro.getRotation2d(), getLeftDistance(), getRightDistance());
+        mOdometry.update(Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance());
 
         m_field.setRobotPose(mOdometry.getPoseMeters());
+        // m_field.setRobotPose(mOdometry.getPoseMeters().getX(),
+        // -mOdometry.getPoseMeters().getY(),
+        // new Rotation2d(Math.toRadians(-getHeading())));
 
         SmartDashboard.putString("Pose", mOdometry.getPoseMeters().toString());
 
@@ -366,8 +365,16 @@ public class RevDrivetrain extends SubsystemBase {
     }
 
     public void tankDriveVolts(double left, double right) {
-        mLeadLeft.setVoltage(left);
-        mLeadRight.setVoltage(right);
+        SmartDashboard.putNumber("VL  ", left);
+        SmartDashboard.putNumber("VR  ", right);
+
+        if (RobotBase.isReal()) {
+            mLeadLeft.setVoltage(left);
+            mLeadRight.setVoltage(right);
+        } else {
+            mLeadLeft.set(left / 12);
+            mLeadRight.set(right / 12);
+        }
         mDrive.feed();
     }
 
@@ -382,7 +389,7 @@ public class RevDrivetrain extends SubsystemBase {
 
         double ival = kI;
 
-        if (RobotBase.isReal()&&Math.abs(endPosition - getLeftDistance()) > kIz) {
+        if (RobotBase.isReal() && Math.abs(endPosition - getLeftDistance()) > kIz) {
 
             ival = 0;
 
@@ -403,15 +410,13 @@ public class RevDrivetrain extends SubsystemBase {
 
     public void driveLeftSide(double value) {
 
-        double batteryVoltage = RobotController.getBatteryVoltage();
-
-        mLeadLeft.set(value * batteryVoltage);
+        mLeadLeft.set(value);
 
     }
 
     public void driveRightSide(double value) {
-        double batteryVoltage = RobotController.getBatteryVoltage();
-        mLeadRight.set(value * batteryVoltage);
+       ;
+        mLeadRight.set(value);
 
     }
 
@@ -511,6 +516,7 @@ public class RevDrivetrain extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
+        resetGyro();
         mOdometry.resetPosition(pose, mGyro.getRotation2d());
         if (RobotBase.isSimulation())
             m_dts.setPose(pose);

@@ -56,9 +56,9 @@ public class FieldMap {
         public static final double cargoDiameter = Units.inchesToMeters(9.5);
 
         // Robot dimensions with bumpers
-        public static final double robotWidth = Units.inchesToMeters(34.75);
-        public static final double robotLength = Units.inchesToMeters(37.75);
-        public static double frontIntakeAdder = Units.inchesToMeters(9);
+        public static final double robotWidth = Units.inchesToMeters(34.75);//.8826
+        public static final double robotLength = Units.inchesToMeters(37.75);//.9588
+        public static double frontIntakeAdder = Units.inchesToMeters(9);//.2286
         public static double rearIntakeAdder = Units.inchesToMeters(9);
         public static final double robotTiltPivotHeight = Units.inchesToMeters(40);
 

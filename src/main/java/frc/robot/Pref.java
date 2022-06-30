@@ -97,7 +97,7 @@ public class Pref {
     prefDict.put("dRStKp", .15);
     prefDict.put("dRacc", .1);
 
-    prefDict.put("dRTurnkP", .05);
+    prefDict.put("dRTurnkP", .004);
     prefDict.put("dRTurnkD", .0);
     prefDict.put("dRTurnkI", .0);
     prefDict.put("dRTurnkIz", .0);
@@ -106,6 +106,8 @@ public class Pref {
     prefDict.put("dRTune", 0.);
 
     prefDict.put("dRPur", 0.35);
+
+    prefDict.put("kpdv", 0.35);
 
     // Intake
 

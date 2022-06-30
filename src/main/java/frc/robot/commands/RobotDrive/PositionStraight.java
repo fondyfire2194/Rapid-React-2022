@@ -61,7 +61,6 @@ public class PositionStraight extends CommandBase {
 
     double yawCorrection = 0;
 
-    if (RobotBase.isReal())
 
       yawError = m_drive.getYaw() - m_startAngle;
 

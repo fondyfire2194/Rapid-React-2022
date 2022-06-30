@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -180,10 +179,10 @@ public class RobotContainer {
             m_limelight = new LimeLight();
 
             m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
-           
+
             m_drive.setDefaultCommand(getArcadeDriveCommandSim());
 
-           // m_drive.setDefaultCommand(getArcadeDriveCommand());
+            // m_drive.setDefaultCommand(getArcadeDriveCommand());
 
             m_intake.setDefaultCommand((new StopActiveIntake(m_intake)));
 
@@ -481,5 +480,5 @@ public class RobotContainer {
 
       }
 
-
+    
 }

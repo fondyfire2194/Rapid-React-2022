@@ -9,12 +9,16 @@ import java.util.Map;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Robot;
 import frc.robot.Vision.LimeLight;
+import frc.robot.commands.AutoCommands.CenterHideOppCargo;
 import frc.robot.commands.AutoCommands.LeftHideOppCargo;
+import frc.robot.commands.AutoCommands.Common.ToggleHideCargo;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -23,19 +27,21 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.trajectories.FondyFireTrajectory;
+import frc.robot.trajectories.ResetOdometryToStartOfTrajectory;
 
 /** Add your docs here. */
 public class SetUpPreRoundOI {
 
         public SendableChooser<Integer> autoChooser = new SendableChooser<>();
         public SendableChooser<Double> startDelayChooser = new SendableChooser<>();
+
         public static boolean m_showPreRound;
         double rate = .5;
 
         public SetUpPreRoundOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
                         LimeLight ll, IntakesSubsystem intake, ClimberSubsystem climber,
-                        FondyFireTrajectory traj) {
+                        FondyFireTrajectory fftraj) {
 
                 /**
                  * 
@@ -58,14 +64,20 @@ public class SetUpPreRoundOI {
                         autoChooser.addOption("Left Tarmac Retract Pickup Advance Shoot",
                                         2);
 
-                        autoChooser.addOption("Right Edge Tarmac Retract Pickup Shoot",
+                        autoChooser.addOption("Center Tarmac Retract Pickup Shoot",
                                         3);
 
-                        autoChooser.addOption("Right Center Tarmac Retract Pickup Shoot",
+                        autoChooser.addOption("Center Tarmac Retract Pickup Shoot Third Cargo",
                                         4);
 
+                        Shuffleboard.getTab("Pre-Round").add("HideCargo", new ToggleHideCargo())
+                                        .withPosition(3, 0);
+
+                        Shuffleboard.getTab("Pre-Round").addBoolean("HidingCargo", () -> Robot.hideOppCargo)
+                                        .withPosition(3, 1);
+
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
-                                        .withPosition(3, 0); //
+                                        .withPosition(4, 0); //
 
                         startDelayChooser.setDefaultOption("No Delay", 0.);
                         startDelayChooser.addOption("One Second", 1.);
@@ -82,10 +94,23 @@ public class SetUpPreRoundOI {
                         oppCommands.add("LeftOpp",
                                         new LeftHideOppCargo(intake, drive, transport, shooter));
 
-                  
-                        // oppCommands.add("CenterThird",
-                        //                 new CenterPuShootThirdCamera(intake, drive, transport, shooter, tilt, turret,
-                        //                                 ll));
+                        oppCommands.add("CenterOpp",
+                                        new CenterHideOppCargo(intake, drive, transport, shooter));
+
+                        oppCommands.add("CenterThirdShoot",
+                                        new SequentialCommandGroup(
+                                                        new ResetOdometryToStartOfTrajectory(drive,
+                                                                        fftraj.centerThirdCargoShoot),
+
+                                                        fftraj.getRamsete(fftraj.centerThirdCargoShoot)
+                                                                        .andThen(() -> drive.tankDriveVolts(0, 0))));
+
+                        oppCommands.add("CenterThirdPickup",
+                                        new SequentialCommandGroup(
+                                                        new ResetOdometryToStartOfTrajectory(drive,
+                                                                        fftraj.centerThirdCargoPickUp),
+
+                                                        fftraj.getRamsete(fftraj.centerThirdCargoPickUp)));
 
                 }
 
