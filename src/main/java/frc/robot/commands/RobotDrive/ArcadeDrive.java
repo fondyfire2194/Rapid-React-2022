@@ -6,6 +6,7 @@ package frc.robot.commands.RobotDrive;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
 import frc.robot.subsystems.RevDrivetrain;
@@ -49,7 +50,7 @@ public class ArcadeDrive extends CommandBase {
 
     if (Math.abs(tempRot) < .05)
       tempRot = 0;
-    
+   
     m_drivetrain.arcadeDrive(tempx, tempRot * Pref.getPref("ArcadeTurnKp"));
 
   }

@@ -30,9 +30,11 @@ public class PositionStraight extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_startAngle = m_drive.getYaw();
+    if (RobotBase.isReal())
+      m_startAngle = m_drive.getYaw();
     m_min = -m_max;
     loopCtr = 0;
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,7 +45,7 @@ public class PositionStraight extends CommandBase {
 
     if (RobotBase.isReal()) {
 
-      // yawKp = Pref.getPref("dRStKp");
+      yawKp = Pref.getPref("dRStKp");
     }
 
     else {
@@ -51,17 +53,19 @@ public class PositionStraight extends CommandBase {
       yawKp = .0;
     }
 
-    leftOut = m_drive.driveDistance(m_endpoint)[0];
+     leftOut = m_drive.driveDistance(m_endpoint)[0];
 
-    rightOut = m_drive.driveDistance(m_endpoint)[1];
+     rightOut = m_drive.driveDistance(m_endpoint)[1];
 
     double yawError = 0;
 
     double yawCorrection = 0;
 
-    yawError = m_drive.getYaw() - m_startAngle;
+    if (RobotBase.isReal())
 
-    yawCorrection = 0;// yawError * yawKp;
+      yawError = m_drive.getYaw() - m_startAngle;
+
+    yawCorrection = yawError * yawKp;
 
     if (leftOut > m_max)
       leftOut = m_max;
@@ -90,18 +94,16 @@ public class PositionStraight extends CommandBase {
     m_drive.stop();
     leftOut = 0;
     rightOut = 0;
-    m_drive.mLeadLeft.setVoltage(0);
-    m_drive.mLeadRight.setVoltage(0);
 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return loopCtr > 5 && Math.abs(m_endpoint - m_drive.getLeftDistance()) < .25;
+    return loopCtr > 5 && Math.abs(m_endpoint - m_drive.getLeftDistance()) < .1
 
-    // && Math.abs(m_endpoint - m_drive.getRightDistance()) < .25;
+        && Math.abs(m_endpoint - m_drive.getRightDistance()) < .1;
 
-    // && m_drive.isStopped();
+      //  && m_drive.isStopped();
   }
 }

@@ -292,7 +292,7 @@ public final class Constants {
       public static final int range3 = 14;
       public static final int range4 = 20;
 
-      public static final int tiltRange1 = 4;
+      public static final int tiltRange1 = 4;//degrees
       public static final int tiltRange2 = 11;
       public static final int tiltRange3 = 14;
       public static final int tiltRange4 = 17;

@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -26,11 +27,7 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.AltRetPuAdvShoot;
-import frc.robot.commands.AutoCommands.CenterHideOppCargo;
-import frc.robot.commands.AutoCommands.CenterPuShootThirdCamera;
-import frc.robot.commands.AutoCommands.LeftHideOppCargo;
 import frc.robot.commands.AutoCommands.RetPuShootCamera;
-import frc.robot.commands.AutoCommands.RightPUShootThird;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
@@ -208,7 +205,7 @@ public class Robot extends TimedRobot {
 
         data = FieldMap.leftTarmacData;
 
-        // startingPose = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
+        startingPose = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
 
         if (useLacrosse) {
 
@@ -226,7 +223,7 @@ public class Robot extends TimedRobot {
 
               new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
-              // new SetRobotPose(m_robotContainer.m_drive, startingPose),
+              new SetRobotPose(m_robotContainer.m_drive, startingPose),
 
               new AltRetPuAdvShoot(intake, drive, transport, shooter, tilt, turret, ll,
                   comp, data));
@@ -247,7 +244,7 @@ public class Robot extends TimedRobot {
 
           data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
 
-         // data[3] not used// turret will be locked to Limelight
+          // data[3] not used// turret will be locked to Limelight
 
           data[4] = shooter.rpmFromCameraDistance[8 + 1];// rpm
 
@@ -265,11 +262,11 @@ public class Robot extends TimedRobot {
 
         data = FieldMap.rightTarmacData;
 
-        // startingPose = new Pose2d(7.65, 2.03, Rotation2d.fromDegrees(90));
+         startingPose = new Pose2d(7.65, 2.03, Rotation2d.fromDegrees(90));
 
         if (useLacrosse) {
 
-          data[0] = (Pref.getPref("autRRtctPt"));//CHANGE  retract point to 1.1 meters
+          data[0] = (Pref.getPref("autRRtctPt"));// CHANGE retract point to 1.1 meters
 
           data[1] = Pref.getPref("autRShootPt");// shoot point .9 meters
 
@@ -307,7 +304,7 @@ public class Robot extends TimedRobot {
 
               new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
                   comp, data));
-//new RightPUShootThird(intake, drive, transport, shooter, tilt, turret, ll, comp, data));
+          
         }
 
         break;
@@ -316,7 +313,7 @@ public class Robot extends TimedRobot {
 
         data = FieldMap.centerTarmacData;
 
-        // startingPose = new Pose2d(6.78, 3, Rotation2d.fromDegrees(34.32));
+         startingPose = new Pose2d(6.78, 3, Rotation2d.fromDegrees(34.32));
 
         if (useLacrosse) {
 
@@ -338,7 +335,7 @@ public class Robot extends TimedRobot {
 
                   data));
 
-                //  new CenterHideOppCargo(intake, drive, transport, shooter, tilt, turret, ll));
+          // new CenterHideOppCargo(intake, drive, transport, shooter, tilt, turret, ll));
         }
 
         else {
@@ -360,7 +357,6 @@ public class Robot extends TimedRobot {
               new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
                   comp, data));
 
-               //   new CenterPuShootThirdCamera( intake, drive, transport, shooter, tilt, turret, ll));
 
         }
 
@@ -432,11 +428,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_shooter.presetLocationName = FieldMap.shootLocationName[m_robotContainer.m_shooter.shootLocation];
     m_robotContainer.m_shooter.shootModeName = FieldMap.shootModeName[m_robotContainer.m_shooter.shootValuesSource];
 
-    // new CalculateTargetDistance(m_robotContainer.m_limelight,
-    // m_robotContainer.m_tilt,
-    // m_robotContainer.m_turret, m_robotContainer.m_shooter).schedule();
-    // new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter,
-    // m_robotContainer.m_tilt).schedule();
+    
 
   }
 

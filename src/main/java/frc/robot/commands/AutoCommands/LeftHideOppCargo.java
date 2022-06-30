@@ -4,11 +4,8 @@
 
 package frc.robot.commands.AutoCommands;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
@@ -20,6 +17,16 @@ import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
+
+/**
+ * After shooting 2 cargo robot center is on alliance cargo center
+ * 
+ * Turn cw by  ? and retract ? feet with rear intake to pick up opponent cargo
+ * 
+ * turn cw by ? and run cargo out of shooter
+ * 
+ * 
+ */
 
 public class LeftHideOppCargo extends SequentialCommandGroup {
 
@@ -39,7 +46,7 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
 
                 addCommands(
-                                new ParallelCommandGroup(
+                                parallel(
 
                                                 new SetFrontIntakeActive(intake, false),
                                                 new ResetEncoders(drive),
@@ -68,7 +75,7 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                              
 
-                                new ParallelRaceGroup(
+                                race(
 
                                                 new RunCargoOutShooter(shooter, intake, transport, 700),
 

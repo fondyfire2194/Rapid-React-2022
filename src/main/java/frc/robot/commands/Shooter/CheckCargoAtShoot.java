@@ -2,43 +2,35 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Turret;
+package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.RevTurretSubsystem;
+import frc.robot.subsystems.CargoTransportSubsystem;
+import frc.robot.subsystems.RevShooterSubsystem;
 
-public class TurretWaitForStop extends CommandBase {
-  /** Creates a new TurretWaitForStop. */
-  private final RevTurretSubsystem m_turret;
-
-  public TurretWaitForStop(RevTurretSubsystem turret) {
+public class CheckCargoAtShoot extends CommandBase {
+  /** Creates a new CheckCargoAtShoot. */
+  private CargoTransportSubsystem m_transport;
+  public CheckCargoAtShoot(CargoTransportSubsystem transport) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_turret = turret;
-    addRequirements(m_turret);
+  m_transport=transport;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    m_turret.stop();
-   m_turret.targetAngle = m_turret.getAngle()+5;
-
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-   
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(m_turret.getSpeed()) < .01;
+    return m_transport.getCargoAtShoot();
   }
 }

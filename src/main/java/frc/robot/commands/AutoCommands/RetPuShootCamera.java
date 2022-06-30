@@ -6,7 +6,6 @@ package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.PipelinesConstants;
@@ -54,7 +53,7 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                 // remaining data used in shoot routine
 
                 addCommands(
-                                new ParallelCommandGroup(
+                                parallel(
 
                                                 new SetFrontIntakeActive(intake, false),
                                                 new ResetEncoders(drive),
@@ -65,7 +64,7 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720,
                                                                 true)),
 
-                                new ParallelRaceGroup(
+                                race(
 
                                                 new PositionStraight(drive, drivePickupPosition,
                                                                 pickUpRate),
@@ -77,11 +76,11 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                                                                                 intake,
                                                                                 transport)),
 
-                                new ParallelCommandGroup(
+                                parallel(
 
-                                                new ParallelRaceGroup(
+                                              race(
 
-                                                                new SequentialCommandGroup(
+                                                                sequence(
 
                                                                                 new WaitCommand(.2),
 

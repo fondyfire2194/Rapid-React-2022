@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Turret;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RevTurretSubsystem;
 
@@ -14,6 +15,7 @@ public class PositionTurret extends CommandBase {
   private double m_endpoint;
   private int loopCtr;
   private boolean endIt;
+
 
   public PositionTurret(RevTurretSubsystem turret, double endpoint) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -30,26 +32,34 @@ public class PositionTurret extends CommandBase {
     m_turret.programRunning = 2;
     m_turret.targetAngle = m_endpoint;
     loopCtr = 0;
+  
+      
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
+
     m_turret.goToPosition(m_turret.targetAngle);
-   // SmartDashboard.putNumber("TUTARG", m_turret.targetAngle);
+   
     loopCtr++;
+
     endIt = m_turret.atTargetAngle() && loopCtr > 10 && Math.abs(m_turret.getSpeed()) < 1;
+
+   
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (loopCtr > 10 && !endIt)
-      
-    m_turret.holdAngle = m_turret.getAngle();
 
-    m_turret.targetAngle = m_turret.holdAngle;
-    
+    if (loopCtr > 10 && !endIt) {
+
+       m_turret.targetAngle = m_turret.getAngle();
+
+    }
+
   }
 
   // Returns true when the command should end.

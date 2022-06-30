@@ -6,15 +6,15 @@ package frc.robot.OI;
 
 import java.util.Map;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.AutoCommands.LeftHideOppCargo;
-import frc.robot.commands.AutoCommands.CenterHideOppCargo;
-import frc.robot.commands.AutoCommands.CenterPuShootThirdCamera;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -82,9 +82,7 @@ public class SetUpPreRoundOI {
                         oppCommands.add("LeftOpp",
                                         new LeftHideOppCargo(intake, drive, transport, shooter));
 
-                        // oppCommands.add("CenterOpp",
-                        //                 new CenterHideOppCargo(intake, drive, transport, shooter, tilt, turret, ll));
-
+                  
                         // oppCommands.add("CenterThird",
                         //                 new CenterPuShootThirdCamera(intake, drive, transport, shooter, tilt, turret,
                         //                                 ll));

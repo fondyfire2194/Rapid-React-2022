@@ -44,7 +44,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     private RelativeEncoder m_topEncoder;
 
     public double requiredRPMLast;
-  //  public double requiredRPM;
+    // public double requiredRPM;
     public double shotDistance;
     public double shootTime;
     public double shootTimeRemaining;
@@ -79,9 +79,10 @@ public class RevShooterSubsystem extends SubsystemBase {
     public final int POSITION_SLOT = 2;
 
     public double[] rpmFromCameraDistance = {
-            1850, 1850, 1850, 2150, 1900, 1950, 2000, // 1-7
-            2300, 2300, 2350, 2700, 2900, 2900, // 8-13
-            2950, 3100, 3250, 3450, 3450, 4500, 5000 };// 14-20
+            1850, 1850, 1850, 2150, 1900,//1 - 5 ft 4 degrees
+            1950, 2000, 2300,//6-8 ft 11 degrees
+            2300, 2350, 2700, 2900, 2900, 2950, // 9-14 ft 14 degrees
+            3100, 3250, 3450, 3450, 4500, 5000 };// 15-20ft 17 degrees
 
     public double startDistance;
 
@@ -180,7 +181,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
         calibrateTopPID();
 
-      //  requiredRPM = 2500;
+        // requiredRPM = 2500;
 
         shootOne = false;
 
@@ -239,7 +240,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     }
 
     public void spinAtRPM(double rpm) {
-       // requiredRPM = rpm;
+        // requiredRPM = rpm;
         mPidController.setReference(rpm, ControlType.kVelocity, VELOCITY_SLOT);
 
     }

@@ -46,8 +46,15 @@ public class TurnToAngle extends PIDCommand {
     getController()
         .setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
     getController().setIntegratorRange(-.01, .01);
+
   }
 
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    getController().reset();
+    
+  }
 
   @Override
   public boolean isFinished() {

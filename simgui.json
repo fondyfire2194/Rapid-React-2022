@@ -1,11 +1,6 @@
 {
   "HALProvider": {
     "Other Devices": {
-      "SPARK MAX [8]": {
-        "header": {
-          "open": true
-        }
-      },
       "SPARK MAX [9]": {
         "header": {
           "open": true
@@ -16,33 +11,6 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/LiveWindow/CargoTransportSubsystem": "Subsystem",
-      "/LiveWindow/ClimberSubsystem": "Subsystem",
-      "/LiveWindow/IntakesSubsystem": "Subsystem",
-      "/LiveWindow/RevDrivetrain": "Subsystem",
-      "/LiveWindow/RevShooterSubsystem": "Subsystem",
-      "/LiveWindow/RevTiltSubsystem": "Subsystem",
-      "/LiveWindow/RevTurretSubsystem": "Subsystem",
-      "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
-      "/LiveWindow/Ungrouped/DigitalInput[0]": "Digital Input",
-      "/LiveWindow/Ungrouped/PIDController[10]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[11]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[12]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[13]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[6]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[7]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[8]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[9]": "PIDController",
-      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
-      "/LiveWindow/Ungrouped/Talon SRX [13]": "Motor Controller",
-      "/LiveWindow/Ungrouped/Talon SRX [14]": "Motor Controller",
-      "/LiveWindow/Ungrouped/Talon SRX [15]": "Motor Controller",
-      "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
       "/Shuffleboard/CanBus/Scheduler/Scheduler": "Scheduler",
       "/Shuffleboard/CanBus/Subs 1/Climber": "Subsystem",
       "/Shuffleboard/CanBus/Subs 1/Drive": "Subsystem",
@@ -51,42 +19,6 @@
       "/Shuffleboard/CanBus/Subs 2/Tilt": "Subsystem",
       "/Shuffleboard/CanBus/Subs 2/Transport": "Subsystem",
       "/Shuffleboard/CanBus/Subs 2/Turret": "Subsystem",
-      "/Shuffleboard/CompetitionMisc/Misc1/Reset to 0": "Command",
-      "/Shuffleboard/CompetitionMisc/Misc2/Hold Cargo": "Command",
-      "/Shuffleboard/CompetitionMisc/Misc2/LowerLeft": "Command",
-      "/Shuffleboard/CompetitionMisc/Misc2/RaiseLeft": "Command",
-      "/Shuffleboard/CompetitionMisc/Misc2/Release Cargo": "Command",
-      "/Shuffleboard/CompetitionMisc/Misc2/ReleaseOneCargo": "Command",
-      "/Shuffleboard/CompetitionMisc/Misc3/Reset Enc": "Command",
-      "/Shuffleboard/CompetitionMisc/Misc3/Reset Gyro": "Command",
-      "/Shuffleboard/CompetitionMisc/Misc3/To P-P Target": "Command",
-      "/Shuffleboard/CompetitionMisc/Misc3/To ShieldGen Target": "Command",
-      "/Shuffleboard/CompetitionMisc/Misc3/To Trench Target": "Command",
-      "/Shuffleboard/CompetitionMisc/MiscVis/Driver Pipeline": "Command",
-      "/Shuffleboard/CompetitionMisc/MiscVis/No Zoom Power Port Pipeline": "Command",
-      "/Shuffleboard/CompetitionMisc/MiscVis/Vision Off": "Command",
-      "/Shuffleboard/CompetitionMisc/MiscVis/Vision On": "Command",
-      "/Shuffleboard/HubVision/Camera/DriverCam": "Command",
-      "/Shuffleboard/HubVision/Camera/MainPIP": "Command",
-      "/Shuffleboard/HubVision/Camera/SecIP": "Command",
-      "/Shuffleboard/HubVision/Camera/SideBySideStream": "Command",
-      "/Shuffleboard/HubVision/Camera/VisionCam": "Command",
-      "/Shuffleboard/HubVision/Dist/AcquireTarget": "Command",
-      "/Shuffleboard/HubVision/Dist/CalcTarget": "Command",
-      "/Shuffleboard/HubVision/Dist/CalcTestTarget": "Command",
-      "/Shuffleboard/HubVision/Dist/Get6": "Command",
-      "/Shuffleboard/HubVision/Dist/Set2XZoom": "Command",
-      "/Shuffleboard/HubVision/Dist/SetNoZoom": "Command",
-      "/Shuffleboard/HubVision/Dist/Sort L to R": "Command",
-      "/Shuffleboard/HubVision/LEDs/LedsBlink": "Command",
-      "/Shuffleboard/HubVision/LEDs/LedsOff": "Command",
-      "/Shuffleboard/HubVision/LEDs/LedsOn": "Command",
-      "/Shuffleboard/HubVision/LEDs/LedsPipeline": "Command",
-      "/Shuffleboard/HubVision/On-Off/Vision Off": "Command",
-      "/Shuffleboard/HubVision/On-Off/Vision On": "Command",
-      "/Shuffleboard/HubVision/Zoom/2XZoom": "Command",
-      "/Shuffleboard/HubVision/Zoom/3X Zoom": "Command",
-      "/Shuffleboard/HubVision/Zoom/No Zoom": "Command",
       "/Shuffleboard/Intake/IntakeActions/ArmLower": "Command",
       "/Shuffleboard/Intake/IntakeActions/ArmRaise": "Command",
       "/Shuffleboard/Intake/IntakeActions/IntakeCmd": "Subsystem",
@@ -94,12 +26,6 @@
       "/Shuffleboard/Intake/IntakeActions/Stop Motor": "Command",
       "/Shuffleboard/Intake/IntakeSelect/Select Front": "Command",
       "/Shuffleboard/Intake/IntakeSelect/Select Rear": "Command",
-      "/Shuffleboard/Intake/IntakeValues/ArmLower": "Command",
-      "/Shuffleboard/Intake/IntakeValues/ArmRaise": "Command",
-      "/Shuffleboard/Intake/IntakeValues/Run Motor": "Command",
-      "/Shuffleboard/Intake/IntakeValues/Select Front": "Command",
-      "/Shuffleboard/Intake/IntakeValues/Select Rear": "Command",
-      "/Shuffleboard/Intake/IntakeValues/Stop Motor": "Command",
       "/Shuffleboard/LLVision/Camera/DriverCam": "Command",
       "/Shuffleboard/LLVision/Camera/MainPIP": "Command",
       "/Shuffleboard/LLVision/Camera/SecIP": "Command",
@@ -116,50 +42,24 @@
       "/Shuffleboard/LLVision/Zoom/No Zoom": "Command",
       "/Shuffleboard/Pre-Round/Auto Commands": "String Chooser",
       "/Shuffleboard/Pre-Round/Auto Delay": "String Chooser",
-      "/Shuffleboard/Pre-Round/OppTest/CenterOpp": "Command",
-      "/Shuffleboard/Pre-Round/OppTest/CenterThird": "Command",
       "/Shuffleboard/Pre-Round/OppTest/LeftOpp": "Command",
-      "/Shuffleboard/Pre-Round/While There's Still Time/Position TI To 1": "Command",
-      "/Shuffleboard/Pre-Round/While There's Still Time/Position TI To 12": "Command",
-      "/Shuffleboard/Pre-Round/While There's Still Time/Position TU To 1": "Command",
-      "/Shuffleboard/Pre-Round/While There's Still Time/Position TU To 11": "Command",
-      "/Shuffleboard/Pre-Round/While There's Still Time/Position TU To 12": "Command",
-      "/Shuffleboard/Pre-Round/While There's Still Time/Position To Entry": "Command",
-      "/Shuffleboard/Pre-Round/While There's Still Time/PositionToSwitch": "Command",
       "/Shuffleboard/SetupRobot/Robot/ClearFaults": "Command",
       "/Shuffleboard/SetupRobot/Robot/Cmd": "Subsystem",
-      "/Shuffleboard/SetupRobot/Robot/EndLog": "Command",
       "/Shuffleboard/SetupRobot/Robot/Reset Enc": "Command",
       "/Shuffleboard/SetupRobot/Robot/Reset Gyro": "Command",
       "/Shuffleboard/SetupRobot/Robot/Stop Robot": "Command",
       "/Shuffleboard/SetupRobot/Robot/To -1": "Command",
       "/Shuffleboard/SetupRobot/Robot/To -3": "Command",
-      "/Shuffleboard/SetupRobot/Robot/To -4": "Command",
-      "/Shuffleboard/SetupRobot/Robot/To -4(1)": "Command",
-      "/Shuffleboard/SetupRobot/Robot/To -4(2)": "Command",
-      "/Shuffleboard/SetupRobot/Robot/To -4(3)": "Command",
       "/Shuffleboard/SetupRobot/Robot/To 0": "Command",
-      "/Shuffleboard/SetupRobot/Robot/To 0(1)": "Command",
       "/Shuffleboard/SetupRobot/Robot/To 2": "Command",
       "/Shuffleboard/SetupRobot/Robot/To 3": "Command",
-      "/Shuffleboard/SetupRobot/Robot/To 4": "Command",
       "/Shuffleboard/SetupRobot/Robot1/TurnTo -45": "Command",
       "/Shuffleboard/SetupRobot/Robot1/TurnTo -90": "Command",
       "/Shuffleboard/SetupRobot/Robot1/TurnTo 0": "Command",
       "/Shuffleboard/SetupRobot/Robot1/TurnTo 180": "Command",
       "/Shuffleboard/SetupRobot/Robot1/TurnTo 45": "Command",
       "/Shuffleboard/SetupRobot/Robot1/TurnTo 90": "Command",
-      "/Shuffleboard/SetupShooter/MAXMPS 50/ClearFaults": "Command",
-      "/Shuffleboard/SetupShooter/MAXMPS 50/Cmd": "Subsystem",
-      "/Shuffleboard/SetupShooter/MAXMPS 50/EndLog": "Command",
-      "/Shuffleboard/SetupShooter/MAXMPS 50/LogDataRun": "Command",
-      "/Shuffleboard/SetupShooter/MAXMPS 50/RunAllShooters": "Command",
-      "/Shuffleboard/SetupShooter/MAXMPS 50/Shoot": "Command",
-      "/Shuffleboard/SetupShooter/MAXMPS 50/Stop Shoot": "Command",
-      "/Shuffleboard/SetupShooter/MAXMPS 50/UseSpeedSlider": "Command",
       "/Shuffleboard/SetupShooter/MAXRPM 5500/ClearFaults": "Command",
-      "/Shuffleboard/SetupShooter/MAXRPM 5500/Cmd": "Subsystem",
-      "/Shuffleboard/SetupShooter/MAXRPM 5500/RunShooterFromSlider": "Command",
       "/Shuffleboard/SetupShooter/MAXRPM 5500/RunShooterFromThrottle": "Command",
       "/Shuffleboard/SetupShooter/MAXRPM 5500/RunTopRoll": "Command",
       "/Shuffleboard/SetupShooter/MAXRPM 5500/ShootOne": "Command",
@@ -170,83 +70,30 @@
       "/Shuffleboard/SetupShooter/ShooterValues1/Cmd": "Subsystem",
       "/Shuffleboard/SetupTilt/Tilt/ClearFaults": "Command",
       "/Shuffleboard/SetupTilt/Tilt/Cmd": "Subsystem",
-      "/Shuffleboard/SetupTilt/Tilt/PosToVis + ": "Command",
-      "/Shuffleboard/SetupTilt/Tilt/PosToVis -": "Command",
-      "/Shuffleboard/SetupTilt/Tilt/Position To 15": "Command",
-      "/Shuffleboard/SetupTilt/Tilt/Position To 25": "Command",
-      "/Shuffleboard/SetupTilt/Tilt/Position To 5": "Command",
       "/Shuffleboard/SetupTilt/Tilt/Position To Entry": "Command",
-      "/Shuffleboard/SetupTilt/Tilt/PositionTiltToVision": "Command",
       "/Shuffleboard/SetupTilt/Tilt/PositionToSwitch": "Command",
-      "/Shuffleboard/SetupTilt/Tilt/PositionToVision": "Command",
       "/Shuffleboard/SetupTilt/Tilt/StopTilt": "Command",
-      "/Shuffleboard/SetupTransport/TransportCargoArm/Hold Cargo": "Command",
-      "/Shuffleboard/SetupTransport/TransportCargoArm/LowerLeft": "Command",
-      "/Shuffleboard/SetupTransport/TransportCargoArm/RaiseLeft": "Command",
-      "/Shuffleboard/SetupTransport/TransportCargoArm/Release Cargo": "Command",
-      "/Shuffleboard/SetupTransport/TransportCargoArm/ReleaseOneCargo": "Command",
       "/Shuffleboard/SetupTransport/TransportValues/Cmd": "Subsystem",
       "/Shuffleboard/SetupTransport/TransportValues/StartLowRoll": "Command",
-      "/Shuffleboard/SetupTransport/TransportValues/StartRollers": "Command",
       "/Shuffleboard/SetupTransport/TransportValues/StopLowRoll": "Command",
-      "/Shuffleboard/SetupTransport/TransportValues/StopRollers": "Command",
       "/Shuffleboard/SetupTurret/Turret/ClearFaults": "Command",
       "/Shuffleboard/SetupTurret/Turret/Cmd": "Subsystem",
-      "/Shuffleboard/SetupTurret/Turret/PosToVis +10": "Command",
-      "/Shuffleboard/SetupTurret/Turret/PosToVis -10": "Command",
-      "/Shuffleboard/SetupTurret/Turret/PosToVis-10": "Command",
-      "/Shuffleboard/SetupTurret/Turret/Position To -10": "Command",
       "/Shuffleboard/SetupTurret/Turret/Position To -20": "Command",
-      "/Shuffleboard/SetupTurret/Turret/Position To -30": "Command",
       "/Shuffleboard/SetupTurret/Turret/Position To 0": "Command",
-      "/Shuffleboard/SetupTurret/Turret/Position To 10": "Command",
       "/Shuffleboard/SetupTurret/Turret/Position To 20": "Command",
-      "/Shuffleboard/SetupTurret/Turret/Position To 30": "Command",
-      "/Shuffleboard/SetupTurret/Turret/PositionToVision +10": "Command",
-      "/Shuffleboard/SetupTurret/Turret/PositionToVision -10": "Command",
       "/Shuffleboard/SetupTurret/Turret/Reset to 0": "Command",
       "/Shuffleboard/SetupTurret/Turret/StopTurret": "Command",
       "/Shuffleboard/SetupTurret/Turret/Vision Off": "Command",
       "/Shuffleboard/SetupTurret/Turret/Vision On": "Command",
-      "/Shuffleboard/Simulation/Field": "Field2d",
-      "/Shuffleboard/Vision/Camera/DriverCam": "Command",
-      "/Shuffleboard/Vision/Camera/MainPIP": "Command",
-      "/Shuffleboard/Vision/Camera/SecIP": "Command",
-      "/Shuffleboard/Vision/Camera/SideBySideStream": "Command",
-      "/Shuffleboard/Vision/Camera/VisionCam": "Command",
-      "/Shuffleboard/Vision/LEDs/LedsBlink": "Command",
-      "/Shuffleboard/Vision/LEDs/LedsOff": "Command",
-      "/Shuffleboard/Vision/LEDs/LedsOn": "Command",
-      "/Shuffleboard/Vision/LEDs/LedsPipeline": "Command",
-      "/Shuffleboard/Vision/On-Off/Vision Off": "Command",
-      "/Shuffleboard/Vision/On-Off/Vision On": "Command",
-      "/Shuffleboard/Vision/Zoom/2XZoom": "Command",
-      "/Shuffleboard/Vision/Zoom/3X Zoom": "Command",
-      "/Shuffleboard/Vision/Zoom/No Zoom": "Command",
-      "/SmartDashboard/Arm Sim": "Mechanism2d",
       "/SmartDashboard/Field": "Field2d"
     },
     "windows": {
-      "/Shuffleboard/Pre-Round/Auto Commands": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/Shuffleboard/Pre-Round/OppTest/LeftOpp": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/Shuffleboard/SetupTilt/Tilt/StopTilt": {
+      "/Shuffleboard/SetupTurret/Turret/Position To 20": {
         "window": {
           "visible": true
         }
       },
       "/SmartDashboard/Field": {
-        "Robot": {
-          "length": 0.8820000290870667,
-          "width": 0.828000009059906
-        },
         "image": "C:\\Users\\John\\Desktop\\2022-field.png",
         "window": {
           "visible": true
@@ -255,31 +102,36 @@
     }
   },
   "NetworkTables": {
-    "Preferences": {
-      "open": true
-    },
     "Shuffleboard": {
       "Competition": {
         "Values": {
-          "open": true
+          "open": false
         }
       },
       "Pre-Round": {
         "Auto Commands": {
+          "open": false
+        }
+      },
+      "SetupTilt": {
+        "TiltValues": {
+          "open": true
+        },
+        "VActGains": {
           "open": true
         },
         "open": true
       },
       "SetupTurret": {
-        "LockGains": {
-          "open": true
-        },
-        "PIDValues": {
-          "open": true
-        },
         "Turret": {
-          "open": true
-        }
+          "Cmd": {
+            "open": true
+          },
+          "Position To -20": {
+            "open": true
+          }
+        },
+        "open": true
       },
       "open": true
     }

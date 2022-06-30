@@ -6,7 +6,6 @@ package frc.robot.commands.Turret;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RevTurretSubsystem;
@@ -33,10 +32,7 @@ public class TurretJogVelocity extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_turret.holdAngle = m_turret.getAngle();
-
-    m_turret.targetAngle = m_turret.holdAngle;
-
+    m_turret.targetAngle = m_turret.getAngle();
 
     if (Math.abs(m_xaxisSpeedSupplier.get()) < .05)
 
@@ -56,9 +52,7 @@ public class TurretJogVelocity extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_turret.stop();
-    m_turret.holdAngle = m_turret.getAngle();
-
-    m_turret.targetAngle = m_turret.holdAngle;
+    m_turret.targetAngle = m_turret.getAngle();
   }
 
   // Returns true when the command sh.joould end.

@@ -19,6 +19,8 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -29,12 +31,9 @@ import frc.robot.subsystems.RevDrivetrain;
  */
 public class FondyFireTrajectory {
 
-        public Trajectory crossLine, example;
-        public Trajectory trenchStartOne, trenchStartTwo, trenchStartThree;
-        public Trajectory controlPanelStartOne, controlPanelStartTwo;
-        public Trajectory centerStartPickup, leftStart, rightStart;
-        public Trajectory leftStartCurve, rightStartCurve;
         private RevDrivetrain m_drive;
+        public Trajectory centerThirdCargoPickUp;
+        public Trajectory centerThirdCargoShoot;
 
         public FondyFireTrajectory(RevDrivetrain drive) {
                 m_drive = drive;
@@ -67,74 +66,19 @@ public class FondyFireTrajectory {
                                                 // Apply the voltage constraint
                                                 .addConstraint(autoVoltageConstraint);
 
-                // // straight line
-                // crossLine = TrajectoryGenerator.generateTrajectory(
-                // List.of(new Pose2d(13, 0, new Rotation2d(0)), new Pose2d(12, 0, new
-                // Rotation2d(0))),
-                // configReversed);
 
-                // picks up after center start
-               
-
-
-                // straight line left of power port
-                leftStart = TrajectoryGenerator.generateTrajectory(
-                                List.of(new Pose2d(13, 5.2, new Rotation2d(0)), new Pose2d(12, 5.2, new Rotation2d(0))),
+                centerThirdCargoPickUp = TrajectoryGenerator.generateTrajectory(
+                                new Pose2d(5.08, 1.749, new Rotation2d(Units.degreesToRadians(Math.PI / 2 + 34))),
+                                List.of(),
+                                new Pose2d(1.274, 2.216, new Rotation2d(Units.degreesToRadians(Math.PI / 2 + 45))),
                                 configReversed);
 
-                // straight line right of power port
-                rightStart = TrajectoryGenerator.generateTrajectory(
-                                List.of(new Pose2d(13, 6.3, new Rotation2d(0)), new Pose2d(12, 6.3, new Rotation2d(0))),
-                                configReversed);
+                centerThirdCargoShoot = TrajectoryGenerator.generateTrajectory(
+                                new Pose2d(1.274, 2.216, new Rotation2d(Units.degreesToRadians(45))),
+                                List.of(),
+                                new Pose2d(5.08, 1.749, new Rotation2d(Units.degreesToRadians(34))),
 
-                // start left of power port curve back for straight shot
-                leftStartCurve = TrajectoryGenerator.generateTrajectory(
-                                List.of(new Pose2d(13, 5.2, new Rotation2d(0)), new Pose2d(12, 5.3, new Rotation2d(0))),
-                                configReversed);
-
-                // start right of power port curve back for straight shot
-                rightStartCurve = TrajectoryGenerator.generateTrajectory(
-                                List.of(new Pose2d(13, 6.3, new Rotation2d(0)), new Pose2d(12, 5.3, new Rotation2d(0))),
-                                configReversed);
-
-                // zig zag
-                example = TrajectoryGenerator.generateTrajectory(
-                                // Start at the origin facing the +X direction
-                                new Pose2d(2, 0, new Rotation2d(0)),
-                                // Pass through these two interior waypoints, making an 's' curve path
-                                List.of(new Translation2d(3, 1), new Translation2d(4, -1)),
-                                // End 3 meters straight ahead of where we started, facing forward
-                                new Pose2d(4, 0, new Rotation2d(0)),
-                                // Pass config
                                 configForward);
-
-                trenchStartOne = TrajectoryGenerator.generateTrajectory(
-
-                                new Pose2d(0, 0, new Rotation2d(0)),
-                                List.of(new Translation2d(1, 0), new Translation2d(2, 0)),
-                                new Pose2d(4, 0.1, new Rotation2d(0)),
-                                // pass config
-                                configPickupReversed);
-
-                trenchStartTwo = TrajectoryGenerator.generateTrajectory(
-
-                                // List.of(new Pose2d(6.5, 0, new Rotation2d(0)), new Pose2d(2, 0, new
-                                // Rotation2d(0))),
-                                new Pose2d(6.5, 0, new Rotation2d(0)),
-                                List.of(new Translation2d(4.5, 0), new Translation2d(3, 0)),
-                                new Pose2d(2.0, 0.1, new Rotation2d(0)),
-                                // pass config
-                                configPickupReversed);
-
-                trenchStartThree = TrajectoryGenerator.generateTrajectory(
-                                // List.of(new Pose2d(4, 0, new Rotation2d(0)), new Pose2d(1, 0, new
-                                // Rotation2d(0))),
-                                new Pose2d(4, 0, new Rotation2d(0)),
-                                List.of(new Translation2d(3, 0), new Translation2d(2, 0)),
-                                new Pose2d(1, 0.1, new Rotation2d(0)),
-                                // pass config
-                                configForward);
-
         }
 
         public RamseteCommand getRamsete(Trajectory traj) {
@@ -144,6 +88,8 @@ public class FondyFireTrajectory {
                                                 DriveConstants.kaVoltSecondsSquaredPerMeter),
                                 DriveConstants.kDriveKinematics, m_drive::getWheelSpeeds,
                                 new PIDController(DriveConstants.kPDriveVel, 0, 0),
-                                new PIDController(DriveConstants.kPDriveVel, 0, 0), m_drive::tankDriveVolts, m_drive);
+                                new PIDController(DriveConstants.kPDriveVel, 0, 0),
+                                m_drive::tankDriveVolts, m_drive);
         }
+
 }

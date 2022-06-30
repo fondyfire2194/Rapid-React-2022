@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -178,10 +179,11 @@ public class RobotContainer {
             m_climber = new ClimberSubsystem();
             m_limelight = new LimeLight();
 
-            // m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
-            m_shooter.setDefaultCommand(getJogShooterCommand());
+            m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
+           
+            m_drive.setDefaultCommand(getArcadeDriveCommandSim());
 
-            m_drive.setDefaultCommand(getArcadeDriveCommand());
+           // m_drive.setDefaultCommand(getArcadeDriveCommand());
 
             m_intake.setDefaultCommand((new StopActiveIntake(m_intake)));
 
@@ -387,13 +389,17 @@ public class RobotContainer {
             return new ArcadeDrive(m_drive, () -> -m_driverController.getY(), () -> m_driverController.getTwist());
       }
 
+      public Command getArcadeDriveCommandSim() {
+            return new ArcadeDrive(m_drive, () -> -codriverGamepad.getRawAxis(3), () -> codriverGamepad.getRawAxis(2));
+      }
+
       public Command getDriveStraightCommand() {
             return new DriveStraightJoystick(m_drive, () -> -m_driverController.getY());
 
       }
 
       public Command getJogTurretCommand(XboxController gamepad) {
-            return new TurretJog(m_turret, () -> gamepad.getRawAxis(0) / 10, gamepad);
+            return new TurretJog(m_turret, () -> gamepad.getRawAxis(0) / 10);
       }
 
       public Command getJogTiltCommand(XboxController gamepad) {
@@ -474,5 +480,6 @@ public class RobotContainer {
                   m_limelight.useVision = false;
 
       }
+
 
 }

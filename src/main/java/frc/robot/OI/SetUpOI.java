@@ -42,6 +42,7 @@ import frc.robot.commands.Tilt.StopTilt;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Turret.ClearTurFaults;
 import frc.robot.commands.Turret.PositionTurret;
+import frc.robot.commands.Turret.PositionTurretIncremental;
 import frc.robot.commands.Turret.ResetTurretAngle;
 import frc.robot.commands.Turret.StopTurret;
 import frc.robot.commands.Vision.UseVision;
@@ -165,7 +166,7 @@ public class SetUpOI {
                         turretValues.addNumber("Vision Error", () -> limelight.getdegRotationToTarget());
                         turretValues.addBoolean("MinHWLim", () -> turret.onMinusHardwareLimit());
                         turretValues.addBoolean("PlusHWLim", () -> turret.onPlusHardwareLimit());
-                        turretValues.addNumber("HoldAngle", () -> turret.holdAngle);
+                
                         ShuffleboardLayout turretValues3 = Shuffleboard.getTab("SetupTurret")
                                         .getLayout("PIDValues", BuiltInLayouts.kList).withPosition(4, 0).withSize(2,
                                                         2)

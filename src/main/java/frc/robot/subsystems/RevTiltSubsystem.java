@@ -7,8 +7,8 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
@@ -52,7 +52,7 @@ public class RevTiltSubsystem extends SubsystemBase {
     public final SparkMaxPIDController mVelController;
     public SparkMaxLimitSwitch m_reverseLimit;
     public SparkMaxLimitSwitch m_forwardLimit;
-    private CANEncoderSim mEncoderSim;
+
     public PIDController mPosController;
 
     public boolean positionResetDone;
@@ -105,19 +105,10 @@ public class RevTiltSubsystem extends SubsystemBase {
     public double cameraCalculatedTiltPosition;
     public double presetPosition;
     public NetworkTableEntry tiltTarget;
-
-    // The Kv and Ka constants are found using the FRC Characterization toolsuite.
-    LinearSystem<N2, N1, N1> m_tiltPosition = LinearSystemId
-            .identifyPositionSystem(TiltConstants.kVVoltSecondsPerRotation, TiltConstants.kA);
-    LinearSystemSim<N2, N1, N1> m_tiltPositionSim = new LinearSystemSim<>(m_tiltPosition);
-
-    /** 
-     * 
-     * 
-     * 
-     * 
-     * 
-     */
+    // private CANEncoderSim mEncoderSim;
+    // final LinearSystem<N2, N1, N1> m_tilt = LinearSystemId
+    //         .identifyPositionSystem(.1, 0.001);
+    // LinearSystemSim<N2, N1, N1> m_tiltSim = new LinearSystemSim<>(m_tilt);
 
     public RevTiltSubsystem() {
         m_motor = new CANSparkMaxWithSim(CANConstants.TILT_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -137,8 +128,12 @@ public class RevTiltSubsystem extends SubsystemBase {
         targetAngle = 0;
         positionResetDone = false;
 
-        mEncoder.setPositionConversionFactor(degreesPerRev);
-        mEncoder.setVelocityConversionFactor(degreesPerRev / 60);
+    //    if (RobotBase.isReal()) {
+
+            mEncoder.setPositionConversionFactor(degreesPerRev);
+            mEncoder.setVelocityConversionFactor(degreesPerRev / 60);
+
+      //  }
 
         m_motor.setSmartCurrentLimit(20);
 
@@ -160,20 +155,30 @@ public class RevTiltSubsystem extends SubsystemBase {
         m_forwardLimit.enableLimitSwitch(true);
 
         if (RobotBase.isSimulation()) {
+            positionResetDone = true;
+     //       mEncoderSim = new CANEncoderSim(m_motor.getDeviceId(), false);
+            mPosController.setP(.02);
 
-            mEncoderSim = new CANEncoderSim(m_motor.getDeviceId(), false);
+            mVelController.setP(.05);
+
+            m_forwardLimit.enableLimitSwitch(false);
+
+            m_reverseLimit.enableLimitSwitch(false);
+
+            enableSoftLimits(false);
+
+            resetAngle();
 
         }
 
         if (RobotBase.isReal() && m_reverseLimit.isPressed()) {
 
             resetAngle();
+
+            enableSoftLimits(false);
+
+            setSoftwareLimits();
         }
-
-        enableSoftLimits(false);
-
-        setSoftwareLimits();
-
         tiltTarget = Shuffleboard.getTab("SetupTilt")
                 .add("TargetDegrees", 0)
                 .withWidget(BuiltInWidgets.kTextView)
@@ -204,18 +209,19 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-        // In this method, we update our simulation of what our tilt is doing
+        // In this method, we update our simulation of what our elevator is doing
         // First, we set our "inputs" (voltages)
-        m_tiltPositionSim.setInput(m_motor.get() * RobotController.getBatteryVoltage());
-
+        // m_tiltSim.setInput(m_motor.get() * RobotController.getBatteryVoltage());
+        // SmartDashboard.putNumber("TSIMI", m_motor.get() * RobotController.getBatteryVoltage());
         // Next, we update it. The standard loop time is 20ms.
-        m_tiltPositionSim.update(0.020);
+        // m_tiltSim.update(0.020);
+     //   SmartDashboard.putNumber("SIMO", m_tiltSim.getOutput(0));
         // Finally, we set our simulated encoder's readings and simulated battery
         // voltage
-        mEncoderSim.setPosition(m_tiltPositionSim.getOutput(0));
+        // mEncoderSim.setPosition(m_tiltSim.getOutput(0));
         // SimBattery estimates loaded battery voltages
-        RoboRioSim.setVInVoltage(
-                BatterySim.calculateDefaultBatteryLoadedVoltage(m_tiltPositionSim.getCurrentDrawAmps()));
+        // RoboRioSim.setVInVoltage(
+        //         BatterySim.calculateDefaultBatteryLoadedVoltage(m_tiltSim.getCurrentDrawAmps()));
 
     }
 
@@ -244,8 +250,8 @@ public class RevTiltSubsystem extends SubsystemBase {
     }
 
     public void moveManually(double speed) {
-
-        m_motor.set(speed);
+            m_motor.set(speed);
+      
     }
 
     public void goToPosition(double degrees) {
@@ -435,7 +441,7 @@ public class RevTiltSubsystem extends SubsystemBase {
         kMinOutput = -.75;
         kMaxOutput = .75;
         mVelController.setOutputRange(kMinOutput, kMaxOutput, VELOCITY_SLOT);
-        maxVel =5.;// Pref.getPref("tiVMaxV");// deg per sec
+        maxVel = 5.;// Pref.getPref("tiVMaxV");// deg per sec
         maxAcc = Pref.getPref("tiVMaxA");// deg per sec per sec
         allowedErr = .1;
         calibratePID(p, i, d, iz, allowedErr, VELOCITY_SLOT);

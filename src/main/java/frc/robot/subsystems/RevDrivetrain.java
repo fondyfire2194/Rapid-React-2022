@@ -36,6 +36,7 @@ import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Pref;
 import frc.robot.Sim.CANEncoderSim;
+import frc.robot.trajectories.FondyFireTrajectory;
 
 public class RevDrivetrain extends SubsystemBase {
     // private static final DrivetrainConstants DRIVETRAIN_CONSTANTS = new
@@ -223,6 +224,9 @@ public class RevDrivetrain extends SubsystemBase {
             m_dts = DifferentialDrivetrainSim.createKitbotSim(KitbotMotor.kDualCIMPerSide, KitbotGearing.k12p75,
 
                     KitbotWheelSize.kSixInch, null);
+
+            mleftPID.setP(3);
+            mrightPID.setP(3);
         }
     }
 
@@ -378,7 +382,7 @@ public class RevDrivetrain extends SubsystemBase {
 
         double ival = kI;
 
-        if (Math.abs(endPosition - getLeftDistance()) > kIz) {
+        if (RobotBase.isReal()&&Math.abs(endPosition - getLeftDistance()) > kIz) {
 
             ival = 0;
 
@@ -387,7 +391,7 @@ public class RevDrivetrain extends SubsystemBase {
             mrightPID.setI(ival);
 
         }
-
+        SmartDashboard.putNumber("MLKP", mleftPID.getP());
         temp[0] = mleftPID.calculate(getLeftDistance(), endPosition);
 
         temp[1] = mrightPID.calculate(getRightDistance(), endPosition);
@@ -399,13 +403,15 @@ public class RevDrivetrain extends SubsystemBase {
 
     public void driveLeftSide(double value) {
 
-        mLeadLeft.set(value);
+        double batteryVoltage = RobotController.getBatteryVoltage();
+
+        mLeadLeft.set(value * batteryVoltage);
 
     }
 
     public void driveRightSide(double value) {
-
-        mLeadRight.set(value);
+        double batteryVoltage = RobotController.getBatteryVoltage();
+        mLeadRight.set(value * batteryVoltage);
 
     }
 
@@ -589,42 +595,41 @@ public class RevDrivetrain extends SubsystemBase {
 
     private void tuneGains() {
 
-        kP = Pref.getPref("dRKp");
-        kI = Pref.getPref("dRKi");
-        kD = Pref.getPref("dRKd");
+        if (RobotBase.isReal()) {
 
-        kIz = Pref.getPref("dRKiz");
+            kP = Pref.getPref("dRKp");
+            kI = Pref.getPref("dRKi");
+            kD = Pref.getPref("dRKd");
 
-        kTurnP = Pref.getPref("dRTurnkP");
+            kIz = Pref.getPref("dRKiz");
 
-        kTurnI = Pref.getPref("dRTurnkI");
+            kTurnP = Pref.getPref("dRTurnkP");
 
-        kTurnD = Pref.getPref("dRTurnkD");
+            kTurnI = Pref.getPref("dRTurnkI");
 
-        kTurnIz = Pref.getPref("dRTurnkIz");
+            kTurnD = Pref.getPref("dRTurnkD");
 
-        if (RobotBase.isSimulation()) {
+            kTurnIz = Pref.getPref("dRTurnkIz");
 
-            kP = .25;
+            mleftPID.setP(kP);
+            mleftPID.setI(kI);
+            mleftPID.setD(kD);
+
+            mrightPID.setP(kP);
+            mrightPID.setI(kI);
+            mrightPID.setD(kD);
+
         }
 
-        mleftPID.setP(kP);
-        mleftPID.setI(kI);
-        mleftPID.setD(kD);
-
-        mrightPID.setP(kP);
-        mrightPID.setI(kI);
-        mrightPID.setD(kD);
-
     }
 
-    private void getGains() {
+    // private void getGains() {
 
-        pset = mleftPID.getP();
-        dset = mleftPID.getD();
-        iset = mleftPID.getI();
+    // pset = mleftPID.getP();
+    // dset = mleftPID.getD();
+    // iset = mleftPID.getI();
 
-    }
+    // }
 
     private void checkTune() {
 
@@ -643,6 +648,7 @@ public class RevDrivetrain extends SubsystemBase {
 
     public void stop() {
         arcadeDrive(0, 0);
+
         mLeadLeft.setVoltage(0);
         mLeadRight.setVoltage(0);
     }

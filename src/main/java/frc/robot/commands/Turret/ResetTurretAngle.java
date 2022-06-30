@@ -31,10 +31,10 @@ public class ResetTurretAngle extends CommandBase {
   public void execute() {
 
     loopCtr++;
-    m_turret.moveManually(0);
+    m_turret.stop();
     m_turret.resetAngle(0);
     m_turret.targetAngle = 0;
-    m_turret.holdAngle=0;
+  
     if (RobotBase.isReal()) {
       m_turret.setSoftwareLimits();
 

@@ -102,7 +102,7 @@ public class RunActiveIntake extends CommandBase {
 
         m_intake.runRearIntakeMotor();
 
-        stopActiveIntakeNow = m_intake.getCargoAtFront();
+        stopActiveIntakeNow = m_intake.getCargoAtRear();
 
         m_startTime = Timer.getFPGATimestamp();
 
