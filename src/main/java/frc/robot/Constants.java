@@ -246,6 +246,8 @@ public final class Constants {
 
       public static final double kA = 0.00003;
 
+    public static final double ABSZEROVALUE = 0;
+
    }
 
    public static final class AutoConstants {

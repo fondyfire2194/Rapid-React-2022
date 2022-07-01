@@ -73,6 +73,8 @@
       "/Shuffleboard/LLVision/Zoom/No Zoom": "Command",
       "/Shuffleboard/Pre-Round/Auto Commands": "String Chooser",
       "/Shuffleboard/Pre-Round/Auto Delay": "String Chooser",
+      "/Shuffleboard/Pre-Round/HideCargo": "Command",
+      "/Shuffleboard/Pre-Round/OppTest/CenterOpp": "Command",
       "/Shuffleboard/Pre-Round/OppTest/CenterThirdPickup": "Command",
       "/Shuffleboard/Pre-Round/OppTest/CenterThirdShoot": "Command",
       "/Shuffleboard/Pre-Round/OppTest/LeftOpp": "Command",
@@ -126,12 +128,17 @@
           "visible": true
         }
       },
-      "/Shuffleboard/SetupRobot/Robot/To 2": {
+      "/Shuffleboard/Pre-Round/OppTest/CenterThirdPickup": {
         "window": {
           "visible": true
         }
       },
-      "/Shuffleboard/SetupRobot/Robot/To 3": {
+      "/Shuffleboard/Pre-Round/OppTest/CenterThirdShoot": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/SetupRobot/Robot/To 2": {
         "window": {
           "visible": true
         }
