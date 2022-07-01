@@ -4,14 +4,11 @@
 
 package frc.robot.commands.AutoCommands.Common;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Tilt.PositionTiltToPreset;
-import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
-import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;

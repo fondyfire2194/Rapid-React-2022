@@ -7,10 +7,6 @@
 
 package frc.robot;
 
-import java.util.function.BooleanSupplier;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -29,14 +25,13 @@ import frc.robot.Constants.ShooterRangeConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.commands.MessageCommand;
-import frc.robot.commands.AutoCommands.AltRetPuAdvShoot;
 import frc.robot.commands.AutoCommands.DoNothing;
 import frc.robot.commands.AutoCommands.LeftHideOppCargo;
 import frc.robot.commands.AutoCommands.RetPuShootCamera;
+import frc.robot.commands.AutoCommands.RunCenterThirdCargo;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
-import frc.robot.commands.RobotDrive.SetRobotPose;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -44,6 +39,7 @@ import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
+import frc.robot.trajectories.FondyFireTrajectory;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -63,20 +59,12 @@ public class Robot extends TimedRobot {
   public double timeToStart;
   int tst;
   private int loopCtr;
-  // public BooleanLogEntry rrBooleanLog;
-  // public static DoubleLogEntry rrDoubleLog;
-  // public static StringLogEntry rrStringLog;
 
   public static double[] data = { 0, 0, 0, 0, 0 };
 
   public static double matchTimeRemaining;
 
-  private Pose2d startingPose;
-
-  private boolean useLacrosse = true;
   public static boolean hideOppCargo;
-
-  private BooleanSupplier temp;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -164,15 +152,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_drive.setIdleMode(true);
 
-    // new CalculateTargetDistance(m_robotContainer.m_limelight,
-    // m_robotContainer.m_tilt,
-    // m_robotContainer.m_turret, m_robotContainer.m_shooter).schedule();
-    // new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter,
-    // m_robotContainer.m_tilt).schedule();
-
-    
-
-      Shuffleboard.selectTab("Competition");
+    Shuffleboard.selectTab("Competition");
 
     Shuffleboard.startRecording();
     // get delay time
@@ -180,6 +160,8 @@ public class Robot extends TimedRobot {
     m_startDelay = m_robotContainer.m_preOi.startDelayChooser.getSelected();
 
     autoChoice = m_robotContainer.m_preOi.autoChooser.getSelected();
+
+    hideOppCargo = m_robotContainer.m_preOi.hideCargoChooser.getSelected();
 
     LimeLight ll = m_robotContainer.m_limelight;
     RevTiltSubsystem tilt = m_robotContainer.m_tilt;
@@ -189,6 +171,7 @@ public class Robot extends TimedRobot {
     CargoTransportSubsystem transport = m_robotContainer.m_transport;
     IntakesSubsystem intake = m_robotContainer.m_intake;
     Compressor comp = m_robotContainer.m_compressor;
+    FondyFireTrajectory fftraj = m_robotContainer.m_trajectory;
 
     ll.setLEDMode(LedMode.kpipeLine);
     ll.setPipeline(PipelinesConstants.noZoom960720);
@@ -210,11 +193,9 @@ public class Robot extends TimedRobot {
 
         break;
 
-      case 2:// left tarmac upper shoot only
+      case 2:// left tarmac start
 
         data = FieldMap.leftTarmacData;
-
-        startingPose = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
 
         // camera shoot numbers are from front bumper to hub fender which is 18" from
         // hub center
@@ -224,43 +205,13 @@ public class Robot extends TimedRobot {
         // so shot length s (82 - 37.75) + 1.29 *39.37 = 44.25 + 52 = 96" = 8 ft
         // this is the start of the tilt range 2 = 11 degrees and 2300 rpm
 
-        data[0] = -1.29;// retract point = 52"
-
-        // data[1] return to shoot not used
-
-        data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
-
-        // data[3] not used// turret will be locked to Limelight
-
-        data[4] = shooter.rpmFromCameraDistance[8 + 1];// rpm
-
-        m_autonomousCommand = new SequentialCommandGroup(
-
-            new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
-
-            new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
-                comp, data),
-
-            new ConditionalCommand(new LeftHideOppCargo(intake, drive, transport, shooter), new DoNothing(),
-                () -> hideOppCargo));
-
-        break;
-
-      case 3:// Pick up and shoot cargo nearest field wall
-
-        data = FieldMap.leftTarmacData;
-
-        startingPose = new Pose2d(7.65, 2.03, Rotation2d.fromDegrees(90));
-
-        data[0] = -1.1;// retract point = 44" WATCH FOR WALL!
-
-        // data[1] return to shoot not used
+        data[0] = -1.6;// retract point
 
         data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = shooter.rpmFromCameraDistance[8 + 1];// rpm
+        data[4] = shooter.rpmFromCameraDistance[8 - 1];// 2000 rpm
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -274,28 +225,50 @@ public class Robot extends TimedRobot {
 
         break;
 
-      case 4:// Pick up and shoot cargo in right center of field
+      case 3://
 
         data = FieldMap.centerTarmacData;
 
-        startingPose = new Pose2d(6.78, 3, Rotation2d.fromDegrees(34.32));
-
-        data[0] = -1.29;// retract point = 44" WATCH FOR WALL!
-
-        // data[1] return to shoot not used
+        data[0] = -1.6;// retract point
 
         data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = shooter.rpmFromCameraDistance[8 + 1];// rpm
+        data[4] = shooter.rpmFromCameraDistance[8 - 1];// 2000 rpm
 
         m_autonomousCommand = new SequentialCommandGroup(
 
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
             new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
-                comp, data));
+                comp, data),
+
+            new ConditionalCommand(new LeftHideOppCargo(intake, drive, transport, shooter), new DoNothing(),
+                () -> hideOppCargo));
+
+        break;
+
+      case 4:// Pick up and shoot cargo in center of field plus third cargo
+
+        data = FieldMap.centerTarmacData;
+
+        data[0] = -1.6;// retract point
+
+        data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
+
+        data[3] = 0;// turret will be locked to Limelight
+
+        data[4] = shooter.rpmFromCameraDistance[8 - 1];// 2000 rpm
+
+        m_autonomousCommand = new SequentialCommandGroup(
+
+            new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+
+            new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
+                comp, data),
+
+            new RunCenterThirdCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll));
 
         break;
 

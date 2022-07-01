@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
+import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
@@ -21,7 +22,7 @@ import frc.robot.subsystems.RevShooterSubsystem;
 /**
  * After shooting 2 cargo robot center is on alliance cargo center
  * 
- * Turn cw by  ? and retract ? feet with rear intake to pick up opponent cargo
+ * Turn cw by ? and retract ? feet with rear intake to pick up opponent cargo
  * 
  * turn cw by ? and run cargo out of shooter
  * 
@@ -30,11 +31,11 @@ import frc.robot.subsystems.RevShooterSubsystem;
 
 public class LeftHideOppCargo extends SequentialCommandGroup {
 
-        private double pickUpAngle = 90;
+        private double pickUpAngle = -95;
 
-        final double pickupPosition = -1;
+        final double pickupPosition = -1.1;
 
-        private double shootAngle = 10;
+        private double shootAngle = -140;
 
         /** Creates a new LRetPuShoot. */
         public LeftHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,
@@ -43,7 +44,6 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
                 // Use addRequirements() here to declare subsystem dependencies.
 
                 double pickUpRate = drive.pickUpRate;
-
 
                 addCommands(
                                 parallel(
@@ -58,28 +58,24 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                                 new ResetEncoders(drive),
 
-                                
-
                                 new PositionStraight(drive, pickupPosition, pickUpRate)
 
                                                 .deadlineWith(new RunActiveIntake(intake, transport)),
 
-                                
                                 new WaitCommand(.2),
+
+                                //new ResetGyro(drive),
 
                                 new TurnToAngle(drive, shootAngle),
 
                                 new WaitCommand(.2),
 
-                                new ResetEncoders(drive),
-
-                             
-
                                 race(
-
                                                 new RunCargoOutShooter(shooter, intake, transport, 700),
 
-                                                new WaitCommand(3)));
+                                                new WaitCommand(3),
+                                                
+                                                new ArcadeDrive(drive, () -> 0., () -> 0.)));
 
         }
 }

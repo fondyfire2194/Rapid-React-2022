@@ -458,6 +458,7 @@ public class SetUpOI {
                         robotValues.addNumber("Gyro Yaw", () -> drive.getYaw());
                         robotValues.addNumber("Faults", () -> drive.getFaults());
                         robotValues.addNumber("Target", () -> drive.leftTargetPosition);
+                        robotValues.addNumber("Heading", () -> drive.getHeading());
 
                         ShuffleboardLayout robotValues2 = Shuffleboard.getTab("SetupRobot")
                                         .getLayout("States", BuiltInLayouts.kGrid).withPosition(6, 0)

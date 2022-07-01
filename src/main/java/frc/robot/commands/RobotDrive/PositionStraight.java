@@ -53,16 +53,15 @@ public class PositionStraight extends CommandBase {
       yawKp = .0;
     }
 
-     leftOut = m_drive.driveDistance(m_endpoint)[0];
+    leftOut = m_drive.driveDistance(m_endpoint)[0];
 
-     rightOut = m_drive.driveDistance(m_endpoint)[1];
+    rightOut = m_drive.driveDistance(m_endpoint)[1];
 
     double yawError = 0;
 
     double yawCorrection = 0;
 
-
-      yawError = m_drive.getYaw() - m_startAngle;
+    yawError = m_drive.getYaw() - m_startAngle;
 
     yawCorrection = yawError * yawKp;
 
@@ -76,9 +75,9 @@ public class PositionStraight extends CommandBase {
     if (rightOut < m_min)
       rightOut = m_min;
 
-    m_drive.driveLeftSide(leftOut - .5 * yawCorrection);
+    m_drive.driveLeftSide(leftOut + .5 * yawCorrection);
 
-    m_drive.driveRightSide(rightOut + .5 * yawCorrection);
+    m_drive.driveRightSide(rightOut - .5 * yawCorrection);
 
     SmartDashboard.putNumber("Lout", leftOut);
     SmartDashboard.putNumber("Rout", rightOut);
@@ -103,6 +102,6 @@ public class PositionStraight extends CommandBase {
 
         && Math.abs(m_endpoint - m_drive.getRightDistance()) < .1;
 
-      //  && m_drive.isStopped();
+    // && m_drive.isStopped();
   }
 }

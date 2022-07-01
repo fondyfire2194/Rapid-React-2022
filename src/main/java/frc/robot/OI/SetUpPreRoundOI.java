@@ -6,19 +6,15 @@ package frc.robot.OI;
 
 import java.util.Map;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Robot;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.AutoCommands.CenterHideOppCargo;
 import frc.robot.commands.AutoCommands.LeftHideOppCargo;
-import frc.robot.commands.AutoCommands.Common.ToggleHideCargo;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -34,6 +30,7 @@ public class SetUpPreRoundOI {
 
         public SendableChooser<Integer> autoChooser = new SendableChooser<>();
         public SendableChooser<Double> startDelayChooser = new SendableChooser<>();
+        public SendableChooser<Boolean> hideCargoChooser = new SendableChooser<>();
 
         public static boolean m_showPreRound;
         double rate = .5;
@@ -61,20 +58,21 @@ public class SetUpPreRoundOI {
 
                         autoChooser.addOption("Taxi", 1);
 
-                        autoChooser.addOption("Left Tarmac Retract Pickup Advance Shoot",
+                        autoChooser.addOption("Left Tarmac Retract Pickup Shoot",
                                         2);
 
                         autoChooser.addOption("Center Tarmac Retract Pickup Shoot",
                                         3);
 
-                        autoChooser.addOption("Center Tarmac Retract Pickup Shoot Third Cargo",
+                        autoChooser.addOption("Center Tarmac Retract Pickup Shoot + Third Cargo",
                                         4);
 
-                        Shuffleboard.getTab("Pre-Round").add("HideCargo", new ToggleHideCargo())
-                                        .withPosition(3, 0);
+                        Shuffleboard.getTab("Pre-Round").add("HidingCargo", hideCargoChooser).withSize(1, 1)
+                                        .withPosition(3, 0); 
 
-                        Shuffleboard.getTab("Pre-Round").addBoolean("HidingCargo", () -> Robot.hideOppCargo)
-                                        .withPosition(3, 1);
+                                        hideCargoChooser.setDefaultOption("Yes", true);
+                                        hideCargoChooser.addOption("No", false);
+
 
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
                                         .withPosition(4, 0); //
@@ -88,7 +86,7 @@ public class SetUpPreRoundOI {
 
                         ShuffleboardLayout oppCommands = Shuffleboard.getTab("Pre-Round")
                                         .getLayout("OppTest", BuiltInLayouts.kList).withPosition(6, 0)
-                                        .withSize(2, 2)
+                                        .withSize(2, 4)
                                         .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                         oppCommands.add("LeftOpp",
@@ -103,7 +101,8 @@ public class SetUpPreRoundOI {
                                                                         fftraj.centerThirdCargoShoot),
 
                                                         fftraj.getRamsete(fftraj.centerThirdCargoShoot)
-                                                                        .andThen(() -> drive.tankDriveVolts(0, 0))));
+                                                                        .andThen(() -> drive.tankDriveVolts(0, 0))
+                                                                        .andThen(() -> drive.trajectoryRunning = false)));
 
                         oppCommands.add("CenterThirdPickup",
                                         new SequentialCommandGroup(
@@ -112,6 +111,33 @@ public class SetUpPreRoundOI {
 
                                                         fftraj.getRamsete(fftraj.centerThirdCargoPickUp)));
 
+                        // oppCommands.add("SetLeftStartPose", new SetRobotPose(drive, drive.zero));
+                        // oppCommands.add("SetZeroPose", new SetRobotPose(drive,
+                        // drive.centerAutoStart));
+                        // oppCommands.add("SetLeftCargoPose", new SetRobotPose(drive,
+                        // drive.leftCargo));
+                        // oppCommands.add("SetCenterCargoPose", new SetRobotPose(drive,
+                        // drive.centerCargo));
+                        // oppCommands.add("SetLeftHideCargoPose", new SetRobotPose(drive,
+                        // drive.leftHideCargo));
+                        // oppCommands.add("SetCenterHideCargoPose", new SetRobotPose(drive,
+                        // drive.centerHideCargo));
+                        // oppCommands.add("SetCenterThirdCargoPose", new SetRobotPose(drive,
+                        // drive.centerThirdCargoGet));
+
+                        // oppCommands.add("CenterShootToOppCargo",
+                        // new SequentialCommandGroup(
+
+                        // new ResetOdometryToStartOfTrajectory(drive,
+                        // fftraj.centerCargo),
+                        // fftraj.getRamsete(fftraj.centerThirdCargoPickUp)));
+
+                        // oppCommands.add("LeftShootToOppCargo",
+                        // new SequentialCommandGroup(
+
+                        // new TurnToAngle(drive, )
+
+                        // fftraj.getRamsete(fftraj.leftOppPickup)));
                 }
 
         }

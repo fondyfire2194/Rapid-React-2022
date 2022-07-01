@@ -9,21 +9,14 @@ package frc.robot.trajectories;
 
 import java.util.List;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import frc.robot.Pref;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.RevDrivetrain;
@@ -36,8 +29,7 @@ public class FondyFireTrajectory {
         private RevDrivetrain m_drive;
         public Trajectory centerThirdCargoPickUp;
         public Trajectory centerThirdCargoShoot;
-
-
+        public Trajectory leftOppPickup;
 
         public FondyFireTrajectory(RevDrivetrain drive) {
                 m_drive = drive;
@@ -63,17 +55,24 @@ public class FondyFireTrajectory {
                                                 .addConstraint(autoVoltageConstraint);
 
                 centerThirdCargoPickUp = TrajectoryGenerator.generateTrajectory(
-                                new Pose2d(5.11, 2.12, new Rotation2d(Units.degreesToRadians(Math.PI / 2 + 25))),
+                                // new Pose2d(5.11, 2.12, new Rotation2d(Units.degreesToRadians(Math.PI / 2 +
+                                // 25))),
+                                drive.centerCargoRev,
                                 List.of(),
-                                new Pose2d(2.71, 1.25, new Rotation2d(Units.degreesToRadians(Math.PI / 2 + 45))),
+                                // new Pose2d(2.71, 1.25, new Rotation2d(Units.degreesToRadians(Math.PI / 2 +
+                                // 45))),
+                                drive.centerThirdCargoGetRev,
                                 configReversed);
 
                 centerThirdCargoShoot = TrajectoryGenerator.generateTrajectory(
-                                new Pose2d(2.85, 1.38, new Rotation2d(Units.degreesToRadians(45))),
+                                drive.centerThirdCargoGet,
+                                // new Pose2d(2.3, 1.1, new Rotation2d(Units.degreesToRadians(45))),
                                 List.of(),
-                                new Pose2d(5.11, 2.12, new Rotation2d(Units.degreesToRadians(25))),
-
+                                // new Pose2d(5.11, 1.9, new Rotation2d(Units.degreesToRadians(25))),
+                                drive.centerCargo,
                                 configForward);
+
+             
 
                 SmartDashboard.putNumber("ShootTrajTime", centerThirdCargoShoot.getTotalTimeSeconds());
                 SmartDashboard.putNumber("PickupTrajTime", centerThirdCargoPickUp.getTotalTimeSeconds());
@@ -81,15 +80,23 @@ public class FondyFireTrajectory {
                 SmartDashboard.putNumber("ShootTrajSize", centerThirdCargoShoot.getStates().size());
         }
 
+
         public RamseteCommand getRamsete(Trajectory traj) {
-                return new RamseteCommand(traj, m_drive::getPose,
+
+                RamseteController m_disabledRamsete = new RamseteController();
+                m_disabledRamsete.setEnabled(false);
+
+                return new RamseteCommand(traj, m_drive::getPose, // m_disabledRamsete,
                                 new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
                                 new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
                                                 DriveConstants.kaVoltSecondsSquaredPerMeter),
                                 DriveConstants.kDriveKinematics, m_drive::getWheelSpeeds,
-                                new PIDController(DriveConstants.kPDriveVel, 0, 0),
-                                new PIDController(DriveConstants.kPDriveVel, 0, 0),
+                                m_drive.leftController, m_drive.rightController,
+
+                                // new PIDController(DriveConstants.kPDriveVel, 0, 0),
+                                // new PIDController(DriveConstants.kPDriveVel, 0, 0),
                                 m_drive::tankDriveVolts, m_drive);
+
         }
 
 }

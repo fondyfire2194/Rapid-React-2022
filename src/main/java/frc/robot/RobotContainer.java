@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -179,10 +180,13 @@ public class RobotContainer {
             m_limelight = new LimeLight();
 
             m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
+ 
+            if (RobotBase.isSimulation())
+            
+                  m_drive.setDefaultCommand(getArcadeDriveCommandSim());
 
-            m_drive.setDefaultCommand(getArcadeDriveCommandSim());
-
-            // m_drive.setDefaultCommand(getArcadeDriveCommand());
+            else
+                  m_drive.setDefaultCommand(getArcadeDriveCommand());
 
             m_intake.setDefaultCommand((new StopActiveIntake(m_intake)));
 
@@ -212,15 +216,15 @@ public class RobotContainer {
             m_trajectory = new FondyFireTrajectory(m_drive);
             ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
             // test configuration
-            // Show_Hide_Screens.setStates(false, false,true);
+           // Show_Hide_Screens.setStates(false, false,true);
             // test configuration with vision
             // Show_Hide_Screens.setStates(false, true, true);
 
             // // competition configuration
-            // Show_Hide_Screens.setStates(true, false, false);
+            Show_Hide_Screens.setStates(true, false, true);
 
             // all configuration
-            Show_Hide_Screens.setStates(true, true, true);
+           // Show_Hide_Screens.setStates(true, true, true);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intake, m_climber, m_trajectory);
@@ -389,7 +393,7 @@ public class RobotContainer {
       }
 
       public Command getArcadeDriveCommandSim() {
-            return new ArcadeDrive(m_drive, () -> -codriverGamepad.getRawAxis(3), () -> codriverGamepad.getRawAxis(2));
+            return new ArcadeDrive(m_drive, () -> -codriverGamepad.getRawAxis(3)/2, () -> codriverGamepad.getRawAxis(2)/2);
       }
 
       public Command getDriveStraightCommand() {
@@ -480,5 +484,4 @@ public class RobotContainer {
 
       }
 
-    
 }

@@ -4,13 +4,12 @@
 
 package frc.robot.commands.AutoCommands;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
+import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
@@ -22,8 +21,6 @@ import frc.robot.subsystems.RevShooterSubsystem;
 
 public class CenterHideOppCargo extends SequentialCommandGroup {
 
-      
-
         /** Creates a new LRetPuShoot. */
         public CenterHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,
                         CargoTransportSubsystem transport, RevShooterSubsystem shooter) {
@@ -32,41 +29,43 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
 
                 double pickUpRate = drive.pickUpRate;
 
-                final double pickUpAngle = -90;
+                final double pickUpAngle = 90;
 
-                final double pickupPosition = -1;
+                final double pickupPosition = 1;
 
-                final double finalAngleDegrees = -80;
+                final double shootAngle = 105;
 
                 // remaining data used in shoot routine
 
                 addCommands(
-                                new ParallelCommandGroup(
+                                parallel(
 
-                                                new SetFrontIntakeActive(intake, true),
+                                                new SetFrontIntakeActive(intake,true),
                                                 new ResetEncoders(drive),
                                                 new ResetGyro(drive)),
 
                                 new TurnToAngle(drive, pickUpAngle),
 
+                                new WaitCommand(.2),
+
                                 new ResetEncoders(drive),
 
-                                new ParallelCommandGroup(
+                                new PositionStraight(drive, pickupPosition, pickUpRate)
 
-                                                new PositionStraight(drive, pickupPosition,
-                                                                pickUpRate),
+                                                .deadlineWith(new RunActiveIntake(intake, transport)),
 
-                                                new WaitCommand(2))
+                                new WaitCommand(.2),
 
-                                                                .deadlineWith(new RunActiveIntake(intake, transport)),
+                                new TurnToAngle(drive, shootAngle),
 
-                                new TurnToAngle(drive, finalAngleDegrees),
+                                new WaitCommand(.2),
 
-                                new ParallelRaceGroup(
-
+                                race(
                                                 new RunCargoOutShooter(shooter, intake, transport, 700),
 
-                                                new WaitCommand(3)));
+                                                new WaitCommand(3),
+
+                                                new ArcadeDrive(drive, () -> 0., () -> 0.)));
 
         }
 }

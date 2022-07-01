@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.FaultID;
@@ -13,16 +15,8 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N2;
-import edu.wpi.first.math.system.LinearSystem;
-import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
@@ -30,11 +24,6 @@ import frc.robot.Constants.TurretConstants;
 import frc.robot.Pref;
 import frc.robot.Sim.CANEncoderSim;
 import frc.robot.Sim.CANSparkMaxWithSim;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.CANCoderFaults;
-import com.ctre.phoenix.sensors.CANCoderStickyFaults;
-import com.ctre.phoenix.sensors.MagnetFieldStrength;
-import com.ctre.phoenix.sensors.WPI_CANCoder;
 
 /**
  * 21:1 gearing
@@ -239,10 +228,12 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         lockPIDOut = mLockController.calculate(cameraError, 0);
 
-        if (lockPIDOut > .5)
-            lockPIDOut = .5;
-        if (lockPIDOut < -.5)
-            lockPIDOut = -.5;
+        double maxAllowed = .5;
+
+        if (lockPIDOut > maxAllowed)
+            lockPIDOut = maxAllowed;
+        if (lockPIDOut < -maxAllowed)
+            lockPIDOut = -maxAllowed;
 
         else
 

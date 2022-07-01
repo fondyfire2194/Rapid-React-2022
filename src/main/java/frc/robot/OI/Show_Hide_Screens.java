@@ -17,14 +17,14 @@ public final class Show_Hide_Screens {
 
     boolean testing = test;
 
-    SetUpOI.showTurret = testing;
-    SetUpOI.showTilt = testing;
-    SetUpOI.showShooter = testing;
+    SetUpOI.showTurret = false;//testing;
+    SetUpOI.showTilt = false;//testing;
+    SetUpOI.showShooter = false;//testing;
     SetUpOI.showRobot = testing;
-    SetUpOI.showTransport = testing;
-    SetUpOI.showClimber = testing;
+    SetUpOI.showTransport = false;//testing;
+    SetUpOI.showClimber = false;//testing;
     SetUpOI.showSubsystems = testing || auto;
-    SetUpOI.showIntake = testing;
+    SetUpOI.showIntake = false;//testing;
 
     LLVisionShuffleboard.m_showVision = showVision;
 

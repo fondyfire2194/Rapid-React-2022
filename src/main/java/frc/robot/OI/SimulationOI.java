@@ -9,7 +9,6 @@ import java.util.Map;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Vision.LimeLight;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;

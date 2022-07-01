@@ -21,6 +21,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -110,7 +112,43 @@ public class RevDrivetrain extends SubsystemBase {
     public final double positionRate = .4;
     public double rotateStartTime;
 
+    public PIDController leftController = new PIDController(DriveConstants.kPDriveVel, 0, 0);
+    public PIDController rightController = new PIDController(DriveConstants.kPDriveVel, 0, 0);
+
+    // NetworkTableEntry m_xEntry =
+    // NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("X");
+    // NetworkTableEntry m_yEntry =
+    // NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Y");
+
+    NetworkTableEntry leftReference = NetworkTableInstance.getDefault().getTable("troubleshooting")
+            .getEntry("left_reference");
+    NetworkTableEntry leftMeasurement = NetworkTableInstance.getDefault().getTable("troubleshooting")
+            .getEntry("left_measurement");
+    NetworkTableEntry rightReference = NetworkTableInstance.getDefault().getTable("troubleshooting")
+            .getEntry("right_reference");
+    NetworkTableEntry rightMeasurement = NetworkTableInstance.getDefault().getTable("troubleshooting")
+            .getEntry("right_measurement");
+
+    NetworkTableEntry angleMeasurement = NetworkTableInstance.getDefault().getTable("troubleshooting")
+            .getEntry("angle_measurement");
+
+    public boolean trajectoryRunning;
+
+ 
+    public Pose2d centerAutoStart = new Pose2d(6.78, 3, Rotation2d.fromDegrees(34.32));
+
+    public Pose2d zero = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+
+    public Pose2d centerCargo = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(34.32));
+
+    public Pose2d centerCargoRev = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(Math.PI / 2 + 34.32));
+
+    public Pose2d centerThirdCargoGet = new Pose2d(2.9, 1.3, Rotation2d.fromDegrees(45));
+
+    public Pose2d centerThirdCargoGetRev = new Pose2d(2.9, 1.3, Rotation2d.fromDegrees(Math.PI / 2 + 45));
+
     public RevDrivetrain() {
+
         mLeadLeft = new CANSparkMax(CANConstants.DRIVETRAIN_LEFT_MASTER,
                 CANSparkMaxLowLevel.MotorType.kBrushless);
         mFollowerLeft = new CANSparkMax(CANConstants.DRIVETRAIN_LEFT_FOLLOWER,
@@ -220,8 +258,8 @@ public class RevDrivetrain extends SubsystemBase {
             m_dts = new DifferentialDrivetrainSim(
                     DriveConstants.kDrivetrainPlant, DCMotor.getNEO(2), 8, .69, 0.0508, null);
 
-             mleftPID.setP(3);
-             mrightPID.setP(3);
+            mleftPID.setP(3);
+            mrightPID.setP(3);
 
         }
     }
@@ -231,10 +269,16 @@ public class RevDrivetrain extends SubsystemBase {
 
         mOdometry.update(Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance());
 
+        if (trajectoryRunning) {
+            leftMeasurement.setNumber(getWheelSpeeds().leftMetersPerSecond);
+            leftReference.setNumber(leftController.getSetpoint());
+
+            rightMeasurement.setNumber(getWheelSpeeds().rightMetersPerSecond);
+            rightReference.setNumber(rightController.getSetpoint());
+
+            angleMeasurement.setNumber(getHeading());
+        }
         m_field.setRobotPose(mOdometry.getPoseMeters());
-        // m_field.setRobotPose(mOdometry.getPoseMeters().getX(),
-        // -mOdometry.getPoseMeters().getY(),
-        // new Rotation2d(Math.toRadians(-getHeading())));
 
         SmartDashboard.putString("Pose", mOdometry.getPoseMeters().toString());
 
@@ -415,7 +459,7 @@ public class RevDrivetrain extends SubsystemBase {
     }
 
     public void driveRightSide(double value) {
-       ;
+        ;
         mLeadRight.set(value);
 
     }
@@ -492,8 +536,8 @@ public class RevDrivetrain extends SubsystemBase {
     }
 
     public double getYaw() {
-        return mGyro.getYaw();
-        // return Math.IEEEremainder(mGyro.getAngle(), 360) * -1;
+        // return mGyro.getYaw();
+        return Math.IEEEremainder(mGyro.getAngle(), 360) * -1;
     }
 
     public Translation2d getTranslation() {

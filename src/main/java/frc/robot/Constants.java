@@ -107,11 +107,11 @@ public final class Constants {
 
       public static double ksVolts = .227;
 
-      public static double kvVoltSecondsPerMeter = 2.63;// 27;//2;
+      public static double kvVoltSecondsPerMeter = 2.629;//22.63;// 27;//2;
 
-      public static double kaVoltSecondsSquaredPerMeter = .329;// 3.48;//.408;
+      public static double kaVoltSecondsSquaredPerMeter = .401;// 3.48;//.408;
 
-      public final static double WHEELBASE_WIDTH = .69;
+      public final static double WHEELBASE_WIDTH = .68;
 
       public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
             WHEELBASE_WIDTH);
@@ -144,11 +144,11 @@ public final class Constants {
        * Trajectory constants
        */
 
-      public static double kMaxTrajectoryMetersPerSecond = 3;
+      public static double kMaxTrajectoryMetersPerSecond = 2.5;
 
-      public static double kMaxTrajectoryAccelerationMetersPerSquared = 10.;
+      public static double kMaxTrajectoryAccelerationMetersPerSquared = 2.5;
 
-      public static double kPDriveVel = 3.5;
+      public static double kPDriveVel = .001;
 
       
 
@@ -236,9 +236,9 @@ public final class Constants {
        * 
        */
 
-      public static final double TURRET_MAX_ANGLE = 55;
+      public static final double TURRET_MAX_ANGLE = 35;
 
-      public static final double TURRET_MIN_ANGLE = -55;
+      public static final double TURRET_MIN_ANGLE = -35;
 
       public static final double TURRET_DEG_PER_MOTOR_REV = 1.38996;// max rps = 150 so 208 deg per sec
 

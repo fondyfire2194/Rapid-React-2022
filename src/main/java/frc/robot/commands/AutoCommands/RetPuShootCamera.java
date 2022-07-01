@@ -6,10 +6,10 @@ package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.PipelinesConstants;
-import frc.robot.Constants.ShooterRangeConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.Intakes.RunActiveIntake;
@@ -47,13 +47,13 @@ public class RetPuShootCamera extends SequentialCommandGroup {
 
                 double drivePickupPosition = data[0];
                 // double shootPosition = data[1];
-                double upperTiltAngle = data[2];
+                double tiltAngle = data[2];
                 // double upperTurretAngle = data[3];
                 double upperRPM = data[4];
                 // remaining data used in shoot routine
 
                 addCommands(
-                                parallel(
+                                new ParallelCommandGroup(
 
                                                 new SetFrontIntakeActive(intake, false),
                                                 new ResetEncoders(drive),
@@ -64,45 +64,57 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720,
                                                                 true)),
 
-                                race(
+                                new ParallelCommandGroup(
 
                                                 new PositionStraight(drive, drivePickupPosition,
                                                                 pickUpRate),
 
-                                                new PositionTilt(tilt, upperTiltAngle),
+                                                new PositionTilt(tilt, tiltAngle),
 
                                                 new WaitCommand(2))
                                                                 .deadlineWith(new RunActiveIntake(
                                                                                 intake,
                                                                                 transport)),
 
-                                parallel(
+                                new ParallelRaceGroup(
 
-                                              race(
+                                                new SequentialCommandGroup(
 
-                                                                sequence(
+                                                                new WaitCommand(.2),
 
-                                                                                new WaitCommand(.2),
+                                                                new AltShootCargo(
+                                                                                shooter,
+                                                                                transport,
+                                                                                intake,
+                                                                                ll),
 
-                                                                                new AltShootCargo(shooter, transport,
-                                                                                                intake, ll),
+                                                                new WaitCommand(.2),
 
-                                                                                new WaitCommand(.2),
+                                                                new AltShootCargo(
+                                                                                shooter,
+                                                                                transport,
+                                                                                intake,
+                                                                                ll),
 
-                                                                                new AltShootCargo(shooter, transport,
-                                                                                                intake, ll),
+                                                                new WaitCommand(1)),
 
-                                                                                new WaitCommand(1)),
+                                                new RunShooter(shooter))
 
-                                                                new RunShooter(shooter))
+                                                                .deadlineWith(new PositionHoldTiltTurret(
+                                                                                tilt,
+                                                                                turret,
+                                                                                ll)),
 
-                                                                                .deadlineWith(new PositionHoldTiltTurret(
-                                                                                                tilt, turret, ll)),
+                                new ParallelCommandGroup(
+
                                                 new UseVision(ll, false),
 
-                                                new LimelightSetPipeline(ll, PipelinesConstants.ledsOffPipeline),
+                                                new LimelightSetPipeline(ll,
+                                                                PipelinesConstants.ledsOffPipeline),
 
-                                                new PositionTurret(turret, 0)));
+                                                new PositionTurret(
+                                                                turret,
+                                                                0)));
 
         }
 }
