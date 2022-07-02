@@ -37,7 +37,7 @@ import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.TurnLedsOnOff;
-import frc.robot.commands.AutoCommands.Common.SetUpCameraShoot;
+import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
 import frc.robot.commands.AutoCommands.Common.SetupPresetShootLocation;
 import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
@@ -54,6 +54,7 @@ import frc.robot.commands.Shooter.ChangeShooterSpeed;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
 import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Tilt.PositionHoldTilt;
 import frc.robot.commands.Tilt.PositionTilt;
@@ -68,7 +69,9 @@ import frc.robot.commands.Turret.ShiftAimLeftRight;
 import frc.robot.commands.Turret.TurretJog;
 import frc.robot.commands.Turret.TurretJogVelocity;
 import frc.robot.commands.Turret.TurretWaitForStop;
+import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.commands.Vision.LimelightSetPipeline;
+import frc.robot.commands.Vision.SetUpLimelightForTarget;
 import frc.robot.commands.Vision.UseVision;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -180,9 +183,9 @@ public class RobotContainer {
             m_limelight = new LimeLight();
 
             m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
- 
+
             if (RobotBase.isSimulation())
-            
+
                   m_drive.setDefaultCommand(getArcadeDriveCommandSim());
 
             else
@@ -216,7 +219,7 @@ public class RobotContainer {
             m_trajectory = new FondyFireTrajectory(m_drive);
             ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
             // test configuration
-           // Show_Hide_Screens.setStates(false, false,true);
+            // Show_Hide_Screens.setStates(false, false,true);
             // test configuration with vision
             // Show_Hide_Screens.setStates(false, true, true);
 
@@ -224,7 +227,7 @@ public class RobotContainer {
             Show_Hide_Screens.setStates(true, false, true);
 
             // all configuration
-           // Show_Hide_Screens.setStates(true, true, true);
+            // Show_Hide_Screens.setStates(true, true, true);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intake, m_climber, m_trajectory);
@@ -342,7 +345,18 @@ public class RobotContainer {
 
                         new LimelightSetPipeline(m_limelight, PipelinesConstants.ledsOffPipeline)));
 
-            driverRightButton.whileActiveContinuous(new SetUpCameraShoot(m_shooter, m_tilt, m_limelight));
+            driverRightButton
+            
+                        .whenPressed(new SetUpLimelightForTarget(m_limelight, PipelinesConstants.noZoom960720, true))
+
+                        .whenPressed(new SetShootSpeedSource(m_shooter, m_shooter.cameraSource))
+
+                        .whileActiveContinuous(
+                              
+                                    new SequentialCommandGroup(new CalculateTargetDistance(m_limelight, m_shooter),
+
+                                                new SelectSpeedAndTiltByDistance(m_shooter, m_tilt)));
+
 
             // co driver gamepad
 
@@ -393,7 +407,8 @@ public class RobotContainer {
       }
 
       public Command getArcadeDriveCommandSim() {
-            return new ArcadeDrive(m_drive, () -> -codriverGamepad.getRawAxis(3)/2, () -> codriverGamepad.getRawAxis(2)/2);
+            return new ArcadeDrive(m_drive, () -> -codriverGamepad.getRawAxis(3) / 2,
+                        () -> codriverGamepad.getRawAxis(2) / 2);
       }
 
       public Command getDriveStraightCommand() {

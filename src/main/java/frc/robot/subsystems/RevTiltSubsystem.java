@@ -93,12 +93,14 @@ public class RevTiltSubsystem extends SubsystemBase {
     public boolean testLock;
     public double tiltOffsetAdder;
     public double tiltOffsetChange;
-    public double cameraCalculatedTiltPosition;
+    public double cameraCalculatedTiltPosition = 0;
+    public double previousCameraCalculatedTiltPosition = 0;
+
     public double presetPosition;
     public NetworkTableEntry tiltTarget;
     // private CANEncoderSim mEncoderSim;
     // final LinearSystem<N2, N1, N1> m_tilt = LinearSystemId
-    //         .identifyPositionSystem(.1, 0.001);
+    // .identifyPositionSystem(.1, 0.001);
     // LinearSystemSim<N2, N1, N1> m_tiltSim = new LinearSystemSim<>(m_tilt);
 
     public RevTiltSubsystem() {
@@ -119,12 +121,12 @@ public class RevTiltSubsystem extends SubsystemBase {
         targetAngle = 0;
         positionResetDone = false;
 
-    //    if (RobotBase.isReal()) {
+        // if (RobotBase.isReal()) {
 
-            mEncoder.setPositionConversionFactor(degreesPerRev);
-            mEncoder.setVelocityConversionFactor(degreesPerRev / 60);
+        mEncoder.setPositionConversionFactor(degreesPerRev);
+        mEncoder.setVelocityConversionFactor(degreesPerRev / 60);
 
-      //  }
+        // }
 
         m_motor.setSmartCurrentLimit(20);
 
@@ -147,7 +149,7 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         if (RobotBase.isSimulation()) {
             positionResetDone = true;
-     //       mEncoderSim = new CANEncoderSim(m_motor.getDeviceId(), false);
+            // mEncoderSim = new CANEncoderSim(m_motor.getDeviceId(), false);
             mPosController.setP(.02);
 
             mVelController.setP(.05);
@@ -194,6 +196,11 @@ public class RevTiltSubsystem extends SubsystemBase {
         if (faultSeen != 0)
             faultSeen = getFaults();
 
+        if (cameraCalculatedTiltPosition != previousCameraCalculatedTiltPosition) {
+            previousCameraCalculatedTiltPosition = cameraCalculatedTiltPosition;
+            targetAngle = cameraCalculatedTiltPosition;
+        }
+
         SmartDashboard.putBoolean("RefDone", positionResetDone);
 
     }
@@ -203,16 +210,17 @@ public class RevTiltSubsystem extends SubsystemBase {
         // In this method, we update our simulation of what our elevator is doing
         // First, we set our "inputs" (voltages)
         // m_tiltSim.setInput(m_motor.get() * RobotController.getBatteryVoltage());
-        // SmartDashboard.putNumber("TSIMI", m_motor.get() * RobotController.getBatteryVoltage());
+        // SmartDashboard.putNumber("TSIMI", m_motor.get() *
+        // RobotController.getBatteryVoltage());
         // Next, we update it. The standard loop time is 20ms.
         // m_tiltSim.update(0.020);
-     //   SmartDashboard.putNumber("SIMO", m_tiltSim.getOutput(0));
+        // SmartDashboard.putNumber("SIMO", m_tiltSim.getOutput(0));
         // Finally, we set our simulated encoder's readings and simulated battery
         // voltage
         // mEncoderSim.setPosition(m_tiltSim.getOutput(0));
         // SimBattery estimates loaded battery voltages
         // RoboRioSim.setVInVoltage(
-        //         BatterySim.calculateDefaultBatteryLoadedVoltage(m_tiltSim.getCurrentDrawAmps()));
+        // BatterySim.calculateDefaultBatteryLoadedVoltage(m_tiltSim.getCurrentDrawAmps()));
 
     }
 
@@ -241,8 +249,8 @@ public class RevTiltSubsystem extends SubsystemBase {
     }
 
     public void moveManually(double speed) {
-            m_motor.set(speed);
-      
+        m_motor.set(speed);
+
     }
 
     public void goToPosition(double degrees) {
