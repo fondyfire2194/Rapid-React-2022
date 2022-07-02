@@ -13,6 +13,7 @@ import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
+import frc.robot.commands.RobotDrive.SaveGetSavedPose;
 import frc.robot.commands.RobotDrive.TurnToAngle;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -38,17 +39,19 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
                 // remaining data used in shoot routine
 
                 addCommands(
-                                parallel(
 
-                                                new SetFrontIntakeActive(intake,true),
-                                                new ResetEncoders(drive),
-                                                new ResetGyro(drive)),
+                                new SetFrontIntakeActive(intake, true),
 
-                                new TurnToAngle(drive, pickUpAngle),
+                                new TurnToAngle(drive, pickUpAngle), new SaveGetSavedPose(drive, 0), // save current
+                                                                                                     // pose
+
+                                new ResetEncoders(drive),
+
+                                new SaveGetSavedPose(drive, 3),
+
 
                                 new WaitCommand(.2),
 
-                                new ResetEncoders(drive),
 
                                 new PositionStraight(drive, pickupPosition, pickUpRate)
 

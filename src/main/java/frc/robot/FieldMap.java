@@ -54,11 +54,13 @@ public class FieldMap {
 
         public static final double cargoFieldRingDiameter = Units.inchesToMeters(153);
         public static final double cargoDiameter = Units.inchesToMeters(9.5);
+        public static final double angleBetweenCargo = 22.5;// 360/16 (possible cargo()
+        public static final double leftStartHideAngle = 90 + (22.5 * 1.5);
 
         // Robot dimensions with bumpers
-        public static final double robotWidth = Units.inchesToMeters(34.75);//.8826
-        public static final double robotLength = Units.inchesToMeters(37.75);//.9588
-        public static double frontIntakeAdder = Units.inchesToMeters(9);//.2286
+        public static final double robotWidth = Units.inchesToMeters(34.75);// .8826
+        public static final double robotLength = Units.inchesToMeters(37.75);// .9588
+        public static double frontIntakeAdder = Units.inchesToMeters(9);// .2286
         public static double rearIntakeAdder = Units.inchesToMeters(9);
         public static final double robotTiltPivotHeight = Units.inchesToMeters(40);
 

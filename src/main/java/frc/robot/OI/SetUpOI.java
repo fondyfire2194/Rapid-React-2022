@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.FieldMap;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.CargoTransport.RunLowerRoller;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
@@ -27,6 +28,7 @@ import frc.robot.commands.RobotDrive.ClearRobFaults;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
+import frc.robot.commands.RobotDrive.SaveGetSavedPose;
 import frc.robot.commands.RobotDrive.StopRobot;
 import frc.robot.commands.RobotDrive.TurnToAngle;
 import frc.robot.commands.Shooter.AltShootCargo;
@@ -42,7 +44,6 @@ import frc.robot.commands.Tilt.StopTilt;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.commands.Turret.ClearTurFaults;
 import frc.robot.commands.Turret.PositionTurret;
-import frc.robot.commands.Turret.PositionTurretIncremental;
 import frc.robot.commands.Turret.ResetTurretAngle;
 import frc.robot.commands.Turret.StopTurret;
 import frc.robot.commands.Vision.UseVision;
@@ -166,7 +167,7 @@ public class SetUpOI {
                         turretValues.addNumber("Vision Error", () -> limelight.getdegRotationToTarget());
                         turretValues.addBoolean("MinHWLim", () -> turret.onMinusHardwareLimit());
                         turretValues.addBoolean("PlusHWLim", () -> turret.onPlusHardwareLimit());
-                
+
                         ShuffleboardLayout turretValues3 = Shuffleboard.getTab("SetupTurret")
                                         .getLayout("PIDValues", BuiltInLayouts.kList).withPosition(4, 0).withSize(2,
                                                         2)
@@ -438,10 +439,17 @@ public class SetUpOI {
 
                         robotCommands1.add("TurnTo 0", new TurnToAngle(drive, 0));
                         robotCommands1.add("TurnTo 45", new TurnToAngle(drive, 45));
-                        robotCommands1.add("TurnTo 90", new TurnToAngle(drive, 90));
+                        robotCommands1.add("Turn To 90", new TurnToAngle(drive, 90));
                         robotCommands1.add("TurnTo 180", new TurnToAngle(drive, 180));
                         robotCommands1.add("TurnTo -45", new TurnToAngle(drive, -45));
-                        robotCommands1.add("TurnTo -90", new TurnToAngle(drive, -90));
+                        robotCommands1.add("Turn To -90", new TurnToAngle(drive, -90));
+                        robotCommands1.add("Turn To LHideOpp", new TurnToAngle(drive, FieldMap.leftStartHideAngle));                     
+
+                        robotCommands1.add("SavePose", new SaveGetSavedPose(drive, 0));
+                        robotCommands1.add("SetPose", new SaveGetSavedPose(drive, 3));
+
+                        robotCommands1.add("GetSavedPose", new SaveGetSavedPose(drive, 1));
+                        robotCommands1.add("GetCurrentPose", new SaveGetSavedPose(drive, 2));
 
                         ShuffleboardLayout robotValues = Shuffleboard.getTab("SetupRobot")
                                         .getLayout("RobotValues", BuiltInLayouts.kList).withPosition(4, 0)

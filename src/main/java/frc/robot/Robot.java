@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,6 +27,7 @@ import frc.robot.Constants.ShooterRangeConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.commands.MessageCommand;
+import frc.robot.commands.AutoCommands.CenterHideOppCargo;
 import frc.robot.commands.AutoCommands.DoNothing;
 import frc.robot.commands.AutoCommands.LeftHideOppCargo;
 import frc.robot.commands.AutoCommands.RetPuShootCamera;
@@ -32,6 +35,7 @@ import frc.robot.commands.AutoCommands.RunCenterThirdCargo;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
+import frc.robot.commands.RobotDrive.SetRobotPose;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -59,6 +63,7 @@ public class Robot extends TimedRobot {
   public double timeToStart;
   int tst;
   private int loopCtr;
+  private Pose2d startingPose;
 
   public static double[] data = { 0, 0, 0, 0, 0 };
 
@@ -204,7 +209,8 @@ public class Robot extends TimedRobot {
         // after retract will be 80 + 1.29
         // so shot length s (82 - 37.75) + 1.29 *39.37 = 44.25 + 52 = 96" = 8 ft
         // this is the start of the tilt range 2 = 11 degrees and 2300 rpm
-
+        startingPose = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
+    
         data[0] = -1.6;// retract point
 
         data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
@@ -214,8 +220,8 @@ public class Robot extends TimedRobot {
         data[4] = shooter.rpmFromCameraDistance[8 - 1];// 2000 rpm
 
         m_autonomousCommand = new SequentialCommandGroup(
-
-            new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+          
+            new SetRobotPose(m_robotContainer.m_drive, startingPose),
 
             new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
                 comp, data),
@@ -229,6 +235,8 @@ public class Robot extends TimedRobot {
 
         data = FieldMap.centerTarmacData;
 
+        startingPose = new Pose2d(6.78, 3, Rotation2d.fromDegrees(34.32));
+
         data[0] = -1.6;// retract point
 
         data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
@@ -239,12 +247,14 @@ public class Robot extends TimedRobot {
 
         m_autonomousCommand = new SequentialCommandGroup(
 
+            new SetRobotPose(m_robotContainer.m_drive, startingPose),
+
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
             new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
                 comp, data),
 
-            new ConditionalCommand(new LeftHideOppCargo(intake, drive, transport, shooter), new DoNothing(),
+            new ConditionalCommand(new CenterHideOppCargo(intake, drive, transport, shooter), new DoNothing(),
                 () -> hideOppCargo));
 
         break;
@@ -252,7 +262,7 @@ public class Robot extends TimedRobot {
       case 4:// Pick up and shoot cargo in center of field plus third cargo
 
         data = FieldMap.centerTarmacData;
-
+        startingPose = new Pose2d(6.78, 3, Rotation2d.fromDegrees(34.32));
         data[0] = -1.6;// retract point
 
         data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
@@ -264,6 +274,8 @@ public class Robot extends TimedRobot {
         m_autonomousCommand = new SequentialCommandGroup(
 
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+
+            new SetRobotPose(m_robotContainer.m_drive, startingPose),
 
             new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
                 comp, data),

@@ -13,6 +13,7 @@ import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
+import frc.robot.commands.RobotDrive.SaveGetSavedPose;
 import frc.robot.commands.RobotDrive.TurnToAngle;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -35,7 +36,7 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
         final double pickupPosition = -1.1;
 
-        private double shootAngle = -140;
+        private double shootAngle = -120;
 
         /** Creates a new LRetPuShoot. */
         public LeftHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,
@@ -46,17 +47,23 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
                 double pickUpRate = drive.pickUpRate;
 
                 addCommands(
-                                parallel(
+                                // parallel(
 
-                                                new SetFrontIntakeActive(intake, false),
-                                                new ResetEncoders(drive),
-                                                new ResetGyro(drive)),
+                                new SetFrontIntakeActive(intake, false),
+                                // new ResetEncoders(drive),
+                                // new ResetGyro(drive)),
 
                                 new TurnToAngle(drive, pickUpAngle),
 
-                                new WaitCommand(.2),
+                                new SaveGetSavedPose(drive, 0), // save current pose
 
                                 new ResetEncoders(drive),
+
+                                new SaveGetSavedPose(drive, 3),
+
+                                new WaitCommand(.2),
+
+                                // new ResetEncoders(drive),
 
                                 new PositionStraight(drive, pickupPosition, pickUpRate)
 
@@ -64,7 +71,7 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                                 new WaitCommand(.2),
 
-                                //new ResetGyro(drive),
+                                // new ResetGyro(drive),
 
                                 new TurnToAngle(drive, shootAngle),
 
@@ -74,7 +81,7 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
                                                 new RunCargoOutShooter(shooter, intake, transport, 700),
 
                                                 new WaitCommand(3),
-                                                
+
                                                 new ArcadeDrive(drive, () -> 0., () -> 0.)));
 
         }

@@ -69,7 +69,7 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                                                 new PositionStraight(drive, drivePickupPosition,
                                                                 pickUpRate),
 
-                                                new PositionTilt(tilt, tiltAngle),
+                                                new PositionTilt(tilt, tiltAngle).withTimeout(2),
 
                                                 new WaitCommand(2))
                                                                 .deadlineWith(new RunActiveIntake(
@@ -86,7 +86,7 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                                                                                 shooter,
                                                                                 transport,
                                                                                 intake,
-                                                                                ll),
+                                                                                ll).withTimeout(2),
 
                                                                 new WaitCommand(.2),
 
@@ -94,7 +94,7 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                                                                                 shooter,
                                                                                 transport,
                                                                                 intake,
-                                                                                ll),
+                                                                                ll).withTimeout(2),
 
                                                                 new WaitCommand(1)),
 
@@ -114,7 +114,7 @@ public class RetPuShootCamera extends SequentialCommandGroup {
 
                                                 new PositionTurret(
                                                                 turret,
-                                                                0)));
+                                                                0).withTimeout(2)));
 
         }
 }

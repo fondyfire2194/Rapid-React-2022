@@ -17,6 +17,7 @@ public class PositionStraight extends CommandBase {
   private double leftOut;
   private double rightOut;
   private int loopCtr;
+  private boolean m_inc;
 
   public PositionStraight(RevDrivetrain drive, double endPoint, double max) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -27,9 +28,20 @@ public class PositionStraight extends CommandBase {
     addRequirements(m_drive);
   }
 
+  public PositionStraight(RevDrivetrain drive, boolean incremental, double endPoint, double max) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    m_drive = drive;
+    m_endpoint = endPoint;
+    m_max = max;
+    m_inc = incremental;
+    addRequirements(m_drive);
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    if (m_inc)
+      m_endpoint += m_drive.getAverageDistance();
     if (RobotBase.isReal())
       m_startAngle = m_drive.getYaw();
     m_min = -m_max;
