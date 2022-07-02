@@ -4,6 +4,7 @@
 
 package frc.robot.commands.AutoCommands.Common;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
@@ -24,6 +25,11 @@ public class SetupPresetShootLocation extends SequentialCommandGroup {
     {
       // Add your commands in the addCommands() call, e.g.
       // addCommands(new FooCommand(), new BarCommand());
+
+      double timeOut = 15;
+
+      if (RobotBase.isSimulation())
+        timeOut = 1;
       addCommands(
 
           new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720, true),
@@ -32,7 +38,7 @@ public class SetupPresetShootLocation extends SequentialCommandGroup {
 
           new SetPresetShootPositionSpeedTilt(shooter, tilt, ll, shootLocation),
 
-          new PositionTiltToPreset(tilt));
+          new PositionTiltToPreset(tilt).withTimeout(timeOut));
 
     }
   }

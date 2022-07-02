@@ -341,22 +341,23 @@ public class RobotContainer {
 
                         new WaitCommand(.5),
 
-                        new PositionTurret(m_turret, 0),
+                        new PositionTurret(m_turret, 0).withTimeout(5),
 
                         new LimelightSetPipeline(m_limelight, PipelinesConstants.ledsOffPipeline)));
 
             driverRightButton
-            
+
                         .whenPressed(new SetUpLimelightForTarget(m_limelight, PipelinesConstants.noZoom960720, true))
 
                         .whenPressed(new SetShootSpeedSource(m_shooter, m_shooter.cameraSource))
 
+                        .whenPressed(new RunShooter(m_shooter))
+                        
                         .whileActiveContinuous(
-                              
+
                                     new SequentialCommandGroup(new CalculateTargetDistance(m_limelight, m_shooter),
 
                                                 new SelectSpeedAndTiltByDistance(m_shooter, m_tilt)));
-
 
             // co driver gamepad
 

@@ -201,7 +201,7 @@ public class RevTiltSubsystem extends SubsystemBase {
             targetAngle = cameraCalculatedTiltPosition;
         }
 
-        SmartDashboard.putBoolean("RefDone", positionResetDone);
+  //      SmartDashboard.putBoolean("RefDone", positionResetDone);
 
     }
 

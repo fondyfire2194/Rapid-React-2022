@@ -5,6 +5,7 @@
 package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -52,6 +53,11 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                 double upperRPM = data[4];
                 // remaining data used in shoot routine
 
+                double timeOut = 15;
+
+                if (RobotBase.isSimulation())
+                        timeOut = 1;
+
                 addCommands(
                                 new ParallelCommandGroup(
 
@@ -69,7 +75,7 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                                                 new PositionStraight(drive, drivePickupPosition,
                                                                 pickUpRate),
 
-                                                new PositionTilt(tilt, tiltAngle).withTimeout(2),
+                                                new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
 
                                                 new WaitCommand(2))
                                                                 .deadlineWith(new RunActiveIntake(
@@ -86,7 +92,7 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                                                                                 shooter,
                                                                                 transport,
                                                                                 intake,
-                                                                                ll).withTimeout(2),
+                                                                                ll).withTimeout(timeOut),
 
                                                                 new WaitCommand(.2),
 
@@ -94,7 +100,7 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                                                                                 shooter,
                                                                                 transport,
                                                                                 intake,
-                                                                                ll).withTimeout(2),
+                                                                                ll).withTimeout(timeOut),
 
                                                                 new WaitCommand(1)),
 

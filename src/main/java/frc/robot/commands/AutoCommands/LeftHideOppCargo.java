@@ -4,6 +4,7 @@
 
 package frc.robot.commands.AutoCommands;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Intakes.RunActiveIntake;
@@ -45,6 +46,11 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
                 // Use addRequirements() here to declare subsystem dependencies.
 
                 double pickUpRate = drive.pickUpRate;
+
+                double timeOut = 15;
+
+                if (RobotBase.isSimulation())
+                        timeOut = 1;
 
                 addCommands(
                                 // parallel(

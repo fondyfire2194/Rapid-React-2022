@@ -84,6 +84,7 @@ public class AltShootCargo extends CommandBase {
       simTime = Timer.getFPGATimestamp();
 
     m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
+    
     m_shooter.wrongCargoColor = m_transport.wrongCargoColor;
 
   }
