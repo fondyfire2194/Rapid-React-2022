@@ -47,10 +47,6 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                 double pickUpRate = drive.pickUpRate;
 
-                double timeOut = 15;
-
-                if (RobotBase.isSimulation())
-                        timeOut = 1;
 
                 addCommands(
                                 // parallel(

@@ -9,6 +9,8 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -87,7 +89,9 @@ public class Robot extends TimedRobot {
 
     getAllianceColorBlue();
 
+
     Shuffleboard.selectTab("Pre-Round");
+
 
   }
 
@@ -209,8 +213,8 @@ public class Robot extends TimedRobot {
         // after retract will be 80 + 1.29
         // so shot length s (82 - 37.75) + 1.29 *39.37 = 44.25 + 52 = 96" = 8 ft
         // this is the start of the tilt range 2 = 11 degrees and 2300 rpm
-        startingPose = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
-    
+        startingPose = drive.leftAutoStart;
+
         data[0] = -1.6;// retract point
 
         data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
@@ -220,7 +224,7 @@ public class Robot extends TimedRobot {
         data[4] = shooter.rpmFromCameraDistance[8 - 1];// 2000 rpm
 
         m_autonomousCommand = new SequentialCommandGroup(
-          
+
             new SetRobotPose(m_robotContainer.m_drive, startingPose),
 
             new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
@@ -235,9 +239,9 @@ public class Robot extends TimedRobot {
 
         data = FieldMap.centerTarmacData;
 
-        startingPose = new Pose2d(6.78, 3, Rotation2d.fromDegrees(34.32));
+        startingPose = drive.centerAutoStart;
 
-        data[0] = -1.6;// retract point
+        data[0] = -1.4;// retract point
 
         data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
 
@@ -262,8 +266,8 @@ public class Robot extends TimedRobot {
       case 4:// Pick up and shoot cargo in center of field plus third cargo
 
         data = FieldMap.centerTarmacData;
-        startingPose = new Pose2d(6.78, 3, Rotation2d.fromDegrees(34.32));
-        data[0] = -1.6;// retract point
+        startingPose = drive.centerAutoStart;
+        data[0] = -1.4;// retract point
 
         data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
 

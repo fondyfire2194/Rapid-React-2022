@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
@@ -21,12 +22,15 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -90,15 +94,15 @@ public class RevDrivetrain extends SubsystemBase {
     public boolean leftBurnOK;
     public boolean rightBurnOK;
 
-    private PIDController mleftPID = new PIDController(kP, kI, kD);
-    private PIDController mrightPID = new PIDController(kP, kI, kD);
+    public PIDController mleftPID = new PIDController(kP, kI, kD);
+    public PIDController mrightPID = new PIDController(kP, kI, kD);
 
     private SparkMaxPIDController mLeftVel;
     private SparkMaxPIDController mRightVel;
 
-    public double kTurnP = .03;
+    public double kTurnP = .01;
     public double kTurnI = 0.;
-    public double kTurnD = 0.;
+    public double kTurnD = 0.00001;
     public double kTurnIz = 0;
 
     public final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts,
@@ -112,8 +116,10 @@ public class RevDrivetrain extends SubsystemBase {
     public final double positionRate = .4;
     public double rotateStartTime;
 
-    public PIDController leftController = new PIDController(DriveConstants.kPDriveVel, 0, 0);
-    public PIDController rightController = new PIDController(DriveConstants.kPDriveVel, 0, 0);
+    double trajKp = DriveConstants.kPDriveVel;
+
+    public PIDController leftController = new PIDController(trajKp, 0, 0);
+    public PIDController rightController = new PIDController(trajKp, 0, 0);
 
     // NetworkTableEntry m_xEntry =
     // NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("X");
@@ -134,14 +140,17 @@ public class RevDrivetrain extends SubsystemBase {
 
     public boolean trajectoryRunning;
 
- 
-    public Pose2d centerAutoStart = new Pose2d(6.78, 3, Rotation2d.fromDegrees(34.32));
+    public Pose2d leftAutoStart = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
+
+    public Pose2d leftCargo = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
+
+    public Pose2d centerAutoStart = new Pose2d(6.6, 2.76, Rotation2d.fromDegrees(30));
 
     public Pose2d zero = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 
-    public Pose2d centerCargo = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(34.32));
+    public Pose2d centerCargo = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(40));
 
-    public Pose2d centerCargoRev = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(Math.PI / 2 + 34.32));
+    public Pose2d centerCargoRev = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(Math.PI / 2 + 35.));
 
     public Pose2d centerThirdCargoGet = new Pose2d(2.9, 1.3, Rotation2d.fromDegrees(45));
 
@@ -258,10 +267,49 @@ public class RevDrivetrain extends SubsystemBase {
             m_dts = new DifferentialDrivetrainSim(
                     DriveConstants.kDrivetrainPlant, DCMotor.getNEO(2), 8, .69, 0.0508, null);
 
-            mleftPID.setP(3);
-            mrightPID.setP(3);
+            mleftPID.setP(3.);
+            mrightPID.setP(3.);
+
+            mleftPID.setD(0);
+            mrightPID.setD(0);
 
         }
+
+        leftReference = Shuffleboard.getTab("Trajectories")
+                .add("LeftReference", 0)
+                .withWidget(BuiltInWidgets.kTextView)
+                .withPosition(0, 0).withSize(3, 2)
+
+                .getEntry();
+
+        leftMeasurement = Shuffleboard.getTab("Trajectories")
+                .add("LeftMeasurement", 0)
+                .withWidget(BuiltInWidgets.kTextView)
+                .withPosition(3, 0).withSize(3, 2)
+
+                .getEntry();
+
+        rightReference = Shuffleboard.getTab("Trajectories")
+                .add("RightReference", 0)
+                .withWidget(BuiltInWidgets.kTextView)
+                .withPosition(0, 2).withSize(3, 2)
+
+                .getEntry();
+
+        rightMeasurement = Shuffleboard.getTab("Trajectories")
+                .add("RightMeasurement", 0)
+                .withWidget(BuiltInWidgets.kTextView)
+                .withPosition(3, 2).withSize(3, 2)
+
+                .getEntry();
+
+        angleMeasurement = Shuffleboard.getTab("Trajectories")
+                .add("AngleMeasurement", 0)
+                .withWidget(BuiltInWidgets.kTextView)
+                .withPosition(6, 0).withSize(2, 2)
+
+                .getEntry();
+
     }
 
     @Override
@@ -443,11 +491,10 @@ public class RevDrivetrain extends SubsystemBase {
 
         }
         SmartDashboard.putNumber("MLKP", mleftPID.getP());
+
         temp[0] = mleftPID.calculate(getLeftDistance(), endPosition);
 
         temp[1] = mrightPID.calculate(getRightDistance(), endPosition);
-
-        mDrive.feed();
 
         return temp;
     }
@@ -459,10 +506,11 @@ public class RevDrivetrain extends SubsystemBase {
     }
 
     public void driveRightSide(double value) {
-        ;
+
         mLeadRight.set(value);
 
     }
+
 
     /**
      * Resets the current pose to the specified pose. This should ONLY be called
@@ -661,6 +709,8 @@ public class RevDrivetrain extends SubsystemBase {
 
             kTurnIz = Pref.getPref("dRTurnkIz");
 
+            trajKp = Pref.getPref("drTrajkp");
+
             mleftPID.setP(kP);
             mleftPID.setI(kI);
             mleftPID.setD(kD);
@@ -668,6 +718,9 @@ public class RevDrivetrain extends SubsystemBase {
             mrightPID.setP(kP);
             mrightPID.setI(kI);
             mrightPID.setD(kD);
+
+            leftController.setP(trajKp);
+            rightController.setP(trajKp);            
 
         }
 

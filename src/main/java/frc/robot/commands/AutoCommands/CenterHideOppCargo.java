@@ -32,7 +32,7 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
 
                 final double pickUpAngle = 90;
 
-                final double pickupPosition = 1;
+                final double pickupPosition = 1.2;
 
                 final double shootAngle = 105;
 

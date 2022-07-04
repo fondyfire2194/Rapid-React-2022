@@ -122,8 +122,8 @@ public class CargoTransportSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("PROXVAL", rcs.getProximity());
-    SmartDashboard.putNumber("LowRollOut", getLowerRoller());
+    // SmartDashboard.putNumber("PROXVAL", rcs.getProximity());
+    // SmartDashboard.putNumber("LowRollOut", getLowerRoller());
 
   }
 
@@ -210,6 +210,14 @@ public class CargoTransportSubsystem extends SubsystemBase {
   }
 
   public void releaseCargo() {
+
+    double rpm = Pref.getPref("LowRollReleaseRPM");
+
+    runLowerAtVelocity(rpm);
+
+  }
+
+  public void intakeCargo() {
 
     double rpm = Pref.getPref("LowRollReleaseRPM");
 

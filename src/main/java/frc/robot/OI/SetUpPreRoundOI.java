@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.AutoCommands.CenterHideOppCargo;
 import frc.robot.commands.AutoCommands.LeftHideOppCargo;
+import frc.robot.commands.RobotDrive.SetRobotPose;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -68,11 +69,10 @@ public class SetUpPreRoundOI {
                                         4);
 
                         Shuffleboard.getTab("Pre-Round").add("HidingCargo", hideCargoChooser).withSize(1, 1)
-                                        .withPosition(3, 0); 
+                                        .withPosition(3, 0);
 
-                                        hideCargoChooser.setDefaultOption("Yes", true);
-                                        hideCargoChooser.addOption("No", false);
-
+                        hideCargoChooser.setDefaultOption("Yes", true);
+                        hideCargoChooser.addOption("No", false);
 
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
                                         .withPosition(4, 0); //
@@ -85,59 +85,14 @@ public class SetUpPreRoundOI {
                         startDelayChooser.addOption("Five Seconds", 5.);
 
                         ShuffleboardLayout oppCommands = Shuffleboard.getTab("Pre-Round")
-                                        .getLayout("OppTest", BuiltInLayouts.kList).withPosition(6, 0)
-                                        .withSize(2, 4)
+                                        .getLayout("OppHideTest", BuiltInLayouts.kList).withPosition(8, 0)
+                                        .withSize(2, 1)
                                         .withProperties(Map.of("Label position", "LEFT")); // labels for
 
-                        oppCommands.add("LeftOpp",
-                                        new LeftHideOppCargo(intake, drive, transport, shooter));
+                        oppCommands.add("LeftOpp", new LeftHideOppCargo(intake, drive, transport, shooter));
 
-                        oppCommands.add("CenterOpp",
-                                        new CenterHideOppCargo(intake, drive, transport, shooter));
+                        oppCommands.add("CenterOpp", new CenterHideOppCargo(intake, drive, transport, shooter));
 
-                        oppCommands.add("CenterThirdShoot",
-                                        new SequentialCommandGroup(
-                                                        new ResetOdometryToStartOfTrajectory(drive,
-                                                                        fftraj.centerThirdCargoShoot),
-
-                                                        fftraj.getRamsete(fftraj.centerThirdCargoShoot)
-                                                                        .andThen(() -> drive.tankDriveVolts(0, 0))
-                                                                        .andThen(() -> drive.trajectoryRunning = false)));
-
-                        oppCommands.add("CenterThirdPickup",
-                                        new SequentialCommandGroup(
-                                                        new ResetOdometryToStartOfTrajectory(drive,
-                                                                        fftraj.centerThirdCargoPickUp),
-
-                                                        fftraj.getRamsete(fftraj.centerThirdCargoPickUp)));
-
-                        // oppCommands.add("SetLeftStartPose", new SetRobotPose(drive, drive.zero));
-                        // oppCommands.add("SetZeroPose", new SetRobotPose(drive,
-                        // drive.centerAutoStart));
-                        // oppCommands.add("SetLeftCargoPose", new SetRobotPose(drive,
-                        // drive.leftCargo));
-                        // oppCommands.add("SetCenterCargoPose", new SetRobotPose(drive,
-                        // drive.centerCargo));
-                        // oppCommands.add("SetLeftHideCargoPose", new SetRobotPose(drive,
-                        // drive.leftHideCargo));
-                        // oppCommands.add("SetCenterHideCargoPose", new SetRobotPose(drive,
-                        // drive.centerHideCargo));
-                        // oppCommands.add("SetCenterThirdCargoPose", new SetRobotPose(drive,
-                        // drive.centerThirdCargoGet));
-
-                        // oppCommands.add("CenterShootToOppCargo",
-                        // new SequentialCommandGroup(
-
-                        // new ResetOdometryToStartOfTrajectory(drive,
-                        // fftraj.centerCargo),
-                        // fftraj.getRamsete(fftraj.centerThirdCargoPickUp)));
-
-                        // oppCommands.add("LeftShootToOppCargo",
-                        // new SequentialCommandGroup(
-
-                        // new TurnToAngle(drive, )
-
-                        // fftraj.getRamsete(fftraj.leftOppPickup)));
                 }
 
         }

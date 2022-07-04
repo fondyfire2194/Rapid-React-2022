@@ -428,8 +428,8 @@ public class SetUpOI {
                         robotCommands.add("Stop Robot", new StopRobot(drive));
                         robotCommands.add("To 3", new PositionStraight(drive, +3, .5));
                         robotCommands.add("To -3", new PositionStraight(drive, -3, .5));
-                        robotCommands.add("To 2", new PositionStraight(drive, 2, .3));
-                        robotCommands.add("To -1", new PositionStraight(drive, -1, .3));
+                        robotCommands.add("To 2", new PositionStraight(drive, 2, .5));
+                        robotCommands.add("To -1", new PositionStraight(drive, -1, .5));
                         robotCommands.add("To 0", new PositionStraight(drive, 0, .5));
                         robotCommands.add("Cmd", drive);
 

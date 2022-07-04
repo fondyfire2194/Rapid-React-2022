@@ -25,6 +25,7 @@ public class ShootSequenceDisplay implements Sendable {
 
     @Override
     public void initSendable(SendableBuilder builder) {
+            
         builder.setSmartDashboardType("ShootSequence");
         builder.addBooleanProperty("cargo_at_shoot", m_transport::getCargoAtShoot,
                 null);

@@ -81,6 +81,7 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.trajectories.FondyFireTrajectory;
+import frc.robot.trajectories.TrajectoryDebug;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -135,6 +136,9 @@ public class RobotContainer {
       public FondyFireTrajectory m_trajectory;
 
       public ShootSequenceDisplay ssdisp;
+
+      public TrajectoryDebug trjdbg;
+
 
       // Drive joystick
 
@@ -218,6 +222,8 @@ public class RobotContainer {
 
             m_trajectory = new FondyFireTrajectory(m_drive);
             ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
+            trjdbg = new TrajectoryDebug(m_drive, m_trajectory);
+      
             // test configuration
             // Show_Hide_Screens.setStates(false, false,true);
             // test configuration with vision
@@ -233,7 +239,7 @@ public class RobotContainer {
                         m_limelight, m_intake, m_climber, m_trajectory);
 
             m_autoOi = new SetUpAutoOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
-                        m_intake, m_climber, m_trajectory, ssdisp);
+                        m_intake, m_climber, m_trajectory);
 
             m_preOi = new SetUpPreRoundOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
                         m_intake, m_climber, m_trajectory);
@@ -352,7 +358,7 @@ public class RobotContainer {
                         .whenPressed(new SetShootSpeedSource(m_shooter, m_shooter.cameraSource))
 
                         .whenPressed(new RunShooter(m_shooter))
-                        
+
                         .whileActiveContinuous(
 
                                     new SequentialCommandGroup(new CalculateTargetDistance(m_limelight, m_shooter),

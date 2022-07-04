@@ -8,6 +8,7 @@
 package frc.robot.trajectories;
 
 import java.util.List;
+import java.util.Map;
 
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -15,8 +16,11 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.RevDrivetrain;
@@ -55,31 +59,51 @@ public class FondyFireTrajectory {
                                                 .addConstraint(autoVoltageConstraint);
 
                 centerThirdCargoPickUp = TrajectoryGenerator.generateTrajectory(
-                                // new Pose2d(5.11, 2.12, new Rotation2d(Units.degreesToRadians(Math.PI / 2 +
-                                // 25))),
+
                                 drive.centerCargoRev,
                                 List.of(),
-                                // new Pose2d(2.71, 1.25, new Rotation2d(Units.degreesToRadians(Math.PI / 2 +
-                                // 45))),
                                 drive.centerThirdCargoGetRev,
                                 configReversed);
 
                 centerThirdCargoShoot = TrajectoryGenerator.generateTrajectory(
                                 drive.centerThirdCargoGet,
-                                // new Pose2d(2.3, 1.1, new Rotation2d(Units.degreesToRadians(45))),
                                 List.of(),
-                                // new Pose2d(5.11, 1.9, new Rotation2d(Units.degreesToRadians(25))),
                                 drive.centerCargo,
                                 configForward);
 
-             
+ 
+                ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
+                                .getLayout("TrajectoryTest", BuiltInLayouts.kList).withPosition(8, 0)
+                                .withSize(2, 1)
+                                .withProperties(Map.of("Label position", "LEFT")); // labels for
 
-                SmartDashboard.putNumber("ShootTrajTime", centerThirdCargoShoot.getTotalTimeSeconds());
-                SmartDashboard.putNumber("PickupTrajTime", centerThirdCargoPickUp.getTotalTimeSeconds());
-                SmartDashboard.putNumber("PUTrjsize", centerThirdCargoPickUp.getStates().size());
-                SmartDashboard.putNumber("ShootTrajSize", centerThirdCargoShoot.getStates().size());
+                trajCommands.add("CenterThirdShoot",
+                                new SequentialCommandGroup(
+                                                new ResetOdometryToStartOfTrajectory(drive,
+                                                                centerThirdCargoShoot),
+
+                                                getRamsete(centerThirdCargoShoot)
+                                                                .andThen(() -> drive.tankDriveVolts(0, 0))
+                                                                .andThen(() -> drive.trajectoryRunning = false)));
+
+                trajCommands.add("CenterThirdPickup",
+                                new SequentialCommandGroup(
+                                                new ResetOdometryToStartOfTrajectory(drive,
+                                                                centerThirdCargoPickUp),
+
+                                                getRamsete(centerThirdCargoPickUp)));
+
+                ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
+                                .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(8, 1)
+                                .withSize(2, 2)
+                                .withProperties(Map.of("Label position", "LEFT")); // labels for
+
+                trajInfo.addNumber("ShootTrajSecs", () -> centerThirdCargoShoot.getTotalTimeSeconds());
+                trajInfo.addNumber("PickupTrajSecs", () -> centerThirdCargoPickUp.getTotalTimeSeconds());
+                trajInfo.addNumber("ShootTrajLength", () -> centerThirdCargoShoot.getStates().size());
+                trajInfo.addNumber("PickupTrajLength", () -> centerThirdCargoPickUp.getStates().size());
+
         }
-
 
         public RamseteCommand getRamsete(Trajectory traj) {
 

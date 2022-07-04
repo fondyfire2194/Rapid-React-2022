@@ -160,7 +160,7 @@ public class AltShootCargo extends CommandBase {
 
       if (!secondCargoAtLowRoller)
 
-        m_transport.runLowerAtVelocity(Pref.getPref("LowRollIntakeRPM"));
+        m_transport.intakeCargo();
 
       if (timeCargoToLowRoller == 0 && cargoAtShoot) {
 
@@ -187,7 +187,7 @@ public class AltShootCargo extends CommandBase {
 
         && Timer.getFPGATimestamp() > timeCargoToLowRoller + activeLowStopTime;
 
-    simEnd = simTime != 0 && Timer.getFPGATimestamp() > simTime + 2;
+    simEnd = simTime != 0 && Timer.getFPGATimestamp() > simTime + 1;
 
   }
 

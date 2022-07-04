@@ -57,7 +57,7 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
 
                                                 new RunActiveIntake(intake, transport).withTimeout(timeOut),
 
-                                                new CheckCargoAtShoot(transport).withTimeout(timeOut)),
+                                                new CheckCargoAtShoot(transport).withTimeout(timeOut*5)),
 
                                 parallel(
 

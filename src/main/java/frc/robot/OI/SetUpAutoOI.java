@@ -29,6 +29,7 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.trajectories.FondyFireTrajectory;
+import frc.robot.trajectories.TrajectoryDebug;
 
 /** Add your docs here. */
 public class SetUpAutoOI {
@@ -41,14 +42,15 @@ public class SetUpAutoOI {
         public SetUpAutoOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
                         LimeLight ll, IntakesSubsystem intake, ClimberSubsystem climber,
-                        FondyFireTrajectory traj, ShootSequenceDisplay ssdisp) {
+                        FondyFireTrajectory traj) {
 
                 if (m_showAuto) {
 
                         ShuffleboardLayout compet = Shuffleboard.getTab("Competition")
                                         .getLayout("States", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4)
                                         .withProperties(Map.of("Label position", "TOP"));
-                        // compet.add("ShootSequence", ssdisp);
+                        
+         
                         compet.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
                         compet.addBoolean("IsShooting", () -> shooter.isShooting);
                         compet.addBoolean("CargoAtRear", () -> intake.getCargoAtRear());
