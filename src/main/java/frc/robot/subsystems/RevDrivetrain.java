@@ -144,7 +144,7 @@ public class RevDrivetrain extends SubsystemBase {
 
     public Pose2d leftCargo = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
 
-    public Pose2d centerAutoStart = new Pose2d(6.6, 2.76, Rotation2d.fromDegrees(30));
+    public Pose2d centerAutoStart = new Pose2d(6.65, 2.83, Rotation2d.fromDegrees(34));
 
     public Pose2d zero = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 

@@ -159,7 +159,13 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean getCargoAtShoot() {
 
-    return cargoSensor.get();
+    if (RobotBase.isReal())
+
+      return cargoSensor.get();
+
+    else
+    
+      return !cargoSensor.get();
   }
 
   public void positionLowerRoller(double distance) {

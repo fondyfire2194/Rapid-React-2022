@@ -33,7 +33,7 @@ import frc.robot.trajectories.ResetOdometryToStartOfTrajectory;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class RunCenterThirdCargo extends SequentialCommandGroup {
         /** Creates a new RunCenterThirdTrajectory. */
-    
+
         public RunCenterThirdCargo(RevDrivetrain drive, FondyFireTrajectory fftraj,
                         IntakesSubsystem intake, RevShooterSubsystem shooter, RevTiltSubsystem tilt,
                         RevTurretSubsystem turret, CargoTransportSubsystem transport, LimeLight ll) {
@@ -45,7 +45,7 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
                 if (RobotBase.isSimulation())
                         timeOut = 1;
 
-                addCommands(  
+                addCommands(
 
                                 parallel(
 
@@ -57,7 +57,7 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
 
                                                 new RunActiveIntake(intake, transport).withTimeout(timeOut),
 
-                                                new CheckCargoAtShoot(transport).withTimeout(timeOut*5)),
+                                                new CheckCargoAtShoot(transport, intake).withTimeout(timeOut * 5)),
 
                                 parallel(
 
@@ -69,7 +69,7 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
                                                 new SetPresetRPM(shooter, 888),
 
                                                 new PositionTilt(tilt, 11).withTimeout(timeOut)),
-                               
+
                                 new AltShootCargo(shooter, transport, intake, ll).withTimeout(timeOut)
                                                 .deadlineWith(new RunShooter(shooter)),
 
