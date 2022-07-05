@@ -135,6 +135,7 @@
       "/Shuffleboard/SetupTurret/Turret/Vision On": "Command",
       "/Shuffleboard/Trajectories/TrajectoryTest/CenterThirdPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryTest/CenterThirdShoot": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryTest/RightThirdPickup": "Command",
       "/SmartDashboard/Field": "Field2d"
     },
     "windows": {

@@ -21,8 +21,10 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.AutoCommands.DoNothing;
 import frc.robot.subsystems.RevDrivetrain;
 
 /**
@@ -34,6 +36,7 @@ public class FondyFireTrajectory {
         public Trajectory centerThirdCargoPickUp;
         public Trajectory centerThirdCargoShoot;
         public Trajectory leftOppPickup;
+        public Trajectory rightThirdCargoPickupRev;
 
         public FondyFireTrajectory(RevDrivetrain drive) {
                 m_drive = drive;
@@ -71,10 +74,15 @@ public class FondyFireTrajectory {
                                 drive.centerCargo,
                                 configForward);
 
- 
+                rightThirdCargoPickupRev = TrajectoryGenerator.generateTrajectory(
+                                drive.rightCargoFirstPickup,
+                                List.of(),
+                                drive.centerCargoRev,
+                                configReversed);
+
                 ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryTest", BuiltInLayouts.kList).withPosition(8, 0)
-                                .withSize(2, 1)
+                                .withSize(2, 2)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                 trajCommands.add("CenterThirdShoot",
@@ -93,8 +101,15 @@ public class FondyFireTrajectory {
 
                                                 getRamsete(centerThirdCargoPickUp)));
 
+                trajCommands.add("RightThirdPickup",
+                                new SequentialCommandGroup(
+                                                new ResetOdometryToStartOfTrajectory(drive,
+                                                                rightThirdCargoPickupRev),
+                                                new WaitCommand(1),
+                                                getRamsete(rightThirdCargoPickupRev)));
+
                 ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
-                                .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(8, 1)
+                                .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(8, 2)
                                 .withSize(2, 2)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 

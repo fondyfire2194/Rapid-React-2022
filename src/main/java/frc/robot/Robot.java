@@ -8,9 +8,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -34,6 +31,7 @@ import frc.robot.commands.AutoCommands.DoNothing;
 import frc.robot.commands.AutoCommands.LeftHideOppCargo;
 import frc.robot.commands.AutoCommands.RetPuShootCamera;
 import frc.robot.commands.AutoCommands.RunCenterThirdCargo;
+import frc.robot.commands.AutoCommands.RunRightThreeCargo;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
@@ -80,12 +78,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-
     // Flush NetworkTables every loop. This ensures that robot pose and other values
     // are sent during every iteration.
     setNetworkTablesFlushEnabled(true);
 
-    
     // Starts recording to data log
 
     if (RobotBase.isReal())
@@ -95,9 +91,7 @@ public class Robot extends TimedRobot {
 
     getAllianceColorBlue();
 
-
     Shuffleboard.selectTab("Pre-Round");
-
 
   }
 
@@ -289,6 +283,30 @@ public class Robot extends TimedRobot {
 
             new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
                 comp, data),
+
+            new RunCenterThirdCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll));
+
+        break;
+
+      case 5:// Pick up and shoot cargo in center of field plus third cargo
+
+        data = FieldMap.rightTarmacData;
+        startingPose = drive.rightAutoStart;
+        data[0] = -1.4;// retract point
+
+        data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
+
+        data[3] = 0;// turret will be locked to Limelight
+
+        data[4] = shooter.rpmFromCameraDistance[8 - 1];// 2000 rpm
+
+        m_autonomousCommand = new SequentialCommandGroup(
+
+            new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+
+            new SetRobotPose(m_robotContainer.m_drive, startingPose),
+
+            new RunRightThreeCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll),
 
             new RunCenterThirdCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll));
 

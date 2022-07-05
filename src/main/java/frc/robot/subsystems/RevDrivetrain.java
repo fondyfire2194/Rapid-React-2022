@@ -16,6 +16,8 @@ import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -74,6 +76,8 @@ public class RevDrivetrain extends SubsystemBase {
     public double rpset, riset, rdset, rffset, rizset;
 
     public double startDistance;
+
+    private Debouncer trajRunningDelOff = new Debouncer(.1, DebounceType.kFalling);
 
     // private int SMART_MOTION_SLOT = 0;
 
@@ -155,6 +159,10 @@ public class RevDrivetrain extends SubsystemBase {
     public Pose2d centerThirdCargoGet = new Pose2d(2.9, 1.3, Rotation2d.fromDegrees(45));
 
     public Pose2d centerThirdCargoGetRev = new Pose2d(2.9, 1.3, Rotation2d.fromDegrees(Math.PI / 2 + 45));
+
+    public Pose2d rightAutoStart = new Pose2d(7.4, 2.09, Rotation2d.fromDegrees(-90));
+
+    public Pose2d rightCargoFirstPickup = new Pose2d(7.4, 1.03, Rotation2d.fromDegrees(Math.PI / 2 - 90));
 
     public RevDrivetrain() {
 
@@ -317,7 +325,7 @@ public class RevDrivetrain extends SubsystemBase {
 
         mOdometry.update(Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance());
 
-        if (trajectoryRunning) {
+        if (trajRunningDelOff.calculate(trajectoryRunning)) {
             leftMeasurement.setNumber(getWheelSpeeds().leftMetersPerSecond);
             leftReference.setNumber(leftController.getSetpoint());
 
@@ -510,7 +518,6 @@ public class RevDrivetrain extends SubsystemBase {
         mLeadRight.set(value);
 
     }
-
 
     /**
      * Resets the current pose to the specified pose. This should ONLY be called
@@ -720,7 +727,7 @@ public class RevDrivetrain extends SubsystemBase {
             mrightPID.setD(kD);
 
             leftController.setP(trajKp);
-            rightController.setP(trajKp);            
+            rightController.setP(trajKp);
 
         }
 

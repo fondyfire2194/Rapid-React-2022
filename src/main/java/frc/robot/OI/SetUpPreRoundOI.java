@@ -65,8 +65,11 @@ public class SetUpPreRoundOI {
                         autoChooser.addOption("Center Tarmac Retract Pickup Shoot",
                                         3);
 
-                        autoChooser.addOption("Center Tarmac Retract Pickup Shoot + Third Cargo",
+                        autoChooser.addOption("Center Tarmac Retract Pickup Shoot + 3 & 4 Cargo",
                                         4);
+
+                        autoChooser.addOption("Right Tarmac Retract Pickup + 3 & 4 Shoot Cargo",
+                                        5);
 
                         Shuffleboard.getTab("Pre-Round").add("HidingCargo", hideCargoChooser).withSize(1, 1)
                                         .withPosition(3, 0);

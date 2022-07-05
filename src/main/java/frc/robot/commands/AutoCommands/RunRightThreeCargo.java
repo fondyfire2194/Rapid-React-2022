@@ -10,8 +10,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Intakes.RunActiveIntake;
+import frc.robot.commands.Intakes.SetFrontIntakeActive;
+import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.Shooter.AltShootCargo;
-import frc.robot.commands.Shooter.CheckCargoAtShoot;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Tilt.PositionTilt;
@@ -31,10 +32,10 @@ import frc.robot.trajectories.ResetOdometryToStartOfTrajectory;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class RunCenterThirdCargo extends SequentialCommandGroup {
+public class RunRightThreeCargo extends SequentialCommandGroup {
         /** Creates a new RunCenterThirdTrajectory. */
 
-        public RunCenterThirdCargo(RevDrivetrain drive, FondyFireTrajectory fftraj,
+        public RunRightThreeCargo(RevDrivetrain drive, FondyFireTrajectory fftraj,
                         IntakesSubsystem intake, RevShooterSubsystem shooter, RevTiltSubsystem tilt,
                         RevTurretSubsystem turret, CargoTransportSubsystem transport, LimeLight ll) {
                 // Add your commands in the addCommands() call, e.g.
@@ -42,39 +43,46 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
 
                 double timeOut = 15;
 
+                double endPoint = 1.2;
+
                 if (RobotBase.isSimulation())
                         timeOut = 1;
 
                 addCommands(
 
                                 parallel(
-
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                fftraj.centerThirdCargoPickUp),
-
-                                                fftraj.getRamsete(fftraj.centerThirdCargoPickUp)
-                                                                .andThen(() -> drive.tankDriveVolts(0, 0)),
+                                                new SetFrontIntakeActive(intake, false),
 
                                                 new RunActiveIntake(intake, transport).withTimeout(timeOut),
 
-                                                new CheckCargoAtShoot(transport, intake).withTimeout(timeOut * 5)),
+                                                new PositionStraight(drive, true, endPoint, drive.pickUpRate)),
 
                                 parallel(
 
-                                                fftraj.getRamsete(fftraj.centerThirdCargoShoot)
+                                                new ResetOdometryToStartOfTrajectory(drive,
+                                                                fftraj.rightThirdCargoPickupRev),
+
+                                                fftraj.getRamsete(fftraj.rightThirdCargoPickupRev)
                                                                 .andThen(() -> drive.tankDriveVolts(0, 0)),
 
                                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720, true),
 
                                                 new SetPresetRPM(shooter, 888),
 
-                                                new PositionTilt(tilt, 11).withTimeout(timeOut)),
+                                                new PositionTilt(tilt, 11).withTimeout(timeOut),
 
-                                new AltShootCargo(shooter, transport, intake, ll).withTimeout(timeOut)
-                                                .deadlineWith(new RunShooter(shooter)),
+                                                new SetFrontIntakeActive(intake, true),
 
-                                new AltShootCargo(shooter, transport, intake, ll).withTimeout(timeOut)
-                                                .deadlineWith(new RunShooter(shooter)),
+                                                new RunActiveIntake(intake, transport).withTimeout(timeOut)),
+
+                                sequence(
+
+                                                new AltShootCargo(shooter, transport, intake, ll).withTimeout(timeOut)
+                                                                .deadlineWith(new RunShooter(shooter)),
+                                                new AltShootCargo(shooter, transport, intake, ll).withTimeout(timeOut)
+                                                                .deadlineWith(new RunShooter(shooter)),
+                                                new AltShootCargo(shooter, transport, intake, ll).withTimeout(timeOut)
+                                                                .deadlineWith(new RunShooter(shooter))),
 
                                 new ParallelCommandGroup(
 
@@ -84,11 +92,11 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
                                                                 PipelinesConstants.ledsOffPipeline),
                                                 new PositionTurret(
                                                                 turret,
-                                                                0).withTimeout(timeOut)
+                                                                0).withTimeout(timeOut))
 
-                                )
+                )
 
-                );
+                ;
 
         }
 }
