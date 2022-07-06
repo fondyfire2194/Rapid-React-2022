@@ -37,7 +37,7 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
         final double pickupPosition = -1.1;
 
-        private double shootAngle = -120;
+        private double shootAngle = -135;
 
         /** Creates a new LRetPuShoot. */
         public LeftHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,

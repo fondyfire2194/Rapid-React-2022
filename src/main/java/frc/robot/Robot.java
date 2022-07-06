@@ -217,11 +217,11 @@ public class Robot extends TimedRobot {
 
         data[0] = -1.6;// retract point
 
-        data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
+        data[2] = ShooterRangeConstants.tiltRange3;// tilt 14 deg
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = shooter.rpmFromCameraDistance[8 - 1];// 2000 rpm
+        data[4] = shooter.rpmFromCameraDistance[9 - 1];// 2000 rpm
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -247,7 +247,7 @@ public class Robot extends TimedRobot {
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = shooter.rpmFromCameraDistance[8 - 1];// 2000 rpm
+        data[4] = shooter.rpmFromCameraDistance[6 - 1];// 1950 rpm
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -273,7 +273,7 @@ public class Robot extends TimedRobot {
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = shooter.rpmFromCameraDistance[8 - 1];// 2000 rpm
+        data[4] = shooter.rpmFromCameraDistance[6 - 1];// 1950 rpm
 
         m_autonomousCommand = new SequentialCommandGroup(
 
