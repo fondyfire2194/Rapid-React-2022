@@ -149,6 +149,11 @@
           "visible": true
         }
       },
+      "/Shuffleboard/Pre-Round/HidingCargo": {
+        "window": {
+          "visible": true
+        }
+      },
       "/Shuffleboard/SetupRobot/Robot/To 2": {
         "window": {
           "visible": true

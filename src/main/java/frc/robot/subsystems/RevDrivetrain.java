@@ -144,26 +144,7 @@ public class RevDrivetrain extends SubsystemBase {
 
     public boolean trajectoryRunning;
 
-    public Pose2d leftAutoStart = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
-
-    public Pose2d leftCargo = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
-
-    public Pose2d centerAutoStart = new Pose2d(6.65, 2.83, Rotation2d.fromDegrees(34));
-
-    public Pose2d zero = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-
-    public Pose2d centerCargo = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(40));
-
-    public Pose2d centerCargoRev = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(Math.PI / 2 + 35.));
-
-    public Pose2d centerThirdCargoGet = new Pose2d(2.9, 1.3, Rotation2d.fromDegrees(45));
-
-    public Pose2d centerThirdCargoGetRev = new Pose2d(2.9, 1.3, Rotation2d.fromDegrees(Math.PI / 2 + 45));
-
-    public Pose2d rightAutoStart = new Pose2d(7.4, 2.09, Rotation2d.fromDegrees(-90));
-
-    public Pose2d rightCargoFirstPickup = new Pose2d(7.4, 1.03, Rotation2d.fromDegrees(Math.PI / 2 - 90));
-
+ 
     public RevDrivetrain() {
 
         mLeadLeft = new CANSparkMax(CANConstants.DRIVETRAIN_LEFT_MASTER,

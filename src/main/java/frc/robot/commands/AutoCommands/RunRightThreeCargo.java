@@ -7,6 +7,7 @@ package frc.robot.commands.AutoCommands;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Intakes.RunActiveIntake;
@@ -59,10 +60,12 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
 
                                 parallel(
 
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                fftraj.rightThirdCargoPickupRev),
+                                                 new ResetOdometryToStartOfTrajectory(drive,
+                                                                 fftraj.rightThirdCargoPickupRev1),
 
-                                                fftraj.getRamsete(fftraj.rightThirdCargoPickupRev)
+                                                                 new WaitCommand(.1),
+
+                                                fftraj.getRamsete(fftraj.rightThirdCargoPickupRev1)
                                                                 .andThen(() -> drive.tankDriveVolts(0, 0)),
 
                                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720, true),

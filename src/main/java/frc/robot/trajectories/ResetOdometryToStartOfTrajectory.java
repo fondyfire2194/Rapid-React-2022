@@ -27,7 +27,8 @@ public class ResetOdometryToStartOfTrajectory extends InstantCommand {
   public void initialize() {
     m_drive.resetOdometry(m_traj.getInitialPose());
     m_drive.trajectoryRunning = true;
-    SmartDashboard.putNumber("TrajTime", m_traj.getTotalTimeSeconds());
+
+    
 
   }
 }

@@ -139,7 +139,6 @@ public class RobotContainer {
 
       public TrajectoryDebug trjdbg;
 
-
       // Drive joystick
 
       // Co driver gamepad
@@ -223,7 +222,7 @@ public class RobotContainer {
             m_trajectory = new FondyFireTrajectory(m_drive);
             ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
             trjdbg = new TrajectoryDebug(m_drive, m_trajectory);
-      
+
             // test configuration
             // Show_Hide_Screens.setStates(false, false,true);
             // test configuration with vision
@@ -415,7 +414,7 @@ public class RobotContainer {
 
       public Command getArcadeDriveCommandSim() {
             return new ArcadeDrive(m_drive, () -> -codriverGamepad.getRawAxis(3) / 2,
-                        () -> codriverGamepad.getRawAxis(2) / 2);
+                        () -> codriverGamepad.getRawAxis(2) * .75);
       }
 
       public Command getDriveStraightCommand() {

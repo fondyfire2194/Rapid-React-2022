@@ -49,8 +49,8 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
 
                                 parallel(
 
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                fftraj.centerThirdCargoPickUp),
+                                                // new ResetOdometryToStartOfTrajectory(drive,
+                                                //                 fftraj.centerThirdCargoPickUp),
 
                                                 fftraj.getRamsete(fftraj.centerThirdCargoPickUp)
                                                                 .andThen(() -> drive.tankDriveVolts(0, 0)),

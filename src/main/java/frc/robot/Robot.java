@@ -213,7 +213,7 @@ public class Robot extends TimedRobot {
         // after retract will be 80 + 1.29
         // so shot length s (82 - 37.75) + 1.29 *39.37 = 44.25 + 52 = 96" = 8 ft
         // this is the start of the tilt range 2 = 11 degrees and 2300 rpm
-        startingPose = drive.leftAutoStart;
+        startingPose = fftraj.leftAutoStart;
 
         data[0] = -1.6;// retract point
 
@@ -239,7 +239,7 @@ public class Robot extends TimedRobot {
 
         data = FieldMap.centerTarmacData;
 
-        startingPose = drive.centerAutoStart;
+        startingPose = fftraj.centerAutoStart;
 
         data[0] = -1.4;// retract point
 
@@ -266,7 +266,7 @@ public class Robot extends TimedRobot {
       case 4:// Pick up and shoot cargo in center of field plus third cargo
 
         data = FieldMap.centerTarmacData;
-        startingPose = drive.centerAutoStart;
+        startingPose = fftraj.centerAutoStart;
         data[0] = -1.4;// retract point
 
         data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
@@ -291,7 +291,7 @@ public class Robot extends TimedRobot {
       case 5:// Pick up and shoot cargo in center of field plus third cargo
 
         data = FieldMap.rightTarmacData;
-        startingPose = drive.rightAutoStart;
+        startingPose = fftraj.rightAutoStart;
         data[0] = -1.4;// retract point
 
         data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
