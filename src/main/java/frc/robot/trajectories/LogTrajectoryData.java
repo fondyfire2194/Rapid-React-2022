@@ -8,6 +8,7 @@
 package frc.robot.trajectories;
 
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -45,14 +46,12 @@ public class LogTrajectoryData extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  
-    int ope = m_ff.trajLogger.init( m_name, names, units);
-    SmartDashboard.putNumber("OPE", ope);
-    SmartDashboard.putString("name", m_name);
-  
+    int ope;
+    
+      ope = m_ff.trajLogger.init(m_name, names, units);
+
     loopCtr = 0;
     fileOpenNow = false;
-
 
   }
 
@@ -112,6 +111,6 @@ public class LogTrajectoryData extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return time > m_traj.getTotalTimeSeconds();
+    return time > m_traj.getTotalTimeSeconds() ;
   }
 }

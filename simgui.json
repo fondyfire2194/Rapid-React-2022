@@ -133,10 +133,18 @@
       "/Shuffleboard/SetupTurret/Turret/StopTurret": "Command",
       "/Shuffleboard/SetupTurret/Turret/Vision Off": "Command",
       "/Shuffleboard/SetupTurret/Turret/Vision On": "Command",
+      "/Shuffleboard/Trajectories/Field": "Field2d",
+      "/Shuffleboard/Trajectories/TrajectoryRun/CenterThirdPickup": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/CenterThirdShoot": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/RightThirdPickup": "Command",
+      "/Shuffleboard/Trajectories/TrajectorySetStart/CenterThirdPickupSetStart": "Command",
+      "/Shuffleboard/Trajectories/TrajectorySetStart/CenterThirdShootSetStart": "Command",
+      "/Shuffleboard/Trajectories/TrajectorySetStart/RightThirdPickupSetStart": "Command",
       "/Shuffleboard/Trajectories/TrajectoryTest/CenterThirdPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryTest/CenterThirdPickupsetStart": "Command",
       "/Shuffleboard/Trajectories/TrajectoryTest/CenterThirdShoot": "Command",
       "/Shuffleboard/Trajectories/TrajectoryTest/CenterThirdShootSetStart": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryTest/LogTraj": "Command",
       "/Shuffleboard/Trajectories/TrajectoryTest/RightThirdPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryTest/RightThirdPickupSetStart": "Command",
       "/SmartDashboard/Field": "Field2d"
@@ -227,5 +235,24 @@
   },
   "NetworkTables View": {
     "visible": false
+  },
+  "Plot": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "height": 302
+        }
+      ]
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "height": 302
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    }
   }
 }

@@ -107,7 +107,7 @@ public final class Constants {
 
       public static double ksVolts = .2;
 
-      public static double kvVoltSecondsPerMeter =2.36;// 2.629;// 22.63;// 27;//2;
+      public static double kvVoltSecondsPerMeter = 2.36;// 2.629;// 22.63;// 27;//2;
 
       public static double kaVoltSecondsSquaredPerMeter = .33;// 3.48;//.408;
 
@@ -144,9 +144,9 @@ public final class Constants {
        * Trajectory constants
        */
 
-      public static double kMaxTrajectoryMetersPerSecond = 3.5;
+      public static double kMaxTrajectoryMetersPerSecond = 3;
 
-      public static double kMaxTrajectoryAccelerationMetersPerSquared = 2.5;
+      public static double kMaxTrajectoryAccelerationMetersPerSquared = 1.5;
 
       public static double kPDriveVel = .000001;
 
@@ -157,6 +157,7 @@ public final class Constants {
       public static final double kaVoltSecondsSquaredPerRadian = 0.3;
 
       public static final LinearSystem<N2, N2, N2> kDrivetrainPlant = LinearSystemId.identifyDrivetrainSystem(
+
             kvVoltSecondsPerMeter, kaVoltSecondsSquaredPerMeter, kvVoltSecondsPerRadian, kaVoltSecondsSquaredPerRadian);
 
       public static final DCMotor kDriveGearbox = DCMotor.getNEO(2);

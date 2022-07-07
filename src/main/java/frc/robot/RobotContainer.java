@@ -81,7 +81,7 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.trajectories.FondyFireTrajectory;
-import frc.robot.trajectories.TrajectoryDebug;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -137,7 +137,7 @@ public class RobotContainer {
 
       public ShootSequenceDisplay ssdisp;
 
-      public TrajectoryDebug trjdbg;
+  
 
       // Drive joystick
 
@@ -221,9 +221,7 @@ public class RobotContainer {
 
             m_trajectory = new FondyFireTrajectory(m_drive);
             ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
-            trjdbg = new TrajectoryDebug(m_drive, m_trajectory);
-            SmartDashboard.putData("TRJDBG", trjdbg);
-
+    
             // test configuration
             // Show_Hide_Screens.setStates(false, false,true);
             // test configuration with vision

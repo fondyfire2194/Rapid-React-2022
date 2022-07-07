@@ -29,7 +29,6 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.trajectories.FondyFireTrajectory;
-import frc.robot.trajectories.TrajectoryDebug;
 
 /** Add your docs here. */
 public class SetUpAutoOI {
