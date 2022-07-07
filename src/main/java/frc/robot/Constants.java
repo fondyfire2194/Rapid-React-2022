@@ -105,11 +105,11 @@ public final class Constants {
       public static double NEO550_COUNTS_PER_REV = 4096;// not used
       public static double DRIVE_GEAR_RATIO = 10.25;
 
-      public static double ksVolts = .227;
+      public static double ksVolts = .2;
 
-      public static double kvVoltSecondsPerMeter = 2.629;//22.63;// 27;//2;
+      public static double kvVoltSecondsPerMeter =2.36;// 2.629;// 22.63;// 27;//2;
 
-      public static double kaVoltSecondsSquaredPerMeter = .401;// 3.48;//.408;
+      public static double kaVoltSecondsSquaredPerMeter = .33;// 3.48;//.408;
 
       public final static double WHEELBASE_WIDTH = .68;
 
@@ -136,21 +136,19 @@ public final class Constants {
       public static double kPositionI = 0.01;
       public static double kPositionP = .4;
       public static double kPositionD = .5;
-//       public static final double kMaxSpeedMetersPerSecond = 1.0;
-//       public static double kMaxPositionAccelerationMetersPerSSquared = 4;
+      // public static final double kMaxSpeedMetersPerSecond = 1.0;
+      // public static double kMaxPositionAccelerationMetersPerSSquared = 4;
 
       /**
        * 
        * Trajectory constants
        */
 
-      public static double kMaxTrajectoryMetersPerSecond = 2.5;
+      public static double kMaxTrajectoryMetersPerSecond = 3.5;
 
       public static double kMaxTrajectoryAccelerationMetersPerSquared = 2.5;
 
       public static double kPDriveVel = .000001;
-
-      
 
       public static double kPickupSpeedMetersPerSecond = 1;
 
@@ -246,13 +244,13 @@ public final class Constants {
 
       public static final double kA = 0.00003;
 
-    public static final double ABSZEROVALUE = 0;
+      public static final double ABSZEROVALUE = 0;
 
    }
 
    public static final class AutoConstants {
 
-      public static final double kMaxAccelerationMetersPerSecondSquared = 10;
+      public static final double kMaxAccelerationMetersPerSecondSquared = 3;
 
       // Reasonable baseline values for a RAMSETE follower in units of meters and
       // seconds

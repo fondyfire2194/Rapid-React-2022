@@ -47,14 +47,13 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                 double pickUpRate = drive.pickUpRate;
 
-
                 addCommands(
                                 // parallel(
 
                                 new SetFrontIntakeActive(intake, false),
-                                // new ResetEncoders(drive),
-                                // new ResetGyro(drive)),
-
+                                new ResetEncoders(drive),
+                                new ResetGyro(drive),
+                                
                                 new TurnToAngle(drive, pickUpAngle),
 
                                 new SaveGetSavedPose(drive, 0), // save current pose

@@ -231,25 +231,25 @@ public class RevTurretSubsystem extends SubsystemBase {
     public void lockTurretToVision(double cameraError) {
         double maxAllowedCameraError = 10;
         boolean negError = cameraError < 0;
-        if (Math.abs(cameraError) > maxAllowedCameraError) {
-            cameraError = maxAllowedCameraError;
-            if (negError)
-                cameraError = -cameraError;
+        // if (Math.abs(cameraError) > maxAllowedCameraError) {
+        //     cameraError = maxAllowedCameraError;
+        //     if (negError)
+        //         cameraError = -cameraError;
 
-        }
+        // }
 
         lockPIDOut = mLockController.calculate(cameraError, 0);
 
-        double maxAllowedOut = .25;
+        double maxAllowedOut = .5;
 
         if (lockPIDOut > maxAllowedOut)
             lockPIDOut = maxAllowedOut;
         if (lockPIDOut < -maxAllowedOut)
             lockPIDOut = -maxAllowedOut;
 
-        else
+        // else
 
-            lockPIDOut = 0;
+        //     lockPIDOut = 0;
 
         SmartDashboard.putNumber("tulLockMove", lockPIDOut * maxVel);
 

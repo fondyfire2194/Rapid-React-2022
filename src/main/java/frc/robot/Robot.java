@@ -221,7 +221,7 @@ public class Robot extends TimedRobot {
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = shooter.rpmFromCameraDistance[9 - 1];// 2000 rpm
+        data[4] = 2700;
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -247,7 +247,7 @@ public class Robot extends TimedRobot {
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = shooter.rpmFromCameraDistance[6 - 1];// 1950 rpm
+        data[4] = 2700;
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -273,7 +273,7 @@ public class Robot extends TimedRobot {
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = shooter.rpmFromCameraDistance[6 - 1];// 1950 rpm
+        data[4] = 2700;
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -298,7 +298,7 @@ public class Robot extends TimedRobot {
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = shooter.rpmFromCameraDistance[8 - 1];// 2000 rpm
+        data[4] = 2700;
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -364,7 +364,7 @@ public class Robot extends TimedRobot {
 
     if (!m_robotContainer.m_tilt.positionResetDone)
 
-      new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule(false);
+      new TiltMoveToReverseLimit(m_robotContainer.m_tilt).schedule();
 
     m_robotContainer.m_limelight.setPipeline(PipelinesConstants.ledsOffPipeline);
 

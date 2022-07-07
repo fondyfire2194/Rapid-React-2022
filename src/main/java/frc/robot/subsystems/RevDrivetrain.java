@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
@@ -24,6 +25,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -59,7 +61,7 @@ public class RevDrivetrain extends SubsystemBase {
 
     private final AHRS mGyro;
 
-    public final Field2d m_field;
+    public final Field2d m_field2d;
     // Simulation
     private CANEncoderSim m_leftEncodersSim;
     private CANEncoderSim m_rightEncodersSim;
@@ -143,8 +145,9 @@ public class RevDrivetrain extends SubsystemBase {
             .getEntry("angle_measurement");
 
     public boolean trajectoryRunning;
+    public double leftVolts;
+    public double rightVolts;
 
- 
     public RevDrivetrain() {
 
         mLeadLeft = new CANSparkMax(CANConstants.DRIVETRAIN_LEFT_MASTER,
@@ -205,9 +208,9 @@ public class RevDrivetrain extends SubsystemBase {
 
         mOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
-        m_field = new Field2d();
+        m_field2d = new Field2d();
         // if (RobotBase.isReal()) {
-        SmartDashboard.putData("Field", m_field);
+        SmartDashboard.putData("Field", m_field2d);
         // }
 
         mLeftEncoder.setPosition(0);
@@ -264,40 +267,40 @@ public class RevDrivetrain extends SubsystemBase {
 
         }
 
-        leftReference = Shuffleboard.getTab("Trajectories")
-                .add("LeftReference", 0)
-                .withWidget(BuiltInWidgets.kTextView)
-                .withPosition(0, 0).withSize(3, 2)
+        // leftReference = Shuffleboard.getTab("Trajectories")
+        // .add("LeftReference", 0)
+        // .withWidget(BuiltInWidgets.kTextView)
+        // .withPosition(0, 0).withSize(3, 2)
 
-                .getEntry();
+        // .getEntry();
 
-        leftMeasurement = Shuffleboard.getTab("Trajectories")
-                .add("LeftMeasurement", 0)
-                .withWidget(BuiltInWidgets.kTextView)
-                .withPosition(3, 0).withSize(3, 2)
+        // leftMeasurement = Shuffleboard.getTab("Trajectories")
+        // .add("LeftMeasurement", 0)
+        // .withWidget(BuiltInWidgets.kTextView)
+        // .withPosition(3, 0).withSize(3, 2)
 
-                .getEntry();
+        // .getEntry();
 
-        rightReference = Shuffleboard.getTab("Trajectories")
-                .add("RightReference", 0)
-                .withWidget(BuiltInWidgets.kTextView)
-                .withPosition(0, 2).withSize(3, 2)
+        // rightReference = Shuffleboard.getTab("Trajectories")
+        // .add("RightReference", 0)
+        // .withWidget(BuiltInWidgets.kTextView)
+        // .withPosition(0, 2).withSize(3, 2)
 
-                .getEntry();
+        // .getEntry();
 
-        rightMeasurement = Shuffleboard.getTab("Trajectories")
-                .add("RightMeasurement", 0)
-                .withWidget(BuiltInWidgets.kTextView)
-                .withPosition(3, 2).withSize(3, 2)
+        // rightMeasurement = Shuffleboard.getTab("Trajectories")
+        // .add("RightMeasurement", 0)
+        // .withWidget(BuiltInWidgets.kTextView)
+        // .withPosition(3, 2).withSize(3, 2)
 
-                .getEntry();
+        // .getEntry();
 
-        angleMeasurement = Shuffleboard.getTab("Trajectories")
-                .add("AngleMeasurement", 0)
-                .withWidget(BuiltInWidgets.kTextView)
-                .withPosition(6, 0).withSize(2, 2)
+        // angleMeasurement = Shuffleboard.getTab("Trajectories")
+        // .add("AngleMeasurement", 0)
+        // .withWidget(BuiltInWidgets.kTextView)
+        // .withPosition(6, 0).withSize(2, 2)
 
-                .getEntry();
+        // .getEntry();
 
     }
 
@@ -309,13 +312,14 @@ public class RevDrivetrain extends SubsystemBase {
         if (trajRunningDelOff.calculate(trajectoryRunning)) {
             leftMeasurement.setNumber(getWheelSpeeds().leftMetersPerSecond);
             leftReference.setNumber(leftController.getSetpoint());
-
+            SmartDashboard.putNumber("LeftMPSFWS", leftController.getSetpoint());
             rightMeasurement.setNumber(getWheelSpeeds().rightMetersPerSecond);
             rightReference.setNumber(rightController.getSetpoint());
+            SmartDashboard.putNumber("RightMPSFWS", rightController.getSetpoint());
 
             angleMeasurement.setNumber(getHeading());
         }
-        m_field.setRobotPose(mOdometry.getPoseMeters());
+        m_field2d.setRobotPose(mOdometry.getPoseMeters());
 
         SmartDashboard.putString("Pose", mOdometry.getPoseMeters().toString());
 
@@ -446,8 +450,8 @@ public class RevDrivetrain extends SubsystemBase {
     }
 
     public void tankDriveVolts(double left, double right) {
-        SmartDashboard.putNumber("VL  ", left);
-        SmartDashboard.putNumber("VR  ", right);
+       leftVolts =left;
+       rightVolts=right;
 
         if (RobotBase.isReal()) {
             mLeadLeft.setVoltage(left);
@@ -666,6 +670,13 @@ public class RevDrivetrain extends SubsystemBase {
                     .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kCoast));
 
         }
+    }
+
+    public void plotTrajectory(Trajectory trajectory) {
+        m_field2d.getObject("trajectory").setPoses(
+                trajectory.getStates().stream()
+                        .map(state -> state.poseMeters)
+                        .collect(Collectors.toList()));
     }
 
     public double getMatchTime() {

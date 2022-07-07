@@ -163,14 +163,13 @@ public class RevTiltSubsystem extends SubsystemBase {
             resetAngle();
 
         }
-
+        setSoftwareLimits();
         if (RobotBase.isReal() && m_reverseLimit.isPressed()) {
 
             resetAngle();
 
-            enableSoftLimits(false);
+            enableSoftLimits(true);
 
-            setSoftwareLimits();
         }
         tiltTarget = Shuffleboard.getTab("SetupTilt")
                 .add("TargetDegrees", 0)
@@ -201,7 +200,10 @@ public class RevTiltSubsystem extends SubsystemBase {
             targetAngle = cameraCalculatedTiltPosition;
         }
 
-  //      SmartDashboard.putBoolean("RefDone", positionResetDone);
+        SmartDashboard.putNumber("TIPLLIMSW", m_motor.getSoftLimit(SoftLimitDirection.kForward));
+        SmartDashboard.putNumber("TIMINLIMSW", m_motor.getSoftLimit(SoftLimitDirection.kReverse));
+
+        // SmartDashboard.putBoolean("RefDone", positionResetDone);
 
     }
 
@@ -339,6 +341,7 @@ public class RevTiltSubsystem extends SubsystemBase {
         m_motor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, (float) TiltConstants.TILT_MIN_ANGLE);
         m_motor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) TiltConstants.TILT_MAX_ANGLE);
         m_motor.setIdleMode(IdleMode.kBrake);
+
     }
 
     public void enableSoftLimits(boolean on) {

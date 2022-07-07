@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
+import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.RobotDrive.PositionStraight;
@@ -24,6 +25,7 @@ import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
+import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.commands.Vision.LimelightSetPipeline;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
 import frc.robot.commands.Vision.UseVision;
@@ -81,7 +83,10 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                                                                 .deadlineWith(new RunActiveIntake(
                                                                                 intake,
                                                                                 transport)),
-
+                                new CalculateTargetDistance(ll, shooter),
+ 
+                                new SelectSpeedAndTiltByDistance(shooter, tilt),
+ 
                                 new ParallelRaceGroup(
 
                                                 new SequentialCommandGroup(

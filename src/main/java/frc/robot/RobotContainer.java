@@ -222,6 +222,7 @@ public class RobotContainer {
             m_trajectory = new FondyFireTrajectory(m_drive);
             ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
             trjdbg = new TrajectoryDebug(m_drive, m_trajectory);
+            SmartDashboard.putData("TRJDBG", trjdbg);
 
             // test configuration
             // Show_Hide_Screens.setStates(false, false,true);
@@ -229,7 +230,7 @@ public class RobotContainer {
             // Show_Hide_Screens.setStates(false, true, true);
 
             // // competition configuration
-            Show_Hide_Screens.setStates(true, false, true);
+            Show_Hide_Screens.setStates(false,false, false);
 
             // all configuration
             // Show_Hide_Screens.setStates(true, true, true);
@@ -356,7 +357,7 @@ public class RobotContainer {
 
                         .whenPressed(new SetShootSpeedSource(m_shooter, m_shooter.cameraSource))
 
-                        .whenPressed(new RunShooter(m_shooter))
+                      //  .whenPressed(new RunShooter(m_shooter))
 
                         .whileActiveContinuous(
 

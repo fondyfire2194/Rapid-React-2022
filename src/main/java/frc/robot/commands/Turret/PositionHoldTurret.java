@@ -19,7 +19,9 @@ package frc.robot.commands.Turret;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import frc.robot.Vision.LimeLight;
 import frc.robot.subsystems.RevTurretSubsystem;
 
@@ -51,7 +53,7 @@ public class PositionHoldTurret extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+   
     targetSeen = m_limelight.getIsTargetFound();
 
     // To limit effect of possible Limelight jitter, valid target is held off for 25
@@ -61,7 +63,7 @@ public class PositionHoldTurret extends CommandBase {
     m_turret.validTargetSeen = m_limelight.useVision && visionTargetDebounce.calculate(targetSeen);
 
     if (targetSeen && m_turret.validTargetSeen) {
-
+ SmartDashboard.putBoolean("LLVTS", m_turret.validTargetSeen);
       cameraHorizontalError = m_limelight.getdegRotationToTarget();
 
       m_turret.lockTurretToVision(cameraHorizontalError);

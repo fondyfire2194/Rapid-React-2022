@@ -17,6 +17,7 @@ public class PositionStraight extends CommandBase {
   private double rightOut;
   private int loopCtr;
   private boolean m_inc;
+  private boolean directionIsPlus;
 
   public PositionStraight(RevDrivetrain drive, double endPoint, double max) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -45,7 +46,7 @@ public class PositionStraight extends CommandBase {
       m_startAngle = m_drive.getYaw();
     m_min = -m_max;
     loopCtr = 0;
-
+    directionIsPlus = m_endpoint > m_drive.getAverageDistance();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -109,9 +110,9 @@ public class PositionStraight extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return loopCtr > 5 && Math.abs(m_endpoint - m_drive.getLeftDistance()) < .1
+    return loopCtr > 5 && Math.abs(m_endpoint - m_drive.getLeftDistance()) < .2;
 
-        && Math.abs(m_endpoint - m_drive.getRightDistance()) < .1;
+    // && Math.abs(m_endpoint - m_drive.getRightDistance()) < .2;
 
     // && m_drive.isStopped();
   }
