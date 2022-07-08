@@ -4,6 +4,7 @@
 
 package frc.robot.commands.AutoCommands;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Intakes.RunActiveIntake;
@@ -42,33 +43,32 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
 
                                 new SetFrontIntakeActive(intake, true),
 
-                                new TurnToAngle(drive, pickUpAngle), new SaveGetSavedPose(drive, 0), // save current
-                                                                                                     // pose
+                                new TurnToAngle(drive, pickUpAngle).andThen(() -> drive.stop()),
+
+                                new WaitCommand(.02), // pose
 
                                 new ResetEncoders(drive),
 
-                                new SaveGetSavedPose(drive, 3),
+                                new WaitCommand(.02),
 
+                                new ParallelCommandGroup(
 
-                                new WaitCommand(.2),
+                                                new WaitCommand(2),
 
+                                                new PositionStraight(drive, pickupPosition, pickUpRate))
 
-                                new PositionStraight(drive, pickupPosition, pickUpRate)
+                                                                .deadlineWith(new RunActiveIntake(intake, transport)),
 
-                                                .deadlineWith(new RunActiveIntake(intake, transport)),
+                                new WaitCommand(.02),
 
-                                new WaitCommand(.2),
+                                new TurnToAngle(drive, shootAngle).andThen(() -> drive.stop()),
 
-                                new TurnToAngle(drive, shootAngle),
-
-                                new WaitCommand(.2),
+                                new WaitCommand(.02),
 
                                 race(
                                                 new RunCargoOutShooter(shooter, intake, transport, 700),
 
-                                                new WaitCommand(3),
-
-                                                new ArcadeDrive(drive, () -> 0., () -> 0.)));
+                                                new WaitCommand(3)));
 
         }
 }

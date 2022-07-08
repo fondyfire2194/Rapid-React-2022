@@ -70,9 +70,7 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                                                 new SetPresetRPM(shooter, upperRPM),
 
                                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720,
-                                                                true)),
-
-                                new ParallelCommandGroup(
+                                                                true),
 
                                                 new PositionStraight(drive, drivePickupPosition,
                                                                 pickUpRate),
@@ -83,15 +81,13 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                                                                 .deadlineWith(new RunActiveIntake(
                                                                                 intake,
                                                                                 transport)),
-                                new CalculateTargetDistance(ll, shooter),
- 
-                                new SelectSpeedAndTiltByDistance(shooter, tilt),
- 
+                                // new CalculateTargetDistance(ll, shooter),
+
+                                // new SelectSpeedAndTiltByDistance(shooter, tilt),
+
                                 new ParallelRaceGroup(
 
                                                 new SequentialCommandGroup(
-
-                                                                new WaitCommand(.2),
 
                                                                 new AltShootCargo(
                                                                                 shooter,

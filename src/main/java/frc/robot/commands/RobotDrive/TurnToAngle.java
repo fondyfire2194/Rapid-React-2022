@@ -36,7 +36,7 @@ public class TurnToAngle extends PIDCommand {
         // Require the drive
         drive);
 
-    getController().setSetpoint(targetAngleDegrees + drive.getHeading()); // Set the controller to be continuous
+    getController().setSetpoint(targetAngleDegrees); // Set the controller to be continuous
                                                                           // (because it is an angle controller)
     getController().enableContinuousInput(-180, 180);
     // Set the controller tolerance - the delta tolerance ensures the robot is

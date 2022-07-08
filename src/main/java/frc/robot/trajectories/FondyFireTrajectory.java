@@ -27,10 +27,9 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.SimpleCSVLogger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.SimpleCSVLogger;
 import frc.robot.commands.AutoCommands.DoNothing;
 import frc.robot.commands.RobotDrive.PlotTrajectory;
 import frc.robot.subsystems.RevDrivetrain;
@@ -199,11 +198,11 @@ public class FondyFireTrajectory {
                 trajInfo.addNumber("PickupTrajSecs", () -> centerThirdCargoPickUp.getTotalTimeSeconds());
                 trajInfo.addNumber("RightTrajSecs", () -> rightThirdCargoPickupRev1.getTotalTimeSeconds());
 
-                ;
-                ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
+                if (RobotBase.isReal()) {
+                        ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
 
-                rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5, 4).withWidget("Field");
-
+                        rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5, 4).withWidget("Field");
+                }
         }
 
         public RamseteCommand getRamsete(Trajectory traj) {

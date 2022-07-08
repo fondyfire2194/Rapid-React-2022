@@ -19,10 +19,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.CANConstants;
-import frc.robot.Constants.PipelinesConstants;
-import frc.robot.Constants.TurretConstants;
 import frc.robot.CTRECanCoder;
+import frc.robot.Constants.CANConstants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.Pref;
 import frc.robot.Sim.CANSparkMaxWithSim;
 

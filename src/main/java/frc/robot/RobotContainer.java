@@ -127,7 +127,7 @@ public class RobotContainer {
 
       public LLVisionShuffleboard m_llVis;
 
-      public Show_Hide_Screens m_sh;
+     // public Show_Hide_Screens m_sh;
 
       public LimeLight m_limelight;
 
@@ -228,7 +228,7 @@ public class RobotContainer {
             // Show_Hide_Screens.setStates(false, true, true);
 
             // // competition configuration
-            Show_Hide_Screens.setStates(false,false, false);
+            Show_Hide_Screens.setStates(true,false, false);
 
             // all configuration
             // Show_Hide_Screens.setStates(true, true, true);

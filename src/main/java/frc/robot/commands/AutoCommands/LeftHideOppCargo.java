@@ -4,7 +4,7 @@
 
 package frc.robot.commands.AutoCommands;
 
-import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Intakes.RunActiveIntake;
@@ -33,11 +33,11 @@ import frc.robot.subsystems.RevShooterSubsystem;
 
 public class LeftHideOppCargo extends SequentialCommandGroup {
 
-        private double pickUpAngle = -95;
+        private double pickUpAngle = -85;
 
         final double pickupPosition = -1.1;
 
-        private double shootAngle = -135;
+        private double shootAngle = -175;
 
         /** Creates a new LRetPuShoot. */
         public LeftHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,
@@ -53,37 +53,31 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
                                 new SetFrontIntakeActive(intake, false),
                                 new ResetEncoders(drive),
                                 new ResetGyro(drive),
-                                
-                                new TurnToAngle(drive, pickUpAngle),
-
-                                new SaveGetSavedPose(drive, 0), // save current pose
+                                new WaitCommand(.02),
+                                new TurnToAngle(drive, pickUpAngle).andThen(() -> drive.stop()),
+                                new WaitCommand(.02),
 
                                 new ResetEncoders(drive),
 
-                                new SaveGetSavedPose(drive, 3),
+                                new ParallelCommandGroup(
 
-                                new WaitCommand(.2),
+                                                new WaitCommand(2),
 
-                                // new ResetEncoders(drive),
+                                                new PositionStraight(drive, pickupPosition, pickUpRate))
 
-                                new PositionStraight(drive, pickupPosition, pickUpRate)
-
-                                                .deadlineWith(new RunActiveIntake(intake, transport)),
-
-                                new WaitCommand(.2),
+                                                                .deadlineWith(new RunActiveIntake(intake, transport)),
+                                new WaitCommand(.02),
 
                                 // new ResetGyro(drive),
 
-                                new TurnToAngle(drive, shootAngle),
+                                new TurnToAngle(drive, shootAngle).andThen(() -> drive.stop()),
 
-                                new WaitCommand(.2),
+                                new WaitCommand(.02),
 
                                 race(
                                                 new RunCargoOutShooter(shooter, intake, transport, 700),
-
-                                                new WaitCommand(3),
-
-                                                new ArcadeDrive(drive, () -> 0., () -> 0.)));
+                                                // new ResetEncoders(drive),
+                                                new WaitCommand(2)));
 
         }
 }

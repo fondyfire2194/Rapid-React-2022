@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -26,15 +25,12 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -586,6 +582,10 @@ public class RevDrivetrain extends SubsystemBase {
 
     public Pose2d getPose() {
         return mOdometry.getPoseMeters();
+    }
+
+    public double getRotationDegrees(){
+      return  getPose().getRotation().getDegrees();
     }
 
     public void resetGyro() {
