@@ -9,6 +9,9 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+
+import org.ejml.dense.row.RandomMatrices_DDRM;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
@@ -20,6 +23,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -446,8 +450,8 @@ public class RevDrivetrain extends SubsystemBase {
     }
 
     public void tankDriveVolts(double left, double right) {
-       leftVolts =left;
-       rightVolts=right;
+        leftVolts = left;
+        rightVolts = right;
 
         if (RobotBase.isReal()) {
             mLeadLeft.setVoltage(left);
@@ -522,6 +526,12 @@ public class RevDrivetrain extends SubsystemBase {
         return savedPose;
     }
 
+    public void rotatePose(double degs) {
+        resetEncoders();
+        Pose2d current = getPose();
+        mOdometry.resetPosition(current, Rotation2d.fromDegrees(getHeading() + degs));
+    }
+
     public void resetPID() {
         mleftPID.reset();
         mrightPID.reset();
@@ -584,8 +594,8 @@ public class RevDrivetrain extends SubsystemBase {
         return mOdometry.getPoseMeters();
     }
 
-    public double getRotationDegrees(){
-      return  getPose().getRotation().getDegrees();
+    public double getRotationDegrees() {
+        return getPose().getRotation().getDegrees();
     }
 
     public void resetGyro() {

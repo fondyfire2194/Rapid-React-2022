@@ -429,7 +429,7 @@ public class SetUpOI {
                         robotCommands.add("To 3", new PositionStraight(drive, +3, .5));
                         robotCommands.add("To -3", new PositionStraight(drive, -3, .5));
                         robotCommands.add("To 2", new PositionStraight(drive, 2, .5));
-                        robotCommands.add("To -1", new PositionStraight(drive, -1, .5));
+                        robotCommands.add("To -1.6", new PositionStraight(drive, -1.6, drive.pickUpRate));
                         robotCommands.add("To 0", new PositionStraight(drive, 0, .5));
                         robotCommands.add("Cmd", drive);
 

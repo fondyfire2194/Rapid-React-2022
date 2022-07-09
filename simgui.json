@@ -105,6 +105,7 @@
       "/Shuffleboard/SetupRobot/Robot/Reset Gyro": "Command",
       "/Shuffleboard/SetupRobot/Robot/Stop Robot": "Command",
       "/Shuffleboard/SetupRobot/Robot/To -1": "Command",
+      "/Shuffleboard/SetupRobot/Robot/To -1.6": "Command",
       "/Shuffleboard/SetupRobot/Robot/To -3": "Command",
       "/Shuffleboard/SetupRobot/Robot/To 0": "Command",
       "/Shuffleboard/SetupRobot/Robot/To 2": "Command",
@@ -180,37 +181,27 @@
           "visible": true
         }
       },
-      "/Shuffleboard/Pre-Round/OppHideTest/CenterOpp": {
-        "window": {
-          "visible": true
-        }
-      },
       "/Shuffleboard/Pre-Round/OppHideTest/LeftOpp": {
         "window": {
           "visible": true
         }
       },
-      "/Shuffleboard/SetupRobot/Robot/To 2": {
+      "/Shuffleboard/SetupRobot/Robot/Reset Enc": {
         "window": {
           "visible": true
         }
       },
-      "/Shuffleboard/SetupRobot/Robot1/TurnTo -90": {
+      "/Shuffleboard/SetupRobot/Robot/Stop Robot": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/SetupRobot/Robot/To -1.6": {
         "window": {
           "visible": true
         }
       },
       "/Shuffleboard/SetupTurret/Turret/Position To 20": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/Shuffleboard/Trajectories/TrajectoryTest/CenterThirdPickup": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/Shuffleboard/Trajectories/TrajectoryTest/RightThirdPickup": {
         "window": {
           "visible": true
         }
@@ -265,7 +256,23 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 302
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 625,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "SPARK MAX [2]-Position"
+            }
+          ]
         }
       ],
       "window": {

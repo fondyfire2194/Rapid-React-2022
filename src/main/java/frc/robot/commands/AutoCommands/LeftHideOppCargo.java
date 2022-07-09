@@ -20,6 +20,7 @@ import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
+import frc.robot.trajectories.RotatePose;
 
 /**
  * After shooting 2 cargo robot center is on alliance cargo center
@@ -37,7 +38,7 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
         final double pickupPosition = -1.1;
 
-        private double shootAngle = -175;
+        private double shootAngle = -120;
 
         /** Creates a new LRetPuShoot. */
         public LeftHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,
@@ -55,6 +56,7 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
                                 new ResetGyro(drive),
                                 new WaitCommand(.02),
                                 new TurnToAngle(drive, pickUpAngle).andThen(() -> drive.stop()),
+                            //    new RotatePose(drive, -90),
                                 new WaitCommand(.02),
 
                                 new ResetEncoders(drive),
@@ -71,7 +73,9 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
                                 // new ResetGyro(drive),
 
                                 new TurnToAngle(drive, shootAngle).andThen(() -> drive.stop()),
-
+  
+                              
+ 
                                 new WaitCommand(.02),
 
                                 race(

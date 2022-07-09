@@ -18,9 +18,9 @@ public class LogTrajectoryData extends CommandBase {
    * Creates a new LogDistanceData.
    */
   public final String[] names = { "Time", "TrajVel", "TrajDeg", "TrajAccel", "TrajCurv", "WheelLeftSpeed",
-      "WheelRightSpeed", "LeftVolts", "RightVolts", "LeftRate", "RightRate", "GyroHdg" };
+      "WheelRightSpeed", "LeftVolts", "RightVolts", "LeftAmps", "RightAmps", "LeftRate", "RightRate", "GyroHdg" };
   public static String[] units = { "Secs", "MPS", "Deg", "MPSPS", "PCT", "MPS",
-      "MPS", "Volt", "Volts", "MPS", "MPS", "Degrees" };
+      "MPS", "Volts", "Volts", "Amps", "Amps", "MPS", "MPS", "Degrees" };
 
   private int loopCtr;
   private boolean fileOpenNow;
@@ -46,8 +46,8 @@ public class LogTrajectoryData extends CommandBase {
   @Override
   public void initialize() {
     int ope;
-    
-      ope = m_ff.trajLogger.init(m_name, names, units);
+
+    ope = m_ff.trajLogger.init(m_name, names, units);
 
     loopCtr = 0;
     fileOpenNow = false;
@@ -92,6 +92,8 @@ public class LogTrajectoryData extends CommandBase {
 
           m_drive.leftVolts,
           m_drive.rightVolts,
+          m_drive.getLeftAmps(),
+          m_drive.getRightAmps(),
           m_drive.getLeftRate(),
           m_drive.getRightRate(),
           m_drive.getHeading());
@@ -110,6 +112,6 @@ public class LogTrajectoryData extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return time > m_traj.getTotalTimeSeconds() ;
+    return time > m_traj.getTotalTimeSeconds();
   }
 }

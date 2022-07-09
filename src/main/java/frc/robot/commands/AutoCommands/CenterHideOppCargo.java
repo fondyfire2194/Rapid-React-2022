@@ -31,17 +31,21 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
 
                 double pickUpRate = drive.pickUpRate;
 
-                final double pickUpAngle = 90;
+                final double pickUpAngle = 86;
 
                 final double pickupPosition = 1.2;
 
-                final double shootAngle = 105;
+                final double shootAngle = 95;
 
                 // remaining data used in shoot routine
 
                 addCommands(
 
                                 new SetFrontIntakeActive(intake, true),
+
+                                new ResetEncoders(drive),
+
+                                new ResetGyro(drive),
 
                                 new TurnToAngle(drive, pickUpAngle).andThen(() -> drive.stop()),
 

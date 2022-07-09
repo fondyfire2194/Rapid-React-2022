@@ -40,17 +40,47 @@ import frc.robot.subsystems.RevDrivetrain;
 public class FondyFireTrajectory {
 
         private RevDrivetrain m_drive;
+
+        // LEFT
+
+    //    public final Pose2d leftAutoStart = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
+
+        final Pose2d leftCargoRev = new Pose2d(5.34, 4.92, Rotation2d.fromDegrees(Math.PI / 2 - 42));
+
+        public Pose2d leftAutoStartRev = new Pose2d(5.12, 5.97, Rotation2d.fromDegrees(Math.PI / 2 - 42));
+
+        public Trajectory leftPickupRev;
+
+        // CENTER
+
+        public Pose2d centerAutoStartRev = new Pose2d(6.65, 2.83, Rotation2d.fromDegrees(Math.PI / 2 + 34));
+
+      //  public final Pose2d centerAutoStart = new Pose2d(6.65, 2.83, Rotation2d.fromDegrees(34));
+
+        final Pose2d centerCargo = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(40));
+
+        final Pose2d centerCargo3Shoot = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(45));
+
+        final Pose2d centerCargoRev = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(Math.PI / 2 + 35.));
+
+        final Pose2d centerThirdCargoGet = new Pose2d(2.36, .75, Rotation2d.fromDegrees(45));
+
+        final Pose2d centerThirdCargoGetRev = new Pose2d(2.36, .75, Rotation2d.fromDegrees(Math.PI / 2 + 45));
+
         public Trajectory centerThirdCargoPickUp;
+
         public Trajectory centerThirdCargoShoot;
-        public Trajectory leftOppPickup;
-        public Trajectory rightThirdCargoPickupRev1;
-        public Trajectory rightThirdCargoPickupRev2;
-        public final Pose2d centerAutoStart = new Pose2d(6.65, 2.83, Rotation2d.fromDegrees(34));
-        public final Pose2d leftAutoStart = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
-        public final Pose2d zero = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+
+        // RIGHT
+
         public final Pose2d rightAutoStart = new Pose2d(7.4, 2.09, Rotation2d.fromDegrees(-90));
 
-        final Pose2d leftCargo = new Pose2d(6.34, 4.92, Rotation2d.fromDegrees(-42));
+        final Pose2d rightCargoFirstPickup = new Pose2d(7.4, 1.1, Rotation2d.fromDegrees(Math.PI / 2 - 90));
+
+        public Trajectory rightThirdCargoPickupRev1;
+
+        public Trajectory rightThirdCargoPickupRev2;
+
         public SimpleCSVLogger trajLogger = new SimpleCSVLogger();
         public boolean trajLogInProgress;
         public boolean logTrajItems = true;
@@ -58,18 +88,6 @@ public class FondyFireTrajectory {
 
         public FondyFireTrajectory(RevDrivetrain drive) {
                 m_drive = drive;
-
-                final Pose2d centerCargo = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(40));
-
-                final Pose2d centerCargo3Shoot = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(45));
-
-                final Pose2d centerCargoRev = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(Math.PI / 2 + 35.));
-
-                final Pose2d centerThirdCargoGet = new Pose2d(2.36, .75, Rotation2d.fromDegrees(45));
-
-                final Pose2d centerThirdCargoGetRev = new Pose2d(2.36, .75, Rotation2d.fromDegrees(Math.PI / 2 + 45));
-
-                final Pose2d rightCargoFirstPickup = new Pose2d(7.4, 1.1, Rotation2d.fromDegrees(Math.PI / 2 - 90));
 
                 var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
                                 new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
@@ -90,6 +108,13 @@ public class FondyFireTrajectory {
                                                 .setKinematics(DriveConstants.kDriveKinematics)
                                                 // Apply the voltage constraint
                                                 .addConstraint(autoVoltageConstraint);
+
+                leftPickupRev = TrajectoryGenerator.generateTrajectory(
+
+                                leftAutoStartRev,
+                                List.of(),
+                                leftCargoRev,
+                                configReversed);
 
                 centerThirdCargoPickUp = TrajectoryGenerator.generateTrajectory(
 

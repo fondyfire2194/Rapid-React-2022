@@ -30,6 +30,7 @@ import frc.robot.commands.AutoCommands.CenterHideOppCargo;
 import frc.robot.commands.AutoCommands.DoNothing;
 import frc.robot.commands.AutoCommands.LeftHideOppCargo;
 import frc.robot.commands.AutoCommands.RetPuShootCamera;
+import frc.robot.commands.AutoCommands.RetPuShootCameraTraj;
 import frc.robot.commands.AutoCommands.RunCenterThirdCargo;
 import frc.robot.commands.AutoCommands.RunRightThreeCargo;
 import frc.robot.commands.RobotDrive.PositionStraight;
@@ -63,7 +64,6 @@ public class Robot extends TimedRobot {
   public double timeToStart;
   int tst;
   private int loopCtr;
-  private Pose2d startingPose;
 
   public static double[] data = { 0, 0, 0, 0, 0 };
 
@@ -213,7 +213,6 @@ public class Robot extends TimedRobot {
         // after retract will be 80 + 1.29
         // so shot length s (82 - 37.75) + 1.29 *39.37 = 44.25 + 52 = 96" = 8 ft
         // this is the start of the tilt range 2 = 11 degrees and 2300 rpm
-        startingPose = fftraj.leftAutoStart;
 
         data[0] = -1.6;// retract point
 
@@ -225,9 +224,9 @@ public class Robot extends TimedRobot {
 
         m_autonomousCommand = new SequentialCommandGroup(
 
-            new SetRobotPose(m_robotContainer.m_drive, startingPose),
+            new SetRobotPose(m_robotContainer.m_drive, fftraj.leftAutoStartRev),
 
-            new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
+            new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.leftPickupRev, transport, shooter, tilt, turret, ll,
                 comp, data),
 
             new ConditionalCommand(new LeftHideOppCargo(intake, drive, transport, shooter), new DoNothing(),
@@ -239,8 +238,6 @@ public class Robot extends TimedRobot {
 
         data = FieldMap.centerTarmacData;
 
-        startingPose = fftraj.centerAutoStart;
-
         data[0] = -1.4;// retract point
 
         data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
@@ -251,7 +248,8 @@ public class Robot extends TimedRobot {
 
         m_autonomousCommand = new SequentialCommandGroup(
 
-            new SetRobotPose(m_robotContainer.m_drive, startingPose),
+            new SetRobotPose(m_robotContainer.m_drive,
+                fftraj.centerAutoStartRev),
 
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
@@ -266,7 +264,7 @@ public class Robot extends TimedRobot {
       case 4:// Pick up and shoot cargo in center of field plus third cargo
 
         data = FieldMap.centerTarmacData;
-        startingPose = fftraj.centerAutoStart;
+
         data[0] = -1.4;// retract point
 
         data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
@@ -279,7 +277,8 @@ public class Robot extends TimedRobot {
 
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
-            new SetRobotPose(m_robotContainer.m_drive, startingPose),
+            new SetRobotPose(m_robotContainer.m_drive,
+                fftraj.centerAutoStartRev),
 
             new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
                 comp, data),
@@ -291,7 +290,7 @@ public class Robot extends TimedRobot {
       case 5:// Pick up and shoot cargo in center of field plus third cargo
 
         data = FieldMap.rightTarmacData;
-        startingPose = fftraj.rightAutoStart;
+
         data[0] = -1.4;// retract point
 
         data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
@@ -304,7 +303,8 @@ public class Robot extends TimedRobot {
 
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
-            new SetRobotPose(m_robotContainer.m_drive, startingPose),
+            new SetRobotPose(m_robotContainer.m_drive,
+                fftraj.rightAutoStart),
 
             new RunRightThreeCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll),
 
