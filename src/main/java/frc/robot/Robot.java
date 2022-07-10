@@ -253,7 +253,7 @@ public class Robot extends TimedRobot {
 
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
-            new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
+            new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.centerFirstPickUpRev, transport, shooter, tilt, turret, ll,
                 comp, data),
 
             new ConditionalCommand(new CenterHideOppCargo(intake, drive, transport, shooter), new DoNothing(),
@@ -304,7 +304,7 @@ public class Robot extends TimedRobot {
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
             new SetRobotPose(m_robotContainer.m_drive,
-                fftraj.rightAutoStart),
+                fftraj.rightCargoAutoStart),
 
             new RunRightThreeCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll),
 

@@ -56,14 +56,17 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
 
                                                 new RunActiveIntake(intake, transport).withTimeout(timeOut),
 
-                                                new PositionStraight(drive, true, endPoint, drive.pickUpRate)),
+                                                new ResetOdometryToStartOfTrajectory(drive,
+                                                                fftraj.rightFirstCargoPickup),
+
+                                                new WaitCommand(.1),
+
+                                                fftraj.getRamsete(fftraj.rightFirstCargoPickup))
+                                                                .andThen(() -> drive.tankDriveVolts(0, 0)),
 
                                 parallel(
 
-                                                 new ResetOdometryToStartOfTrajectory(drive,
-                                                                 fftraj.rightThirdCargoPickupRev1),
-
-                                                                 new WaitCommand(.1),
+                                                new WaitCommand(.1),
 
                                                 fftraj.getRamsete(fftraj.rightThirdCargoPickupRev1)
                                                                 .andThen(() -> drive.tankDriveVolts(0, 0)),
@@ -95,11 +98,8 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
                                                                 PipelinesConstants.ledsOffPipeline),
                                                 new PositionTurret(
                                                                 turret,
-                                                                0).withTimeout(timeOut))
-
-                )
-
-                ;
+                                                                0).withTimeout(timeOut)));
 
         }
+
 }
