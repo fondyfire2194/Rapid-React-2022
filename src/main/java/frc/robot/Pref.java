@@ -111,6 +111,10 @@ public class Pref {
 
     prefDict.put("kpdv", 0.35);
 
+    prefDict.put("trajVel",.8);
+
+    prefDict.put("trajAcc", .4);
+
     // Intake
 
     prefDict.put("IntakeSpeed", 0.75);

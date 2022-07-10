@@ -41,32 +41,14 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
                         RevTurretSubsystem turret, CargoTransportSubsystem transport, LimeLight ll) {
                 // Add your commands in the addCommands() call, e.g.
                 // addCommands(new FooCommand(), new BarCommand());
-
                 double timeOut = 15;
 
                 double endPoint = 1.2;
 
                 if (RobotBase.isSimulation())
                         timeOut = 1;
-
                 addCommands(
-
                                 parallel(
-                                                new SetFrontIntakeActive(intake, false),
-
-                                                new RunActiveIntake(intake, transport).withTimeout(timeOut),
-
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                fftraj.rightFirstCargoPickup),
-
-                                                new WaitCommand(.1),
-
-                                                fftraj.getRamsete(fftraj.rightFirstCargoPickup))
-                                                                .andThen(() -> drive.tankDriveVolts(0, 0)),
-
-                                parallel(
-
-                                                new WaitCommand(.1),
 
                                                 fftraj.getRamsete(fftraj.rightThirdCargoPickupRev1)
                                                                 .andThen(() -> drive.tankDriveVolts(0, 0)),
@@ -101,5 +83,4 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
                                                                 0).withTimeout(timeOut)));
 
         }
-
 }

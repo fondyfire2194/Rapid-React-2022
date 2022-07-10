@@ -23,14 +23,17 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Pref;
 import frc.robot.SimpleCSVLogger;
 import frc.robot.commands.AutoCommands.DoNothing;
+import frc.robot.commands.RobotDrive.ClearPlot;
 import frc.robot.commands.RobotDrive.PlotTrajectory;
 import frc.robot.subsystems.RevDrivetrain;
 
@@ -43,7 +46,7 @@ public class FondyFireTrajectory {
 
         // LEFT
 
-        final Pose2d leftCargoRev = new Pose2d(5., 5.95, Rotation2d.fromDegrees(Math.PI / 2 - 42));
+        final Pose2d leftCargoRev = new Pose2d(5.08, 6.19, Rotation2d.fromDegrees(Math.PI / 2 - 42));
 
         public Pose2d leftAutoStartRev = new Pose2d(6.26, 5.04, Rotation2d.fromDegrees(Math.PI / 2 - 42));
 
@@ -51,27 +54,27 @@ public class FondyFireTrajectory {
 
         // CENTER
 
-        public Pose2d centerAutoStartRev = new Pose2d(6.65, 2.83, Rotation2d.fromDegrees(Math.PI / 2 + 34));
+        public Pose2d centerAutoStartRev = new Pose2d(6.72, 2.73, Rotation2d.fromDegrees(Math.PI / 2 + 22));
 
         final Pose2d centerCargo3Shoot = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(45));
 
-        final Pose2d centerCargoRev = new Pose2d(5.2, 2.17, Rotation2d.fromDegrees(Math.PI / 2 + 37.));
+        final Pose2d centerCargoRev = new Pose2d(5.13, 1.94, Rotation2d.fromDegrees(Math.PI / 2 + 37.));
 
         final Pose2d centerThirdCargoGet = new Pose2d(2.36, .75, Rotation2d.fromDegrees(45));
 
         final Pose2d centerThirdCargoGetRev = new Pose2d(2.36, .75, Rotation2d.fromDegrees(Math.PI / 2 + 45));
 
         public Trajectory centerFirstPickUpRev;
- 
+
         public Trajectory centerThirdCargoPickUp;
 
         public Trajectory centerThirdCargoShoot;
 
         // RIGHT
 
-        public final Pose2d rightCargoAutoStart = new Pose2d(7.4, 2.09, Rotation2d.fromDegrees(-90));
+        public final Pose2d rightCargoAutoStart = new Pose2d(7.63, 1.9, Rotation2d.fromDegrees(-90));
 
-        final Pose2d rightCargoFirstPickup = new Pose2d(7.4, 1.1, Rotation2d.fromDegrees(Math.PI / 2 - 90));
+        final Pose2d rightCargoFirstPickup = new Pose2d(7.63, .62, Rotation2d.fromDegrees(Math.PI / 2 - 90));
 
         public Trajectory rightThirdCargoPickupRev1;
 
@@ -81,10 +84,9 @@ public class FondyFireTrajectory {
         public boolean trajLogInProgress;
         public boolean logTrajItems = true;
         public boolean endFile;
+        public double time;
 
         public DifferentialDriveVoltageConstraint autoVoltageConstraint;
-
-
 
         public FondyFireTrajectory(RevDrivetrain drive) {
 
@@ -95,34 +97,20 @@ public class FondyFireTrajectory {
                                                 DriveConstants.kaVoltSecondsSquaredPerMeter),
                                 DriveConstants.kDriveKinematics, 11); // 8
 
-                // TrajectoryConfig configReversed = new TrajectoryConfig(DriveConstants.kMaxTrajectoryMetersPerSecond,
-                //                 DriveConstants.kMaxTrajectoryAccelerationMetersPerSquared)
-                //                                 // Add kinematics to ensure max speed is actually obeyed
-                //                                 .setKinematics(DriveConstants.kDriveKinematics)
-                //                                 // Apply the voltage constraint
-                //                                 .addConstraint(autoVoltageConstraint);
-                // configReversed.setReversed(true);
-
-                // TrajectoryConfig configForward = new TrajectoryConfig(DriveConstants.kMaxTrajectoryMetersPerSecond,
-                //                 DriveConstants.kMaxTrajectoryAccelerationMetersPerSquared)
-                //                                 // Add kinematics to ensure max speed is actually obeyed
-                //                                 .setKinematics(DriveConstants.kDriveKinematics)
-                //                                 // Apply the voltage constraint
-                //                                 .addConstraint(autoVoltageConstraint);
-
                 leftPickupRev = TrajectoryGenerator.generateTrajectory(
 
                                 leftAutoStartRev,
                                 List.of(),
                                 leftCargoRev,
-                                withSpeedAndAcceleration(.8, 1).setReversed(true));
+                                withSpeedAndAcceleration(1, 1).setReversed(true));
 
                 centerFirstPickUpRev = TrajectoryGenerator.generateTrajectory(
 
                                 centerAutoStartRev,
                                 List.of(),
                                 centerCargoRev,
-                                withSpeedAndAcceleration(.8, 1).setReversed(true));
+                                withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc"))
+                                                .setReversed(true));
 
                 centerThirdCargoPickUp = TrajectoryGenerator.generateTrajectory(
 
@@ -147,12 +135,45 @@ public class FondyFireTrajectory {
                                 rightCargoFirstPickup,
                                 List.of(),
                                 centerCargoRev,
-                                withSpeedAndAcceleration(.8, .5).setReversed(true));
+                                withSpeedAndAcceleration(.8, .75).setReversed(true));
 
                 ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(6, 0)
                                 .withSize(2, 2)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
+
+                trajCommands.add("LeftPickup",
+                                new SequentialCommandGroup(
+                                                new ResetOdometryToStartOfTrajectory(drive,
+                                                                leftPickupRev),
+                                                new ParallelCommandGroup(
+                                                                new ConditionalCommand(
+                                                                                new LogTrajectoryData(drive, this,
+                                                                                                leftPickupRev,
+                                                                                                "LPU"),
+                                                                                new DoNothing(),
+                                                                                () -> RobotBase.isReal()),
+                                                                getRamsete(leftPickupRev))
+                                                                                .andThen(() -> drive.tankDriveVolts(0,
+                                                                                                0))
+                                                                                .andThen(() -> drive.trajectoryRunning = false)));
+
+                trajCommands.add("CenterPickup",
+                                new SequentialCommandGroup(
+                                                new ResetOdometryToStartOfTrajectory(drive,
+                                                                centerFirstPickUpRev),
+                                                new ParallelCommandGroup(
+
+                                                                new ConditionalCommand(
+                                                                                new LogTrajectoryData(drive, this,
+                                                                                                centerFirstPickUpRev,
+                                                                                                "CPU1"),
+                                                                                new DoNothing(),
+                                                                                () -> RobotBase.isReal()),
+                                                                getRamsete(centerFirstPickUpRev))
+                                                                                .andThen(() -> drive.tankDriveVolts(0,
+                                                                                                0))
+                                                                                .andThen(() -> drive.trajectoryRunning = false)));
 
                 trajCommands.add("CenterThirdShoot",
                                 new SequentialCommandGroup(
@@ -181,7 +202,7 @@ public class FondyFireTrajectory {
                                                                                                 "C3PU"),
                                                                                 new DoNothing(),
                                                                                 () -> RobotBase.isReal()),
-                                                                getRamsete(centerThirdCargoPickUp))
+                                                                getRamsete(leftPickupRev))
                                                                                 .andThen(() -> m_drive.tankDriveVolts(0,
                                                                                                 0))
                                                                                 .andThen(() -> m_drive.trajectoryRunning = false)));
@@ -203,10 +224,26 @@ public class FondyFireTrajectory {
                                                                                                 0))
                                                                                 .andThen(() -> m_drive.trajectoryRunning = false)));
 
+                trajCommands.add("CleaPlot", new ClearPlot(drive));
+
                 ShuffleboardLayout trajSetStart = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectorySetStart", BuiltInLayouts.kList).withPosition(8, 0)
                                 .withSize(2, 2)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
+
+                trajSetStart.add("LeftPickuptSetStart",
+
+                                new SequentialCommandGroup(
+                                                new ResetOdometryToStartOfTrajectory(drive,
+                                                                leftPickupRev),
+                                                new PlotTrajectory(drive, leftPickupRev)));
+
+                trajSetStart.add("CenterPickuptSetStart",
+
+                                new SequentialCommandGroup(
+                                                new ResetOdometryToStartOfTrajectory(drive,
+                                                                centerFirstPickUpRev),
+                                                new PlotTrajectory(drive, centerFirstPickUpRev)));
 
                 trajSetStart.add("CenterThirdShootSetStart",
 
@@ -241,12 +278,10 @@ public class FondyFireTrajectory {
 
                 trajInfo.addNumber("Right3PUTrajSecs", () -> rightThirdCargoPickupRev1.getTotalTimeSeconds());
 
-                if (RobotBase.isReal()) {
-                        ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
+                ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
 
-                        rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5, 4).withWidget("Field");
+                rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5, 4).withWidget("Field");
 
-                }
         }
 
         public TrajectoryConfig withSpeedAndAcceleration(
@@ -278,7 +313,6 @@ public class FondyFireTrajectory {
                                                 DriveConstants.kaVoltSecondsSquaredPerMeter),
                                 DriveConstants.kDriveKinematics, m_drive::getWheelSpeeds,
                                 m_drive.leftController, m_drive.rightController,
-
                                 // new PIDController(DriveConstants.kPDriveVel, 0, 0),
                                 // new PIDController(DriveConstants.kPDriveVel, 0, 0),
                                 m_drive::tankDriveVolts, m_drive);

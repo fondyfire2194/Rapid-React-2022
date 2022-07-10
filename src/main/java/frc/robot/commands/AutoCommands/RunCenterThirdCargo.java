@@ -14,7 +14,7 @@ import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.CheckCargoAtShoot;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
-import frc.robot.commands.Tilt.PositionTilt;
+import frc.robot.commands.Tilt.SetTiltTargetAngle;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
@@ -26,7 +26,6 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.trajectories.FondyFireTrajectory;
-import frc.robot.trajectories.ResetOdometryToStartOfTrajectory;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -50,8 +49,9 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
                                 parallel(
 
                                                 // new ResetOdometryToStartOfTrajectory(drive,
-                                                //                 fftraj.centerThirdCargoPickUp),
-
+                                                // fftraj.centerThirdCargoPickUp),
+                                                new SetTiltTargetAngle(tilt, 11),
+  
                                                 fftraj.getRamsete(fftraj.centerThirdCargoPickUp)
                                                                 .andThen(() -> drive.tankDriveVolts(0, 0)),
 
@@ -66,9 +66,7 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
 
                                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720, true),
 
-                                                new SetPresetRPM(shooter, 888),
-
-                                                new PositionTilt(tilt, 11).withTimeout(timeOut)),
+                                                new SetPresetRPM(shooter, 888)),
 
                                 new AltShootCargo(shooter, transport, intake, ll).withTimeout(timeOut)
                                                 .deadlineWith(new RunShooter(shooter)),

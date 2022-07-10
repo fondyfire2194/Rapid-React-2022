@@ -81,7 +81,7 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.trajectories.FondyFireTrajectory;
-
+import frc.robot.trajectories.TrajectoryDebug;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -113,7 +113,7 @@ public class RobotContainer {
 
       public final ClimberSubsystem m_climber;
 
-      // public final RawContoursV2 m_rcv2;
+      public final TrajectoryDebug tragdebug;
 
       public static boolean autoSelected;
 
@@ -127,7 +127,7 @@ public class RobotContainer {
 
       public LLVisionShuffleboard m_llVis;
 
-     // public Show_Hide_Screens m_sh;
+      // public Show_Hide_Screens m_sh;
 
       public LimeLight m_limelight;
 
@@ -136,8 +136,6 @@ public class RobotContainer {
       public FondyFireTrajectory m_trajectory;
 
       public ShootSequenceDisplay ssdisp;
-
-  
 
       // Drive joystick
 
@@ -221,14 +219,14 @@ public class RobotContainer {
 
             m_trajectory = new FondyFireTrajectory(m_drive);
             ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
-    
+
             // test configuration
             // Show_Hide_Screens.setStates(false, false,true);
             // test configuration with vision
             // Show_Hide_Screens.setStates(false, true, true);
 
             // // competition configuration
-            Show_Hide_Screens.setStates(true,false, false);
+            Show_Hide_Screens.setStates(true, false, false);
 
             // all configuration
             // Show_Hide_Screens.setStates(true, true, true);
@@ -242,6 +240,9 @@ public class RobotContainer {
             m_preOi = new SetUpPreRoundOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
                         m_intake, m_climber, m_trajectory);
 
+            tragdebug = new TrajectoryDebug(m_drive, m_trajectory, m_trajectory.rightThirdCargoPickupRev1);
+
+            SmartDashboard.putData("tdbg",tragdebug);
             // if (RobotBase.isSimulation())
             // m_simOI = new SimulationOI(m_turret, m_tilt, m_drive, m_shooter, m_transport,
             // m_compressor,
@@ -355,7 +356,7 @@ public class RobotContainer {
 
                         .whenPressed(new SetShootSpeedSource(m_shooter, m_shooter.cameraSource))
 
-                      //  .whenPressed(new RunShooter(m_shooter))
+                        // .whenPressed(new RunShooter(m_shooter))
 
                         .whileActiveContinuous(
 

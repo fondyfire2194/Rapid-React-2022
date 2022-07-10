@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -9,9 +10,6 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
-
-import org.ejml.dense.row.RandomMatrices_DDRM;
-
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
@@ -23,14 +21,11 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -79,7 +74,8 @@ public class RevDrivetrain extends SubsystemBase {
 
     public double startDistance;
 
-    private Debouncer trajRunningDelOff = new Debouncer(.1, DebounceType.kFalling);
+    // private Debouncer trajRunningDelOff = new Debouncer(.1,
+    // DebounceType.kFalling);
 
     // private int SMART_MOTION_SLOT = 0;
 
@@ -103,8 +99,8 @@ public class RevDrivetrain extends SubsystemBase {
     public PIDController mleftPID = new PIDController(kP, kI, kD);
     public PIDController mrightPID = new PIDController(kP, kI, kD);
 
-    private SparkMaxPIDController mLeftVel;
-    private SparkMaxPIDController mRightVel;
+    public SparkMaxPIDController mLeftVel;
+    public SparkMaxPIDController mRightVel;
 
     public double kTurnP = .01;
     public double kTurnI = 0.;
@@ -132,17 +128,22 @@ public class RevDrivetrain extends SubsystemBase {
     // NetworkTableEntry m_yEntry =
     // NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Y");
 
-    NetworkTableEntry leftReference = NetworkTableInstance.getDefault().getTable("troubleshooting")
-            .getEntry("left_reference");
-    NetworkTableEntry leftMeasurement = NetworkTableInstance.getDefault().getTable("troubleshooting")
-            .getEntry("left_measurement");
-    NetworkTableEntry rightReference = NetworkTableInstance.getDefault().getTable("troubleshooting")
-            .getEntry("right_reference");
-    NetworkTableEntry rightMeasurement = NetworkTableInstance.getDefault().getTable("troubleshooting")
-            .getEntry("right_measurement");
+    // NetworkTableEntry leftReference =
+    // NetworkTableInstance.getDefault().getTable("troubleshooting")
+    // .getEntry("left_reference");
+    // NetworkTableEntry leftMeasurement =
+    // NetworkTableInstance.getDefault().getTable("troubleshooting")
+    // .getEntry("left_measurement");
+    // NetworkTableEntry rightReference =
+    // NetworkTableInstance.getDefault().getTable("troubleshooting")
+    // .getEntry("right_reference");
+    // NetworkTableEntry rightMeasurement =
+    // NetworkTableInstance.getDefault().getTable("troubleshooting")
+    // .getEntry("right_measurement");
 
-    NetworkTableEntry angleMeasurement = NetworkTableInstance.getDefault().getTable("troubleshooting")
-            .getEntry("angle_measurement");
+    // NetworkTableEntry angleMeasurement =
+    // NetworkTableInstance.getDefault().getTable("troubleshooting")
+    // .getEntry("angle_measurement");
 
     public boolean trajectoryRunning;
     public double leftVolts;
@@ -209,9 +210,8 @@ public class RevDrivetrain extends SubsystemBase {
         mOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
         m_field2d = new Field2d();
-        // if (RobotBase.isReal()) {
+
         SmartDashboard.putData("Field", m_field2d);
-        // }
 
         mLeftEncoder.setPosition(0);
         mRightEncoder.setPosition(0);
@@ -241,12 +241,6 @@ public class RevDrivetrain extends SubsystemBase {
         Arrays.asList(mLeadLeft, mLeadRight, mFollowerLeft, mFollowerRight)
                 .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
 
-        // kP = .4;
-        // kI = .1;
-        // kD = .5;
-        // maxAcc = 8;
-        // maxVel = 3;
-
         if (RobotBase.isSimulation()) {
 
             m_leftEncodersSim = new CANEncoderSim(mLeadLeft.getDeviceId(), false);
@@ -267,41 +261,6 @@ public class RevDrivetrain extends SubsystemBase {
 
         }
 
-        // leftReference = Shuffleboard.getTab("Trajectories")
-        // .add("LeftReference", 0)
-        // .withWidget(BuiltInWidgets.kTextView)
-        // .withPosition(0, 0).withSize(3, 2)
-
-        // .getEntry();
-
-        // leftMeasurement = Shuffleboard.getTab("Trajectories")
-        // .add("LeftMeasurement", 0)
-        // .withWidget(BuiltInWidgets.kTextView)
-        // .withPosition(3, 0).withSize(3, 2)
-
-        // .getEntry();
-
-        // rightReference = Shuffleboard.getTab("Trajectories")
-        // .add("RightReference", 0)
-        // .withWidget(BuiltInWidgets.kTextView)
-        // .withPosition(0, 2).withSize(3, 2)
-
-        // .getEntry();
-
-        // rightMeasurement = Shuffleboard.getTab("Trajectories")
-        // .add("RightMeasurement", 0)
-        // .withWidget(BuiltInWidgets.kTextView)
-        // .withPosition(3, 2).withSize(3, 2)
-
-        // .getEntry();
-
-        // angleMeasurement = Shuffleboard.getTab("Trajectories")
-        // .add("AngleMeasurement", 0)
-        // .withWidget(BuiltInWidgets.kTextView)
-        // .withPosition(6, 0).withSize(2, 2)
-
-        // .getEntry();
-
     }
 
     @Override
@@ -309,16 +268,6 @@ public class RevDrivetrain extends SubsystemBase {
 
         mOdometry.update(Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance());
 
-        if (trajRunningDelOff.calculate(trajectoryRunning)) {
-            leftMeasurement.setNumber(getWheelSpeeds().leftMetersPerSecond);
-            leftReference.setNumber(leftController.getSetpoint());
-            SmartDashboard.putNumber("LeftMPSFWS", leftController.getSetpoint());
-            rightMeasurement.setNumber(getWheelSpeeds().rightMetersPerSecond);
-            rightReference.setNumber(rightController.getSetpoint());
-            SmartDashboard.putNumber("RightMPSFWS", rightController.getSetpoint());
-
-            angleMeasurement.setNumber(getHeading());
-        }
         m_field2d.setRobotPose(mOdometry.getPoseMeters());
 
         SmartDashboard.putString("Pose", mOdometry.getPoseMeters().toString());
@@ -342,6 +291,7 @@ public class RevDrivetrain extends SubsystemBase {
         SmartDashboard.putNumber("LPOS", getLeftDistance());
         var voltage = RobotController.getInputVoltage();
         SmartDashboard.putNumber("LOUT", mLeadLeft.get() * voltage);
+        SmartDashboard.putNumber("ROUT", mLeadRight.get() * voltage);
 
         var currHdg = m_dts.getHeading();
         m_dts.setInputs(mLeadLeft.get() * voltage,
@@ -687,6 +637,17 @@ public class RevDrivetrain extends SubsystemBase {
                 trajectory.getStates().stream()
                         .map(state -> state.poseMeters)
                         .collect(Collectors.toList()));
+    }
+
+    public void clearPlot(int l) {
+
+        // Seems to be the only way to clear the lists
+        m_field2d.getObject("trajectory").setPoses(Collections.<Pose2d>emptyList());
+        for (int i = 1; i <= l; i++)
+            m_field2d.getObject("trajectory" + i).setPoses(Collections.<Pose2d>emptyList());
+        m_field2d.getObject("waypoints").setPoses(Collections.<Pose2d>emptyList());
+        for (int i = 1; i <= l; i++)
+            m_field2d.getObject("waypoints" + i).setPoses(Collections.<Pose2d>emptyList());
     }
 
     public double getMatchTime() {

@@ -18,9 +18,10 @@ public class LogTrajectoryData extends CommandBase {
    * Creates a new LogDistanceData.
    */
   public final String[] names = { "Time", "TrajVel", "TrajDeg", "TrajAccel", "TrajCurv", "WheelLeftSpeed",
-      "WheelRightSpeed", "LeftVolts", "RightVolts", "LeftAmps", "RightAmps", "LeftRate", "RightRate", "GyroHdg" };
+      "WheelRightSpeed", "LeftVolts", "RightVolts", "LeftAmps", "RightAmps", "LeftRate", "RightRate", "LeftDist",
+      "RightDist", "GyroHdg" };
   public static String[] units = { "Secs", "MPS", "Deg", "MPSPS", "PCT", "MPS",
-      "MPS", "Volts", "Volts", "Amps", "Amps", "MPS", "MPS", "Degrees" };
+      "MPS", "Volts", "Volts", "Amps", "Amps", "MPS", "MPS", "Meters", "Meters", "Degrees" };
 
   private int loopCtr;
   private boolean fileOpenNow;
@@ -96,6 +97,8 @@ public class LogTrajectoryData extends CommandBase {
           m_drive.getRightAmps(),
           m_drive.getLeftRate(),
           m_drive.getRightRate(),
+          m_drive.getLeftDistance(),
+          m_drive.getRightDistance(),
           m_drive.getHeading());
 
     }

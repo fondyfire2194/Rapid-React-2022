@@ -152,11 +152,16 @@
       "/Shuffleboard/SetupTurret/Turret/Vision Off": "Command",
       "/Shuffleboard/SetupTurret/Turret/Vision On": "Command",
       "/Shuffleboard/Trajectories/Field": "Field2d",
+      "/Shuffleboard/Trajectories/TrajectoryRun/CenterPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/CenterThirdPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/CenterThirdShoot": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/CleaPlot": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/LeftPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/RightThirdPickup": "Command",
+      "/Shuffleboard/Trajectories/TrajectorySetStart/CenterPickuptSetStart": "Command",
       "/Shuffleboard/Trajectories/TrajectorySetStart/CenterThirdPickupSetStart": "Command",
       "/Shuffleboard/Trajectories/TrajectorySetStart/CenterThirdShootSetStart": "Command",
+      "/Shuffleboard/Trajectories/TrajectorySetStart/LeftPickuptSetStart": "Command",
       "/Shuffleboard/Trajectories/TrajectorySetStart/RightThirdPickupSetStart": "Command",
       "/Shuffleboard/Trajectories/TrajectoryTest/CenterThirdPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryTest/CenterThirdPickupsetStart": "Command",
@@ -209,7 +214,13 @@
         }
       },
       "/SmartDashboard/Field": {
+        "bottom": 900,
+        "height": 8.229599952697754,
         "image": "C:\\Users\\John\\Desktop\\2022-field.png",
+        "left": 74,
+        "right": 1774,
+        "top": 50,
+        "width": 16.459199905395508,
         "window": {
           "visible": true
         }
@@ -246,8 +257,14 @@
         "TrajectoryInfo": {
           "open": true
         },
+        "TrajectoryRun": {
+          "open": true
+        },
         "open": true
       },
+      "open": true
+    },
+    "SmartDashboard": {
       "open": true
     }
   },

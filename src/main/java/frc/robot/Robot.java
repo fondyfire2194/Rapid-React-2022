@@ -32,6 +32,7 @@ import frc.robot.commands.AutoCommands.LeftHideOppCargo;
 import frc.robot.commands.AutoCommands.RetPuShootCamera;
 import frc.robot.commands.AutoCommands.RetPuShootCameraTraj;
 import frc.robot.commands.AutoCommands.RunCenterThirdCargo;
+import frc.robot.commands.AutoCommands.RunRightFirstPickup;
 import frc.robot.commands.AutoCommands.RunRightThreeCargo;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
@@ -118,15 +119,9 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
 
-    // m_robotContainer.m_limelight.periodic();
-
     loopCtr++;
 
     SmartDashboard.putNumber("LPCTRA", loopCtr);
-    var state = m_robotContainer.m_trajectory.centerThirdCargoShoot.sample(.25);
-
-    SmartDashboard.putNumber("StateVel", state.velocityMetersPerSecond);
-    SmartDashboard.putString("State", state.toString());
 
   }
 
@@ -253,7 +248,8 @@ public class Robot extends TimedRobot {
 
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
-            new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.centerFirstPickUpRev, transport, shooter, tilt, turret, ll,
+            new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.centerFirstPickUpRev, transport, shooter, tilt,
+                turret, ll,
                 comp, data),
 
             new ConditionalCommand(new CenterHideOppCargo(intake, drive, transport, shooter), new DoNothing(),
@@ -280,7 +276,8 @@ public class Robot extends TimedRobot {
             new SetRobotPose(m_robotContainer.m_drive,
                 fftraj.centerAutoStartRev),
 
-            new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
+            new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.centerFirstPickUpRev, transport, shooter, tilt,
+                turret, ll,
                 comp, data),
 
             new RunCenterThirdCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll));
@@ -305,6 +302,8 @@ public class Robot extends TimedRobot {
 
             new SetRobotPose(m_robotContainer.m_drive,
                 fftraj.rightCargoAutoStart),
+
+            new RunRightFirstPickup(drive, fftraj, intake, shooter, tilt, turret, transport, ll),
 
             new RunRightThreeCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll),
 

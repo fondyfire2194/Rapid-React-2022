@@ -14,10 +14,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
-import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
-import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.Shooter.AltShootCargo;
@@ -25,8 +23,8 @@ import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Tilt.PositionTilt;
+import frc.robot.commands.Tilt.SetTiltTargetAngle;
 import frc.robot.commands.Turret.PositionTurret;
-import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.commands.Vision.LimelightSetPipeline;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
 import frc.robot.commands.Vision.UseVision;
@@ -71,13 +69,12 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
                                                 new ResetGyro(drive),
                                                 new SetShootSpeedSource(shooter, shooter.fromPreset),
                                                 new SetPresetRPM(shooter, upperRPM),
+                                                new SetTiltTargetAngle(tilt, tiltAngle),
 
                                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720,
                                                                 true),
 
                                                 ff.getRamsete(traj).andThen(() -> drive.tankDriveVolts(0, 0)),
-
-                                                new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
 
                                                 new WaitCommand(2))
                                                                 .deadlineWith(new RunActiveIntake(

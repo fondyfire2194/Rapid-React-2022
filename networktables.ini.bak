@@ -43,6 +43,7 @@ double "/Preferences/dRTurnkIz"=0
 double "/Preferences/dRTurnkIzLim"=5
 double "/Preferences/dRTurnkP"=0.05
 double "/Preferences/dRacc"=0.03
+double "/Preferences/drTrajkp"=1e-06
 double "/Preferences/kpdv"=0.35
 double "/Preferences/sHTune"=0
 double "/Preferences/sHff"=0.018

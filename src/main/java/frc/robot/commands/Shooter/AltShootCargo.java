@@ -34,8 +34,6 @@ public class AltShootCargo extends CommandBase {
   private double cargoReleaseTime = .25;
   private boolean cargoReleasing;
   private double cargoReleaseTimer;
-  private double simTime;
-  private boolean simEnd;
   private LimeLight m_ll;
 
   public AltShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
@@ -79,11 +77,7 @@ public class AltShootCargo extends CommandBase {
 
       activeLowStopTime = Pref.getPref("LowRollStopTimeBlue");
 
-    if (RobotBase.isSimulation())
-
-      simTime = Timer.getFPGATimestamp();
-
-    m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
+       m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
     
     m_shooter.wrongCargoColor = m_transport.wrongCargoColor;
 
@@ -187,8 +181,6 @@ public class AltShootCargo extends CommandBase {
 
         && Timer.getFPGATimestamp() > timeCargoToLowRoller + activeLowStopTime;
 
-    simEnd = simTime != 0 && Timer.getFPGATimestamp() > simTime + 1;
-
   }
 
   // Called once the command ends or is interrupted.
@@ -214,6 +206,6 @@ public class AltShootCargo extends CommandBase {
 
     return noCargoAtStart || secondCargoAtLowRoller || noMoreCargo
 
-        || m_transport.latchCargoAtShoot || simEnd;
+        || m_transport.latchCargoAtShoot;
   }
 }

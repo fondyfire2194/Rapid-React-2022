@@ -146,7 +146,7 @@ public final class Constants {
 
       public static double kMaxTrajectoryMetersPerSecond = 3;
 
-      public static double kMaxTrajectoryAccelerationMetersPerSquared = 1.5;
+      public static double kMaxTrajectoryAccelerationMetersPerSquared = 3;
 
       public static double kPDriveVel = .000001;
 
