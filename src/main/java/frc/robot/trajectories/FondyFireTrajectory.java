@@ -45,7 +45,7 @@ public class FondyFireTrajectory {
 
         final Pose2d leftCargoRev = new Pose2d(5., 5.95, Rotation2d.fromDegrees(Math.PI / 2 - 42));
 
-        public Pose2d leftAutoStartRev = new Pose2d(6.24, 5.11, Rotation2d.fromDegrees(Math.PI / 2 - 42));
+        public Pose2d leftAutoStartRev = new Pose2d(6.26, 5.04, Rotation2d.fromDegrees(Math.PI / 2 - 42));
 
         public Trajectory leftPickupRev;
 
@@ -53,11 +53,9 @@ public class FondyFireTrajectory {
 
         public Pose2d centerAutoStartRev = new Pose2d(6.65, 2.83, Rotation2d.fromDegrees(Math.PI / 2 + 34));
 
-        final Pose2d centerCargo = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(40));
-
         final Pose2d centerCargo3Shoot = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(45));
 
-        final Pose2d centerCargoRev = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(Math.PI / 2 + 35.));
+        final Pose2d centerCargoRev = new Pose2d(5.2, 2.17, Rotation2d.fromDegrees(Math.PI / 2 + 37.));
 
         final Pose2d centerThirdCargoGet = new Pose2d(2.36, .75, Rotation2d.fromDegrees(45));
 
@@ -97,20 +95,20 @@ public class FondyFireTrajectory {
                                                 DriveConstants.kaVoltSecondsSquaredPerMeter),
                                 DriveConstants.kDriveKinematics, 11); // 8
 
-                TrajectoryConfig configReversed = new TrajectoryConfig(DriveConstants.kMaxTrajectoryMetersPerSecond,
-                                DriveConstants.kMaxTrajectoryAccelerationMetersPerSquared)
-                                                // Add kinematics to ensure max speed is actually obeyed
-                                                .setKinematics(DriveConstants.kDriveKinematics)
-                                                // Apply the voltage constraint
-                                                .addConstraint(autoVoltageConstraint);
-                configReversed.setReversed(true);
+                // TrajectoryConfig configReversed = new TrajectoryConfig(DriveConstants.kMaxTrajectoryMetersPerSecond,
+                //                 DriveConstants.kMaxTrajectoryAccelerationMetersPerSquared)
+                //                                 // Add kinematics to ensure max speed is actually obeyed
+                //                                 .setKinematics(DriveConstants.kDriveKinematics)
+                //                                 // Apply the voltage constraint
+                //                                 .addConstraint(autoVoltageConstraint);
+                // configReversed.setReversed(true);
 
-                TrajectoryConfig configForward = new TrajectoryConfig(DriveConstants.kMaxTrajectoryMetersPerSecond,
-                                DriveConstants.kMaxTrajectoryAccelerationMetersPerSquared)
-                                                // Add kinematics to ensure max speed is actually obeyed
-                                                .setKinematics(DriveConstants.kDriveKinematics)
-                                                // Apply the voltage constraint
-                                                .addConstraint(autoVoltageConstraint);
+                // TrajectoryConfig configForward = new TrajectoryConfig(DriveConstants.kMaxTrajectoryMetersPerSecond,
+                //                 DriveConstants.kMaxTrajectoryAccelerationMetersPerSquared)
+                //                                 // Add kinematics to ensure max speed is actually obeyed
+                //                                 .setKinematics(DriveConstants.kDriveKinematics)
+                //                                 // Apply the voltage constraint
+                //                                 .addConstraint(autoVoltageConstraint);
 
                 leftPickupRev = TrajectoryGenerator.generateTrajectory(
 
