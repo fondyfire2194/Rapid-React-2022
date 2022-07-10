@@ -7,7 +7,9 @@
 
 package frc.robot.trajectories;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -17,11 +19,12 @@ public class LogTrajectoryData extends CommandBase {
   /**
    * Creates a new LogDistanceData.
    */
-  public final String[] names = { "Time", "TrajVel", "TrajDeg", "TrajAccel", "TrajCurv", "WheelLeftSpeed",
-      "WheelRightSpeed", "LeftVolts", "RightVolts", "LeftAmps", "RightAmps", "LeftRate", "RightRate", "LeftDist",
-      "RightDist", "GyroHdg" };
-  public static String[] units = { "Secs", "MPS", "Deg", "MPSPS", "PCT", "MPS",
-      "MPS", "Volts", "Volts", "Amps", "Amps", "MPS", "MPS", "Meters", "Meters", "Degrees" };
+  public final String[] names = { "Time", "TrajVel", "TrajAccel", "TrajCurv", "TrajX", "TrajY", "TrajDeg",
+      "RobX", "RobY", "RobDeg", "WheelLeftSpeed", "WheelRightSpeed", "LeftVolts", "RightVolts", "LeftAmps",
+      "RightAmps" };
+
+  public static String[] units = { "Secs", "MPS", "MPSPS", "DegPerSec", "Meters", "Meters", "Deg",
+      "Meters", "Meters", "Deg", "MPS", "MPS", "Volts", "Volts", "Amps", "Amps" };
 
   private int loopCtr;
   private boolean fileOpenNow;
@@ -34,6 +37,7 @@ public class LogTrajectoryData extends CommandBase {
   private double firstLogTime;
   private double time;
   private String m_name;
+  private double startTime;
 
   public LogTrajectoryData(RevDrivetrain drive, FondyFireTrajectory ff, Trajectory traj, String trajName) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -80,27 +84,36 @@ public class LogTrajectoryData extends CommandBase {
         firstLogTime = logTime;
 
       time = Timer.getFPGATimestamp() - firstLogTime;
+      startTime = Timer.getFPGATimestamp();
+      State trajstate = m_traj.sample(time);
+      Pose2d robPose = m_drive.getPose();
 
       m_ff.trajLogger.writeData(
           time,
-          m_traj.sample(time).velocityMetersPerSecond,
-          m_traj.sample(time).poseMeters.getRotation().getDegrees(),
-          m_traj.sample(time).accelerationMetersPerSecondSq,
-          m_traj.sample(time).curvatureRadPerMeter,
+          trajstate.velocityMetersPerSecond,
+          trajstate.accelerationMetersPerSecondSq,
+          trajstate.curvatureRadPerMeter,
+
+          trajstate.poseMeters.getTranslation().getX(),
+          trajstate.poseMeters.getTranslation().getY(),
+          trajstate.poseMeters.getRotation().getDegrees(),
+
+          robPose.getX(),
+          robPose.getY(),
+          robPose.getRotation().getDegrees(),
 
           m_drive.getWheelSpeeds().leftMetersPerSecond,
           m_drive.getWheelSpeeds().rightMetersPerSecond,
 
           m_drive.leftVolts,
           m_drive.rightVolts,
-          m_drive.getLeftAmps(),
-          m_drive.getRightAmps(),
-          m_drive.getLeftRate(),
-          m_drive.getRightRate(),
-          m_drive.getLeftDistance(),
-          m_drive.getRightDistance(),
-          m_drive.getHeading());
 
+          m_drive.getLeftAmps(),
+          m_drive.getRightAmps()
+
+      );
+      double logTime = Timer.getFPGATimestamp() - startTime;
+      SmartDashboard.putNumber("Log Time", logTime);
     }
 
   }
