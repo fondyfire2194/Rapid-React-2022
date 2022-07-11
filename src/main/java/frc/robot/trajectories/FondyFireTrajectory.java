@@ -136,11 +136,11 @@ public class FondyFireTrajectory {
                                 rightCargoFirstPickup,
                                 List.of(),
                                 centerCargoRev,
-                                withSpeedAndAcceleration(.8, .75).setReversed(true));
+                                withSpeedAndAcceleration(.25, .5).setReversed(true));
 
                 ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(6, 0)
-                                .withSize(3, 2)
+                                .withSize(2,3)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                 trajCommands.add("LeftPickup",
@@ -283,7 +283,7 @@ public class FondyFireTrajectory {
 
                 ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
 
-  //              rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5, 4).withWidget("Field");
+        //        rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5, 4).withWidget("Field");
 
         }
 

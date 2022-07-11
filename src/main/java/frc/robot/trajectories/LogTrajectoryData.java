@@ -23,7 +23,7 @@ public class LogTrajectoryData extends CommandBase {
       "LeftVolts", "RightVolts",
       "WheelLeftSpeed", "WheelRightSpeed", "RobX", "RobY", "RobDeg", "LeftAmps", "RightAmps" };
 
-  public static String[] units = { "Secs", "MPS", "MPSPS", "DegPerSec", "Meters", "Meters", "Deg",
+  public static String[] units = { "Secs", "MPS", "MPSPS", "RadPerMeter", "Meters", "Meters", "Deg",
       "Volts", "Volts",
       "MPS", "MPS", "Meters", "Meters", "Deg", "Amps", "Amps" };
 
@@ -129,6 +129,6 @@ public class LogTrajectoryData extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return time > m_traj.getTotalTimeSeconds();
+    return time > m_traj.getTotalTimeSeconds() + .5;
   }
 }

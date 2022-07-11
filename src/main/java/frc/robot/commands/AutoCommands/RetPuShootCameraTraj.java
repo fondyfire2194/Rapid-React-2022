@@ -65,24 +65,28 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
                                 new ParallelCommandGroup(
 
                                                 new SetFrontIntakeActive(intake, false),
-                                                new ResetEncoders(drive),
-                                                new ResetGyro(drive),
+                                                // new ResetEncoders(drive),
+                                                // new ResetGyro(drive),
                                                 new SetShootSpeedSource(shooter, shooter.fromPreset),
+
                                                 new SetPresetRPM(shooter, upperRPM),
+
                                                 new SetTiltTargetAngle(tilt, tiltAngle),
 
                                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720,
-                                                                true),
+                                                                true)),
 
-                                                ff.getRamsete(traj).andThen(() -> drive.tankDriveVolts(0, 0)),
+                                new ParallelCommandGroup(
 
-                                                new WaitCommand(2))
+                                                new WaitCommand(2)
                                                                 .deadlineWith(new RunActiveIntake(
-                                                                                intake,
-                                                                                transport)),
-                                // new CalculateTargetDistance(ll, shooter),
+                                                                                intake, transport)),
+                                                new SequentialCommandGroup(
 
-                                // new SelectSpeedAndTiltByDistance(shooter, tilt),
+                                                                new WaitCommand(.25),
+
+                                                                ff.getRamsete(traj).andThen(
+                                                                                () -> drive.tankDriveVolts(0, 0)))),
 
                                 new ParallelRaceGroup(
 
