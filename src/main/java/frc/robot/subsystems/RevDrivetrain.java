@@ -679,7 +679,7 @@ public class RevDrivetrain extends SubsystemBase {
 
             kTurnIz = Pref.getPref("dRTurnkIz");
 
-            trajKp = Pref.getPref("drTrajkp");
+            trajKp = Pref.getPref("trajkp");
 
             mleftPID.setP(kP);
             mleftPID.setI(kI);

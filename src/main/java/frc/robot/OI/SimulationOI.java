@@ -32,7 +32,7 @@ public class SimulationOI {
 
     ShuffleboardTab sim = Shuffleboard.getTab("Simulation");
 
-    sim.add("Field", drive.m_field2d).withPosition(1, 0).withSize(5, 4).withWidget("Field");
+   // sim.add("Field", drive.m_field2d).withPosition(1, 0).withSize(5, 4).withWidget("Field");
 
     sim.addNumber("TiltAngle", () -> tilt.getAngle()).withPosition(6, 0)
         .withWidget("Number Bar").withProperties(Map.of("min", 0, "max", 16));

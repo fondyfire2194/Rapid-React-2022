@@ -43,7 +43,7 @@ public class PositionStraight extends CommandBase {
     if (m_inc)
       m_endpoint += m_drive.getAverageDistance();
     if (RobotBase.isReal())
-      m_startAngle = m_drive.getYaw();
+      m_startAngle = m_drive.getRotationDegrees();
     m_min = -m_max;
     loopCtr = 0;
     directionIsPlus = m_endpoint > m_drive.getAverageDistance();

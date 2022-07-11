@@ -20,11 +20,12 @@ public class LogTrajectoryData extends CommandBase {
    * Creates a new LogDistanceData.
    */
   public final String[] names = { "Time", "TrajVel", "TrajAccel", "TrajCurv", "TrajX", "TrajY", "TrajDeg",
-      "RobX", "RobY", "RobDeg", "WheelLeftSpeed", "WheelRightSpeed", "LeftVolts", "RightVolts", "LeftAmps",
-      "RightAmps" };
+      "LeftVolts", "RightVolts",
+      "WheelLeftSpeed", "WheelRightSpeed", "RobX", "RobY", "RobDeg", "LeftAmps", "RightAmps" };
 
   public static String[] units = { "Secs", "MPS", "MPSPS", "DegPerSec", "Meters", "Meters", "Deg",
-      "Meters", "Meters", "Deg", "MPS", "MPS", "Volts", "Volts", "Amps", "Amps" };
+      "Volts", "Volts",
+      "MPS", "MPS", "Meters", "Meters", "Deg", "Amps", "Amps" };
 
   private int loopCtr;
   private boolean fileOpenNow;
@@ -98,15 +99,15 @@ public class LogTrajectoryData extends CommandBase {
           trajstate.poseMeters.getTranslation().getY(),
           trajstate.poseMeters.getRotation().getDegrees(),
 
-          robPose.getX(),
-          robPose.getY(),
-          robPose.getRotation().getDegrees(),
+          m_drive.leftVolts,
+          m_drive.rightVolts,
 
           m_drive.getWheelSpeeds().leftMetersPerSecond,
           m_drive.getWheelSpeeds().rightMetersPerSecond,
 
-          m_drive.leftVolts,
-          m_drive.rightVolts,
+          robPose.getX(),
+          robPose.getY(),
+          robPose.getRotation().getDegrees(),
 
           m_drive.getLeftAmps(),
           m_drive.getRightAmps()

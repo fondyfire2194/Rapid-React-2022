@@ -103,7 +103,7 @@ public class Pref {
     prefDict.put("dRTurnkIz", .0);
     prefDict.put("dRTurnkIzLim", 5.);
 
-    prefDict.put("drTrajkp",.000001);
+ 
 
     prefDict.put("dRTune", 0.);
 
@@ -111,7 +111,9 @@ public class Pref {
 
     prefDict.put("kpdv", 0.35);
 
-    prefDict.put("trajVel",.8);
+    prefDict.put("trajkp", .000001);
+
+    prefDict.put("trajVel",.5);
 
     prefDict.put("trajAcc", .4);
 

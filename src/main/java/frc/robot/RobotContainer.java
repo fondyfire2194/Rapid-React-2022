@@ -240,7 +240,7 @@ public class RobotContainer {
             m_preOi = new SetUpPreRoundOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
                         m_intake, m_climber, m_trajectory);
 
-            tragdebug = new TrajectoryDebug(m_drive, m_trajectory, m_trajectory.rightThirdCargoPickupRev1);
+            tragdebug = new TrajectoryDebug(m_drive, m_trajectory, m_trajectory.leftPickupRev);
 
             SmartDashboard.putData("tdbg",tragdebug);
             // if (RobotBase.isSimulation())

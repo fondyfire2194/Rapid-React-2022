@@ -158,6 +158,7 @@
       "/Shuffleboard/Trajectories/TrajectoryRun/CleaPlot": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/LeftPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/RightThirdPickup": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/RotatePose": "Command",
       "/Shuffleboard/Trajectories/TrajectorySetStart/CenterPickuptSetStart": "Command",
       "/Shuffleboard/Trajectories/TrajectorySetStart/CenterThirdPickupSetStart": "Command",
       "/Shuffleboard/Trajectories/TrajectorySetStart/CenterThirdShootSetStart": "Command",
@@ -198,17 +199,27 @@
           "visible": true
         }
       },
-      "/Shuffleboard/SetupRobot/Robot/Stop Robot": {
-        "window": {
-          "visible": true
-        }
-      },
       "/Shuffleboard/SetupRobot/Robot/To -1.6": {
         "window": {
           "visible": true
         }
       },
+      "/Shuffleboard/SetupRobot/Robot1/Turn To -90": {
+        "window": {
+          "visible": true
+        }
+      },
       "/Shuffleboard/SetupTurret/Turret/Position To 20": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/Trajectories/TrajectoryRun/LeftPickup": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/Trajectories/TrajectoryRun/RotatePose": {
         "window": {
           "visible": true
         }
@@ -233,6 +244,12 @@
         "Values": {
           "open": false
         }
+      },
+      "SetupRobot": {
+        "RobotValues": {
+          "open": true
+        },
+        "open": true
       },
       "SetupTilt": {
         "TiltValues": {

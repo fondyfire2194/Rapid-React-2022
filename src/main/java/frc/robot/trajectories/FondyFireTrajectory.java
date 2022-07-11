@@ -46,9 +46,9 @@ public class FondyFireTrajectory {
 
         // LEFT
 
-        final Pose2d leftCargoRev = new Pose2d(5.08, 6.19, Rotation2d.fromDegrees(Math.PI / 2 - 42));
+        final Pose2d leftCargoRev = new Pose2d(5.0, 6.2, Rotation2d.fromDegrees(Math.PI / 2 - 35));
 
-        public Pose2d leftAutoStartRev = new Pose2d(6.26, 5.04, Rotation2d.fromDegrees(Math.PI / 2 - 42));
+        public Pose2d leftAutoStartRev = new Pose2d(6.38, 5.27, Rotation2d.fromDegrees(Math.PI / 2 - 35));
 
         public Trajectory leftPickupRev;
 
@@ -102,7 +102,8 @@ public class FondyFireTrajectory {
                                 leftAutoStartRev,
                                 List.of(),
                                 leftCargoRev,
-                                withSpeedAndAcceleration(1, 1).setReversed(true));
+                                withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc"))
+                                                .setReversed(true));
 
                 centerFirstPickUpRev = TrajectoryGenerator.generateTrajectory(
 
@@ -129,7 +130,7 @@ public class FondyFireTrajectory {
                                 rightCargoAutoStart,
                                 List.of(),
                                 rightCargoFirstPickup,
-                                withSpeedAndAcceleration(.8, .5));
+                                withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc")));
 
                 rightThirdCargoPickupRev1 = TrajectoryGenerator.generateTrajectory(
                                 rightCargoFirstPickup,
@@ -139,7 +140,7 @@ public class FondyFireTrajectory {
 
                 ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(6, 0)
-                                .withSize(2, 2)
+                                .withSize(3, 2)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                 trajCommands.add("LeftPickup",
@@ -225,6 +226,8 @@ public class FondyFireTrajectory {
                                                                                 .andThen(() -> m_drive.trajectoryRunning = false)));
 
                 trajCommands.add("CleaPlot", new ClearPlot(drive));
+                trajCommands.add("RotatePose", new RotatePose(drive, 0));
+
 
                 ShuffleboardLayout trajSetStart = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectorySetStart", BuiltInLayouts.kList).withPosition(8, 0)
@@ -280,7 +283,7 @@ public class FondyFireTrajectory {
 
                 ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
 
-                rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5, 4).withWidget("Field");
+  //              rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5, 4).withWidget("Field");
 
         }
 

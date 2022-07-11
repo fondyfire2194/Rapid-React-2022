@@ -20,6 +20,7 @@ import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
+import frc.robot.trajectories.RotatePose;
 
 public class CenterHideOppCargo extends SequentialCommandGroup {
 
@@ -31,11 +32,11 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
 
                 double pickUpRate = drive.pickUpRate;
 
-                final double pickUpAngle = 86;
+                final double pickUpAngle = 110;
 
-                final double pickupPosition = 1.2;
+                final double pickupPosition = 1.5;
 
-                final double shootAngle = 95;
+                final double shootAngle = 132;
 
                 // remaining data used in shoot routine
 
@@ -43,15 +44,12 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
 
                                 new SetFrontIntakeActive(intake, true),
 
-                                new ResetEncoders(drive),
-
-                                new ResetGyro(drive),
 
                                 new TurnToAngle(drive, pickUpAngle).andThen(() -> drive.stop()),
 
-                                new WaitCommand(.02), // pose
+                                new WaitCommand(.02),
 
-                                new ResetEncoders(drive),
+                                new RotatePose(drive, 0),
 
                                 new WaitCommand(.02),
 
@@ -68,6 +66,8 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
                                 new TurnToAngle(drive, shootAngle).andThen(() -> drive.stop()),
 
                                 new WaitCommand(.02),
+
+                                new RotatePose(drive, 0),
 
                                 race(
                                                 new RunCargoOutShooter(shooter, intake, transport, 700),

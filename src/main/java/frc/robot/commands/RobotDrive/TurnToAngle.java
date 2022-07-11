@@ -28,7 +28,7 @@ public class TurnToAngle extends PIDCommand {
     super(
         new PIDController(drive.kTurnP, drive.kTurnI, drive.kTurnD),
         // Close loop on heading
-        drive::getHeading,
+        drive::getRotationDegrees,
         // Set reference to target
         targetAngleDegrees,
         // Pipe output to turn robot

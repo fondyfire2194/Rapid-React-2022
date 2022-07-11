@@ -467,7 +467,7 @@ public class SetUpOI {
                         robotValues.addNumber("Faults", () -> drive.getFaults());
                         robotValues.addNumber("Target", () -> drive.leftTargetPosition);
                         robotValues.addNumber("Heading", () -> drive.getHeading());
-
+                        robotValues.addNumber("Rotation", () -> drive.getRotationDegrees());
                         ShuffleboardLayout robotValues2 = Shuffleboard.getTab("SetupRobot")
                                         .getLayout("States", BuiltInLayouts.kGrid).withPosition(6, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "TOP")); // labels

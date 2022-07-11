@@ -14,12 +14,11 @@ public class RotatePose extends InstantCommand {
   private RevDrivetrain m_drive;
   private double m_degs;
 
-
-  public RotatePose(RevDrivetrain drive,double degs) {
+  public RotatePose(RevDrivetrain drive, double degs) {
     // Use addRequirements() here to declare subsystem dependencies.
-  
+
     m_drive = drive;
-    m_degs=degs;
+    m_degs = degs;
   }
 
   // Called when the command is initially scheduled.

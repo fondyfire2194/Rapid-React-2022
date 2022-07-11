@@ -34,11 +34,11 @@ import frc.robot.trajectories.RotatePose;
 
 public class LeftHideOppCargo extends SequentialCommandGroup {
 
-        private double pickUpAngle = -85;
+        private double pickUpAngle = -133;
 
         final double pickupPosition = -1.1;
 
-        private double shootAngle = -120;
+        private double shootAngle = -175;
 
         /** Creates a new LRetPuShoot. */
         public LeftHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,
@@ -52,14 +52,15 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
                                 // parallel(
 
                                 new SetFrontIntakeActive(intake, false),
-                                new ResetEncoders(drive),
-                                new ResetGyro(drive),
-                                new WaitCommand(.02),
-                                new TurnToAngle(drive, pickUpAngle).andThen(() -> drive.stop()),
-                            //    new RotatePose(drive, -90),
+                                // new ResetEncoders(drive),
+                                // new ResetGyro(drive),
                                 new WaitCommand(.02),
 
-                                new ResetEncoders(drive),
+                                new TurnToAngle(drive, pickUpAngle).andThen(() -> drive.stop()),
+
+                                new WaitCommand(.02),
+
+                                new RotatePose(drive,0),
 
                                 new ParallelCommandGroup(
 
@@ -73,10 +74,10 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
                                 // new ResetGyro(drive),
 
                                 new TurnToAngle(drive, shootAngle).andThen(() -> drive.stop()),
-  
-                              
- 
+
                                 new WaitCommand(.02),
+
+                                new RotatePose(drive, 0),
 
                                 race(
                                                 new RunCargoOutShooter(shooter, intake, transport, 700),
