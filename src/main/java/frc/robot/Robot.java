@@ -224,7 +224,8 @@ public class Robot extends TimedRobot {
             new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.leftPickupRev, transport, shooter, tilt, turret, ll,
                 comp, data),
 
-            new ConditionalCommand(new LeftHideOppCargo(intake, drive, transport, shooter), new DoNothing(),
+            new ConditionalCommand(new LeftHideOppCargo(intake, drive, transport, shooter, fftraj, fftraj.leftHideRev),
+                new DoNothing(),
                 () -> hideOppCargo));
 
         break;
@@ -252,7 +253,9 @@ public class Robot extends TimedRobot {
                 turret, ll,
                 comp, data),
 
-            new ConditionalCommand(new CenterHideOppCargo(intake, drive, transport, shooter), new DoNothing(),
+            new ConditionalCommand(
+                new CenterHideOppCargo(intake, drive, transport, shooter, fftraj, fftraj.centerHide),
+                new DoNothing(),
                 () -> hideOppCargo));
 
         break;

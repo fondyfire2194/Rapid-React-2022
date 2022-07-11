@@ -89,9 +89,10 @@ public class SetUpPreRoundOI {
                                         .withSize(2, 1)
                                         .withProperties(Map.of("Label position", "LEFT")); // labels for
 
-                        oppCommands.add("LeftOpp", new LeftHideOppCargo(intake, drive, transport, shooter));
+                        oppCommands.add("LeftOpp", new LeftHideOppCargo(intake, drive, transport, shooter, fftraj,
+                                        fftraj.leftHideRev));
 
-                        oppCommands.add("CenterOpp", new CenterHideOppCargo(intake, drive, transport, shooter));
+                        oppCommands.add("CenterOpp", new CenterHideOppCargo(intake, drive, transport, shooter,fftraj,fftraj.centerHide));
 
                 }
 

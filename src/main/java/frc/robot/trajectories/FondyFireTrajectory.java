@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -46,25 +45,35 @@ public class FondyFireTrajectory {
 
         // LEFT
 
-        final Pose2d leftCargoRev = new Pose2d(5.0, 6.2, Rotation2d.fromDegrees(Math.PI / 2 - 35));
+        public Pose2d leftCargoRev = new Pose2d(5.0, 6.2, Rotation2d.fromDegrees(Math.PI / 2 - 35));
+
+        public Pose2d leftOppCargoRev = new Pose2d(6.01, 7.24, Rotation2d.fromDegrees(Math.PI / 2 - 133));
 
         public Pose2d leftAutoStartRev = new Pose2d(6.38, 5.27, Rotation2d.fromDegrees(Math.PI / 2 - 35));
 
         public Trajectory leftPickupRev;
 
+        public Trajectory leftHideRev;
+
         // CENTER
 
         public Pose2d centerAutoStartRev = new Pose2d(6.72, 2.73, Rotation2d.fromDegrees(Math.PI / 2 + 22));
 
+        public Pose2d centerHideOppCargo = new Pose2d(4.39, 3.38, Rotation2d.fromDegrees(Math.PI / 2 + 132));
+
         final Pose2d centerCargo3Shoot = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(45));
 
         final Pose2d centerCargoRev = new Pose2d(5.13, 1.94, Rotation2d.fromDegrees(Math.PI / 2 + 37.));
+  
+        final Pose2d centerCargo = new Pose2d(5.13, 1.94, Rotation2d.fromDegrees( 37.));
 
         final Pose2d centerThirdCargoGet = new Pose2d(2.36, .75, Rotation2d.fromDegrees(45));
 
         final Pose2d centerThirdCargoGetRev = new Pose2d(2.36, .75, Rotation2d.fromDegrees(Math.PI / 2 + 45));
 
         public Trajectory centerFirstPickUpRev;
+
+        public Trajectory centerHide;
 
         public Trajectory centerThirdCargoPickUp;
 
@@ -104,6 +113,13 @@ public class FondyFireTrajectory {
                                 leftCargoRev,
                                 withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc"))
                                                 .setReversed(true));
+                leftHideRev = TrajectoryGenerator.generateTrajectory(
+
+                                leftCargoRev,
+                                List.of(),
+                                leftOppCargoRev,
+                                withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc"))
+                                                .setReversed(true));
 
                 centerFirstPickUpRev = TrajectoryGenerator.generateTrajectory(
 
@@ -112,6 +128,13 @@ public class FondyFireTrajectory {
                                 centerCargoRev,
                                 withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc"))
                                                 .setReversed(true));
+
+                centerHide = TrajectoryGenerator.generateTrajectory(
+
+                                centerCargoRev,
+                                List.of(),
+                                centerHideOppCargo,
+                                withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc")));
 
                 centerThirdCargoPickUp = TrajectoryGenerator.generateTrajectory(
 
@@ -140,7 +163,7 @@ public class FondyFireTrajectory {
 
                 ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(6, 0)
-                                .withSize(2,3)
+                                .withSize(2, 3)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                 trajCommands.add("LeftPickup",
@@ -228,7 +251,6 @@ public class FondyFireTrajectory {
                 trajCommands.add("CleaPlot", new ClearPlot(drive));
                 trajCommands.add("RotatePose", new RotatePose(drive));
 
-
                 ShuffleboardLayout trajSetStart = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectorySetStart", BuiltInLayouts.kList).withPosition(8, 0)
                                 .withSize(2, 2)
@@ -283,7 +305,8 @@ public class FondyFireTrajectory {
 
                 ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
 
-        //        rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5, 4).withWidget("Field");
+                // rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
+                // 4).withWidget("Field");
 
         }
 

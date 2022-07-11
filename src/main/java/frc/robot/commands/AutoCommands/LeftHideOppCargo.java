@@ -4,6 +4,7 @@
 
 package frc.robot.commands.AutoCommands;
 
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -20,6 +21,7 @@ import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
+import frc.robot.trajectories.FondyFireTrajectory;
 import frc.robot.trajectories.RotatePose;
 
 /**
@@ -42,7 +44,8 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
         /** Creates a new LRetPuShoot. */
         public LeftHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,
-                        CargoTransportSubsystem transport, RevShooterSubsystem shooter) {
+                        CargoTransportSubsystem transport, RevShooterSubsystem shooter, FondyFireTrajectory fftraj,
+                        Trajectory traj) {
                 addRequirements(intake, drive, transport, shooter);
                 // Use addRequirements() here to declare subsystem dependencies.
 
@@ -64,11 +67,11 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                                 new ParallelCommandGroup(
 
-                                                new WaitCommand(2),
+                                                new WaitCommand(2).deadlineWith(new RunActiveIntake(intake, transport)),
 
-                                                new PositionStraight(drive, pickupPosition, pickUpRate))
+                                                fftraj.getRamsete(traj).andThen(
+                                                                () -> drive.tankDriveVolts(0, 0))),
 
-                                                                .deadlineWith(new RunActiveIntake(intake, transport)),
                                 new WaitCommand(.02),
 
                                 // new ResetGyro(drive),

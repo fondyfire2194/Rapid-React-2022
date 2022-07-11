@@ -4,6 +4,7 @@
 
 package frc.robot.commands.AutoCommands;
 
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -16,13 +17,15 @@ import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
+import frc.robot.trajectories.FondyFireTrajectory;
 import frc.robot.trajectories.RotatePose;
 
 public class CenterHideOppCargo extends SequentialCommandGroup {
 
         /** Creates a new LRetPuShoot. */
         public CenterHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,
-                        CargoTransportSubsystem transport, RevShooterSubsystem shooter) {
+                        CargoTransportSubsystem transport, RevShooterSubsystem shooter, FondyFireTrajectory fftraj,
+                        Trajectory traj) {
                 addRequirements(intake, drive, transport, shooter);
                 // Use addRequirements() here to declare subsystem dependencies.
 
@@ -40,7 +43,6 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
 
                                 new SetFrontIntakeActive(intake, true),
 
-
                                 new TurnToAngle(drive, pickUpAngle).andThen(() -> drive.stop()),
 
                                 new WaitCommand(.02),
@@ -51,19 +53,18 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
 
                                 new ParallelCommandGroup(
 
-                                                new WaitCommand(2),
+                                                new WaitCommand(2).deadlineWith(new RunActiveIntake(intake, transport)),
 
-                                                new PositionStraight(drive, pickupPosition, pickUpRate))
-
-                                                                .deadlineWith(new RunActiveIntake(intake, transport)),
-
-                                new WaitCommand(.02),
-
-                                new TurnToAngle(drive, shootAngle).andThen(() -> drive.stop()),
+                                                fftraj.getRamsete(traj).andThen(
+                                                                () -> drive.tankDriveVolts(0, 0))),
 
                                 new WaitCommand(.02),
 
-                                new RotatePose(drive),
+                                // new TurnToAngle(drive, shootAngle).andThen(() -> drive.stop()),
+
+                                // new WaitCommand(.02),
+
+                                // new RotatePose(drive),
 
                                 race(
                                                 new RunCargoOutShooter(shooter, intake, transport, 700),
