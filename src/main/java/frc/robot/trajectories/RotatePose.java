@@ -12,19 +12,19 @@ import frc.robot.subsystems.RevDrivetrain;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class RotatePose extends InstantCommand {
   private RevDrivetrain m_drive;
-  private double m_degs;
+ 
 
-  public RotatePose(RevDrivetrain drive, double degs) {
+  public RotatePose(RevDrivetrain drive) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     m_drive = drive;
-    m_degs = degs;
+
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.rotatePose(m_degs);
+    m_drive.rotatePose();
 
   }
 }

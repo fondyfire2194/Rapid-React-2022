@@ -476,10 +476,10 @@ public class RevDrivetrain extends SubsystemBase {
         return savedPose;
     }
 
-    public void rotatePose(double degs) {
+    public void rotatePose() {
         resetEncoders();
         Pose2d current = getPose();
-        mOdometry.resetPosition(current, Rotation2d.fromDegrees(getHeading() + degs));
+        mOdometry.resetPosition(current, Rotation2d.fromDegrees(getHeading()));
     }
 
     public void resetPID() {

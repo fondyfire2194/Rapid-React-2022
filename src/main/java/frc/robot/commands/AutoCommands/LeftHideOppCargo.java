@@ -60,7 +60,7 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                                 new WaitCommand(.02),
 
-                                new RotatePose(drive,0),
+                                new RotatePose(drive),
 
                                 new ParallelCommandGroup(
 
@@ -77,7 +77,7 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                                 new WaitCommand(.02),
 
-                                new RotatePose(drive, 0),
+                                new RotatePose(drive),
 
                                 race(
                                                 new RunCargoOutShooter(shooter, intake, transport, 700),

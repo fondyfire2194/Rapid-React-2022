@@ -10,11 +10,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
-import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.PositionStraight;
-import frc.robot.commands.RobotDrive.ResetEncoders;
-import frc.robot.commands.RobotDrive.ResetGyro;
-import frc.robot.commands.RobotDrive.SaveGetSavedPose;
 import frc.robot.commands.RobotDrive.TurnToAngle;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -49,7 +45,7 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
 
                                 new WaitCommand(.02),
 
-                                new RotatePose(drive, 0),
+                                new RotatePose(drive),
 
                                 new WaitCommand(.02),
 
@@ -67,7 +63,7 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
 
                                 new WaitCommand(.02),
 
-                                new RotatePose(drive, 0),
+                                new RotatePose(drive),
 
                                 race(
                                                 new RunCargoOutShooter(shooter, intake, transport, 700),

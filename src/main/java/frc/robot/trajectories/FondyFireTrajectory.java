@@ -226,7 +226,7 @@ public class FondyFireTrajectory {
                                                                                 .andThen(() -> m_drive.trajectoryRunning = false)));
 
                 trajCommands.add("CleaPlot", new ClearPlot(drive));
-                trajCommands.add("RotatePose", new RotatePose(drive, 0));
+                trajCommands.add("RotatePose", new RotatePose(drive));
 
 
                 ShuffleboardLayout trajSetStart = Shuffleboard.getTab("Trajectories")
