@@ -249,6 +249,9 @@
         "RobotValues": {
           "open": true
         },
+        "States": {
+          "open": true
+        },
         "open": true
       },
       "SetupTilt": {
@@ -271,22 +274,15 @@
         "open": true
       },
       "Trajectories": {
-        "TrajectoryInfo": {
-          "open": true
-        },
         "TrajectoryRun": {
           "open": true
-        },
-        "open": true
+        }
       },
       "open": true
     },
     "SmartDashboard": {
       "open": true
     }
-  },
-  "NetworkTables View": {
-    "visible": false
   },
   "Plot": {
     "Plot <0>": {
@@ -318,12 +314,9 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 302
+          "height": 723
         }
-      ],
-      "window": {
-        "visible": false
-      }
+      ]
     }
   }
 }

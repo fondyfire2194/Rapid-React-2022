@@ -118,6 +118,7 @@ public class Robot extends TimedRobot {
     // m_robotContainer.m_setup.checkLimits();
 
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
+    m_robotContainer.m_drive.voltsValue = m_robotContainer.getThrottle();
 
     loopCtr++;
 

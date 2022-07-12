@@ -148,6 +148,10 @@ public class RevDrivetrain extends SubsystemBase {
     public boolean trajectoryRunning;
     public double leftVolts;
     public double rightVolts;
+    public double voltsValue;
+    public double currentVolts;
+    public double leftmpspervolt;
+    public double rightmpspervolt;
 
     public RevDrivetrain() {
 
@@ -178,9 +182,6 @@ public class RevDrivetrain extends SubsystemBase {
 
         mRightEncoder = mLeadRight.getEncoder();
         mLeftEncoder = mLeadLeft.getEncoder();
-
-        // if (RobotBase.isReal()) {
-
         mLeftEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
         mRightEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
 
@@ -306,6 +307,8 @@ public class RevDrivetrain extends SubsystemBase {
 
         m_simAngle.set(m_simAngle.get() - hdgDiff.getDegrees());
 
+        
+
     }
 
     /////////////////////////////////////
@@ -346,6 +349,14 @@ public class RevDrivetrain extends SubsystemBase {
 
     public double getLeftAmps() {
         return mLeadLeft.getOutputCurrent();
+    }
+
+    public double getLeftFollowerAmps() {
+        return mFollowerLeft.getOutputCurrent();
+    }
+
+    public double getRightFollowerAmps() {
+        return mFollowerRight.getOutputCurrent();
     }
 
     public double getRightFollowerOut() {

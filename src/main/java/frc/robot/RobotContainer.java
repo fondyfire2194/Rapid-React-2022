@@ -29,9 +29,9 @@ import frc.robot.OI.LLVisionShuffleboard;
 import frc.robot.OI.SetUpAutoOI;
 import frc.robot.OI.SetUpOI;
 import frc.robot.OI.SetUpPreRoundOI;
-import frc.robot.OI.ShootSequenceDisplay;
 import frc.robot.OI.Show_Hide_Screens;
 import frc.robot.OI.SimulationOI;
+import frc.robot.OI.TrajTestOI;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
@@ -47,8 +47,10 @@ import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Intakes.StopActiveIntake;
+import frc.robot.commands.RobotDrive.AccelVolts;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
+import frc.robot.commands.RobotDrive.RunAtVolts;
 import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.ChangeShooterSpeed;
 import frc.robot.commands.Shooter.JogShooter;
@@ -113,7 +115,7 @@ public class RobotContainer {
 
       public final ClimberSubsystem m_climber;
 
-      public final TrajectoryDebug tragdebug;
+      // public final TrajectoryDebug tragdebug;
 
       public static boolean autoSelected;
 
@@ -127,6 +129,8 @@ public class RobotContainer {
 
       public LLVisionShuffleboard m_llVis;
 
+      public TrajTestOI ttoi;
+
       // public Show_Hide_Screens m_sh;
 
       public LimeLight m_limelight;
@@ -135,7 +139,7 @@ public class RobotContainer {
 
       public FondyFireTrajectory m_trajectory;
 
-      public ShootSequenceDisplay ssdisp;
+      // public ShootSequenceDisplay ssdisp;
 
       // Drive joystick
 
@@ -218,31 +222,35 @@ public class RobotContainer {
             m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
             m_trajectory = new FondyFireTrajectory(m_drive);
-            ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
-
+            // ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
+            ttoi = new TrajTestOI(m_drive, m_trajectory);
             // test configuration
             // Show_Hide_Screens.setStates(false, false,true);
             // test configuration with vision
             // Show_Hide_Screens.setStates(false, true, true);
 
             // // competition configuration
-            Show_Hide_Screens.setStates(true, false, false);
+            Show_Hide_Screens.setStates(false, false, false);
 
             // all configuration
             // Show_Hide_Screens.setStates(true, true, true);
 
-            m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
-                        m_limelight, m_intake, m_climber, m_trajectory);
+            // m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport,
+            // m_compressor,
+            // m_limelight, m_intake, m_climber, m_trajectory);
 
-            m_autoOi = new SetUpAutoOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
-                        m_intake, m_climber, m_trajectory);
+            // m_autoOi = new SetUpAutoOI(m_turret, m_tilt, m_drive, m_shooter, m_transport,
+            // m_compressor, m_limelight,
+            // m_intake, m_climber, m_trajectory);
 
-            m_preOi = new SetUpPreRoundOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
-                        m_intake, m_climber, m_trajectory);
+            // m_preOi = new SetUpPreRoundOI(m_turret, m_tilt, m_drive, m_shooter,
+            // m_transport, m_compressor, m_limelight,
+            // m_intake, m_climber, m_trajectory);
 
-            tragdebug = new TrajectoryDebug(m_drive, m_trajectory, m_trajectory.leftPickupRev);
+            // tragdebug = new TrajectoryDebug(m_drive, m_trajectory,
+            // m_trajectory.leftPickupRev);
 
-            SmartDashboard.putData("tdbg",tragdebug);
+            // SmartDashboard.putData("tdbg",tragdebug);
             // if (RobotBase.isSimulation())
             // m_simOI = new SimulationOI(m_turret, m_tilt, m_drive, m_shooter, m_transport,
             // m_compressor,
@@ -284,15 +292,13 @@ public class RobotContainer {
              */
 
             new JoystickButton(m_driverController, 1)
-                        .whileHeld(new RunActiveIntake(m_intake, m_transport))
-                        .whenPressed(new TurnLedsOnOff(m_limelight, false))
-                        .whenPressed(new RunLowerRollerIntake(m_transport, m_intake))
-                        .whenReleased(new StopActiveIntake(m_intake));
+                        .whileHeld(new RunAtVolts(m_drive));
+                        // .whenPressed(new TurnLedsOnOff(m_limelight, false))
+                        // .whenPressed(new RunLowerRollerIntake(m_transport, m_intake))
+                        // .whenReleased(new StopActiveIntake(m_intake));
 
             new JoystickButton(m_driverController, 2)
-                        .whenPressed(new RunShooter(m_shooter))
-                        .whenPressed(new TurnLedsOnOff(m_limelight, true))
-                        .whenPressed(new AltShootCargo(m_shooter, m_transport, m_intake, m_limelight));
+                        .whileHeld(new AccelVolts(m_drive));
 
             new JoystickButton(m_driverController, 6).whenPressed(new SetFrontIntakeActive(m_intake, true));
 

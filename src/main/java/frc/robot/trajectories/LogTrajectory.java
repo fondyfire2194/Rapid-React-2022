@@ -15,16 +15,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RevDrivetrain;
 
-public class LogTrajectoryData extends CommandBase {
+public class LogTrajectory extends CommandBase {
   /**
    * Creates a new LogDistanceData.
    */
-  public final String[] names = { "Time",
-      "LeftVolts", "RightVolts",
-      "WheelLeftSpeed", "WheelRightSpeed", "RobX", "RobY", "RobDeg", "LeftAmps", "RightAmps" };
+  public final String[] names = { "Time", "TrajVel", "TrajAccel", "TrajCurv", "TrajX", "TrajY", "TrajDeg"
+  };
 
-  public static String[] units = { "Secs","Volts", "Volts",
-      "MPS", "MPS", "Meters", "Meters", "Deg", "Amps", "Amps" };
+  public static String[] units = { "Secs", "MPS", "MPSPS", "RadPerMeter", "Meters", "Meters", "Deg"
+  };
 
   private int loopCtr;
   private boolean fileOpenNow;
@@ -39,7 +38,7 @@ public class LogTrajectoryData extends CommandBase {
   private String m_name;
   private double startTime;
 
-  public LogTrajectoryData(RevDrivetrain drive, FondyFireTrajectory ff, Trajectory traj, String trajName) {
+  public LogTrajectory(RevDrivetrain drive, FondyFireTrajectory ff, Trajectory traj, String trajName) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = drive;
     m_ff = ff;
@@ -85,28 +84,21 @@ public class LogTrajectoryData extends CommandBase {
 
       time = Timer.getFPGATimestamp() - firstLogTime;
       startTime = Timer.getFPGATimestamp();
-
-      Pose2d robPose = m_drive.getPose();
+      State trajstate = m_traj.sample(time);
 
       m_ff.trajLogger.writeData(
           time,
+          trajstate.velocityMetersPerSecond,
+          trajstate.accelerationMetersPerSecondSq,
+          trajstate.curvatureRadPerMeter,
 
-          m_drive.leftVolts,
-          m_drive.rightVolts,
-
-          m_drive.getWheelSpeeds().leftMetersPerSecond,
-          m_drive.getWheelSpeeds().rightMetersPerSecond,
-
-          robPose.getX(),
-          robPose.getY(),
-          robPose.getRotation().getDegrees(),
-
-          m_drive.getLeftAmps(),
-          m_drive.getRightAmps()
+          trajstate.poseMeters.getTranslation().getX(),
+          trajstate.poseMeters.getTranslation().getY(),
+          trajstate.poseMeters.getRotation().getDegrees()
 
       );
       double logTime = Timer.getFPGATimestamp() - startTime;
-      SmartDashboard.putNumber("Log Data Time", logTime);
+      SmartDashboard.putNumber("Log Time", logTime);
     }
 
   }
