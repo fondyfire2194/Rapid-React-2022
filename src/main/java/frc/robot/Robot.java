@@ -238,30 +238,6 @@ public class Robot extends TimedRobot {
 
         break;
 
-      case 4:// Pick up and shoot cargo in center of field plus third cargo
-
-        data = FieldMap.centerTarmacData;
-
-        data[0] = -1.4;// retract point
-
-        data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
-
-        data[3] = 0;// turret will be locked to Limelight
-
-        data[4] = 2700;
-
-        m_autonomousCommand = new SequentialCommandGroup(
-
-            new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
-
-            new RetPuShootCamera(intake, drive, transport, shooter, tilt,
-                turret, ll,
-                comp, data))
-
-        ;
-
-        break;
-
       default:
 
         break;
