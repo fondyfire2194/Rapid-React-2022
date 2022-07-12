@@ -28,28 +28,25 @@ import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
-import frc.robot.trajectories.FondyFireTrajectory;
 
 /** Add your docs here. */
 public class SetUpAutoOI {
 
         public SendableChooser<Command> autoChooser = new SendableChooser<>();
         public SendableChooser<Integer> startDelayChooser = new SendableChooser<>();
-     
+
         public static boolean m_showAuto;
 
         public SetUpAutoOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
-                        LimeLight ll, IntakesSubsystem intake, ClimberSubsystem climber,
-                        FondyFireTrajectory traj) {
+                        LimeLight ll, IntakesSubsystem intake, ClimberSubsystem climber) {
 
                 if (m_showAuto) {
 
                         ShuffleboardLayout compet = Shuffleboard.getTab("Competition")
                                         .getLayout("States", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4)
                                         .withProperties(Map.of("Label position", "TOP"));
-                        
-         
+
                         compet.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
                         compet.addBoolean("IsShooting", () -> shooter.isShooting);
                         compet.addBoolean("CargoAtRear", () -> intake.getCargoAtRear());
@@ -65,7 +62,7 @@ public class SetUpAutoOI {
                         compet1.addNumber("LeftAmps", () -> shooter.getLeftAmps());
                         compet1.addNumber("RightAmps", () -> shooter.getRightAmps());
                         compet1.addNumber("RobotPosn", () -> drive.getAverageDistance());
-                        
+
                         compet1.addNumber("TargetDistance", () -> shooter.calculatedCameraDistance);
 
                         compet1.addBoolean("LLHasTarget", () -> ll.getIsTargetFound());
@@ -108,7 +105,7 @@ public class SetUpAutoOI {
                         compet4.addNumber("TiltPreset", () -> tilt.presetPosition);
                         compet4.addNumber("DriverAdjustRPM",
                                         () -> shooter.shooterRPMAdder[shooter.shootLocation]);
-                        
+
                         compet4.addNumber("TUAngle", () -> turret.getAngle());
                         compet4.addNumber("Visiondistance", () -> shooter.calculatedCameraDistance);
                         compet4.addBoolean("LLHasTarget", () -> ll.getIsTargetFound());

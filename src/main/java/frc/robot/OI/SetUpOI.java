@@ -54,7 +54,7 @@ import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
-import frc.robot.trajectories.FondyFireTrajectory;
+
 
 /** Add your docs here. */
 public class SetUpOI {
@@ -73,8 +73,8 @@ public class SetUpOI {
         public SetUpOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
                         LimeLight limelight, IntakesSubsystem intake,
-                        ClimberSubsystem climber,
-                        FondyFireTrajectory traj) {
+                        ClimberSubsystem climber
+                        ) {
 
                 if (showIntake) {
 

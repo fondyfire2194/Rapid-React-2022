@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.AutoCommands.CenterHideOppCargo;
-import frc.robot.commands.AutoCommands.LeftHideOppCargo;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -21,7 +19,6 @@ import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
-import frc.robot.trajectories.FondyFireTrajectory;
 
 /** Add your docs here. */
 public class SetUpPreRoundOI {
@@ -35,8 +32,7 @@ public class SetUpPreRoundOI {
 
         public SetUpPreRoundOI(RevTurretSubsystem turret, RevTiltSubsystem tilt, RevDrivetrain drive,
                         RevShooterSubsystem shooter, CargoTransportSubsystem transport, Compressor compressor,
-                        LimeLight ll, IntakesSubsystem intake, ClimberSubsystem climber,
-                        FondyFireTrajectory fftraj) {
+                        LimeLight ll, IntakesSubsystem intake, ClimberSubsystem climber) {
 
                 /**
                  * 
@@ -62,17 +58,8 @@ public class SetUpPreRoundOI {
                         autoChooser.addOption("Center Tarmac Retract Pickup Shoot",
                                         3);
 
-                        autoChooser.addOption("Center Tarmac Retract Pickup Shoot + 3 & 4 Cargo",
+                        autoChooser.addOption("Right Tarmac Retract Pickup Shoot",
                                         4);
-
-                        autoChooser.addOption("Right Tarmac Retract Pickup + 3 & 4 Shoot Cargo",
-                                        5);
-
-                        Shuffleboard.getTab("Pre-Round").add("HidingCargo", hideCargoChooser).withSize(1, 1)
-                                        .withPosition(3, 0);
-
-                        hideCargoChooser.setDefaultOption("Yes", true);
-                        hideCargoChooser.addOption("No", false);
 
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
                                         .withPosition(4, 0); //
@@ -83,16 +70,6 @@ public class SetUpPreRoundOI {
                         startDelayChooser.addOption("Three Seconds", 3.);
                         startDelayChooser.addOption("Four Seconds", 4.);
                         startDelayChooser.addOption("Five Seconds", 5.);
-
-                        ShuffleboardLayout oppCommands = Shuffleboard.getTab("Pre-Round")
-                                        .getLayout("OppHideTest", BuiltInLayouts.kList).withPosition(8, 0)
-                                        .withSize(2, 1)
-                                        .withProperties(Map.of("Label position", "LEFT")); // labels for
-
-                        oppCommands.add("LeftOpp", new LeftHideOppCargo(intake, drive, transport, shooter, fftraj,
-                                        fftraj.leftHideRev));
-
-                        oppCommands.add("CenterOpp", new CenterHideOppCargo(intake, drive, transport, shooter,fftraj,fftraj.centerHide));
 
                 }
 

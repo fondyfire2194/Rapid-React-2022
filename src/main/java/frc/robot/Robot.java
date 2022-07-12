@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -19,25 +18,16 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Constants.ShooterRangeConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.commands.MessageCommand;
-import frc.robot.commands.AutoCommands.CenterHideOppCargo;
-import frc.robot.commands.AutoCommands.DoNothing;
-import frc.robot.commands.AutoCommands.LeftHideOppCargo;
 import frc.robot.commands.AutoCommands.RetPuShootCamera;
-import frc.robot.commands.AutoCommands.RetPuShootCameraTraj;
-import frc.robot.commands.AutoCommands.RunCenterThirdCargo;
-import frc.robot.commands.AutoCommands.RunRightFirstPickup;
-import frc.robot.commands.AutoCommands.RunRightThreeCargo;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
-import frc.robot.commands.RobotDrive.SetRobotPose;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -45,7 +35,6 @@ import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
-import frc.robot.trajectories.FondyFireTrajectory;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -175,7 +164,6 @@ public class Robot extends TimedRobot {
     CargoTransportSubsystem transport = m_robotContainer.m_transport;
     IntakesSubsystem intake = m_robotContainer.m_intake;
     Compressor comp = m_robotContainer.m_compressor;
-    FondyFireTrajectory fftraj = m_robotContainer.m_trajectory;
 
     ll.setLEDMode(LedMode.kpipeLine);
     ll.setPipeline(PipelinesConstants.noZoom960720);
@@ -219,14 +207,10 @@ public class Robot extends TimedRobot {
 
         m_autonomousCommand = new SequentialCommandGroup(
 
-            new SetRobotPose(m_robotContainer.m_drive, fftraj.leftAutoStartRev),
+            new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
+                comp, data)
 
-            new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.leftPickupRev, transport, shooter, tilt, turret, ll,
-                comp, data),
-
-            new ConditionalCommand(new LeftHideOppCargo(intake, drive, transport, shooter, fftraj, fftraj.leftHideRev),
-                new DoNothing(),
-                () -> hideOppCargo));
+        );
 
         break;
 
@@ -244,19 +228,13 @@ public class Robot extends TimedRobot {
 
         m_autonomousCommand = new SequentialCommandGroup(
 
-            new SetRobotPose(m_robotContainer.m_drive,
-                fftraj.centerAutoStartRev),
-
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
-            new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.centerFirstPickUpRev, transport, shooter, tilt,
+            new RetPuShootCamera(intake, drive, transport, shooter, tilt,
                 turret, ll,
-                comp, data),
+                comp, data)
 
-            new ConditionalCommand(
-                new CenterHideOppCargo(intake, drive, transport, shooter, fftraj, fftraj.centerHide),
-                new DoNothing(),
-                () -> hideOppCargo));
+        );
 
         break;
 
@@ -276,41 +254,11 @@ public class Robot extends TimedRobot {
 
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
-            new SetRobotPose(m_robotContainer.m_drive,
-                fftraj.centerAutoStartRev),
-
-            new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.centerFirstPickUpRev, transport, shooter, tilt,
+            new RetPuShootCamera(intake, drive, transport, shooter, tilt,
                 turret, ll,
-                comp, data),
+                comp, data))
 
-            new RunCenterThirdCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll));
-
-        break;
-
-      case 5:// Pick up and shoot cargo in center of field plus third cargo
-
-        data = FieldMap.rightTarmacData;
-
-        data[0] = -1.4;// retract point
-
-        data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
-
-        data[3] = 0;// turret will be locked to Limelight
-
-        data[4] = 2700;
-
-        m_autonomousCommand = new SequentialCommandGroup(
-
-            new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
-
-            new SetRobotPose(m_robotContainer.m_drive,
-                fftraj.rightCargoAutoStart),
-
-            new RunRightFirstPickup(drive, fftraj, intake, shooter, tilt, turret, transport, ll),
-
-            new RunRightThreeCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll),
-
-            new RunCenterThirdCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll));
+        ;
 
         break;
 

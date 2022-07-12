@@ -31,7 +31,6 @@ import frc.robot.OI.SetUpOI;
 import frc.robot.OI.SetUpPreRoundOI;
 import frc.robot.OI.ShootSequenceDisplay;
 import frc.robot.OI.Show_Hide_Screens;
-import frc.robot.OI.SimulationOI;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
@@ -80,8 +79,6 @@ import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
-import frc.robot.trajectories.FondyFireTrajectory;
-import frc.robot.trajectories.TrajectoryDebug;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -113,8 +110,6 @@ public class RobotContainer {
 
       public final ClimberSubsystem m_climber;
 
-      public final TrajectoryDebug tragdebug;
-
       public static boolean autoSelected;
 
       public SetUpOI m_setup;
@@ -123,8 +118,6 @@ public class RobotContainer {
 
       public SetUpPreRoundOI m_preOi;
 
-      public SimulationOI m_simOI;
-
       public LLVisionShuffleboard m_llVis;
 
       // public Show_Hide_Screens m_sh;
@@ -132,8 +125,6 @@ public class RobotContainer {
       public LimeLight m_limelight;
 
       public Compressor m_compressor;
-
-      public FondyFireTrajectory m_trajectory;
 
       public ShootSequenceDisplay ssdisp;
 
@@ -217,7 +208,6 @@ public class RobotContainer {
 
             m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
-            m_trajectory = new FondyFireTrajectory(m_drive);
             ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
 
             // test configuration
@@ -232,17 +222,14 @@ public class RobotContainer {
             // Show_Hide_Screens.setStates(true, true, true);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
-                        m_limelight, m_intake, m_climber, m_trajectory);
+                        m_limelight, m_intake, m_climber);
 
             m_autoOi = new SetUpAutoOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
-                        m_intake, m_climber, m_trajectory);
+                        m_intake, m_climber);
 
             m_preOi = new SetUpPreRoundOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
-                        m_intake, m_climber, m_trajectory);
+                        m_intake, m_climber);
 
-            tragdebug = new TrajectoryDebug(m_drive, m_trajectory, m_trajectory.leftPickupRev);
-
-            SmartDashboard.putData("tdbg",tragdebug);
             // if (RobotBase.isSimulation())
             // m_simOI = new SimulationOI(m_turret, m_tilt, m_drive, m_shooter, m_transport,
             // m_compressor,
