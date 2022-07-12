@@ -51,6 +51,7 @@ import frc.robot.commands.RobotDrive.AccelVolts;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
 import frc.robot.commands.RobotDrive.RunAtVolts;
+import frc.robot.commands.RobotDrive.TrajSimVolts;
 import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.ChangeShooterSpeed;
 import frc.robot.commands.Shooter.JogShooter;
@@ -292,24 +293,24 @@ public class RobotContainer {
              */
 
             new JoystickButton(m_driverController, 1)
-                        .whileHeld(new RunAtVolts(m_drive));
-                        // .whenPressed(new TurnLedsOnOff(m_limelight, false))
-                        // .whenPressed(new RunLowerRollerIntake(m_transport, m_intake))
-                        // .whenReleased(new StopActiveIntake(m_intake));
+                        .whileHeld(new RunAtVolts(m_drive, false));
+            // .whenPressed(new TurnLedsOnOff(m_limelight, false))
+            // .whenPressed(new RunLowerRollerIntake(m_transport, m_intake))
+            // .whenReleased(new StopActiveIntake(m_intake));
 
             new JoystickButton(m_driverController, 2)
                         .whileHeld(new AccelVolts(m_drive));
 
             new JoystickButton(m_driverController, 6).whenPressed(new SetFrontIntakeActive(m_intake, true));
 
-            new JoystickButton(m_driverController, 3).whenPressed(new StopShoot(m_shooter, m_transport))
-                        // .whenPressed(new TurnLedsOnOff(m_limelight, false))
-                        .whenPressed(new StopLowerRoller(m_transport));
+            new JoystickButton(m_driverController, 3)
+            .whileHeld(new TrajSimVolts(m_drive,false));
 
             new JoystickButton(m_driverController, 4).whenPressed(new SetFrontIntakeActive(m_intake, false));
 
-            new JoystickButton(m_driverController, 5).whenPressed(new RunShooter(m_shooter))
-                        .whenPressed(new TurnLedsOnOff(m_limelight, true));
+            new JoystickButton(m_driverController, 5)
+                        .whileHeld(new TrajSimVolts(m_drive, true));
+           
 
             new JoystickButton(m_driverController, 7)
 

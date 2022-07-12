@@ -7,7 +7,6 @@
 
 package frc.robot.trajectories;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.Timer;
@@ -28,7 +27,6 @@ public class LogTrajectory extends CommandBase {
   private int loopCtr;
   private boolean fileOpenNow;
 
-  private final RevDrivetrain m_drive;
   private final FondyFireTrajectory m_ff;
   private final Trajectory m_traj;
 
@@ -38,9 +36,14 @@ public class LogTrajectory extends CommandBase {
   private String m_name;
   private double startTime;
 
-  public LogTrajectory(RevDrivetrain drive, FondyFireTrajectory ff, Trajectory traj, String trajName) {
+  private int pointer;
+  private int trajLength;
+
+  private State trajState;
+
+  public LogTrajectory(FondyFireTrajectory ff, Trajectory traj, String trajName) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_drive = drive;
+
     m_ff = ff;
     m_traj = traj;
     m_name = trajName;
@@ -55,6 +58,7 @@ public class LogTrajectory extends CommandBase {
 
     loopCtr = 0;
     fileOpenNow = false;
+    pointer = 0;
 
   }
 
@@ -65,42 +69,38 @@ public class LogTrajectory extends CommandBase {
     // allow i second for file to be opened
     if (!fileOpenNow)
       loopCtr++;
-    if (loopCtr > 500) {
+    if (loopCtr > 500 && !fileOpenNow) {
       fileOpenNow = true;
       loopCtr = 0;
     }
-    // log data every 100ms
+    // log data
     if (fileOpenNow)
+
       m_ff.trajLogInProgress = true;
 
-    if (logTime == 0)
-      logTime = Timer.getFPGATimestamp();
+    SmartDashboard.putBoolean("lip", m_ff.trajLogInProgress);
 
-    if (m_ff.logTrajItems && Timer.getFPGATimestamp() > logTime + .1) {
-      logTime = Timer.getFPGATimestamp();
+    trajLength = m_traj.getStates().size();
 
-      if (firstLogTime == 0)
-        firstLogTime = logTime;
+    trajState = m_traj.getStates().get(pointer);
 
-      time = Timer.getFPGATimestamp() - firstLogTime;
-      startTime = Timer.getFPGATimestamp();
-      State trajstate = m_traj.sample(time);
+    m_ff.trajLogger.writeData(
 
-      m_ff.trajLogger.writeData(
-          time,
-          trajstate.velocityMetersPerSecond,
-          trajstate.accelerationMetersPerSecondSq,
-          trajstate.curvatureRadPerMeter,
+        trajState.timeSeconds,
+        trajState.velocityMetersPerSecond,
+        trajState.accelerationMetersPerSecondSq,
+        trajState.curvatureRadPerMeter,
 
-          trajstate.poseMeters.getTranslation().getX(),
-          trajstate.poseMeters.getTranslation().getY(),
-          trajstate.poseMeters.getRotation().getDegrees()
+        trajState.poseMeters.getTranslation().getX(),
+        trajState.poseMeters.getTranslation().getY(),
+        trajState.poseMeters.getRotation().getDegrees()
 
-      );
-      double logTime = Timer.getFPGATimestamp() - startTime;
-      SmartDashboard.putNumber("Log Time", logTime);
-    }
+    );
 
+    pointer++;
+
+    SmartDashboard.putNumber("ptr", pointer);
+    SmartDashboard.putNumber("Leng", trajLength);
   }
 
   // Called once the command ends or is interrupted.
@@ -113,6 +113,6 @@ public class LogTrajectory extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return time > m_traj.getTotalTimeSeconds() + .5;
+    return pointer >= trajLength - 1;
   }
 }

@@ -45,11 +45,11 @@ public class FondyFireTrajectory {
 
         // LEFT
 
-        public Pose2d leftCargoRev = new Pose2d(5.0, 6.2, Rotation2d.fromDegrees(Math.PI / 2 - 35));
+        public Pose2d leftCargoRev = new Pose2d(3.5, 0, Rotation2d.fromDegrees(Math.PI / 2 ));
 
         public Pose2d leftOppCargoRev = new Pose2d(6.01, 7.24, Rotation2d.fromDegrees(Math.PI / 2 - 133));
 
-        public Pose2d leftAutoStartRev = new Pose2d(6.38, 5.27, Rotation2d.fromDegrees(Math.PI / 2 - 35));
+        public Pose2d leftAutoStartRev = new Pose2d(5,0, Rotation2d.fromDegrees(Math.PI /2));
 
         public Trajectory leftPickupRev;
 
@@ -338,7 +338,7 @@ public class FondyFireTrajectory {
                                 new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
                                                 DriveConstants.kaVoltSecondsSquaredPerMeter),
                                 DriveConstants.kDriveKinematics, m_drive::getWheelSpeeds,
-                                m_drive.leftController, m_drive.rightController,
+                                 m_drive.leftController, m_drive.rightController,
                                 // new PIDController(DriveConstants.kPDriveVel, 0, 0),
                                 // new PIDController(DriveConstants.kPDriveVel, 0, 0),
                                 m_drive::tankDriveVolts, m_drive);

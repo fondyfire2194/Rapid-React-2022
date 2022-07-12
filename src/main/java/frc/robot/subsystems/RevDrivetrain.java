@@ -152,6 +152,10 @@ public class RevDrivetrain extends SubsystemBase {
     public double currentVolts;
     public double leftmpspervolt;
     public double rightmpspervolt;
+    public double leftmpspspervolt;
+    public double rightmpspspervolt;
+    public double ksVolts;
+    public double kvVolts;
 
     public RevDrivetrain() {
 
@@ -307,8 +311,6 @@ public class RevDrivetrain extends SubsystemBase {
 
         m_simAngle.set(m_simAngle.get() - hdgDiff.getDegrees());
 
-        
-
     }
 
     /////////////////////////////////////
@@ -328,11 +330,17 @@ public class RevDrivetrain extends SubsystemBase {
     }
 
     public double getLeftRate() {
-        return mLeftEncoder.getVelocity();
+        if (RobotBase.isReal())
+            return mLeftEncoder.getVelocity();
+        else
+            return 3 * leftVolts / 12;
     }
 
     public double getRightRate() {
-        return mRightEncoder.getVelocity();
+        if (RobotBase.isReal())
+            return mRightEncoder.getVelocity();
+        else
+            return 3 * rightVolts / 12;
     }
 
     public double getRightOut() {
@@ -374,6 +382,7 @@ public class RevDrivetrain extends SubsystemBase {
     public boolean getRightFollower() {
         return mFollowerRight.isFollower();
     }
+
 
     public void arcadeDrive(double speed, double rotation) {
         SmartDashboard.putNumber("ARCrot", rotation);

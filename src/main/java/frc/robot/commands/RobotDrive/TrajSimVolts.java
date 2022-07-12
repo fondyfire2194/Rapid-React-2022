@@ -8,29 +8,28 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RevDrivetrain;
 
-public class AccelVolts extends CommandBase {
+public class TrajSimVolts extends CommandBase {
   /** Creates a new RunAtVolts. */
   private RevDrivetrain m_drive;
 
   double minVolts = 0;
 
-  double accelMPSPSPS = .1;
-
-  double maxMPS = 3;
-
-  double mpspervolt;
-
   double voltsIncrementPer20ms;
 
-  double maxVolts;
+  double maxVolts = 2.5;
 
-  double kvVoltSecondsPerMeter = 2.4;
+  double time = 3;
 
   private double voltsIncremementPerSecond;
 
-  public AccelVolts(RevDrivetrain drive) {
+  private boolean slowDown;
+
+  private boolean m_minus;
+
+  public TrajSimVolts(RevDrivetrain drive, boolean minus) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = drive;
+    m_minus = minus;
 
     addRequirements(m_drive);
 
@@ -40,44 +39,47 @@ public class AccelVolts extends CommandBase {
   @Override
   public void initialize() {
     m_drive.currentVolts = 0;
-
-    m_drive.ksVolts = .2;
-
-    mpspervolt = maxMPS / 12;
-
-    voltsIncremementPerSecond = accelMPSPSPS / mpspervolt;
+    m_drive.resetEncoders();
+    m_drive.resetGyro();
+    slowDown = false;
+    voltsIncremementPerSecond = maxVolts / (time / 2);
 
     SmartDashboard.putNumber("VIPS", voltsIncremementPerSecond);
 
     voltsIncrementPer20ms = voltsIncremementPerSecond / 50;
 
-    maxVolts = 5;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    m_drive.currentVolts += voltsIncrementPer20ms;
+    if (!slowDown) {
 
-    if (m_drive.currentVolts >= maxVolts)
+      m_drive.currentVolts += voltsIncrementPer20ms;
 
-      m_drive.currentVolts = maxVolts;
+      if (m_drive.currentVolts >= maxVolts)
+        slowDown = true;
+    }
 
-    m_drive.tankDriveVolts(m_drive.currentVolts, m_drive.currentVolts);
+    if (slowDown) {
 
-    m_drive.kvVolts = kvVoltSecondsPerMeter * m_drive.getLeftRate();
+      m_drive.currentVolts -= voltsIncrementPer20ms;
 
-    m_drive.leftmpspspervolt = accelMPSPSPS / (m_drive.currentVolts - m_drive.ksVolts - m_drive.kvVolts);
+      if (m_drive.currentVolts < .1)
 
-    m_drive.rightmpspspervolt = accelMPSPSPS
-        / (m_drive.currentVolts - m_drive.ksVolts - m_drive.kvVolts);
-
+        m_drive.currentVolts = 0;
+    }
+    if (m_minus)
+      m_drive.tankDriveVolts(-m_drive.currentVolts, -m_drive.currentVolts);
+    else
+      m_drive.tankDriveVolts(m_drive.currentVolts, m_drive.currentVolts);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_drive.currentVolts = 0;
     m_drive.tankDriveVolts(0, 0);
   }
 
@@ -85,5 +87,6 @@ public class AccelVolts extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
+
   }
 }

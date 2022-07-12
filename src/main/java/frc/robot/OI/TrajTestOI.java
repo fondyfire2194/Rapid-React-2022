@@ -9,10 +9,14 @@ import java.util.Map;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.trajectories.FondyFireTrajectory;
+import frc.robot.trajectories.LogTrajectory;
+import frc.robot.trajectories.LogTrajectoryData;
+import frc.robot.trajectories.ResetOdometryToStartOfTrajectory;
 
 /** Add your docs here. */
 public class TrajTestOI {
@@ -33,6 +37,20 @@ public class TrajTestOI {
                 robotCommands.addNumber("Gyro Yaw", () -> drive.getYaw());
                 robotCommands.addNumber("Heading", () -> drive.getHeading());
                 robotCommands.addNumber("Rotation", () -> drive.getRotationDegrees());
+                robotCommands.add("LogTrajectoryData", new LogTrajectoryData(drive, traj, traj.leftPickupRev, "LPUD"));
+  robotCommands.add("LogTrajectoryPoints" ,new LogTrajectory( traj, traj.leftPickupRev, "LPU"));
+  
+  
+  
+                robotCommands.add("LeftPickuptStart",
+
+                                new SequentialCommandGroup(
+                                                new ResetOdometryToStartOfTrajectory(drive,
+                                                                traj.leftPickupRev),
+                                                traj.getRamsete(traj.leftPickupRev)
+                                                                .andThen(() -> drive.tankDriveVolts(0,
+                                                                                0))
+                                                                .andThen(() -> drive.trajectoryRunning = false)));
 
                 ShuffleboardLayout leftValues = Shuffleboard.getTab("SetupRobot")
                                 .getLayout("LeftValues", BuiltInLayouts.kList).withPosition(2, 0)
@@ -59,8 +77,15 @@ public class TrajTestOI {
                                 .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels
 
                 testValues.addNumber("TestVolts", () -> drive.currentVolts);
+                testValues.addNumber("ksVolts", () -> drive.ksVolts);
+                testValues.addNumber("kVVolts", () -> drive.kvVolts);
+                testValues.addNumber("TrajkpL", () -> drive.leftController.getP());
+                testValues.addNumber("TrajkpR", () -> drive.rightController.getP());
+
                 testValues.addNumber("LeftMPSPerVolt", () -> drive.leftmpspervolt);
                 testValues.addNumber("RightMPSPerVolt", () -> drive.rightmpspervolt);
+                testValues.addNumber("LeftMPSPSPerVolt", () -> drive.leftmpspspervolt);
+                testValues.addNumber("RightMPSPSPerVolt", () -> drive.rightmpspspervolt);
 
         }
 
