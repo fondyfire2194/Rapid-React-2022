@@ -18,7 +18,6 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -255,12 +254,11 @@ public class FondyFireTrajectory {
                                                                                                 0))
                                                                                 .andThen(() -> trajectoryRunning = false)));
 
-                trajCommands.add("CleaPlot", new ClearPlot(drive));
-                trajCommands.add("RotatePose", new RotatePose(drive));
+                
 
                 ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7,0)
-                                .withSize(4, 2)
+                                .withSize(2, 4)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                 trajInfo.addNumber("LeftPickUpTrajSecs", () -> leftPickupRev.getTotalTimeSeconds());
