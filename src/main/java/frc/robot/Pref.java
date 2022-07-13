@@ -125,7 +125,7 @@ public class Pref {
 
     // center pickup 1
 
-    prefDict.put("trajVelCPU1", 1.5);
+    prefDict.put("trajVelCPU1", 1.0);
 
     prefDict.put("trajAccCPU1", 1.);
 
@@ -146,6 +146,12 @@ public class Pref {
     prefDict.put("trajVelCSH3", 1.5);
 
     prefDict.put("trajAccCSH3", 1.);
+
+    // right pickup 1
+
+    prefDict.put("trajVelRPU1", 1.0);
+
+    prefDict.put("trajAccRPU1", 1.);
 
     // Intake
 

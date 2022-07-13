@@ -154,7 +154,7 @@ public class FondyFireTrajectory {
                                 rightCargoAutoStart,
                                 List.of(),
                                 rightCargoFirstPickup,
-                                withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc")));
+                                withSpeedAndAcceleration(Pref.getPref("trajVelRPU1"), Pref.getPref("trajAccRPU1")));
 
                 rightThirdCargoPickupRev1 = TrajectoryGenerator.generateTrajectory(
                                 rightCargoFirstPickup,
