@@ -30,20 +30,16 @@ import frc.robot.OI.SetUpAutoOI;
 import frc.robot.OI.SetUpOI;
 import frc.robot.OI.SetUpPreRoundOI;
 import frc.robot.OI.Show_Hide_Screens;
-import frc.robot.OI.SimulationOI;
 import frc.robot.OI.TrajTestOI;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
-import frc.robot.Vision.TurnLedsOnOff;
 import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
 import frc.robot.commands.AutoCommands.Common.SetupPresetShootLocation;
-import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Climber.RunClimber;
 import frc.robot.commands.Climber.StopClimber;
-import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Intakes.StopActiveIntake;
@@ -51,14 +47,13 @@ import frc.robot.commands.RobotDrive.AccelVolts;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
 import frc.robot.commands.RobotDrive.RunAtVolts;
+import frc.robot.commands.RobotDrive.RunFeedForward;
+import frc.robot.commands.RobotDrive.TrajSimMPS;
 import frc.robot.commands.RobotDrive.TrajSimVolts;
-import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.ChangeShooterSpeed;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
-import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Tilt.PositionHoldTilt;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Tilt.TiltJog;
@@ -84,7 +79,6 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.trajectories.FondyFireTrajectory;
-import frc.robot.trajectories.TrajectoryDebug;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -116,8 +110,6 @@ public class RobotContainer {
 
       public final ClimberSubsystem m_climber;
 
-      // public final TrajectoryDebug tragdebug;
-
       public static boolean autoSelected;
 
       public SetUpOI m_setup;
@@ -125,8 +117,6 @@ public class RobotContainer {
       public SetUpAutoOI m_autoOi;
 
       public SetUpPreRoundOI m_preOi;
-
-      public SimulationOI m_simOI;
 
       public LLVisionShuffleboard m_llVis;
 
@@ -304,23 +294,19 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 6).whenPressed(new SetFrontIntakeActive(m_intake, true));
 
             new JoystickButton(m_driverController, 3)
-            .whileHeld(new TrajSimVolts(m_drive,false));
+                        .whileHeld(new TrajSimVolts(m_drive, false));
 
-            new JoystickButton(m_driverController, 4).whenPressed(new SetFrontIntakeActive(m_intake, false));
+            new JoystickButton(m_driverController, 4).whileHeld(new RunFeedForward(m_drive, false));
 
             new JoystickButton(m_driverController, 5)
                         .whileHeld(new TrajSimVolts(m_drive, true));
-           
 
             new JoystickButton(m_driverController, 7)
-
-                        .whenPressed(new PositionTilt(m_tilt, TiltConstants.TILT_MIN_ANGLE))
-
-                        .whenPressed(new PositionTurret(m_turret, 0));
+                        .whileHeld(new TrajSimMPS(m_drive, false));
 
             new JoystickButton(m_driverController, 8)
 
-                        .whileHeld(new RunCargoOutShooter(m_shooter, m_intake, m_transport, 1000));
+                        .whileHeld(new TrajSimMPS(m_drive, true));
 
             new JoystickButton(m_driverController, 9).whenPressed(
 

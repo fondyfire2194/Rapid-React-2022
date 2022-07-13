@@ -105,11 +105,11 @@ public final class Constants {
       public static double NEO550_COUNTS_PER_REV = 4096;// not used
       public static double DRIVE_GEAR_RATIO = 10.25;
 
-      public static double ksVolts = .2;
+      public static double ksVolts = .23;
 
-      public static double kvVoltSecondsPerMeter = .4;//2.36;// 2.629;// 22.63;// 27;//2;
+      public static double kvVoltSecondsPerMeter = 2.36;//.4;//2.36;// 2.629;// 22.63;// 27;//2;
 
-      public static double kaVoltSecondsSquaredPerMeter = .04;//.33;// 3.48;//.408;
+      public static double kaVoltSecondsSquaredPerMeter = .33;//.04;//.33;// 3.48;//.408;
 
       public final static double WHEELBASE_WIDTH = .68;
 

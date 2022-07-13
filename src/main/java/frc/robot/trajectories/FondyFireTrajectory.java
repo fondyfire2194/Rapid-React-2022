@@ -304,9 +304,10 @@ public class FondyFireTrajectory {
                 trajInfo.addNumber("Right3PUTrajSecs", () -> rightThirdCargoPickupRev1.getTotalTimeSeconds());
 
                 ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
-
-                rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
-                                4).withWidget("Field");
+     
+                if (RobotBase.isReal())
+                        rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
+                                        4).withWidget("Field");
 
         }
 

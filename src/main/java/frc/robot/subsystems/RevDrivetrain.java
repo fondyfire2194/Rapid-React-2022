@@ -157,6 +157,7 @@ public class RevDrivetrain extends SubsystemBase {
     public double rightmpspspervolt;
     public double ksVolts;
     public double kvVolts;
+    public double currentMPS;
 
     public RevDrivetrain() {
 
@@ -187,12 +188,14 @@ public class RevDrivetrain extends SubsystemBase {
 
         mRightEncoder = mLeadRight.getEncoder();
         mLeftEncoder = mLeadLeft.getEncoder();
-        mLeftEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
-        mRightEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
 
-        mLeftEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
-        mRightEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
+        if (RobotBase.isReal()) {
+            mLeftEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
+            mRightEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
 
+            mLeftEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
+            mRightEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
+        }
         mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
         mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
 
@@ -384,7 +387,6 @@ public class RevDrivetrain extends SubsystemBase {
         return mFollowerRight.isFollower();
     }
 
-
     public void arcadeDrive(double speed, double rotation) {
         SmartDashboard.putNumber("ARCrot", rotation);
         if (Math.abs(speed) < .1 || lockedForVision)
@@ -432,6 +434,11 @@ public class RevDrivetrain extends SubsystemBase {
             mLeadRight.set(right / 12);
         }
         mDrive.feed();
+    }
+
+    public void tankDriveWithFeedforward(double leftVelocity, double rightVelocity) {
+        mLeadLeft.setVoltage(m_feedforward.calculate(leftVelocity));
+        mLeadRight.setVoltage(m_feedforward.calculate(rightVelocity));
     }
 
     public void tankDrive(double left, double right) {
