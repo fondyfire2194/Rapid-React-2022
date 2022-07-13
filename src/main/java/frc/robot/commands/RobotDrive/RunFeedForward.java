@@ -59,7 +59,9 @@ public class RunFeedForward extends CommandBase {
       m_drive.currentMPS += mpsIncrementPer20ms;
 
       if (m_drive.currentMPS >= maxMPS)
+      
         slowDown = true;
+
     }
 
     if (slowDown) {
@@ -71,8 +73,11 @@ public class RunFeedForward extends CommandBase {
         m_drive.currentMPS = 0;
     }
     if (m_minus)
+
       m_drive.tankDriveWithFeedforward(-m_drive.currentMPS,- m_drive.currentMPS);
+
     else
+
       m_drive.tankDriveWithFeedforward(m_drive.currentMPS, m_drive.currentMPS);
   }
 

@@ -89,7 +89,7 @@ public class TrajTestOI {
                 testValues.addNumber("kVVolts", () -> drive.kvVolts);
                 testValues.addNumber("TrajkpL", () -> drive.leftController.getP());
                 testValues.addNumber("TrajkpR", () -> drive.rightController.getP());
-
+                testValues.addNumber("CurrentMPS", () -> drive.currentMPS);
                 testValues.addNumber("LeftMPSPerVolt", () -> drive.leftmpspervolt);
                 testValues.addNumber("RightMPSPerVolt", () -> drive.rightmpspervolt);
                 testValues.addNumber("LeftMPSPSPerVolt", () -> drive.leftmpspspervolt);
