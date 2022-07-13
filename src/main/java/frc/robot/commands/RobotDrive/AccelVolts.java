@@ -24,7 +24,7 @@ public class AccelVolts extends CommandBase {
 
   double maxVolts;
 
-  double kvVoltSecondsPerMeter = 2.4;
+  double kvVoltSecondsPerMeter = .4;
 
   private double voltsIncremementPerSecond;
 

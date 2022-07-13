@@ -38,16 +38,24 @@ public class TrajTestOI {
                 robotCommands.addNumber("Heading", () -> drive.getHeading());
                 robotCommands.addNumber("Rotation", () -> drive.getRotationDegrees());
                 robotCommands.add("LogTrajectoryData", new LogTrajectoryData(drive, traj, traj.leftPickupRev, "LPUD"));
-  robotCommands.add("LogTrajectoryPoints" ,new LogTrajectory( traj, traj.leftPickupRev, "LPU"));
-  
-  
-  
+                robotCommands.add("LogTrajectoryPoints", new LogTrajectory(traj, traj.leftPickupRev, "LPU"));
+
                 robotCommands.add("LeftPickuptStart",
 
                                 new SequentialCommandGroup(
                                                 new ResetOdometryToStartOfTrajectory(drive,
                                                                 traj.leftPickupRev),
                                                 traj.getRamsete(traj.leftPickupRev)
+                                                                .andThen(() -> drive.tankDriveVolts(0,
+                                                                                0))
+                                                                .andThen(() -> drive.trajectoryRunning = false)));
+
+                robotCommands.add("CenterPickuptStart",
+
+                                new SequentialCommandGroup(
+                                                new ResetOdometryToStartOfTrajectory(drive,
+                                                                traj.centerFirstPickUpRev),
+                                                traj.getRamsete(traj.centerFirstPickUpRev)
                                                                 .andThen(() -> drive.tankDriveVolts(0,
                                                                                 0))
                                                                 .andThen(() -> drive.trajectoryRunning = false)));

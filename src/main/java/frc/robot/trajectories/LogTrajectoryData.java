@@ -87,7 +87,7 @@ public class LogTrajectoryData extends CommandBase {
 
       time = Timer.getFPGATimestamp() - firstLogTime;
 
-      if ((time - lastTime) > .1) {
+      if ((time - lastTime) > .05) {
 
         lastTime = time;
 

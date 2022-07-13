@@ -11,7 +11,7 @@ public class RunAtVolts extends CommandBase {
   /** Creates a new RunAtVolts. */
   private RevDrivetrain m_drive;
   private boolean m_minus;
-  double maxVolts = 5;
+  double maxVolts = 1;
   double minVolts = 0;
 
   public RunAtVolts(RevDrivetrain drive, boolean minus) {
