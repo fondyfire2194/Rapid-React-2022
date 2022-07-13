@@ -41,8 +41,8 @@ public class RunRightFirstPickup extends SequentialCommandGroup {
 
             new RunActiveIntake(intake, transport).withTimeout(timeOut),
 
-            new ResetOdometryToStartOfTrajectory(drive,
-                fftraj.rightFirstCargoPickup),
+            new ResetOdometryToStartOfTrajectory(fftraj,
+                fftraj.rightFirstCargoPickup, drive),
 
             new WaitCommand(.1),
 

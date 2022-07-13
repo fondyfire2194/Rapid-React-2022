@@ -13,22 +13,24 @@ import frc.robot.subsystems.RevDrivetrain;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ResetOdometryToStartOfTrajectory extends InstantCommand {
-  private RevDrivetrain m_drive;
+  private FondyFireTrajectory m_fftraj;
   private Trajectory m_traj;
+  private RevDrivetrain m_drive;
 
-  public ResetOdometryToStartOfTrajectory(RevDrivetrain drive, Trajectory traj) {
+  public ResetOdometryToStartOfTrajectory(FondyFireTrajectory fftraj, Trajectory traj, RevDrivetrain drive) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_drive = drive;
+    m_fftraj = fftraj;
     m_traj = traj;
+    m_drive = drive;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.resetOdometry(m_traj.getInitialPose());
-    m_drive.trajectoryRunning = true;
 
-    
+    m_drive.resetOdometry(m_traj.getInitialPose());
+
+    m_fftraj.trajectoryRunning = true;
 
   }
 }

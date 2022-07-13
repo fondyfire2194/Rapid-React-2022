@@ -99,6 +99,10 @@ public class FondyFireTrajectory {
 
         public DifferentialDriveVoltageConstraint autoVoltageConstraint;
 
+        public String activeTrajectoryName = "None";
+
+        public boolean trajectoryRunning;
+
         public FondyFireTrajectory(RevDrivetrain drive) {
 
                 m_drive = drive;
@@ -165,14 +169,14 @@ public class FondyFireTrajectory {
                                 withSpeedAndAcceleration(.25, .5).setReversed(true));
 
                 ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
-                                .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(6, 0)
+                                .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(5, 0)
                                 .withSize(2, 3)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                 trajCommands.add("LeftPickup",
                                 new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                leftPickupRev),
+                                                new ResetOdometryToStartOfTrajectory(this,
+                                                                leftPickupRev, drive),
                                                 new ParallelCommandGroup(
                                                                 new ConditionalCommand(
                                                                                 new LogTrajectoryData(drive, this,
@@ -183,12 +187,12 @@ public class FondyFireTrajectory {
                                                                 getRamsete(leftPickupRev))
                                                                                 .andThen(() -> drive.tankDriveVolts(0,
                                                                                                 0))
-                                                                                .andThen(() -> drive.trajectoryRunning = false)));
+                                                                                .andThen(() -> trajectoryRunning = false)));
 
                 trajCommands.add("CenterPickup",
                                 new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                centerFirstPickUpRev),
+                                                new ResetOdometryToStartOfTrajectory(this,
+                                                                centerFirstPickUpRev, drive),
                                                 new ParallelCommandGroup(
 
                                                                 new ConditionalCommand(
@@ -200,12 +204,12 @@ public class FondyFireTrajectory {
                                                                 getRamsete(centerFirstPickUpRev))
                                                                                 .andThen(() -> drive.tankDriveVolts(0,
                                                                                                 0))
-                                                                                .andThen(() -> drive.trajectoryRunning = false)));
+                                                                                .andThen(() -> trajectoryRunning = false)));
 
                 trajCommands.add("CenterThirdShoot",
                                 new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                centerThirdCargoShoot),
+                                                new ResetOdometryToStartOfTrajectory(this,
+                                                                centerThirdCargoShoot, drive),
                                                 new ParallelCommandGroup(
                                                                 new ConditionalCommand(
                                                                                 new LogTrajectoryData(drive, this,
@@ -216,12 +220,12 @@ public class FondyFireTrajectory {
                                                                 getRamsete(centerThirdCargoShoot))
                                                                                 .andThen(() -> drive.tankDriveVolts(0,
                                                                                                 0))
-                                                                                .andThen(() -> drive.trajectoryRunning = false)));
+                                                                                .andThen(() -> trajectoryRunning = false)));
 
                 trajCommands.add("CenterThirdPickup",
                                 new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                centerThirdCargoPickUp),
+                                                new ResetOdometryToStartOfTrajectory(this,
+                                                                centerThirdCargoPickUp, drive),
                                                 new ParallelCommandGroup(
                                                                 new ConditionalCommand(
                                                                                 new LogTrajectoryData(drive, this,
@@ -232,12 +236,12 @@ public class FondyFireTrajectory {
                                                                 getRamsete(leftPickupRev))
                                                                                 .andThen(() -> m_drive.tankDriveVolts(0,
                                                                                                 0))
-                                                                                .andThen(() -> m_drive.trajectoryRunning = false)));
+                                                                                .andThen(() -> trajectoryRunning = false)));
 
                 trajCommands.add("RightThirdPickup",
                                 new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                rightThirdCargoPickupRev1),
+                                                new ResetOdometryToStartOfTrajectory(this,
+                                                                rightThirdCargoPickupRev1, drive),
 
                                                 new ParallelCommandGroup(
 
@@ -249,14 +253,14 @@ public class FondyFireTrajectory {
                                                                 getRamsete(rightThirdCargoPickupRev1))
                                                                                 .andThen(() -> m_drive.tankDriveVolts(0,
                                                                                                 0))
-                                                                                .andThen(() -> m_drive.trajectoryRunning = false)));
+                                                                                .andThen(() -> trajectoryRunning = false)));
 
                 trajCommands.add("CleaPlot", new ClearPlot(drive));
                 trajCommands.add("RotatePose", new RotatePose(drive));
 
                 ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
-                                .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(8, 2)
-                                .withSize(2, 2)
+                                .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7,0)
+                                .withSize(4, 2)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                 trajInfo.addNumber("LeftPickUpTrajSecs", () -> leftPickupRev.getTotalTimeSeconds());
@@ -266,6 +270,7 @@ public class FondyFireTrajectory {
                 trajInfo.addNumber("CenShootTrajSecs", () -> centerThirdCargoShoot.getTotalTimeSeconds());
 
                 trajInfo.addNumber("Right3PUTrajSecs", () -> rightThirdCargoPickupRev1.getTotalTimeSeconds());
+                trajInfo.addBoolean("Traj Running", () -> trajectoryRunning);
 
                 ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
 

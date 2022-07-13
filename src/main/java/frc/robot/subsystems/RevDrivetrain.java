@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -124,7 +125,7 @@ public class RevDrivetrain extends SubsystemBase {
     public PIDController leftController = new PIDController(trajKp, 0, 0);
     public PIDController rightController = new PIDController(trajKp, 0, 0);
 
-    public boolean trajectoryRunning;
+    
     public double leftVolts;
     public double rightVolts;
 
@@ -617,8 +618,8 @@ public class RevDrivetrain extends SubsystemBase {
                         .map(state -> state.poseMeters)
                         .collect(Collectors.toList()));
     }
-
-    public void clearPlot(int l) {
+    
+        public void clearPlot(int l) {
 
         // Seems to be the only way to clear the lists
         m_field2d.getObject("trajectory").setPoses(Collections.<Pose2d>emptyList());

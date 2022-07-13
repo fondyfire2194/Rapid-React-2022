@@ -248,8 +248,7 @@
       "SetupRobot": {
         "RobotValues": {
           "open": true
-        },
-        "open": true
+        }
       },
       "SetupTilt": {
         "TiltValues": {
@@ -278,7 +277,8 @@
           "open": true
         },
         "open": true
-      }
+      },
+      "open": true
     },
     "troubleshooting": {
       "open": true
