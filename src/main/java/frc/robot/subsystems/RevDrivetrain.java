@@ -29,6 +29,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -205,7 +206,7 @@ public class RevDrivetrain extends SubsystemBase {
 
         mLeadRight.setOpenLoopRampRate(1);
 
-        mGyro = new AHRS();
+        mGyro = new AHRS(Port.kUSB);
 
         mOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 

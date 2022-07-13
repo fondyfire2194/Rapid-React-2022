@@ -103,8 +103,6 @@ public class Pref {
     prefDict.put("dRTurnkIz", .0);
     prefDict.put("dRTurnkIzLim", 5.);
 
- 
-
     prefDict.put("dRTune", 0.);
 
     prefDict.put("dRPur", 0.35);
@@ -113,9 +111,41 @@ public class Pref {
 
     prefDict.put("trajkp", .000001);
 
-    prefDict.put("trajVel",.5);
+    // left pickup
 
-    prefDict.put("trajAcc", .4);
+    prefDict.put("trajVelLPU", 1.5);
+
+    prefDict.put("trajAccLPU", 1.);
+
+    // left hide
+
+    prefDict.put("trajVelLH", 1.5);
+
+    prefDict.put("trajAccLH", 1.);
+
+    // center pickup 1
+
+    prefDict.put("trajVelCPU1", 1.5);
+
+    prefDict.put("trajAccCPU1", 1.);
+
+    // center hide
+
+    prefDict.put("trajVelCH", 1.5);
+
+    prefDict.put("trajAccCH", 1.);
+
+    // center pickup 3
+
+    prefDict.put("trajVelCPU3", 1.5);
+
+    prefDict.put("trajAccCPU3", 1.);
+
+    // center shoot 3
+
+    prefDict.put("trajVelCSH3", 1.5);
+
+    prefDict.put("trajAccCSH3", 1.);
 
     // Intake
 

@@ -45,11 +45,11 @@ public class FondyFireTrajectory {
 
         // LEFT
 
-        public Pose2d leftCargoRev = new Pose2d(5.0, 6.2, Rotation2d.fromDegrees(Math.PI / 2 - 35));
+        public Pose2d leftCargoRev = new Pose2d(5.0, 6.2, Rotation2d.fromDegrees(-35));
 
-        public Pose2d leftOppCargoRev = new Pose2d(6.01, 7.24, Rotation2d.fromDegrees(Math.PI / 2 - 133));
+        public Pose2d leftOppCargoRev = new Pose2d(6.01, 7.24, Rotation2d.fromDegrees(-133));
 
-        public Pose2d leftAutoStartRev = new Pose2d(6.38, 5.27, Rotation2d.fromDegrees(Math.PI / 2 - 35));
+        public Pose2d leftAutoStartRev = new Pose2d(6.38, 5.27, Rotation2d.fromDegrees(-35));
 
         public Trajectory leftPickupRev;
 
@@ -57,19 +57,19 @@ public class FondyFireTrajectory {
 
         // CENTER
 
-        public Pose2d centerAutoStartRev = new Pose2d(6.72, 2.73, Rotation2d.fromDegrees(Math.PI / 2 + 22));
+        public Pose2d centerAutoStartRev = new Pose2d(6.72, 2.73, Rotation2d.fromDegrees(+22));
 
-        public Pose2d centerHideOppCargo = new Pose2d(4.39, 3.38, Rotation2d.fromDegrees(Math.PI / 2 + 132));
+        public Pose2d centerHideOppCargo = new Pose2d(4.39, 3.38, Rotation2d.fromDegrees(+132));
 
         final Pose2d centerCargo3Shoot = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(45));
 
-        final Pose2d centerCargoRev = new Pose2d(5.13, 1.94, Rotation2d.fromDegrees(Math.PI / 2 + 37.));
-  
-        final Pose2d centerCargo = new Pose2d(5.13, 1.94, Rotation2d.fromDegrees( 37.));
+        final Pose2d centerCargoRev = new Pose2d(5.13, 1.94, Rotation2d.fromDegrees(+37.));
+
+        final Pose2d centerCargo = new Pose2d(5.13, 1.94, Rotation2d.fromDegrees(37.));
 
         final Pose2d centerThirdCargoGet = new Pose2d(2.36, .75, Rotation2d.fromDegrees(45));
 
-        final Pose2d centerThirdCargoGetRev = new Pose2d(2.36, .75, Rotation2d.fromDegrees(Math.PI / 2 + 45));
+        final Pose2d centerThirdCargoGetRev = new Pose2d(2.36, .75, Rotation2d.fromDegrees(+45));
 
         public Trajectory centerFirstPickUpRev;
 
@@ -83,7 +83,7 @@ public class FondyFireTrajectory {
 
         public final Pose2d rightCargoAutoStart = new Pose2d(7.63, 1.9, Rotation2d.fromDegrees(-90));
 
-        final Pose2d rightCargoFirstPickup = new Pose2d(7.63, .62, Rotation2d.fromDegrees(Math.PI / 2 - 90));
+        final Pose2d rightCargoFirstPickup = new Pose2d(7.63, .62, Rotation2d.fromDegrees(-90));
 
         public Trajectory rightThirdCargoPickupRev1;
 
@@ -111,14 +111,14 @@ public class FondyFireTrajectory {
                                 leftAutoStartRev,
                                 List.of(),
                                 leftCargoRev,
-                                withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc"))
+                                withSpeedAndAcceleration(Pref.getPref("trajVelLPU"), Pref.getPref("trajAccLPU"))
                                                 .setReversed(true));
                 leftHideRev = TrajectoryGenerator.generateTrajectory(
 
                                 leftCargoRev,
                                 List.of(),
                                 leftOppCargoRev,
-                                withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc"))
+                                withSpeedAndAcceleration(Pref.getPref("trajVelLH"), Pref.getPref("trajAccLH"))
                                                 .setReversed(true));
 
                 centerFirstPickUpRev = TrajectoryGenerator.generateTrajectory(
@@ -126,7 +126,7 @@ public class FondyFireTrajectory {
                                 centerAutoStartRev,
                                 List.of(),
                                 centerCargoRev,
-                                withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc"))
+                                withSpeedAndAcceleration(Pref.getPref("trajVelCPU1"), Pref.getPref("trajAccCPU1"))
                                                 .setReversed(true));
 
                 centerHide = TrajectoryGenerator.generateTrajectory(
@@ -134,20 +134,21 @@ public class FondyFireTrajectory {
                                 centerCargoRev,
                                 List.of(),
                                 centerHideOppCargo,
-                                withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc")));
+                                withSpeedAndAcceleration(Pref.getPref("trajVelCH"), Pref.getPref("trajAccCH")));
 
                 centerThirdCargoPickUp = TrajectoryGenerator.generateTrajectory(
 
                                 centerCargoRev,
                                 List.of(),
                                 centerThirdCargoGetRev,
-                                withSpeedAndAcceleration(.8, .5).setReversed(true));
+                                withSpeedAndAcceleration(Pref.getPref("trajVelCPU3"), Pref.getPref("trajAccCPU3"))
+                                                .setReversed(true));
 
                 centerThirdCargoShoot = TrajectoryGenerator.generateTrajectory(
                                 centerThirdCargoGet,
                                 List.of(),
                                 centerCargo3Shoot,
-                                withSpeedAndAcceleration(.8, .5));
+                                withSpeedAndAcceleration(Pref.getPref("trajVelCSH3"), Pref.getPref("trajAccCSH3")));
 
                 rightFirstCargoPickup = TrajectoryGenerator.generateTrajectory(
                                 rightCargoAutoStart,
@@ -251,45 +252,6 @@ public class FondyFireTrajectory {
                 trajCommands.add("CleaPlot", new ClearPlot(drive));
                 trajCommands.add("RotatePose", new RotatePose(drive));
 
-                ShuffleboardLayout trajSetStart = Shuffleboard.getTab("Trajectories")
-                                .getLayout("TrajectorySetStart", BuiltInLayouts.kList).withPosition(8, 0)
-                                .withSize(2, 2)
-                                .withProperties(Map.of("Label position", "LEFT")); // labels for
-
-                trajSetStart.add("LeftPickuptSetStart",
-
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                leftPickupRev),
-                                                new PlotTrajectory(drive, leftPickupRev)));
-
-                trajSetStart.add("CenterPickuptSetStart",
-
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                centerFirstPickUpRev),
-                                                new PlotTrajectory(drive, centerFirstPickUpRev)));
-
-                trajSetStart.add("CenterThirdShootSetStart",
-
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                centerThirdCargoShoot),
-                                                new PlotTrajectory(drive, centerThirdCargoShoot)));
-
-                trajSetStart.add("CenterThirdPickupSetStart",
-
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                centerThirdCargoPickUp),
-                                                new PlotTrajectory(drive, centerThirdCargoPickUp)));
-
-                trajSetStart.add("RightThirdPickupSetStart",
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                rightThirdCargoPickupRev1),
-                                                new PlotTrajectory(drive, rightThirdCargoPickupRev1)));
-
                 ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(8, 2)
                                 .withSize(2, 2)
@@ -312,14 +274,13 @@ public class FondyFireTrajectory {
 
         public TrajectoryConfig withSpeedAndAcceleration(
 
-                        double maxSpeedPercent, double maxAccelerationPercent) {
+                        double maxSpeed, double maxAcceleration) {
 
                 return new TrajectoryConfig(
 
-                                DriveConstants.kMaxTrajectoryMetersPerSecond *
-                                                clamp(maxSpeedPercent, 0, 1),
+                                clamp(maxSpeed, 0, 4),
                                 DriveConstants.kMaxTrajectoryAccelerationMetersPerSquared *
-                                                clamp(maxAccelerationPercent, 0, 1.5))
+                                                clamp(maxAcceleration, 0, 3))
                                                                 .setKinematics(DriveConstants.kDriveKinematics)
                                                                 .addConstraint(autoVoltageConstraint);
         }
