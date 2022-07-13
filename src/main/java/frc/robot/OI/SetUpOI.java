@@ -28,7 +28,6 @@ import frc.robot.commands.RobotDrive.ClearRobFaults;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
-import frc.robot.commands.RobotDrive.SaveGetSavedPose;
 import frc.robot.commands.RobotDrive.StopRobot;
 import frc.robot.commands.RobotDrive.TurnToAngle;
 import frc.robot.commands.Shooter.AltShootCargo;
@@ -445,12 +444,7 @@ public class SetUpOI {
                         robotCommands1.add("Turn To -90", new TurnToAngle(drive, -90));
                         robotCommands1.add("Turn To LHideOpp", new TurnToAngle(drive, FieldMap.leftStartHideAngle));                     
 
-                        robotCommands1.add("SavePose", new SaveGetSavedPose(drive, 0));
-                        robotCommands1.add("SetPose", new SaveGetSavedPose(drive, 3));
-
-                        robotCommands1.add("GetSavedPose", new SaveGetSavedPose(drive, 1));
-                        robotCommands1.add("GetCurrentPose", new SaveGetSavedPose(drive, 2));
-
+   
                         ShuffleboardLayout robotValues = Shuffleboard.getTab("SetupRobot")
                                         .getLayout("RobotValues", BuiltInLayouts.kList).withPosition(4, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels

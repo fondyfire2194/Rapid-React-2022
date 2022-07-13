@@ -95,6 +95,8 @@ public class FondyFireTrajectory {
         public boolean endFile;
         public double time;
 
+        private boolean logTrajectories = false;
+
         public DifferentialDriveVoltageConstraint autoVoltageConstraint;
 
         public FondyFireTrajectory(RevDrivetrain drive) {
@@ -177,7 +179,7 @@ public class FondyFireTrajectory {
                                                                                                 leftPickupRev,
                                                                                                 "LPU"),
                                                                                 new DoNothing(),
-                                                                                () -> RobotBase.isReal()),
+                                                                                () -> logTrajectories),
                                                                 getRamsete(leftPickupRev))
                                                                                 .andThen(() -> drive.tankDriveVolts(0,
                                                                                                 0))
@@ -194,7 +196,7 @@ public class FondyFireTrajectory {
                                                                                                 centerFirstPickUpRev,
                                                                                                 "CPU1"),
                                                                                 new DoNothing(),
-                                                                                () -> RobotBase.isReal()),
+                                                                                () -> logTrajectories),
                                                                 getRamsete(centerFirstPickUpRev))
                                                                                 .andThen(() -> drive.tankDriveVolts(0,
                                                                                                 0))
@@ -210,7 +212,7 @@ public class FondyFireTrajectory {
                                                                                                 centerThirdCargoShoot,
                                                                                                 "C3SH"),
                                                                                 new DoNothing(),
-                                                                                () -> RobotBase.isReal()),
+                                                                                () -> logTrajectories),
                                                                 getRamsete(centerThirdCargoShoot))
                                                                                 .andThen(() -> drive.tankDriveVolts(0,
                                                                                                 0))
@@ -226,7 +228,7 @@ public class FondyFireTrajectory {
                                                                                                 centerThirdCargoPickUp,
                                                                                                 "C3PU"),
                                                                                 new DoNothing(),
-                                                                                () -> RobotBase.isReal()),
+                                                                                () -> logTrajectories),
                                                                 getRamsete(leftPickupRev))
                                                                                 .andThen(() -> m_drive.tankDriveVolts(0,
                                                                                                 0))
@@ -243,7 +245,7 @@ public class FondyFireTrajectory {
                                                                                 this,
                                                                                 rightThirdCargoPickupRev1, "R3PU"),
                                                                                 new DoNothing(),
-                                                                                () -> RobotBase.isReal()),
+                                                                                () -> logTrajectories),
                                                                 getRamsete(rightThirdCargoPickupRev1))
                                                                                 .andThen(() -> m_drive.tankDriveVolts(0,
                                                                                                 0))
@@ -267,8 +269,8 @@ public class FondyFireTrajectory {
 
                 ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
 
-                // rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
-                // 4).withWidget("Field");
+                rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
+                                4).withWidget("Field");
 
         }
 
