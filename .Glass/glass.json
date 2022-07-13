@@ -3,7 +3,12 @@
     "CameraPublisher": {
       "limelight": {
         "open": true
-      },
+      }
+    },
+    "Preferences": {
+      "open": true
+    },
+    "troubleshooting": {
       "open": true
     },
     "types": {
@@ -15,6 +20,14 @@
       "/Shuffleboard/Can+Sols/All/Transport": "Subsystem",
       "/Shuffleboard/Can+Sols/All/Turret": "Subsystem",
       "/Shuffleboard/Can+Sols/Scheduler/Scheduler": "Scheduler",
+      "/Shuffleboard/CanBus/Scheduler/Scheduler": "Scheduler",
+      "/Shuffleboard/CanBus/Subs 1/Climber": "Subsystem",
+      "/Shuffleboard/CanBus/Subs 1/Drive": "Subsystem",
+      "/Shuffleboard/CanBus/Subs 1/Shooter": "Subsystem",
+      "/Shuffleboard/CanBus/Subs 2/Intakes": "Subsystem",
+      "/Shuffleboard/CanBus/Subs 2/Tilt": "Subsystem",
+      "/Shuffleboard/CanBus/Subs 2/Transport": "Subsystem",
+      "/Shuffleboard/CanBus/Subs 2/Turret": "Subsystem",
       "/Shuffleboard/HubVision/Dist/AcquireTarget": "Command",
       "/Shuffleboard/HubVision/Dist/CalcTarget": "Command",
       "/Shuffleboard/HubVision/Dist/CalcTestTarget": "Command",
@@ -44,16 +57,32 @@
       "/Shuffleboard/LLVision/Zoom/2XZoom": "Command",
       "/Shuffleboard/LLVision/Zoom/3X Zoom": "Command",
       "/Shuffleboard/LLVision/Zoom/No Zoom": "Command",
+      "/Shuffleboard/Pre-Round/Auto Commands": "String Chooser",
+      "/Shuffleboard/Pre-Round/Auto Delay": "String Chooser",
+      "/Shuffleboard/Pre-Round/HidingCargo": "String Chooser",
+      "/Shuffleboard/Pre-Round/OppHideTest/CenterOpp": "Command",
+      "/Shuffleboard/Pre-Round/OppHideTest/LeftOpp": "Command",
       "/Shuffleboard/SetupRobot/Robot/ClearFaults": "Command",
       "/Shuffleboard/SetupRobot/Robot/Cmd": "Subsystem",
       "/Shuffleboard/SetupRobot/Robot/Reset Enc": "Command",
       "/Shuffleboard/SetupRobot/Robot/Reset Gyro": "Command",
       "/Shuffleboard/SetupRobot/Robot/Stop Robot": "Command",
+      "/Shuffleboard/SetupRobot/Robot/To -1.6": "Command",
+      "/Shuffleboard/SetupRobot/Robot/To -3": "Command",
       "/Shuffleboard/SetupRobot/Robot/To -4(1)": "Command",
       "/Shuffleboard/SetupRobot/Robot/To -4(2)": "Command",
       "/Shuffleboard/SetupRobot/Robot/To -4(3)": "Command",
       "/Shuffleboard/SetupRobot/Robot/To 0": "Command",
       "/Shuffleboard/SetupRobot/Robot/To 0(1)": "Command",
+      "/Shuffleboard/SetupRobot/Robot/To 2": "Command",
+      "/Shuffleboard/SetupRobot/Robot/To 3": "Command",
+      "/Shuffleboard/SetupRobot/Robot1/Turn To -90": "Command",
+      "/Shuffleboard/SetupRobot/Robot1/Turn To 90": "Command",
+      "/Shuffleboard/SetupRobot/Robot1/Turn To LHideOpp": "Command",
+      "/Shuffleboard/SetupRobot/Robot1/TurnTo -45": "Command",
+      "/Shuffleboard/SetupRobot/Robot1/TurnTo 0": "Command",
+      "/Shuffleboard/SetupRobot/Robot1/TurnTo 180": "Command",
+      "/Shuffleboard/SetupRobot/Robot1/TurnTo 45": "Command",
       "/Shuffleboard/SetupShooter/MAXMPS 50/ClearFaults": "Command",
       "/Shuffleboard/SetupShooter/MAXMPS 50/Cmd": "Subsystem",
       "/Shuffleboard/SetupShooter/MAXMPS 50/EndLog": "Command",
@@ -94,6 +123,14 @@
       "/Shuffleboard/SetupTurret/Turret/Position To 20": "Command",
       "/Shuffleboard/SetupTurret/Turret/Reset to 0": "Command",
       "/Shuffleboard/SetupTurret/Turret/StopTurret": "Command",
+      "/Shuffleboard/Trajectories/Field": "Field2d",
+      "/Shuffleboard/Trajectories/TrajectoryRun/CenterPickup": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/CenterThirdPickup": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/CenterThirdShoot": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/CleaPlot": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/LeftPickup": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/RightThirdPickup": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/RotatePose": "Command",
       "/SmartDashboard/Field": "Field2d"
     },
     "windows": {
@@ -105,6 +142,72 @@
     }
   },
   "NetworkTables Settings": {
-    "mode": "Client"
+    "mode": "Client",
+    "serverTeam": "10.21.94.2"
+  },
+  "Plots": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "height": 1061,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/left_measurement"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/left_reference"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/Preferences/trajAccCH"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "height": 864,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/X"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/right_reference"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

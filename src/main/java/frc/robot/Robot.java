@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -29,7 +28,6 @@ import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.CenterHideOppCargo;
 import frc.robot.commands.AutoCommands.DoNothing;
 import frc.robot.commands.AutoCommands.LeftHideOppCargo;
-import frc.robot.commands.AutoCommands.RetPuShootCamera;
 import frc.robot.commands.AutoCommands.RetPuShootCameraTraj;
 import frc.robot.commands.AutoCommands.RunCenterThirdCargo;
 import frc.robot.commands.AutoCommands.RunRightFirstPickup;
@@ -122,6 +120,8 @@ public class Robot extends TimedRobot {
     loopCtr++;
 
     SmartDashboard.putNumber("LPCTRA", loopCtr);
+
+    m_robotContainer.tbstraj.periodic();
 
   }
 

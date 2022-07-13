@@ -65,7 +65,7 @@ public class RevDrivetrain extends SubsystemBase {
     private SimDouble m_simAngle;
 
     private final DifferentialDrive mDrive;
-    private final DifferentialDriveOdometry mOdometry;
+    public final DifferentialDriveOdometry mOdometry;
     private Pose2d savedPose;
     public double leftTargetPosition;
     public double rightTargetPosition;
@@ -123,28 +123,6 @@ public class RevDrivetrain extends SubsystemBase {
 
     public PIDController leftController = new PIDController(trajKp, 0, 0);
     public PIDController rightController = new PIDController(trajKp, 0, 0);
-
-    // NetworkTableEntry m_xEntry =
-    // NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("X");
-    // NetworkTableEntry m_yEntry =
-    // NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Y");
-
-    // NetworkTableEntry leftReference =
-    // NetworkTableInstance.getDefault().getTable("troubleshooting")
-    // .getEntry("left_reference");
-    // NetworkTableEntry leftMeasurement =
-    // NetworkTableInstance.getDefault().getTable("troubleshooting")
-    // .getEntry("left_measurement");
-    // NetworkTableEntry rightReference =
-    // NetworkTableInstance.getDefault().getTable("troubleshooting")
-    // .getEntry("right_reference");
-    // NetworkTableEntry rightMeasurement =
-    // NetworkTableInstance.getDefault().getTable("troubleshooting")
-    // .getEntry("right_measurement");
-
-    // NetworkTableEntry angleMeasurement =
-    // NetworkTableInstance.getDefault().getTable("troubleshooting")
-    // .getEntry("angle_measurement");
 
     public boolean trajectoryRunning;
     public double leftVolts;
