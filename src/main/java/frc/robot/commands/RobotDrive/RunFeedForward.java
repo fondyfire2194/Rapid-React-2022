@@ -4,6 +4,7 @@
 
 package frc.robot.commands.RobotDrive;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RevDrivetrain;
@@ -26,10 +27,19 @@ public class RunFeedForward extends CommandBase {
 
   private boolean m_minus;
 
-  public RunFeedForward(RevDrivetrain drive, boolean minus) {
+  private boolean m_step;
+
+  private double[] mpsStep = { .5, 1, 1.5, 2, 2.5, 3 };
+
+  private int stepPointer;
+
+  private double startTime;
+
+  public RunFeedForward(RevDrivetrain drive, boolean minus, boolean step) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = drive;
     m_minus = minus;
+    m_step = step;
 
     addRequirements(m_drive);
 
@@ -42,39 +52,64 @@ public class RunFeedForward extends CommandBase {
     m_drive.resetEncoders();
     m_drive.resetGyro();
     slowDown = false;
-    mpsIncremementPerSecond = maxMPS / (time / 2);
 
-    SmartDashboard.putNumber("MPSIPS", mpsIncremementPerSecond);
+    if (!m_step) {
+      mpsIncremementPerSecond = maxMPS / (time / 2);
 
-    mpsIncrementPer20ms = mpsIncremementPerSecond / 50;
+      SmartDashboard.putNumber("MPSIPS", mpsIncremementPerSecond);
 
+      mpsIncrementPer20ms = mpsIncremementPerSecond / 50;
+
+    } else {
+      stepPointer = 0;
+      startTime = Timer.getFPGATimestamp();
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (!m_step) {
+      if (!slowDown) {
 
-    if (!slowDown) {
+        m_drive.currentMPS += mpsIncrementPer20ms;
 
-      m_drive.currentMPS += mpsIncrementPer20ms;
+        if (m_drive.currentMPS >= maxMPS)
 
-      if (m_drive.currentMPS >= maxMPS)
-      
-        slowDown = true;
+          slowDown = true;
+
+      }
+
+      if (slowDown) {
+
+        m_drive.currentMPS -= mpsIncrementPer20ms;
+
+        if (m_drive.currentMPS < .1)
+
+          m_drive.currentMPS = 0;
+      }
 
     }
 
-    if (slowDown) {
+    else {
 
-      m_drive.currentMPS -= mpsIncrementPer20ms;
+      m_drive.currentMPS = mpsStep[stepPointer];
 
-      if (m_drive.currentMPS < .1)
+      if (Timer.getFPGATimestamp() > startTime + 2
 
+          && stepPointer < mpsStep.length - 1) {
+
+        stepPointer++;
+
+        startTime = Timer.getFPGATimestamp();
+      }
+      if (stepPointer > mpsStep.length - 1)
         m_drive.currentMPS = 0;
+
     }
     if (m_minus)
 
-      m_drive.tankDriveWithFeedforward(-m_drive.currentMPS,- m_drive.currentMPS);
+      m_drive.tankDriveWithFeedforward(-m_drive.currentMPS, -m_drive.currentMPS);
 
     else
 

@@ -296,7 +296,7 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 3)
                         .whileHeld(new TrajSimVolts(m_drive, false));
 
-            new JoystickButton(m_driverController, 4).whileHeld(new RunFeedForward(m_drive, false));
+            new JoystickButton(m_driverController, 4).whileHeld(new RunFeedForward(m_drive, false, true));
 
             new JoystickButton(m_driverController, 5)
                         .whileHeld(new TrajSimVolts(m_drive, true));
