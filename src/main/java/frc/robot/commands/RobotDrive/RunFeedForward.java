@@ -17,7 +17,7 @@ public class RunFeedForward extends CommandBase {
 
   double mpsIncrementPer20ms;
 
-  double maxMPS = 2.5;
+  double maxMPS = 3;
 
   double time = 3;
 
@@ -92,20 +92,13 @@ public class RunFeedForward extends CommandBase {
     }
 
     else {
+      double mpsRange = maxMPS - minMPS;
 
-      m_drive.currentMPS = mpsStep[stepPointer];
+      m_drive.currentVolts = minMPS + mpsRange * m_drive.voltsValue;
 
-      if (Timer.getFPGATimestamp() > startTime + 2
+      m_drive.currentMPS = m_drive.currentVolts;
 
-          && stepPointer < mpsStep.length - 1) {
-
-        stepPointer++;
-
-        startTime = Timer.getFPGATimestamp();
-      }
-      if (stepPointer > mpsStep.length - 1)
-        m_drive.currentMPS = 0;
-
+     
     }
     if (m_minus)
 

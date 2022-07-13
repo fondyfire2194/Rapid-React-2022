@@ -251,48 +251,48 @@ public class FondyFireTrajectory {
                 trajCommands.add("CleaPlot", new ClearPlot(drive));
                 trajCommands.add("RotatePose", new RotatePose(drive));
 
-                ShuffleboardLayout trajSetStart = Shuffleboard.getTab("Trajectories")
-                                .getLayout("TrajectorySetStart", BuiltInLayouts.kList).withPosition(8, 0)
-                                .withSize(2, 2)
-                                .withProperties(Map.of("Label position", "LEFT")); // labels for
+                // ShuffleboardLayout trajSetStart = Shuffleboard.getTab("Trajectories")
+                //                 .getLayout("TrajectorySetStart", BuiltInLayouts.kList).withPosition(8, 0)
+                //                 .withSize(2, 2)
+                //                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
-                trajSetStart.add("LeftPickuptSetStart",
+                // trajSetStart.add("LeftPickuptSetStart",
 
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                leftPickupRev),
-                                                new PlotTrajectory(drive, leftPickupRev)));
+                //                 new SequentialCommandGroup(
+                //                                 new ResetOdometryToStartOfTrajectory(drive,
+                //                                                 leftPickupRev),
+                //                                 new PlotTrajectory(drive, leftPickupRev)));
 
-                trajSetStart.add("CenterPickuptSetStart",
+                // trajSetStart.add("CenterPickuptSetStart",
 
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                centerFirstPickUpRev),
-                                                new PlotTrajectory(drive, centerFirstPickUpRev)));
+                //                 new SequentialCommandGroup(
+                //                                 new ResetOdometryToStartOfTrajectory(drive,
+                //                                                 centerFirstPickUpRev),
+                //                                 new PlotTrajectory(drive, centerFirstPickUpRev)));
 
-                trajSetStart.add("CenterThirdShootSetStart",
+                // trajSetStart.add("CenterThirdShootSetStart",
 
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                centerThirdCargoShoot),
-                                                new PlotTrajectory(drive, centerThirdCargoShoot)));
+                //                 new SequentialCommandGroup(
+                //                                 new ResetOdometryToStartOfTrajectory(drive,
+                //                                                 centerThirdCargoShoot),
+                //                                 new PlotTrajectory(drive, centerThirdCargoShoot)));
 
-                trajSetStart.add("CenterThirdPickupSetStart",
+                // trajSetStart.add("CenterThirdPickupSetStart",
 
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                centerThirdCargoPickUp),
-                                                new PlotTrajectory(drive, centerThirdCargoPickUp)));
+                //                 new SequentialCommandGroup(
+                //                                 new ResetOdometryToStartOfTrajectory(drive,
+                //                                                 centerThirdCargoPickUp),
+                //                                 new PlotTrajectory(drive, centerThirdCargoPickUp)));
 
-                trajSetStart.add("RightThirdPickupSetStart",
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(drive,
-                                                                rightThirdCargoPickupRev1),
-                                                new PlotTrajectory(drive, rightThirdCargoPickupRev1)));
+                // trajSetStart.add("RightThirdPickupSetStart",
+                //                 new SequentialCommandGroup(
+                //                                 new ResetOdometryToStartOfTrajectory(drive,
+                //                                                 rightThirdCargoPickupRev1),
+                //                                 new PlotTrajectory(drive, rightThirdCargoPickupRev1)));
 
                 ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
-                                .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(8, 2)
-                                .withSize(2, 2)
+                                .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7, 2)
+                                .withSize(2, 3)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                 trajInfo.addNumber("LeftPickUpTrajSecs", () -> leftPickupRev.getTotalTimeSeconds());
