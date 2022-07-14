@@ -97,6 +97,8 @@ public class FondyFireTrajectory {
 
         public DifferentialDriveVoltageConstraint autoVoltageConstraint;
 
+        public String activeTrajectoryName;
+
         public FondyFireTrajectory(RevDrivetrain drive) {
 
                 m_drive = drive;
@@ -113,6 +115,7 @@ public class FondyFireTrajectory {
                                 leftCargoRev,
                                 withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc"))
                                                 .setReversed(true));
+
                 leftHideRev = TrajectoryGenerator.generateTrajectory(
 
                                 leftCargoRev,
@@ -162,7 +165,7 @@ public class FondyFireTrajectory {
                                 withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc")));
 
                 ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
-                                .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(6, 0)
+                                .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(5, 0)
                                 .withSize(2, 3)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
@@ -251,48 +254,9 @@ public class FondyFireTrajectory {
                 trajCommands.add("CleaPlot", new ClearPlot(drive));
                 trajCommands.add("RotatePose", new RotatePose(drive));
 
-                // ShuffleboardLayout trajSetStart = Shuffleboard.getTab("Trajectories")
-                //                 .getLayout("TrajectorySetStart", BuiltInLayouts.kList).withPosition(8, 0)
-                //                 .withSize(2, 2)
-                //                 .withProperties(Map.of("Label position", "LEFT")); // labels for
-
-                // trajSetStart.add("LeftPickuptSetStart",
-
-                //                 new SequentialCommandGroup(
-                //                                 new ResetOdometryToStartOfTrajectory(drive,
-                //                                                 leftPickupRev),
-                //                                 new PlotTrajectory(drive, leftPickupRev)));
-
-                // trajSetStart.add("CenterPickuptSetStart",
-
-                //                 new SequentialCommandGroup(
-                //                                 new ResetOdometryToStartOfTrajectory(drive,
-                //                                                 centerFirstPickUpRev),
-                //                                 new PlotTrajectory(drive, centerFirstPickUpRev)));
-
-                // trajSetStart.add("CenterThirdShootSetStart",
-
-                //                 new SequentialCommandGroup(
-                //                                 new ResetOdometryToStartOfTrajectory(drive,
-                //                                                 centerThirdCargoShoot),
-                //                                 new PlotTrajectory(drive, centerThirdCargoShoot)));
-
-                // trajSetStart.add("CenterThirdPickupSetStart",
-
-                //                 new SequentialCommandGroup(
-                //                                 new ResetOdometryToStartOfTrajectory(drive,
-                //                                                 centerThirdCargoPickUp),
-                //                                 new PlotTrajectory(drive, centerThirdCargoPickUp)));
-
-                // trajSetStart.add("RightThirdPickupSetStart",
-                //                 new SequentialCommandGroup(
-                //                                 new ResetOdometryToStartOfTrajectory(drive,
-                //                                                 rightThirdCargoPickupRev1),
-                //                                 new PlotTrajectory(drive, rightThirdCargoPickupRev1)));
-
-                ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
-                                .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7, 2)
-                                .withSize(2, 3)
+                  ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
+                                .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7, 0)
+                                .withSize(2, 4)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
                 trajInfo.addNumber("LeftPickUpTrajSecs", () -> leftPickupRev.getTotalTimeSeconds());
@@ -303,11 +267,19 @@ public class FondyFireTrajectory {
 
                 trajInfo.addNumber("Right3PUTrajSecs", () -> rightThirdCargoPickupRev1.getTotalTimeSeconds());
 
-                ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
+                trajInfo.addNumber("LeftWheelSpeed", () -> drive.getWheelSpeeds().leftMetersPerSecond);
+ 
+                trajInfo.addNumber("RightWheelSpeed", () -> drive.getWheelSpeeds().rightMetersPerSecond);
+ 
+                trajInfo.addNumber("LeftVolts", () -> drive.leftVolts);
+
+                trajInfo.addNumber("RightVolts", () -> drive.rightVolts);
+
+                // ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
      
-                if (RobotBase.isReal())
-                        rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
-                                        4).withWidget("Field");
+                // if (RobotBase.isReal())
+                //         rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
+                //                         4).withWidget("Field");
 
         }
 

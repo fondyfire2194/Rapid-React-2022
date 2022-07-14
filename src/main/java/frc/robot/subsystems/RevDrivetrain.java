@@ -4,21 +4,20 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+import com.ctre.phoenix.CANifier.LEDChannel;
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -27,6 +26,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SerialPort.Port;
@@ -38,19 +38,20 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Pref;
 import frc.robot.Sim.CANEncoderSim;
+import frc.robot.Sim.CANSparkMaxWithSim;
+import frc.robot.Pref;
 
 public class RevDrivetrain extends SubsystemBase {
     // private static final DrivetrainConstants DRIVETRAIN_CONSTANTS = new
     // NeoDrivetrainConstants();
 
     private static final int VELOCITY_SLOT = 0;
-    public final CANSparkMax mLeadLeft; // NOPMD
-    private final CANSparkMax mFollowerLeft; // NOPMD
+    public final CANSparkMaxWithSim mLeadLeft; // NOPMD
+    private final CANSparkMaxWithSim mFollowerLeft; // NOPMD
 
-    public final CANSparkMax mLeadRight; // NOPMD
-    private final CANSparkMax mFollowerRight; // NOPMD
+    public final CANSparkMaxWithSim mLeadRight; // NOPMD
+    private final CANSparkMaxWithSim mFollowerRight; // NOPMD
 
     public final RelativeEncoder mRightEncoder;
     public final RelativeEncoder mLeftEncoder;
@@ -59,13 +60,12 @@ public class RevDrivetrain extends SubsystemBase {
 
     public final Field2d m_field2d;
     // Simulation
-    private CANEncoderSim m_leftEncodersSim;
-    private CANEncoderSim m_rightEncodersSim;
+    
     private DifferentialDrivetrainSim m_dts;
     private SimDouble m_simAngle;
 
     private final DifferentialDrive mDrive;
-    private final DifferentialDriveOdometry mOdometry;
+    public final DifferentialDriveOdometry mOdometry;
     private Pose2d savedPose;
     public double leftTargetPosition;
     public double rightTargetPosition;
@@ -103,6 +103,9 @@ public class RevDrivetrain extends SubsystemBase {
     public SparkMaxPIDController mLeftVel;
     public SparkMaxPIDController mRightVel;
 
+    public CANEncoderSim mLeftEncoderSim;
+    public CANEncoderSim mRightEncoderSim;
+
     public double kTurnP = .01;
     public double kTurnI = 0.;
     public double kTurnD = 0.00001;
@@ -124,28 +127,7 @@ public class RevDrivetrain extends SubsystemBase {
     public PIDController leftController = new PIDController(trajKp, 0, 0);
     public PIDController rightController = new PIDController(trajKp, 0, 0);
 
-    // NetworkTableEntry m_xEntry =
-    // NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("X");
-    // NetworkTableEntry m_yEntry =
-    // NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Y");
-
-    // NetworkTableEntry leftReference =
-    // NetworkTableInstance.getDefault().getTable("troubleshooting")
-    // .getEntry("left_reference");
-    // NetworkTableEntry leftMeasurement =
-    // NetworkTableInstance.getDefault().getTable("troubleshooting")
-    // .getEntry("left_measurement");
-    // NetworkTableEntry rightReference =
-    // NetworkTableInstance.getDefault().getTable("troubleshooting")
-    // .getEntry("right_reference");
-    // NetworkTableEntry rightMeasurement =
-    // NetworkTableInstance.getDefault().getTable("troubleshooting")
-    // .getEntry("right_measurement");
-
-    // NetworkTableEntry angleMeasurement =
-    // NetworkTableInstance.getDefault().getTable("troubleshooting")
-    // .getEntry("angle_measurement");
-
+ 
     public boolean trajectoryRunning;
     public double leftVolts;
     public double rightVolts;
@@ -161,14 +143,13 @@ public class RevDrivetrain extends SubsystemBase {
 
     public RevDrivetrain() {
 
-        mLeadLeft = new CANSparkMax(CANConstants.DRIVETRAIN_LEFT_MASTER,
-                CANSparkMaxLowLevel.MotorType.kBrushless);
-        mFollowerLeft = new CANSparkMax(CANConstants.DRIVETRAIN_LEFT_FOLLOWER,
-                CANSparkMaxLowLevel.MotorType.kBrushless);
-        mLeadRight = new CANSparkMax(CANConstants.DRIVETRAIN_RIGHT_MASTER,
-                CANSparkMaxLowLevel.MotorType.kBrushless);
-        mFollowerRight = new CANSparkMax(CANConstants.DRIVETRAIN_RIGHT_FOLLOWER,
-                CANSparkMaxLowLevel.MotorType.kBrushless);
+        mLeadLeft = new CANSparkMaxWithSim(CANConstants.DRIVETRAIN_LEFT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mFollowerLeft = new CANSparkMaxWithSim(CANConstants.DRIVETRAIN_LEFT_FOLLOWER, CANSparkMaxLowLevel.MotorType.kBrushless);
+                
+        mLeadRight = new CANSparkMaxWithSim(CANConstants.DRIVETRAIN_RIGHT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
+        
+        mFollowerRight = new CANSparkMaxWithSim(CANConstants.DRIVETRAIN_RIGHT_FOLLOWER, CANSparkMaxLowLevel.MotorType.kBrushless);
+            
 
         mLeadLeft.restoreFactoryDefaults();
         mFollowerLeft.restoreFactoryDefaults();
@@ -189,13 +170,13 @@ public class RevDrivetrain extends SubsystemBase {
         mRightEncoder = mLeadRight.getEncoder();
         mLeftEncoder = mLeadLeft.getEncoder();
 
-        if (RobotBase.isReal()) {
+        
             mLeftEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
             mRightEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
 
             mLeftEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
             mRightEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
-        }
+        
         mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
         mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
 
@@ -248,13 +229,13 @@ public class RevDrivetrain extends SubsystemBase {
 
         // Set current limiting on drive train to prevent brown outs
         Arrays.asList(mLeadLeft, mLeadRight, mFollowerLeft, mFollowerRight)
-                .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
+                .forEach((CANSparkMaxWithSim spark) -> spark.setSmartCurrentLimit(35));
 
         if (RobotBase.isSimulation()) {
 
-            m_leftEncodersSim = new CANEncoderSim(mLeadLeft.getDeviceId(), false);
+            mLeftEncoderSim = new CANEncoderSim(mLeadLeft.getDeviceId(), false);
 
-            m_rightEncodersSim = new CANEncoderSim(mLeadRight.getDeviceId(), false);
+            mRightEncoderSim = new CANEncoderSim(mLeadRight.getDeviceId(), false);
 
             var dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
 
@@ -309,9 +290,9 @@ public class RevDrivetrain extends SubsystemBase {
         var newHdg = m_dts.getHeading();
         var hdgDiff = newHdg.minus(currHdg);
 
-        m_leftEncodersSim.setPosition(m_dts.getLeftPositionMeters());
+        mLeftEncoderSim.setPosition(m_dts.getLeftPositionMeters());
 
-        m_rightEncodersSim.setPosition(m_dts.getRightPositionMeters());
+        mRightEncoderSim.setPosition(m_dts.getRightPositionMeters());
 
         m_simAngle.set(m_simAngle.get() - hdgDiff.getDegrees());
 
@@ -437,8 +418,21 @@ public class RevDrivetrain extends SubsystemBase {
     }
 
     public void tankDriveWithFeedforward(double leftVelocity, double rightVelocity) {
+      
+      if(RobotBase.isReal()){
+      
         mLeadLeft.setVoltage(m_feedforward.calculate(leftVelocity));
         mLeadRight.setVoltage(m_feedforward.calculate(rightVelocity));
+
+      }
+
+      else{
+          leftVolts = m_feedforward.calculate(leftVelocity);
+          rightVolts= m_feedforward.calculate(rightVelocity);
+          mLeadLeft.set(leftVolts / 12);
+          mLeadRight.set(rightVolts / 12);
+
+      }
     }
 
     public void tankDrive(double left, double right) {
@@ -520,8 +514,8 @@ public class RevDrivetrain extends SubsystemBase {
             mLeftEncoder.setPosition(0);
             mRightEncoder.setPosition(0);
         } else {
-            m_leftEncodersSim.setPosition(0);
-            m_rightEncodersSim.setPosition(0);
+            mLeftEncoderSim.setPosition(0);
+            mRightEncoderSim.setPosition(0);
             m_dts.setPose(new Pose2d());
 
         }
@@ -619,7 +613,7 @@ public class RevDrivetrain extends SubsystemBase {
 
     public void clearFaults() {
         Arrays.asList(mLeadLeft, mLeadRight, mFollowerLeft, mFollowerRight)
-                .forEach((CANSparkMax spark) -> spark.clearFaults());
+                .forEach((CANSparkMaxWithSim spark) -> spark.clearFaults());
 
     }
 
@@ -649,13 +643,13 @@ public class RevDrivetrain extends SubsystemBase {
 
             // Set motors to brake when idle. We don't want the drive train to coast.
             Arrays.asList(mLeadLeft, mLeadRight, mFollowerLeft, mFollowerRight)
-                    .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
+                    .forEach((CANSparkMaxWithSim spark) -> spark.setIdleMode(IdleMode.kBrake));
         }
 
         else {
             // Set motors to brake when idle. We don't want the drive train to coast.
             Arrays.asList(mLeadLeft, mLeadRight, mFollowerLeft, mFollowerRight)
-                    .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kCoast));
+                    .forEach((CANSparkMaxWithSim spark) -> spark.setIdleMode(IdleMode.kCoast));
 
         }
     }

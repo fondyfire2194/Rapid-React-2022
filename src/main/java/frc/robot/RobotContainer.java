@@ -25,24 +25,13 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Constants.TiltConstants;
-import frc.robot.OI.LLVisionShuffleboard;
-import frc.robot.OI.SetUpAutoOI;
+
 import frc.robot.OI.SetUpOI;
-import frc.robot.OI.SetUpPreRoundOI;
-import frc.robot.OI.Show_Hide_Screens;
 import frc.robot.OI.TrajTestOI;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
-import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
-import frc.robot.commands.AutoCommands.Common.SetupPresetShootLocation;
-import frc.robot.commands.CargoTransport.StopLowerRoller;
-import frc.robot.commands.Climber.RunClimber;
-import frc.robot.commands.Climber.StopClimber;
-import frc.robot.commands.Intakes.RunCargoOutShooter;
-import frc.robot.commands.Intakes.SetFrontIntakeActive;
-import frc.robot.commands.Intakes.StopActiveIntake;
 import frc.robot.commands.RobotDrive.AccelVolts;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
@@ -50,34 +39,9 @@ import frc.robot.commands.RobotDrive.RunAtVolts;
 import frc.robot.commands.RobotDrive.RunFeedForward;
 import frc.robot.commands.RobotDrive.TrajSimMPS;
 import frc.robot.commands.RobotDrive.TrajSimVolts;
-import frc.robot.commands.Shooter.ChangeShooterSpeed;
-import frc.robot.commands.Shooter.JogShooter;
-import frc.robot.commands.Shooter.JogShooterVelocity;
-import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Tilt.PositionHoldTilt;
-import frc.robot.commands.Tilt.PositionTilt;
-import frc.robot.commands.Tilt.TiltJog;
-import frc.robot.commands.Tilt.TiltJogVelocity;
-import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
-import frc.robot.commands.Tilt.TiltWaitForStop;
-import frc.robot.commands.Turret.PositionHoldTurret;
-import frc.robot.commands.Turret.PositionTurret;
-import frc.robot.commands.Turret.PositionTurretIncremental;
-import frc.robot.commands.Turret.ShiftAimLeftRight;
-import frc.robot.commands.Turret.TurretJog;
-import frc.robot.commands.Turret.TurretJogVelocity;
-import frc.robot.commands.Turret.TurretWaitForStop;
-import frc.robot.commands.Vision.CalculateTargetDistance;
-import frc.robot.commands.Vision.LimelightSetPipeline;
-import frc.robot.commands.Vision.SetUpLimelightForTarget;
-import frc.robot.commands.Vision.UseVision;
-import frc.robot.subsystems.CargoTransportSubsystem;
-import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.IntakesSubsystem;
+
 import frc.robot.subsystems.RevDrivetrain;
-import frc.robot.subsystems.RevShooterSubsystem;
-import frc.robot.subsystems.RevTiltSubsystem;
-import frc.robot.subsystems.RevTurretSubsystem;
+
 import frc.robot.trajectories.FondyFireTrajectory;
 
 /**
@@ -98,28 +62,16 @@ public class RobotContainer {
 
       public final RevDrivetrain m_drive;
 
-      public final IntakesSubsystem m_intake;
-
-      public final CargoTransportSubsystem m_transport;
-
-      public final RevTurretSubsystem m_turret;
-
-      public final RevTiltSubsystem m_tilt;
-
-      public final RevShooterSubsystem m_shooter;
-
-      public final ClimberSubsystem m_climber;
-
+  
       public static boolean autoSelected;
 
       public SetUpOI m_setup;
 
-      public SetUpAutoOI m_autoOi;
+ //     public SetUpAutoOI m_autoOi;
 
-      public SetUpPreRoundOI m_preOi;
+     
 
-      public LLVisionShuffleboard m_llVis;
-
+ 
       public TrajTestOI ttoi;
 
       // public Show_Hide_Screens m_sh;
@@ -168,18 +120,10 @@ public class RobotContainer {
             Pref.deleteUnused();
             Pref.addMissing();
             m_drive = new RevDrivetrain();
-            m_transport = new CargoTransportSubsystem();
-
-            m_intake = new IntakesSubsystem();
-
-            m_shooter = new RevShooterSubsystem();
-            m_turret = new RevTurretSubsystem();
-            m_tilt = new RevTiltSubsystem();
-            m_climber = new ClimberSubsystem();
+          
             m_limelight = new LimeLight();
 
-            m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
-
+           
             if (RobotBase.isSimulation())
 
                   m_drive.setDefaultCommand(getArcadeDriveCommandSim());
@@ -187,17 +131,7 @@ public class RobotContainer {
             else
                   m_drive.setDefaultCommand(getArcadeDriveCommand());
 
-            m_intake.setDefaultCommand((new StopActiveIntake(m_intake)));
-
-            m_transport.setDefaultCommand(new StopLowerRoller(m_transport));
-
-            m_tilt.setDefaultCommand(new PositionHoldTilt(m_tilt));
-
-            m_turret.setDefaultCommand(new PositionHoldTurret(m_turret,
-                        m_limelight));
-
-            m_climber.setDefaultCommand(new StopClimber(m_climber));
-
+           
             m_limelight.setCamMode(CamMode.kvision);
             m_limelight.setLEDMode(LedMode.kpipeLine);
             m_limelight.setStream((StreamType.kStandard));
@@ -221,7 +155,7 @@ public class RobotContainer {
             // Show_Hide_Screens.setStates(false, true, true);
 
             // // competition configuration
-            Show_Hide_Screens.setStates(false, false, false);
+          
 
             // all configuration
             // Show_Hide_Screens.setStates(true, true, true);
@@ -247,8 +181,7 @@ public class RobotContainer {
             // m_compressor,
             // m_limelight, m_intake, m_climber, m_trajectory);
 
-            m_llVis = new LLVisionShuffleboard(m_limelight, m_turret, m_tilt, m_shooter);
-
+           
             configureButtonBindings();
 
             LiveWindow.disableAllTelemetry();
@@ -291,7 +224,7 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 2)
                         .whileHeld(new AccelVolts(m_drive));
 
-            new JoystickButton(m_driverController, 6).whenPressed(new SetFrontIntakeActive(m_intake, true));
+            // new JoystickButton(m_driverController, 6)
 
             new JoystickButton(m_driverController, 3)
                         .whileHeld(new TrajSimVolts(m_drive, false));
@@ -308,83 +241,60 @@ public class RobotContainer {
 
                         .whileHeld(new TrajSimMPS(m_drive, true));
 
-            new JoystickButton(m_driverController, 9).whenPressed(
+            // new JoystickButton(m_driverController, 9).whenPressed(
 
-                        new LimelightSetPipeline(m_limelight, PipelinesConstants.noZoom960720));
+                    
 
-            new JoystickButton(m_driverController, 10).whenPressed(
+            // new JoystickButton(m_driverController, 10).whenPressed(
 
-                        new LimelightSetPipeline(m_limelight, PipelinesConstants.ledsOffPipeline));
+                       
 
-            new JoystickButton(m_driverController, 11).whileHeld(
+            // new JoystickButton(m_driverController, 11).whileHeld(
 
-                        new RunClimber(m_climber, Pref.getPref("ClimbArmUp")));
+                    
 
-            new JoystickButton(m_driverController, 12)
+            // new JoystickButton(m_driverController, 12)
 
-                        .whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmDown")))
+                        
 
-                        .whenPressed(new PositionTilt(m_tilt, TiltConstants.TILT_MIN_ANGLE))
+            // // close to hub
+            // driverUpButton.whenPressed
+            // // tarmac line
+            // driverDownButton.whenPressed
 
-                        .whenPressed(new PositionTurret(m_turret, 0));
+            // driverLeftButton.whenPressed
 
-            // close to hub
-            driverUpButton.whenPressed(new SetupPresetShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 0));
-            // tarmac line
-            driverDownButton.whenPressed(new SetupPresetShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 1));// tarmac
+                        
 
-            driverLeftButton.whenPressed(new SequentialCommandGroup(
+            // driverRightButton
 
-                        new UseVision(m_limelight, false),
-
-                        new WaitCommand(.5),
-
-                        new PositionTurret(m_turret, 0).withTimeout(5),
-
-                        new LimelightSetPipeline(m_limelight, PipelinesConstants.ledsOffPipeline)));
-
-            driverRightButton
-
-                        .whenPressed(new SetUpLimelightForTarget(m_limelight, PipelinesConstants.noZoom960720, true))
-
-                        .whenPressed(new SetShootSpeedSource(m_shooter, m_shooter.cameraSource))
-
-                        // .whenPressed(new RunShooter(m_shooter))
-
-                        .whileActiveContinuous(
-
-                                    new SequentialCommandGroup(new CalculateTargetDistance(m_limelight, m_shooter),
-
-                                                new SelectSpeedAndTiltByDistance(m_shooter, m_tilt)));
-
+                     
             // co driver gamepad
 
-            codriverStart.whenPressed(new TiltMoveToReverseLimit(m_tilt));
+            // codriverStart.whenPressed
 
-            codriverX.whileHeld(getJogTiltVelocityCommand()).whileHeld(getJogTurretVelocityCommand())
-                        .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));
+            // codriverX.whileHeld
 
-            codriverY.whileHeld(getJogTiltCommand(codriverGamepad)).whileHeld(getJogTurretCommand(codriverGamepad))
-                        .whenReleased(new TiltWaitForStop(m_tilt)).whenReleased(new TurretWaitForStop(m_turret));
+            // codriverY.whileHeld
 
-            codriverB.whenPressed(new SetFrontIntakeActive(m_intake, false));
+            // codriverB.whenPressed
 
-            codriverUpButton.whenPressed(new ChangeShooterSpeed(m_shooter, +100));
+            // codriverUpButton.whenPressed
 
-            codriverDownButton.whenPressed(new ChangeShooterSpeed(m_shooter, -100));
+            // codriverDownButton.whenPressed
 
-            codriverRightButton.whenPressed(new ShiftAimLeftRight(m_limelight, false));
+            // codriverRightButton.whenPressed
 
-            codriverLeftButton.whenPressed(new ShiftAimLeftRight(m_limelight, true));
+            // codriverLeftButton.whenPressed
 
-            codriverA.whenPressed(new SetFrontIntakeActive(m_intake, true));
+            // codriverA.whenPressed
 
-            codriverLeftTrigger.whenPressed(new PositionTurretIncremental(m_turret, 1));
+            // codriverLeftTrigger.whenPressed
 
-            codriverRightTrigger.whenPressed(new PositionTurretIncremental(m_turret, -1));
+            // codriverRightTrigger.whenPressed
 
-            // test allow low shoot speed
-            codriverLeftStick.whenPressed(new SetupPresetShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 3));
+            // // test allow low shoot speed
+            // codriverLeftStick.whenPressed
 
             LiveWindow.disableAllTelemetry();
 
@@ -415,13 +325,7 @@ public class RobotContainer {
 
       }
 
-      public Command getJogTurretCommand(XboxController gamepad) {
-            return new TurretJog(m_turret, () -> gamepad.getRawAxis(0) / 10);
-      }
-
-      public Command getJogTiltCommand(XboxController gamepad) {
-            return new TiltJog(m_tilt, () -> -gamepad.getRawAxis(1) / 2, gamepad);
-      }
+      
 
       /**
        * Use to tune velocity loop for use inside vision position loops. Goal is to
@@ -444,58 +348,53 @@ public class RobotContainer {
        * @return
        */
 
-      public Command getJogTurretVelocityCommand() {
+      // public Command getJogTurretVelocityCommand() {
 
-            return new TurretJogVelocity(m_turret, () -> codriverGamepad.getRawAxis(0) / 2);
-      }
+      //       return new TurretJogVelocity(m_turret, () -> codriverGamepad.getRawAxis(0) / 2);
+      // }
 
-      public Command getJogTiltVelocityCommand() {
+      // public Command getJogTiltVelocityCommand() {
 
-            return new TiltJogVelocity(m_tilt, () -> -codriverGamepad.getRawAxis(1) / 2);
-      }
+      //       return new TiltJogVelocity(m_tilt, () -> -codriverGamepad.getRawAxis(1) / 2);
+      // }
 
-      public Command getJogShooterCommand() {
+      // public Command getJogShooterCommand() {
 
-            return new JogShooter(m_shooter, () -> codriverGamepad.getRawAxis(3));
-      }
+      //       return new JogShooter(m_shooter, () -> codriverGamepad.getRawAxis(3));
+      // }
 
-      public Command getJogShooterVelocityCommand() {
-            return new JogShooterVelocity(m_shooter, () -> codriverGamepad.getRawAxis(4));
-      }
+      // public Command getJogShooterVelocityCommand() {
+      //       return new JogShooterVelocity(m_shooter, () -> codriverGamepad.getRawAxis(4));
+      // }
 
       public double getThrottle() {
             return (1 - m_driverController.getThrottle()) / 2;
       }
 
       public void checkCANDevices() {
-            m_turret.checkCAN();
-            m_tilt.checkCAN();
-            m_intake.checkFrontCAN();
-            m_intake.checkRearCAN();
-            m_shooter.checkCAN();
+          
             m_drive.checkCAN();
-            m_transport.checkCAN();
-            m_climber.checkCAN();
+           
 
       }
 
       public double[] getPDPInfo() {
             double temp[] = { 0, 0, 0, 0, 0 };
-            temp[0] = m_shooter.getBatteryVoltage();
-            temp[1] = m_shooter.getTemperature();
-            temp[2] = m_shooter.getTotalEnergy() / 3600;
-            temp[3] = m_shooter.getTotalPower();
+            // temp[0] = m_shooter.getBatteryVoltage();
+            // temp[1] = m_shooter.getTemperature();
+            // temp[2] = m_shooter.getTotalEnergy() / 3600;
+            // temp[3] = m_shooter.getTotalPower();
             return temp;
 
       }
 
-      public void checkLimits() {
-            if (m_tilt.onMinusSoftwareLimit() || m_tilt.onPlusSoftwareLimit() || m_tilt.onMinusHardwareLimit()
-                        || m_turret.onPlusSoftwareLimit() || m_turret.onMinusSoftwareLimit()
-                        || m_turret.onPlusHardwareLimit() || m_turret.onMinusHardwareLimit()
-                        || DriverStation.isDisabled())
-                  m_limelight.useVision = false;
+      // public void checkLimits() {
+      //       if (m_tilt.onMinusSoftwareLimit() || m_tilt.onPlusSoftwareLimit() || m_tilt.onMinusHardwareLimit()
+      //                   || m_turret.onPlusSoftwareLimit() || m_turret.onMinusSoftwareLimit()
+      //                   || m_turret.onPlusHardwareLimit() || m_turret.onMinusHardwareLimit()
+      //                   || DriverStation.isDisabled())
+      //             m_limelight.useVision = false;
 
-      }
+      // }
 
 }
