@@ -107,9 +107,9 @@ public final class Constants {
 
       public static double ksVolts = .23;
 
-      public static double kvVoltSecondsPerMeter = 2.36;// 2.36;// 2.629;// 22.63;// 27;//2;
+      public static double kvVoltSecondsPerMeter = 2.74;// 2.36;// 2.629;// 22.63;// 27;//2;
 
-      public static double kaVoltSecondsSquaredPerMeter = .33;// 3.48;//.408;
+      public static double kaVoltSecondsSquaredPerMeter = .4;// 3.48;//.408;
 
       public final static double WHEELBASE_WIDTH = .68;
 

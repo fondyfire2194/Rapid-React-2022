@@ -116,7 +116,7 @@ public class FondyFireTrajectory {
                                 leftAutoStartRev,
                                 List.of(),
                                 leftCargoRev,
-                                withSpeedAndAcceleration(Pref.getPref("trajVelLPU"), Pref.getPref("trajAccLPU"))
+                                withSpeedAndAcceleration(1, .5)
                                                 .setReversed(true));
                 leftHideRev = TrajectoryGenerator.generateTrajectory(
 
@@ -254,10 +254,8 @@ public class FondyFireTrajectory {
                                                                                                 0))
                                                                                 .andThen(() -> trajectoryRunning = false)));
 
-                
-
                 ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
-                                .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7,0)
+                                .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7, 0)
                                 .withSize(2, 4)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
