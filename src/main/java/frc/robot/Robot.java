@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Constants.ShooterRangeConstants;
@@ -25,10 +26,12 @@ import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.RetPuShootCamera;
+import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
+import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -154,7 +157,7 @@ public class Robot extends TimedRobot {
 
     autoChoice = m_robotContainer.m_preOi.autoChooser.getSelected();
 
-    hideOppCargo = m_robotContainer.m_preOi.hideCargoChooser.getSelected();
+    hideOppCargo = false;// m_robotContainer.m_preOi.hideCargoChooser.getSelected();
 
     LimeLight ll = m_robotContainer.m_limelight;
     RevTiltSubsystem tilt = m_robotContainer.m_tilt;
@@ -199,7 +202,7 @@ public class Robot extends TimedRobot {
 
         data[0] = -1.6;// retract point
 
-        data[2] = ShooterRangeConstants.tiltRange3;// tilt 14 deg
+        data[2] = ShooterRangeConstants.tiltRange4;// tilt 14 deg
 
         data[3] = 0;// turret will be locked to Limelight
 
@@ -207,7 +210,10 @@ public class Robot extends TimedRobot {
 
         m_autonomousCommand = new SequentialCommandGroup(
 
-            new RetPuShootCamera(intake, drive, transport, shooter, tilt, turret, ll,
+            new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+
+            new RetPuShootCamera(intake, drive, transport, shooter, tilt,
+                turret, ll,
                 comp, data)
 
         );
@@ -218,9 +224,9 @@ public class Robot extends TimedRobot {
 
         data = FieldMap.centerTarmacData;
 
-        data[0] = -1.4;// retract point
+        data[0] = -1.6;// retract point
 
-        data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
+        data[2] = ShooterRangeConstants.tiltRange4;// tilt 11 deg
 
         data[3] = 0;// turret will be locked to Limelight
 
@@ -304,6 +310,10 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_shooter.presetLocationName = FieldMap.shootLocationName[m_robotContainer.m_shooter.shootLocation];
     m_robotContainer.m_shooter.shootModeName = FieldMap.shootModeName[m_robotContainer.m_shooter.shootValuesSource];
 
+    new ParallelCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight,
+        m_robotContainer.m_shooter),
+
+        new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();
   }
 
   /**
