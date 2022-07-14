@@ -32,11 +32,13 @@ import frc.robot.commands.AutoCommands.RetPuShootCameraTraj;
 import frc.robot.commands.AutoCommands.RunCenterThirdCargo;
 import frc.robot.commands.AutoCommands.RunRightFirstPickup;
 import frc.robot.commands.AutoCommands.RunRightThreeCargo;
+import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.SetRobotPose;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
+import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -53,6 +55,9 @@ import frc.robot.trajectories.FondyFireTrajectory;
  * project.
  */
 public class Robot extends TimedRobot {
+  private static final LimeLight m_limelight = null;
+  private static final RevShooterSubsystem m_shooter = null;
+  private static final String m_tilt = null;
   private Command m_autonomousCommand;
   private int autoChoice;
 
@@ -355,6 +360,11 @@ public class Robot extends TimedRobot {
 
     }
     autoHasRun = false;
+
+    // new SequentialCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight,
+    //     m_robotContainer.m_shooter),
+
+    //     new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).perpetually();
 
     Shuffleboard.update();
 

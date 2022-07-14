@@ -15,10 +15,10 @@ public class SelectSpeedAndTiltByDistance extends CommandBase {
   private RevTiltSubsystem m_tilt;
 
   /** Creates a new SelectSpeedAndTiltByDistance. */
-  public SelectSpeedAndTiltByDistance(RevShooterSubsystem shooter, RevTiltSubsystem tilt) {
+  public SelectSpeedAndTiltByDistance(RevShooterSubsystem shooter, RevTiltSubsystem m_tilt2) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
-    m_tilt = tilt;
+    m_tilt = m_tilt2;
   }
 
   // Called when the command is initially scheduled.
