@@ -107,7 +107,7 @@ public final class Constants {
 
       public static double ksVolts = .23;
 
-      public static double kvVoltSecondsPerMeter = 2.36;//.4;//2.36;// 2.629;// 22.63;// 27;//2;
+      public static double kvVoltSecondsPerMeter = 2.7;//2.36;//.4;//2.36;// 2.629;// 22.63;// 27;//2;
 
       public static double kaVoltSecondsSquaredPerMeter = .33;//.04;//.33;// 3.48;//.408;
 
