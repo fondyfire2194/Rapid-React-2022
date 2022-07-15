@@ -4,20 +4,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import com.ctre.phoenix.CANifier.LEDChannel;
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -26,7 +25,6 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SerialPort.Port;
@@ -38,20 +36,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Sim.CANEncoderSim;
-import frc.robot.Sim.CANSparkMaxWithSim;
 import frc.robot.Pref;
+import frc.robot.Sim.CANEncoderSim;
 
 public class RevDrivetrain extends SubsystemBase {
     // private static final DrivetrainConstants DRIVETRAIN_CONSTANTS = new
     // NeoDrivetrainConstants();
 
     private static final int VELOCITY_SLOT = 0;
-    public final CANSparkMaxWithSim mLeadLeft; // NOPMD
-    private final CANSparkMaxWithSim mFollowerLeft; // NOPMD
+    public final CANSparkMax mLeadLeft; // NOPMD
+    private final CANSparkMax mFollowerLeft; // NOPMD
 
-    public final CANSparkMaxWithSim mLeadRight; // NOPMD
-    private final CANSparkMaxWithSim mFollowerRight; // NOPMD
+    public final CANSparkMax mLeadRight; // NOPMD
+    private final CANSparkMax mFollowerRight; // NOPMD
 
     public final RelativeEncoder mRightEncoder;
     public final RelativeEncoder mLeftEncoder;
@@ -60,7 +57,7 @@ public class RevDrivetrain extends SubsystemBase {
 
     public final Field2d m_field2d;
     // Simulation
-    
+
     private DifferentialDrivetrainSim m_dts;
     private SimDouble m_simAngle;
 
@@ -113,6 +110,10 @@ public class RevDrivetrain extends SubsystemBase {
 
     public final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts,
             DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter);
+    public final SimpleMotorFeedforward m_feedforwardSim = new SimpleMotorFeedforward(DriveConstants.ksVolts,
+             2.4, .06);
+    // public final SimpleMotorFeedforward m_feedforwardSim = new SimpleMotorFeedforward(DriveConstants.ksVolts,
+    //          3.9, .16);
 
     private int robotStoppedCtr;
 
@@ -127,29 +128,30 @@ public class RevDrivetrain extends SubsystemBase {
     public PIDController leftController = new PIDController(trajKp, 0, 0);
     public PIDController rightController = new PIDController(trajKp, 0, 0);
 
- 
     public boolean trajectoryRunning;
     public double leftVolts;
     public double rightVolts;
     public double voltsValue;
     public double currentVolts;
-    public double leftmpspervolt;
-    public double rightmpspervolt;
-    public double leftmpspspervolt;
-    public double rightmpspspervolt;
+    public double voltsPerMPS;
+
+    public double voltspwermpssqd;
+    
     public double ksVolts;
     public double kvVolts;
-    public double currentMPS;
+    public double currentMPSCommand;
+    public double accelerationVolts;
 
     public RevDrivetrain() {
 
-        mLeadLeft = new CANSparkMaxWithSim(CANConstants.DRIVETRAIN_LEFT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mFollowerLeft = new CANSparkMaxWithSim(CANConstants.DRIVETRAIN_LEFT_FOLLOWER, CANSparkMaxLowLevel.MotorType.kBrushless);
-                
-        mLeadRight = new CANSparkMaxWithSim(CANConstants.DRIVETRAIN_RIGHT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
-        
-        mFollowerRight = new CANSparkMaxWithSim(CANConstants.DRIVETRAIN_RIGHT_FOLLOWER, CANSparkMaxLowLevel.MotorType.kBrushless);
-            
+        mLeadLeft = new CANSparkMax(CANConstants.DRIVETRAIN_LEFT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mFollowerLeft = new CANSparkMax(CANConstants.DRIVETRAIN_LEFT_FOLLOWER,
+                CANSparkMaxLowLevel.MotorType.kBrushless);
+
+        mLeadRight = new CANSparkMax(CANConstants.DRIVETRAIN_RIGHT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
+
+        mFollowerRight = new CANSparkMax(CANConstants.DRIVETRAIN_RIGHT_FOLLOWER,
+                CANSparkMaxLowLevel.MotorType.kBrushless);
 
         mLeadLeft.restoreFactoryDefaults();
         mFollowerLeft.restoreFactoryDefaults();
@@ -170,13 +172,12 @@ public class RevDrivetrain extends SubsystemBase {
         mRightEncoder = mLeadRight.getEncoder();
         mLeftEncoder = mLeadLeft.getEncoder();
 
-        
-            mLeftEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
-            mRightEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
+        mLeftEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
+        mRightEncoder.setPositionConversionFactor(DriveConstants.METERS_PER_MOTOR_REV);
 
-            mLeftEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
-            mRightEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
-        
+        mLeftEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
+        mRightEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
+
         mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
         mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
 
@@ -229,7 +230,7 @@ public class RevDrivetrain extends SubsystemBase {
 
         // Set current limiting on drive train to prevent brown outs
         Arrays.asList(mLeadLeft, mLeadRight, mFollowerLeft, mFollowerRight)
-                .forEach((CANSparkMaxWithSim spark) -> spark.setSmartCurrentLimit(35));
+                .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
 
         if (RobotBase.isSimulation()) {
 
@@ -418,21 +419,21 @@ public class RevDrivetrain extends SubsystemBase {
     }
 
     public void tankDriveWithFeedforward(double leftVelocity, double rightVelocity) {
-      
-      if(RobotBase.isReal()){
-      
-        mLeadLeft.setVoltage(m_feedforward.calculate(leftVelocity));
-        mLeadRight.setVoltage(m_feedforward.calculate(rightVelocity));
 
-      }
+        if (RobotBase.isReal()) {
 
-      else{
-          leftVolts = m_feedforward.calculate(leftVelocity);
-          rightVolts= m_feedforward.calculate(rightVelocity);
-          mLeadLeft.set(leftVolts / 12);
-          mLeadRight.set(rightVolts / 12);
+            mLeadLeft.setVoltage(m_feedforward.calculate(leftVelocity));
+            mLeadRight.setVoltage(m_feedforward.calculate(rightVelocity));
 
-      }
+        }
+
+        else {
+            leftVolts = m_feedforwardSim.calculate(leftVelocity);
+            rightVolts = m_feedforwardSim.calculate(rightVelocity);
+            mLeadLeft.set(leftVolts / 12);
+            mLeadRight.set(rightVolts / 12);
+
+        }
     }
 
     public void tankDrive(double left, double right) {
@@ -613,7 +614,7 @@ public class RevDrivetrain extends SubsystemBase {
 
     public void clearFaults() {
         Arrays.asList(mLeadLeft, mLeadRight, mFollowerLeft, mFollowerRight)
-                .forEach((CANSparkMaxWithSim spark) -> spark.clearFaults());
+                .forEach((CANSparkMax spark) -> spark.clearFaults());
 
     }
 
@@ -643,13 +644,13 @@ public class RevDrivetrain extends SubsystemBase {
 
             // Set motors to brake when idle. We don't want the drive train to coast.
             Arrays.asList(mLeadLeft, mLeadRight, mFollowerLeft, mFollowerRight)
-                    .forEach((CANSparkMaxWithSim spark) -> spark.setIdleMode(IdleMode.kBrake));
+                    .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
         }
 
         else {
             // Set motors to brake when idle. We don't want the drive train to coast.
             Arrays.asList(mLeadLeft, mLeadRight, mFollowerLeft, mFollowerRight)
-                    .forEach((CANSparkMaxWithSim spark) -> spark.setIdleMode(IdleMode.kCoast));
+                    .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kCoast));
 
         }
     }

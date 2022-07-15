@@ -11,7 +11,7 @@ public class RunAtVolts extends CommandBase {
   /** Creates a new RunAtVolts. */
   private RevDrivetrain m_drive;
   private boolean m_minus;
-  double maxVolts = 1;
+  double maxVolts = 12;
   double minVolts = 0;
 
   public RunAtVolts(RevDrivetrain drive, boolean minus) {
@@ -26,9 +26,9 @@ public class RunAtVolts extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.ksVolts = .2;
+    m_drive.ksVolts = .23;
     if (m_minus)
-      m_drive.ksVolts = -.2;
+      m_drive.ksVolts = -.23;
 
   }
 
@@ -41,19 +41,20 @@ public class RunAtVolts extends CommandBase {
     m_drive.currentVolts = minVolts + voltsRange * m_drive.voltsValue;
 
     if (m_minus)
+
       m_drive.currentVolts = -m_drive.currentVolts;
 
     m_drive.tankDriveVolts(m_drive.currentVolts, m_drive.currentVolts);
 
     m_drive.kvVolts = m_drive.currentVolts - m_drive.ksVolts;
 
-    m_drive.leftmpspervolt = m_drive.getLeftRate() / m_drive.kvVolts;
+    m_drive.voltsPerMPS =  m_drive.kvVolts/((m_drive.getLeftRate() + m_drive.getRightRate()) / 2) ;
 
-    m_drive.rightmpspervolt = m_drive.getRightRate() / m_drive.kvVolts;
+    // m_drive.rightmpspervolt = m_drive.getRightRate() / m_drive.kvVolts;
 
     if (m_minus) {
-      m_drive.leftmpspervolt = -m_drive.leftmpspervolt;
-      m_drive.rightmpspervolt = -m_drive.rightmpspervolt;
+      m_drive.voltsPerMPS = -m_drive.voltsPerMPS;
+      // m_drive.rightmpspervolt = -m_drive.rightmpspervolt;
 
     }
   }
@@ -63,6 +64,7 @@ public class RunAtVolts extends CommandBase {
   public void end(boolean interrupted) {
 
     m_drive.tankDriveVolts(0, 0);
+    m_drive.voltsPerMPS=0;
   }
 
   // Returns true when the command should end.

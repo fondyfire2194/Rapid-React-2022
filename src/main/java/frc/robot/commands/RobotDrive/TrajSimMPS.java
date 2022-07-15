@@ -38,7 +38,7 @@ public class TrajSimMPS extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.currentMPS = 0;
+    m_drive.currentMPSCommand = 0;
     m_drive.resetEncoders();
     m_drive.resetGyro();
     slowDown = false;
@@ -59,33 +59,33 @@ public class TrajSimMPS extends CommandBase {
 
     if (!slowDown) {
 
-      m_drive.currentMPS += mpsIncrementPer20ms;
-  SmartDashboard.putNumber("CMPS", m_drive.currentMPS);
-      if (m_drive.currentMPS >= maxMPS)
+      m_drive.currentMPSCommand += mpsIncrementPer20ms;
+  SmartDashboard.putNumber("CMPS", m_drive.currentMPSCommand);
+      if (m_drive.currentMPSCommand >= maxMPS)
         slowDown = true;
     }
 
     if (slowDown) {
 
-      m_drive.currentMPS -= mpsIncrementPer20ms;
+      m_drive.currentMPSCommand -= mpsIncrementPer20ms;
 
-      if (m_drive.currentMPS < .1)
+      if (m_drive.currentMPSCommand < .1)
 
-        m_drive.currentMPS = 0;
+        m_drive.currentMPSCommand = 0;
     }
     if (m_minus)
 
-      m_drive.tankDriveWithFeedforward(-m_drive.currentMPS, -m_drive.currentMPS);
+      m_drive.tankDriveWithFeedforward(-m_drive.currentMPSCommand, -m_drive.currentMPSCommand);
 
       else
 
-      m_drive.tankDriveWithFeedforward(m_drive.currentMPS, m_drive.currentMPS);
+      m_drive.tankDriveWithFeedforward(m_drive.currentMPSCommand, m_drive.currentMPSCommand);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drive.currentMPS = 0;
+    m_drive.currentMPSCommand = 0;
     m_drive.tankDriveWithFeedforward(0, 0);
   }
 

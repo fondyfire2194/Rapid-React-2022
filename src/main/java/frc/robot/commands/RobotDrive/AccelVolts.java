@@ -18,13 +18,13 @@ public class AccelVolts extends CommandBase {
 
   double maxMPS = 3;
 
-  double mpspervolt;
+  double voltsPerMPS;
 
   double voltsIncrementPer20ms;
 
   double maxVolts;
 
-  double kvVoltSecondsPerMeter = .4;
+  double kvVoltSecondsPerMeter = 3.9;
 
   private double voltsIncremementPerSecond;
 
@@ -41,17 +41,17 @@ public class AccelVolts extends CommandBase {
   public void initialize() {
     m_drive.currentVolts = 0;
 
-    m_drive.ksVolts = .2;
+    m_drive.ksVolts = .23;
 
-    mpspervolt = maxMPS / 12;
+    voltsPerMPS = maxMPS / 12;
 
-    voltsIncremementPerSecond = accelMPSPSPS / mpspervolt;
+    voltsIncremementPerSecond = accelMPSPSPS / voltsPerMPS;
 
     SmartDashboard.putNumber("VIPS", voltsIncremementPerSecond);
 
     voltsIncrementPer20ms = voltsIncremementPerSecond / 50;
 
-    maxVolts = 5;
+    maxVolts = 10;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -68,10 +68,9 @@ public class AccelVolts extends CommandBase {
 
     m_drive.kvVolts = kvVoltSecondsPerMeter * m_drive.getLeftRate();
 
-    m_drive.leftmpspspervolt = accelMPSPSPS / (m_drive.currentVolts - m_drive.ksVolts - m_drive.kvVolts);
+    m_drive.accelerationVolts = m_drive.currentVolts - m_drive.ksVolts - m_drive.kvVolts;
 
-    m_drive.rightmpspspervolt = accelMPSPSPS
-        / (m_drive.currentVolts - m_drive.ksVolts - m_drive.kvVolts);
+    m_drive.voltspwermpssqd = m_drive.accelerationVolts / accelMPSPSPS;
 
   }
 
