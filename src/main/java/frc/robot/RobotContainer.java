@@ -24,9 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PipelinesConstants;
-import frc.robot.Constants.TiltConstants;
 
-import frc.robot.OI.SetUpOI;
+
 import frc.robot.OI.TrajTestOI;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.CamMode;
@@ -65,7 +64,7 @@ public class RobotContainer {
   
       public static boolean autoSelected;
 
-      public SetUpOI m_setup;
+
 
  //     public SetUpAutoOI m_autoOi;
 

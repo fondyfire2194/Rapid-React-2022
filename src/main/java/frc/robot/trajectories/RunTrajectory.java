@@ -13,10 +13,12 @@ import frc.robot.subsystems.RevDrivetrain;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class RunTrajectory extends SequentialCommandGroup {
   /** Creates a new RunTraj. */
-  public RunTrajectory(FondyFireTrajectory fftraj, RevDrivetrain drive, Trajectory traj) {
+  public RunTrajectory( FondyFireTrajectory fftraj, RevDrivetrain drive, Trajectory traj) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+
+       // new SetActiveTrajectory(fftraj, traj),
 
         new ResetOdometryToStartOfTrajectory(drive, traj),
 

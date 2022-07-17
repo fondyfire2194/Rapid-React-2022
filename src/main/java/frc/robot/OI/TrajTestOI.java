@@ -13,7 +13,7 @@ import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.trajectories.FondyFireTrajectory;
-import frc.robot.trajectories.LogTrajectory;
+import frc.robot.trajectories.LogTrajectoryData;
 
 /** Add your docs here. */
 public class TrajTestOI {
@@ -34,9 +34,9 @@ public class TrajTestOI {
                 robotCommands.addNumber("Gyro Yaw", () -> drive.getYaw());
                 robotCommands.addNumber("Heading", () -> drive.getHeading());
                 robotCommands.addNumber("Rotation", () -> drive.getRotationDegrees());
-                // robotCommands.add("LogTrajectoryData", new LogTrajectoryData(drive, traj,
-                // traj.leftPickupRev, "LPUD"));
-                robotCommands.add("LogTrajectoryPoints", new LogTrajectory(traj, traj.leftPickupRev, "LPU"));
+              
+           
+         
 
                 ShuffleboardLayout leftValues = Shuffleboard.getTab("SetupRobot")
                                 .getLayout("LeftValues", BuiltInLayouts.kList).withPosition(2, 0)
@@ -72,7 +72,6 @@ public class TrajTestOI {
                 testValues.addNumber("accVolts", () -> drive.accelerationVolts);
 
                 testValues.addNumber("KA calc", () -> drive.kA);
-                
 
         }
 

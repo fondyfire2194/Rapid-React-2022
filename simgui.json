@@ -163,6 +163,7 @@
       "/Shuffleboard/Trajectories/TrajectoryRun/CenterThirdShoot": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/CleaPlot": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/LeftPickup": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/LogTrajectoryData": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/RightThirdPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/RotatePose": "Command",
       "/Shuffleboard/Trajectories/TrajectorySetStart/CenterPickuptSetStart": "Command",
@@ -335,7 +336,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <1>": {
       "plots": [

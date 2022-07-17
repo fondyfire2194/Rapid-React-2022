@@ -19,12 +19,11 @@ public class LogTrajectoryData extends CommandBase {
   /**
    * Creates a new LogDistanceData.
    */
-  public final String[] names = { "Time",
-      "LeftVolts", "RightVolts",
-      "WheelLeftSpeed", "WheelRightSpeed", "RobX", "RobY", "RobDeg", "LeftAmps", "RightAmps" };
+  public final String[] names = { "Time", "TrajVel", "TrajAccel", "TrajCurv", "TrajX", "TrajY", "TrajDeg",
+      "WheelLeftSpeed", "WheelRightSpeed", "RobX", "RobY", "RobDeg" };
 
-  public static String[] units = { "Secs", "Volts", "Volts",
-      "MPS", "MPS", "Meters", "Meters", "Deg", "Amps", "Amps" };
+  public static String[] units = { "Secs", "MPS", "MPSPS", "RadPerMeter", "Meters", "Meters", "Deg",
+      "MPS", "MPS", "Meters", "Meters", "Deg" };
 
   private int loopCtr;
   private boolean fileOpenNow;
@@ -91,30 +90,35 @@ public class LogTrajectoryData extends CommandBase {
 
         lastTime = time;
 
-        startTime = Timer.getFPGATimestamp();
-
         Pose2d robPose = m_drive.getPose();
+
+        State trajState = m_traj.sample(time);
+
+        Pose2d trajPose = trajState.poseMeters;
 
         m_ff.trajLogger.writeData(
             time,
 
-            m_drive.leftVolts,
-            m_drive.rightVolts,
+            trajState.velocityMetersPerSecond,
+            trajState.accelerationMetersPerSecondSq,
+            trajState.curvatureRadPerMeter,
+
+            trajPose.getTranslation().getX(),
+            trajPose.getTranslation().getY(),
+            trajPose.getRotation().getDegrees(),
 
             m_drive.getWheelSpeeds().leftMetersPerSecond,
             m_drive.getWheelSpeeds().rightMetersPerSecond,
 
             robPose.getX(),
             robPose.getY(),
-            robPose.getRotation().getDegrees(),
-
-            m_drive.getLeftAmps(),
-            m_drive.getRightAmps()
+            robPose.getRotation().getDegrees()
 
         );
       }
-      double logTime = Timer.getFPGATimestamp() - startTime;
-      SmartDashboard.putNumber("Log Data Time", logTime);
+      double logTime = Timer.getFPGATimestamp() - firstLogTime;
+      
+      SmartDashboard.putNumber("Log Data Time", logTime - time);
     }
 
   }

@@ -74,7 +74,7 @@ public class FondyFireTrajectory {
 
         // RIGHT
 
-        public final Pose2d rightCargoAutoStart = new Pose2d(7.63, 1.9, Rotation2d.fromDegrees(-90));
+        public final Pose2d rightCargoAutoStart = new Pose2d(7.63, 1.9, Rotation2d.fromDegrees(-80));
 
         final Pose2d rightCargoFirstPickup = new Pose2d(7.63, .62, Rotation2d.fromDegrees(-90));
 
@@ -90,7 +90,27 @@ public class FondyFireTrajectory {
 
         public DifferentialDriveVoltageConstraint autoVoltageConstraint;
 
-        public String activeTrajectoryName;
+        public String activeTrajectoryName = "Not Specified";
+
+        public double clamp(double value, double low, double high) {
+                return Math.max(low, Math.min(value, high));
+        }
+
+        public TrajectoryConfig withSpeedAndAcceleration(
+
+                        double maxSpeedPercent, double maxAccelerationPercent) {
+
+                return new TrajectoryConfig(
+
+                                DriveConstants.kMaxTrajectoryMetersPerSecond *
+                                                clamp(maxSpeedPercent, 0, 1),
+                                DriveConstants.kMaxTrajectoryAccelerationMetersPerSquared *
+                                                clamp(maxAccelerationPercent, 0, 1.5))
+                                                                .setKinematics(DriveConstants.kDriveKinematics)
+                                                                .addConstraint(autoVoltageConstraint);
+        }
+
+        public Trajectory activeTrajectory;;
 
         public FondyFireTrajectory(RevDrivetrain drive) {
 
@@ -149,13 +169,16 @@ public class FondyFireTrajectory {
                                 rightCargoAutoStart,
                                 List.of(),
                                 rightCargoFirstPickup,
-                                withSpeedAndAcceleration(1, .5).setReversed(true));
+                                withSpeedAndAcceleration(.5, .25).setReversed(true));
 
                 rightThirdCargoPickupRev1 = TrajectoryGenerator.generateTrajectory(
                                 rightCargoFirstPickup,
                                 List.of(),
                                 centerCargoRev,
                                 withSpeedAndAcceleration(1, .5).setReversed(true));
+                activeTrajectory = TrajectoryGenerator.generateTrajectory(leftAutoStartRev, List.of(),
+                                leftCargoRev, withSpeedAndAcceleration(1, .25)
+                                                .setReversed(true));
 
                 ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(5, 0)
@@ -172,6 +195,9 @@ public class FondyFireTrajectory {
 
                 trajCommands.add("RightThirdPickup", new RunTrajectory(this, drive, rightThirdCargoPickupRev1));
 
+                trajCommands.add("LogTrajectoryData",
+                                new LogTrajectoryData(drive, this, leftPickupRev, "LPUD"));
+
                 ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7, 0)
                                 .withSize(2, 4)
@@ -179,7 +205,8 @@ public class FondyFireTrajectory {
 
                 trajInfo.addNumber("LeftPickUpTrajSecs", () -> leftPickupRev.getTotalTimeSeconds());
                 trajInfo.addNumber("Cen1PUTrajSecs", () -> centerFirstPickUpRev.getTotalTimeSeconds());
-                trajInfo.addNumber("Right1PUTrajSecs", () -> rightFirstCargoPickup.getTotalTimeSeconds());
+                // trajInfo.addNumber("Right1PUTrajSecs", () ->
+                // rightFirstCargoPickup.getTotalTimeSeconds());
 
                 trajInfo.addNumber("CenShootTrajSecs", () -> centerThirdCargoShoot.getTotalTimeSeconds());
 
@@ -201,31 +228,13 @@ public class FondyFireTrajectory {
 
         }
 
-        public TrajectoryConfig withSpeedAndAcceleration(
-
-                        double maxSpeedPercent, double maxAccelerationPercent) {
-
-                return new TrajectoryConfig(
-
-                                DriveConstants.kMaxTrajectoryMetersPerSecond *
-                                                clamp(maxSpeedPercent, 0, 1),
-                                DriveConstants.kMaxTrajectoryAccelerationMetersPerSquared *
-                                                clamp(maxAccelerationPercent, 0, 1.5))
-                                                                .setKinematics(DriveConstants.kDriveKinematics)
-                                                                .addConstraint(autoVoltageConstraint);
-        }
-
-        public double clamp(double value, double low, double high) {
-                return Math.max(low, Math.min(value, high));
-        }
-
         public RamseteCommand getRamsete(Trajectory traj) {
 
                 RamseteController m_disabledRamsete = new RamseteController();
                 m_disabledRamsete.setEnabled(false);
 
                 return new RamseteCommand(traj, m_drive::getPose,
-                 // m_disabledRamsete,
+                                // m_disabledRamsete,
                                 new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
                                 new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
                                                 DriveConstants.kaVoltSecondsSquaredPerMeter),

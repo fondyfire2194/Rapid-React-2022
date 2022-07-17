@@ -19,7 +19,8 @@ public class ResetOdometryToStartOfTrajectory extends InstantCommand {
   public ResetOdometryToStartOfTrajectory(RevDrivetrain drive, Trajectory traj) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = drive;
-    m_traj = traj;
+    m_traj =traj;
+
   }
 
   // Called when the command is initially scheduled.
@@ -27,8 +28,6 @@ public class ResetOdometryToStartOfTrajectory extends InstantCommand {
   public void initialize() {
     m_drive.resetOdometry(m_traj.getInitialPose());
     m_drive.trajectoryRunning = true;
-
-    
 
   }
 }

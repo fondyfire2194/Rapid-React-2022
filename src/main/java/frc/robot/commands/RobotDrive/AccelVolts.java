@@ -25,11 +25,9 @@ public class AccelVolts extends CommandBase {
 
   double startMPSCommand = .2;
 
-  private double voltsIncremementPerSecond;
 
   private boolean accPulse;
 
-  private boolean decPulse;
 
   private int loopCtr;
 
