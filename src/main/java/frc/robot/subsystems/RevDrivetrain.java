@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -10,7 +9,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
@@ -18,8 +16,6 @@ import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -167,23 +163,10 @@ public class RevDrivetrain extends SubsystemBase {
         mLeftEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
         mRightEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
 
-        mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-        mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+     
+        mLeadLeft.setOpenLoopRampRate(.01);
 
-        mFollowerLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
-        mFollowerLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-        mFollowerLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-
-        mLeadRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-        mLeadRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-
-        mFollowerRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
-        mFollowerRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-        mFollowerRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-
-        mLeadLeft.setOpenLoopRampRate(1);
-
-        mLeadRight.setOpenLoopRampRate(1);
+        mLeadRight.setOpenLoopRampRate(.01);
 
         mGyro = new AHRS(Port.kUSB);
 
