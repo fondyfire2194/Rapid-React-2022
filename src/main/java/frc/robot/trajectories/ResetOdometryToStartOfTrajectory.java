@@ -42,7 +42,7 @@ public class ResetOdometryToStartOfTrajectory extends InstantCommand {
         m_fftraj.withSpeedAndAcceleration(Pref.getPref("trajVelLPU"), Pref.getPref("trajAccLPU"))
             .setReversed(true));
 
-    m_fftraj.trajectoryRunning = true;
+  //  m_fftraj.trajectoryRunning = true;
 
   }
 }

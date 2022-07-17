@@ -21,18 +21,12 @@ import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstrai
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Pref;
 import frc.robot.SimpleCSVLogger;
-import frc.robot.commands.AutoCommands.DoNothing;
-import frc.robot.commands.RobotDrive.ClearPlot;
-import frc.robot.commands.RobotDrive.PlotTrajectory;
 import frc.robot.subsystems.RevDrivetrain;
 
 /**
@@ -94,13 +88,9 @@ public class FondyFireTrajectory {
         public boolean endFile;
         public double time;
 
-        private boolean logTrajectories = false;
-
         public DifferentialDriveVoltageConstraint autoVoltageConstraint;
 
-        public String activeTrajectoryName = "None";
-
-        public boolean trajectoryRunning;
+        public String activeTrajectoryName;
 
         public FondyFireTrajectory(RevDrivetrain drive) {
 
@@ -116,14 +106,15 @@ public class FondyFireTrajectory {
                                 leftAutoStartRev,
                                 List.of(),
                                 leftCargoRev,
-                                withSpeedAndAcceleration(1, .5)
+                                withSpeedAndAcceleration(1, .25)
                                                 .setReversed(true));
+
                 leftHideRev = TrajectoryGenerator.generateTrajectory(
 
                                 leftCargoRev,
                                 List.of(),
                                 leftOppCargoRev,
-                                withSpeedAndAcceleration(Pref.getPref("trajVelLH"), Pref.getPref("trajAccLH"))
+                                withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc"))
                                                 .setReversed(true));
 
                 centerFirstPickUpRev = TrajectoryGenerator.generateTrajectory(
@@ -131,7 +122,7 @@ public class FondyFireTrajectory {
                                 centerAutoStartRev,
                                 List.of(),
                                 centerCargoRev,
-                                withSpeedAndAcceleration(Pref.getPref("trajVelCPU1"), Pref.getPref("trajAccCPU1"))
+                                withSpeedAndAcceleration(1, .5)
                                                 .setReversed(true));
 
                 centerHide = TrajectoryGenerator.generateTrajectory(
@@ -139,120 +130,47 @@ public class FondyFireTrajectory {
                                 centerCargoRev,
                                 List.of(),
                                 centerHideOppCargo,
-                                withSpeedAndAcceleration(Pref.getPref("trajVelCH"), Pref.getPref("trajAccCH")));
+                                withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc")));
 
                 centerThirdCargoPickUp = TrajectoryGenerator.generateTrajectory(
 
                                 centerCargoRev,
                                 List.of(),
                                 centerThirdCargoGetRev,
-                                withSpeedAndAcceleration(Pref.getPref("trajVelCPU3"), Pref.getPref("trajAccCPU3"))
-                                                .setReversed(true));
+                                withSpeedAndAcceleration(.8, .5).setReversed(true));
 
                 centerThirdCargoShoot = TrajectoryGenerator.generateTrajectory(
                                 centerThirdCargoGet,
                                 List.of(),
                                 centerCargo3Shoot,
-                                withSpeedAndAcceleration(Pref.getPref("trajVelCSH3"), Pref.getPref("trajAccCSH3")));
+                                withSpeedAndAcceleration(.8, .5));
 
                 rightFirstCargoPickup = TrajectoryGenerator.generateTrajectory(
                                 rightCargoAutoStart,
                                 List.of(),
                                 rightCargoFirstPickup,
-                                withSpeedAndAcceleration(Pref.getPref("trajVelRPU1"), Pref.getPref("trajAccRPU1")));
+                                withSpeedAndAcceleration(1, .5).setReversed(true));
 
                 rightThirdCargoPickupRev1 = TrajectoryGenerator.generateTrajectory(
                                 rightCargoFirstPickup,
                                 List.of(),
                                 centerCargoRev,
-                                withSpeedAndAcceleration(.25, .5).setReversed(true));
+                                withSpeedAndAcceleration(1, .5).setReversed(true));
 
                 ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(5, 0)
                                 .withSize(2, 3)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
-                trajCommands.add("LeftPickup",
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(this,
-                                                                leftPickupRev, drive),
-                                                new ParallelCommandGroup(
-                                                                new ConditionalCommand(
-                                                                                new LogTrajectoryData(drive, this,
-                                                                                                leftPickupRev,
-                                                                                                "LPU"),
-                                                                                new DoNothing(),
-                                                                                () -> logTrajectories),
-                                                                getRamsete(leftPickupRev))
-                                                                                .andThen(() -> drive.tankDriveVolts(0,
-                                                                                                0))
-                                                                                .andThen(() -> trajectoryRunning = false)));
+                trajCommands.add("LeftPickup", new RunTrajectory(this, drive, leftPickupRev));
 
-                trajCommands.add("CenterPickup",
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(this,
-                                                                centerFirstPickUpRev, drive),
-                                                new ParallelCommandGroup(
+                trajCommands.add("CenterPickup", new RunTrajectory(this, drive, centerFirstPickUpRev));
 
-                                                                new ConditionalCommand(
-                                                                                new LogTrajectoryData(drive, this,
-                                                                                                centerFirstPickUpRev,
-                                                                                                "CPU1"),
-                                                                                new DoNothing(),
-                                                                                () -> logTrajectories),
-                                                                getRamsete(centerFirstPickUpRev))
-                                                                                .andThen(() -> drive.tankDriveVolts(0,
-                                                                                                0))
-                                                                                .andThen(() -> trajectoryRunning = false)));
+                trajCommands.add("CenterThirdShoot", new RunTrajectory(this, drive, centerThirdCargoShoot));
 
-                trajCommands.add("CenterThirdShoot",
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(this,
-                                                                centerThirdCargoShoot, drive),
-                                                new ParallelCommandGroup(
-                                                                new ConditionalCommand(
-                                                                                new LogTrajectoryData(drive, this,
-                                                                                                centerThirdCargoShoot,
-                                                                                                "C3SH"),
-                                                                                new DoNothing(),
-                                                                                () -> logTrajectories),
-                                                                getRamsete(centerThirdCargoShoot))
-                                                                                .andThen(() -> drive.tankDriveVolts(0,
-                                                                                                0))
-                                                                                .andThen(() -> trajectoryRunning = false)));
+                trajCommands.add("CenterThirdPickup", new RunTrajectory(this, drive, centerThirdCargoPickUp));
 
-                trajCommands.add("CenterThirdPickup",
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(this,
-                                                                centerThirdCargoPickUp, drive),
-                                                new ParallelCommandGroup(
-                                                                new ConditionalCommand(
-                                                                                new LogTrajectoryData(drive, this,
-                                                                                                centerThirdCargoPickUp,
-                                                                                                "C3PU"),
-                                                                                new DoNothing(),
-                                                                                () -> logTrajectories),
-                                                                getRamsete(leftPickupRev))
-                                                                                .andThen(() -> m_drive.tankDriveVolts(0,
-                                                                                                0))
-                                                                                .andThen(() -> trajectoryRunning = false)));
-
-                trajCommands.add("RightThirdPickup",
-                                new SequentialCommandGroup(
-                                                new ResetOdometryToStartOfTrajectory(this,
-                                                                rightThirdCargoPickupRev1, drive),
-
-                                                new ParallelCommandGroup(
-
-                                                                new ConditionalCommand(new LogTrajectoryData(drive,
-                                                                                this,
-                                                                                rightThirdCargoPickupRev1, "R3PU"),
-                                                                                new DoNothing(),
-                                                                                () -> logTrajectories),
-                                                                getRamsete(rightThirdCargoPickupRev1))
-                                                                                .andThen(() -> m_drive.tankDriveVolts(0,
-                                                                                                0))
-                                                                                .andThen(() -> trajectoryRunning = false)));
+                trajCommands.add("RightThirdPickup", new RunTrajectory(this, drive, rightThirdCargoPickupRev1));
 
                 ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7, 0)
@@ -266,24 +184,33 @@ public class FondyFireTrajectory {
                 trajInfo.addNumber("CenShootTrajSecs", () -> centerThirdCargoShoot.getTotalTimeSeconds());
 
                 trajInfo.addNumber("Right3PUTrajSecs", () -> rightThirdCargoPickupRev1.getTotalTimeSeconds());
-                trajInfo.addBoolean("Traj Running", () -> trajectoryRunning);
 
-                ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
+                trajInfo.addNumber("LeftWheelSpeed", () -> drive.getWheelSpeeds().leftMetersPerSecond);
 
-                rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
-                                4).withWidget("Field");
+                trajInfo.addNumber("RightWheelSpeed", () -> drive.getWheelSpeeds().rightMetersPerSecond);
+
+                trajInfo.addNumber("LeftVolts", () -> drive.leftVolts);
+
+                trajInfo.addNumber("RightVolts", () -> drive.rightVolts);
+
+                // ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
+
+                // if (RobotBase.isReal())
+                // rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
+                // 4).withWidget("Field");
 
         }
 
         public TrajectoryConfig withSpeedAndAcceleration(
 
-                        double maxSpeed, double maxAcceleration) {
+                        double maxSpeedPercent, double maxAccelerationPercent) {
 
                 return new TrajectoryConfig(
 
-                                clamp(maxSpeed, 0, 4),
+                                DriveConstants.kMaxTrajectoryMetersPerSecond *
+                                                clamp(maxSpeedPercent, 0, 1),
                                 DriveConstants.kMaxTrajectoryAccelerationMetersPerSquared *
-                                                clamp(maxAcceleration, 0, 3))
+                                                clamp(maxAccelerationPercent, 0, 1.5))
                                                                 .setKinematics(DriveConstants.kDriveKinematics)
                                                                 .addConstraint(autoVoltageConstraint);
         }
@@ -297,7 +224,8 @@ public class FondyFireTrajectory {
                 RamseteController m_disabledRamsete = new RamseteController();
                 m_disabledRamsete.setEnabled(false);
 
-                return new RamseteCommand(traj, m_drive::getPose, // m_disabledRamsete,
+                return new RamseteCommand(traj, m_drive::getPose,
+                                // m_disabledRamsete,
                                 new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
                                 new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
                                                 DriveConstants.kaVoltSecondsSquaredPerMeter),
