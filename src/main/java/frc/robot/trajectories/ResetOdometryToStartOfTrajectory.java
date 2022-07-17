@@ -4,13 +4,8 @@
 
 package frc.robot.trajectories;
 
-import java.util.List;
-
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Pref;
 import frc.robot.subsystems.RevDrivetrain;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -34,15 +29,8 @@ public class ResetOdometryToStartOfTrajectory extends InstantCommand {
 
     m_drive.resetOdometry(m_traj.getInitialPose());
 
-    m_fftraj.leftPickupRev= TrajectoryGenerator.generateTrajectory(
-
-        m_fftraj.leftAutoStartRev,
-        List.of(),
-        m_fftraj.leftCargoRev,
-        m_fftraj.withSpeedAndAcceleration(Pref.getPref("trajVelLPU"), Pref.getPref("trajAccLPU"))
-            .setReversed(true));
-
-  //  m_fftraj.trajectoryRunning = true;
+   
+    m_drive.trajectoryRunning = true;
 
   }
 }

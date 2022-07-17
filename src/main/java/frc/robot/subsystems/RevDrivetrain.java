@@ -124,6 +124,7 @@ public class RevDrivetrain extends SubsystemBase {
     
     public double leftVolts;
     public double rightVolts;
+    public boolean trajectoryRunning;
 
     public RevDrivetrain() {
 
