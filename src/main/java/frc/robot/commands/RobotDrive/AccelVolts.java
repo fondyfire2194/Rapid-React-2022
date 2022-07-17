@@ -17,17 +17,21 @@ public class AccelVolts extends CommandBase {
 
   double accelMPSPSPS = .1;
 
-  double maxMPS = 3;
-
-  double voltsPerMPS;
+  double maxMPS = 4;
 
   double voltsIncrementPer20ms;
 
   double maxVolts;
 
-  double kvVoltSecondsPerMeter = 3.9;
+  double startMPSCommand = .2;
 
   private double voltsIncremementPerSecond;
+
+  private boolean accPulse;
+
+  private boolean decPulse;
+
+  private int loopCtr;
 
   public AccelVolts(RevDrivetrain drive) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -40,40 +44,45 @@ public class AccelVolts extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.currentVolts = 0;
 
-    m_drive.ksVolts = .23;
+    m_drive.currentMPSCommand = startMPSCommand;
 
-    voltsPerMPS = maxMPS / 12;
+    loopCtr = 0;
 
-    voltsIncremementPerSecond = accelMPSPSPS / voltsPerMPS;
-
-    SmartDashboard.putNumber("VIPS", voltsIncremementPerSecond);
-
-    voltsIncrementPer20ms = voltsIncremementPerSecond / 50;
-
-    maxVolts = 10;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    m_drive.currentVolts += voltsIncrementPer20ms;
+    loopCtr++;
 
-    if (m_drive.currentVolts >= maxVolts)
+    if (loopCtr > 10 && !accPulse) {
 
-      m_drive.currentVolts = maxVolts;
+      accPulse = true;
+    }
+    if (loopCtr > 20) {
+      accPulse = false;
+      loopCtr = 0;
+    }
+
+    if (accPulse) {
+
+      m_drive.currentVolts = DriveConstants.kvVoltSecondsPerMeter * m_drive.currentMPSCommand + DriveConstants.ksVolts
+
+          + DriveConstants.kaVoltSecondsSquaredPerMeter * accelMPSPSPS;
+    }
+
+    if (!accPulse)
+
+    {
+      m_drive.currentMPSCommand = startMPSCommand;
+      m_drive.currentVolts = DriveConstants.kvVoltSecondsPerMeter * m_drive.currentMPSCommand + DriveConstants.ksVolts;
+    }
 
     m_drive.tankDriveVolts(m_drive.currentVolts, m_drive.currentVolts);
 
-    m_drive.kvVolts = DriveConstants.kvVoltSecondsPerMeter * m_drive.getLeftRate();
-
-    m_drive.accelerationVolts = m_drive.currentVolts - m_drive.ksVolts - m_drive.kvVolts;
-
-    m_drive.voltspwermpssqd = m_drive.accelerationVolts / accelMPSPSPS;
-
-  }
+  }// kaVoltSecondsSquaredPerMeter V / m/s/s
 
   // Called once the command ends or is interrupted.
   @Override

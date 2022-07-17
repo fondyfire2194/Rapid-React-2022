@@ -59,6 +59,7 @@
       "/LiveWindow/Ungrouped/Talon SRX [13]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [14]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [15]": "Motor Controller",
+      "/LiveWindow/Ungrouped/navX-Sensor[2]": "Gyro",
       "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
       "/Shuffleboard/CanBus/Scheduler/Scheduler": "Scheduler",
       "/Shuffleboard/CanBus/Subs 1/Climber": "Subsystem",
@@ -251,10 +252,7 @@
         }
       },
       "SetupRobot": {
-        "LeftValues": {
-          "open": true
-        },
-        "RightValues": {
+        "Robot": {
           "open": true
         },
         "RobotValues": {
@@ -287,11 +285,9 @@
       "Trajectories": {
         "TrajectoryRun": {
           "open": true
-        }
+        },
+        "open": true
       },
-      "open": true
-    },
-    "SmartDashboard": {
       "open": true
     }
   },
@@ -299,11 +295,6 @@
     "Plot <0>": {
       "plots": [
         {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
           "height": 625,
           "series": [
             {
@@ -314,13 +305,37 @@
                 1.0
               ],
               "id": "SPARK MAX [2]-Position"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/SetupRobot/LeftValues/LeftVelMPS"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/Trajectories/TrajectoryInfo/LeftVolts"
+            },
+            {
+              "color": [
+                0.7686275243759155,
+                0.30588236451148987,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/SetupRobot/States/KA calc"
             }
           ]
         }
-      ],
-      "window": {
-        "visible": false
-      }
+      ]
     },
     "Plot <1>": {
       "plots": [
@@ -376,6 +391,98 @@
                 1.0
               ],
               "id": "NT:/Shuffleboard/SetupRobot/LeftValues/LeftOut"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <2>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 669,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/SetupRobot/RightValues/RightVelMPS"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/SetupRobot/States/CurrentMPSCmd"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/SetupRobot/States/kVVolts"
+            },
+            {
+              "color": [
+                0.7686275243759155,
+                0.30588236451148987,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/SetupRobot/States/kv"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <3>": {
+      "plots": [
+        {
+          "height": 833,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/SetupRobot/States/kVVolts"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/SetupRobot/States/TestVolts"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/SetupRobot/States/accVolts"
             }
           ]
         }

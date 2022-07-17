@@ -133,12 +133,13 @@ public class RevDrivetrain extends SubsystemBase {
     public double currentVolts;
     public double voltsPerMPS;
 
-    public double voltspwermpssqd;
     
     public double ksVolts;
     public double kvVolts;
     public double currentMPSCommand;
     public double accelerationVolts;
+    public double kA;
+
 
     public RevDrivetrain() {
 

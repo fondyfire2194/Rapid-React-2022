@@ -71,7 +71,7 @@ public class TrajTestOI {
                 testValues.addNumber("kv", () -> drive.voltsPerMPS);
                 testValues.addNumber("accVolts", () -> drive.accelerationVolts);
 
-                testValues.addNumber("VoltsPerMPSPS", () -> drive.voltspwermpssqd);
+                testValues.addNumber("KA calc", () -> drive.kA);
                 
 
         }
