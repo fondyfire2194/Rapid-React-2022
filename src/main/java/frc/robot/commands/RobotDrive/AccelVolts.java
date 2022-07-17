@@ -6,6 +6,7 @@ package frc.robot.commands.RobotDrive;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.RevDrivetrain;
 
 public class AccelVolts extends CommandBase {
@@ -66,7 +67,7 @@ public class AccelVolts extends CommandBase {
 
     m_drive.tankDriveVolts(m_drive.currentVolts, m_drive.currentVolts);
 
-    m_drive.kvVolts = kvVoltSecondsPerMeter * m_drive.getLeftRate();
+    m_drive.kvVolts = DriveConstants.kvVoltSecondsPerMeter * m_drive.getLeftRate();
 
     m_drive.accelerationVolts = m_drive.currentVolts - m_drive.ksVolts - m_drive.kvVolts;
 

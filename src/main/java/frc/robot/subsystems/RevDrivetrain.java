@@ -112,9 +112,7 @@ public class RevDrivetrain extends SubsystemBase {
             DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter);
     public final SimpleMotorFeedforward m_feedforwardSim = new SimpleMotorFeedforward(DriveConstants.ksVolts,
              2.4, .06);
-    // public final SimpleMotorFeedforward m_feedforwardSim = new SimpleMotorFeedforward(DriveConstants.ksVolts,
-    //          3.9, .16);
-
+   
     private int robotStoppedCtr;
 
     public boolean robotStoppedForOneSecond;

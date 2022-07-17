@@ -54,6 +54,7 @@ public class RunFeedForward extends CommandBase {
     slowDown = false;
 
     if (!m_step) {
+      
       mpsIncremementPerSecond = maxMPS / (time / 2);
 
       SmartDashboard.putNumber("MPSIPS", mpsIncremementPerSecond);

@@ -224,7 +224,8 @@ public class FondyFireTrajectory {
                 RamseteController m_disabledRamsete = new RamseteController();
                 m_disabledRamsete.setEnabled(false);
 
-                return new RamseteCommand(traj, m_drive::getPose, // m_disabledRamsete,
+                return new RamseteCommand(traj, m_drive::getPose,
+                 // m_disabledRamsete,
                                 new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
                                 new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
                                                 DriveConstants.kaVoltSecondsSquaredPerMeter),

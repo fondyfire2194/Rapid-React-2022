@@ -43,24 +43,21 @@ public class TrajSimMPS extends CommandBase {
     m_drive.resetGyro();
     slowDown = false;
     mpsIncremementPerSecond = maxMPS / (time / 2);
-
-  
-
     mpsIncrementPer20ms = mpsIncremementPerSecond / 50;
-  SmartDashboard.putNumber("VIPS", mpsIncrementPer20ms);
+
+    SmartDashboard.putNumber("VIPS", mpsIncrementPer20ms);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-  
     SmartDashboard.putBoolean("SLDN", slowDown);
 
     if (!slowDown) {
 
       m_drive.currentMPSCommand += mpsIncrementPer20ms;
-  SmartDashboard.putNumber("CMPS", m_drive.currentMPSCommand);
+      SmartDashboard.putNumber("CMPS", m_drive.currentMPSCommand);
       if (m_drive.currentMPSCommand >= maxMPS)
         slowDown = true;
     }
@@ -77,7 +74,7 @@ public class TrajSimMPS extends CommandBase {
 
       m_drive.tankDriveWithFeedforward(-m_drive.currentMPSCommand, -m_drive.currentMPSCommand);
 
-      else
+    else
 
       m_drive.tankDriveWithFeedforward(m_drive.currentMPSCommand, m_drive.currentMPSCommand);
   }
