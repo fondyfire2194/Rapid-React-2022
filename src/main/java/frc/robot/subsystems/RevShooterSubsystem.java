@@ -146,12 +146,14 @@ public class RevShooterSubsystem extends SubsystemBase {
         mRightMotor.restoreFactoryDefaults();
         mRightMotor.follow(mLeftMotor, true);
 
-        mLeftMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-        mLeftMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+        
+        // mLeftMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
+        // mLeftMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+        // mLeftMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
 
-        mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
-        mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-        mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+        // mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
+        // mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+        // mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
 
         m_topRollerMotor = new CANSparkMaxWithSim(CANConstants.TOP_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
         m_topPID = m_topRollerMotor.getPIDController();

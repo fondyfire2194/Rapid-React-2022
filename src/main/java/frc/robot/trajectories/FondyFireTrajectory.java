@@ -22,10 +22,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Pref;
 import frc.robot.SimpleCSVLogger;
 import frc.robot.subsystems.RevDrivetrain;
 
@@ -130,7 +128,7 @@ public class FondyFireTrajectory {
                                 centerCargoRev,
                                 List.of(),
                                 centerHideOppCargo,
-                                withSpeedAndAcceleration(1,5));
+                                withSpeedAndAcceleration(1, 5));
 
                 centerThirdCargoPickUp = TrajectoryGenerator.generateTrajectory(
 
@@ -162,15 +160,15 @@ public class FondyFireTrajectory {
                                 .withSize(2, 3)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
-                trajCommands.add("LeftPickup", new RunTrajectory(this, drive, leftPickupRev));
+                trajCommands.add("LeftPickup", new RunTrajectory(this, drive, leftPickupRev, "LPU"));
 
-                trajCommands.add("CenterPickup", new RunTrajectory(this, drive, centerFirstPickUpRev));
+                trajCommands.add("CenterPickup", new RunTrajectory(this, drive, centerFirstPickUpRev, "CPU1"));
 
-                trajCommands.add("CenterThirdShoot", new RunTrajectory(this, drive, centerThirdCargoShoot));
+                trajCommands.add("CenterThirdShoot", new RunTrajectory(this, drive, centerThirdCargoShoot, "CS"));
 
-                trajCommands.add("CenterThirdPickup", new RunTrajectory(this, drive, centerThirdCargoPickUp));
+                trajCommands.add("CenterThirdPickup", new RunTrajectory(this, drive, centerThirdCargoPickUp, "CPU3"));
 
-                trajCommands.add("RightThirdPickup", new RunTrajectory(this, drive, rightThirdCargoPickupRev1));
+                trajCommands.add("RightThirdPickup", new RunTrajectory(this, drive, rightThirdCargoPickupRev1, "RPU3"));
 
                 ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7, 0)

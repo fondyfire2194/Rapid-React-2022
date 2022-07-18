@@ -5,7 +5,9 @@
 package frc.robot.trajectories;
 
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.AutoCommands.DoNothing;
 import frc.robot.subsystems.RevDrivetrain;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -13,12 +15,14 @@ import frc.robot.subsystems.RevDrivetrain;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class RunTrajectory extends SequentialCommandGroup {
   /** Creates a new RunTraj. */
-  public RunTrajectory(FondyFireTrajectory fftraj, RevDrivetrain drive, Trajectory traj) {
+  public RunTrajectory(FondyFireTrajectory fftraj, RevDrivetrain drive, Trajectory traj, String name) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
 
         new ResetOdometryToStartOfTrajectory(fftraj, traj, drive),
+
+        new ConditionalCommand(new NetTablesLog(drive, traj, name), new DoNothing(), () -> fftraj.logTrajItems),
 
         fftraj.getRamsete(traj)
 
