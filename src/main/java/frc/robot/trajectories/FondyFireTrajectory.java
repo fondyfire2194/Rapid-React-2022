@@ -205,8 +205,7 @@ public class FondyFireTrajectory {
 
                 trajInfo.addNumber("LeftPickUpTrajSecs", () -> leftPickupRev.getTotalTimeSeconds());
                 trajInfo.addNumber("Cen1PUTrajSecs", () -> centerFirstPickUpRev.getTotalTimeSeconds());
-                // trajInfo.addNumber("Right1PUTrajSecs", () ->
-                // rightFirstCargoPickup.getTotalTimeSeconds());
+                trajInfo.addNumber("Right1PUTrajSecs", () -> rightFirstCargoPickup.getTotalTimeSeconds());
 
                 trajInfo.addNumber("CenShootTrajSecs", () -> centerThirdCargoShoot.getTotalTimeSeconds());
 

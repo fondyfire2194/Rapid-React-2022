@@ -169,14 +169,7 @@ public class Robot extends TimedRobot {
   @Override
 
   public void teleopPeriodic() {
-    // SmartDashboard.putData("ShootSequence", m_robotContainer.ssdisp);
-    // if (m_robotContainer.m_transport.wrongCargoColor) {
-
-    // new EmptyCargoFromShooter(m_robotContainer.m_shooter,
-    // m_robotContainer.m_transport)
-
-    // .execute();
-    // }
+    m_robotContainer.m_drive.throttleValue=m_robotContainer.getThrottle();
 
     matchTimeRemaining = DriverStation.getMatchTime();
   }

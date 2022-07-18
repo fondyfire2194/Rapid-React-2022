@@ -8,7 +8,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -18,14 +17,10 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PipelinesConstants;
-
-
 import frc.robot.OI.TrajTestOI;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.CamMode;
@@ -38,9 +33,7 @@ import frc.robot.commands.RobotDrive.RunAtVolts;
 import frc.robot.commands.RobotDrive.RunFeedForward;
 import frc.robot.commands.RobotDrive.TrajSimMPS;
 import frc.robot.commands.RobotDrive.TrajSimVolts;
-
 import frc.robot.subsystems.RevDrivetrain;
-
 import frc.robot.trajectories.FondyFireTrajectory;
 
 /**
@@ -153,33 +146,7 @@ public class RobotContainer {
             // test configuration with vision
             // Show_Hide_Screens.setStates(false, true, true);
 
-            // // competition configuration
           
-
-            // all configuration
-            // Show_Hide_Screens.setStates(true, true, true);
-
-            // m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport,
-            // m_compressor,
-            // m_limelight, m_intake, m_climber, m_trajectory);
-
-            // m_autoOi = new SetUpAutoOI(m_turret, m_tilt, m_drive, m_shooter, m_transport,
-            // m_compressor, m_limelight,
-            // m_intake, m_climber, m_trajectory);
-
-            // m_preOi = new SetUpPreRoundOI(m_turret, m_tilt, m_drive, m_shooter,
-            // m_transport, m_compressor, m_limelight,
-            // m_intake, m_climber, m_trajectory);
-
-            // tragdebug = new TrajectoryDebug(m_drive, m_trajectory,
-            // m_trajectory.leftPickupRev);
-
-            // SmartDashboard.putData("tdbg",tragdebug);
-            // if (RobotBase.isSimulation())
-            // m_simOI = new SimulationOI(m_turret, m_tilt, m_drive, m_shooter, m_transport,
-            // m_compressor,
-            // m_limelight, m_intake, m_climber, m_trajectory);
-
            
             configureButtonBindings();
 
@@ -216,19 +183,18 @@ public class RobotContainer {
 
             new JoystickButton(m_driverController, 1)
                         .whileHeld(new RunAtVolts(m_drive, false));
-            // .whenPressed(new TurnLedsOnOff(m_limelight, false))
-            // .whenPressed(new RunLowerRollerIntake(m_transport, m_intake))
-            // .whenReleased(new StopActiveIntake(m_intake));
+           
 
             new JoystickButton(m_driverController, 2)
                         .whileHeld(new AccelVolts(m_drive));
 
-            // new JoystickButton(m_driverController, 6)
+             new JoystickButton(m_driverController, 6)
+             .whileHeld(new RunFeedForward(m_drive, false));
 
             new JoystickButton(m_driverController, 3)
                         .whileHeld(new TrajSimVolts(m_drive, false));
 
-            new JoystickButton(m_driverController, 4).whileHeld(new RunFeedForward(m_drive, false, true));
+            new JoystickButton(m_driverController, 4).whileHeld(new RunFeedForward(m_drive, false));
 
             new JoystickButton(m_driverController, 5)
                         .whileHeld(new TrajSimVolts(m_drive, true));
