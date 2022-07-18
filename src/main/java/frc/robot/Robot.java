@@ -16,7 +16,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 
 /**
@@ -41,6 +42,20 @@ public class Robot extends TimedRobot {
   public static double matchTimeRemaining;
 
   public static boolean hideOppCargo;
+  public static final int FRONT_INTAKE_1 = 3;
+  public static final int FRONT_INTAKE_2 = 2;
+
+  public static final int REAR_INTAKE_1 = 1;
+  public static final int REAR_INTAKE_2 = 0;
+
+
+
+  public final DoubleSolenoid m_rearIntakeArm = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+      REAR_INTAKE_1,REAR_INTAKE_2);
+
+
+  public final DoubleSolenoid m_frontIntakeArm = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+      FRONT_INTAKE_1, FRONT_INTAKE_2);
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -63,6 +78,10 @@ public class Robot extends TimedRobot {
     getAllianceColorBlue();
 
     Shuffleboard.selectTab("Pre-Round");
+
+    m_frontIntakeArm.set(DoubleSolenoid.Value.kReverse);
+
+    m_rearIntakeArm.set(DoubleSolenoid.Value.kReverse);
 
   }
 
