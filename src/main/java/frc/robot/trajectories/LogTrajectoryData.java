@@ -97,6 +97,7 @@ public class LogTrajectoryData extends CommandBase {
         Pose2d trajPose = trajState.poseMeters;
 
         m_ff.trajLogger.writeData(
+          
             time,
 
             trajState.velocityMetersPerSecond,

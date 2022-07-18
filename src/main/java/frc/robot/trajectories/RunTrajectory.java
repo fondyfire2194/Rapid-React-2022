@@ -24,7 +24,7 @@ public class RunTrajectory extends SequentialCommandGroup {
 
         new ResetOdometryToStartOfTrajectory(drive, traj),
 
-        new ConditionalCommand(new LogTrajectoryData(drive, fftraj, traj, name), new DoNothing(),
+        new ConditionalCommand(new NetTablesLog(drive, traj, name), new DoNothing(),
             () -> fftraj.logTrajItems),
 
         fftraj.getRamsete(traj)

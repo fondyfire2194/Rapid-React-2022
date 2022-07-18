@@ -195,9 +195,7 @@ public class FondyFireTrajectory {
 
                 trajCommands.add("RightThirdPickup", new RunTrajectory(this, drive, rightThirdCargoPickupRev1, "RPU3"));
 
-                trajCommands.add("LogTrajectoryData",
-                                new LogTrajectoryData(drive, this, leftPickupRev, "LPUD"));
-
+         
                 ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7, 0)
                                 .withSize(2, 4)

@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -36,6 +37,7 @@ import frc.robot.commands.RobotDrive.TrajSimVolts;
 import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.trajectories.FondyFireTrajectory;
 
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -56,6 +58,8 @@ public class RobotContainer {
 
   
       public static boolean autoSelected;
+
+ 
 
 
 
@@ -103,6 +107,7 @@ public class RobotContainer {
       public POVButton driverRightButton = new POVButton(m_driverController, 90);
       public POVButton driverDownButton = new POVButton(m_driverController, 180);
       public POVButton driverLeftButton = new POVButton(m_driverController, 270);
+      private SendableBuilder builder;
 
       /**
        * The container for the robot. Contains subsysems, OI devices, and commands.
@@ -146,7 +151,7 @@ public class RobotContainer {
             // test configuration with vision
             // Show_Hide_Screens.setStates(false, true, true);
 
-          
+       
            
             configureButtonBindings();
 
