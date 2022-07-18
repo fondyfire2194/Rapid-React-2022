@@ -13,7 +13,6 @@ import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.trajectories.FondyFireTrajectory;
-import frc.robot.trajectories.LogTrajectoryData;
 
 /** Add your docs here. */
 public class TrajTestOI {
