@@ -114,7 +114,7 @@ public class FondyFireTrajectory {
                                 leftCargoRev,
                                 List.of(),
                                 leftOppCargoRev,
-                                withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc"))
+                                withSpeedAndAcceleration(1, .25)
                                                 .setReversed(true));
 
                 centerFirstPickUpRev = TrajectoryGenerator.generateTrajectory(
@@ -130,7 +130,7 @@ public class FondyFireTrajectory {
                                 centerCargoRev,
                                 List.of(),
                                 centerHideOppCargo,
-                                withSpeedAndAcceleration(Pref.getPref("trajVel"), Pref.getPref("trajAcc")));
+                                withSpeedAndAcceleration(1,5));
 
                 centerThirdCargoPickUp = TrajectoryGenerator.generateTrajectory(
 
