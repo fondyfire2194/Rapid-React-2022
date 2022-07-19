@@ -81,8 +81,6 @@ import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.trajectories.FondyFireTrajectory;
 
-
-
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -122,8 +120,6 @@ public class RobotContainer {
       public SetUpPreRoundOI m_preOi;
 
       public LLVisionShuffleboard m_llVis;
-
- 
 
       public LimeLight m_limelight;
 
@@ -210,7 +206,7 @@ public class RobotContainer {
             m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
             m_trajectory = new FondyFireTrajectory(m_drive);
-            
+
             ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
 
             // test configuration
@@ -232,7 +228,6 @@ public class RobotContainer {
 
             m_preOi = new SetUpPreRoundOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
                         m_intake, m_climber, m_trajectory);
-
 
             m_llVis = new LLVisionShuffleboard(m_limelight, m_turret, m_tilt, m_shooter);
 
@@ -316,10 +311,12 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 12)
 
                         .whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmDown")))
+                        .whenPressed(new PositionTurret(m_turret, 0))
+                        .whenPressed(new SequentialCommandGroup(
 
-                        .whenPressed(new PositionTilt(m_tilt, TiltConstants.TILT_MIN_ANGLE))
-
-                        .whenPressed(new PositionTurret(m_turret, 0));
+                                    new UseVision(m_limelight, false),
+                                    new LimelightSetPipeline(m_limelight, PipelinesConstants.ledsOffPipeline),
+                                    new TiltMoveToReverseLimit(m_tilt)));
 
             // close to hub
             driverUpButton.whenPressed(new SetupPresetShootLocation(m_shooter, m_tilt, m_turret, m_limelight, 0));
@@ -342,11 +339,7 @@ public class RobotContainer {
 
                         .whenPressed(new SetShootSpeedSource(m_shooter, m_shooter.cameraSource));
 
-                        // .whenPressed(new RunShooter(m_shooter))
-
-                      
-
-                                    
+            // .whenPressed(new RunShooter(m_shooter))
 
             // co driver gamepad
 
