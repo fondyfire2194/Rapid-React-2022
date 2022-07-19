@@ -16,6 +16,7 @@ import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
+import frc.robot.trajectories.CreateTrajectory;
 import frc.robot.trajectories.FondyFireTrajectory;
 import frc.robot.trajectories.RotatePose;
 
@@ -40,7 +41,7 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
         /** Creates a new LRetPuShoot. */
         public LeftHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,
                         CargoTransportSubsystem transport, RevShooterSubsystem shooter, FondyFireTrajectory fftraj,
-                        Trajectory traj) {
+                        Trajectory mytraj) {
                 addRequirements(intake, drive, transport, shooter);
                 // Use addRequirements() here to declare subsystem dependencies.
 
@@ -60,11 +61,13 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                                 new RotatePose(drive),
 
+                                new CreateTrajectory(drive, fftraj, mytraj),
+
                                 new ParallelCommandGroup(
 
                                                 new WaitCommand(2).deadlineWith(new RunActiveIntake(intake, transport)),
 
-                                                fftraj.getRamsete(traj).andThen(
+                                                fftraj.getRamsete(mytraj).andThen(
                                                                 () -> drive.tankDriveVolts(0, 0))),
 
                                 new WaitCommand(.02),

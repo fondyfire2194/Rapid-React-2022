@@ -10,12 +10,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
+import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
-import frc.robot.commands.RobotDrive.PositionStraight;
+
 import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
+import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
@@ -28,7 +30,6 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.trajectories.FondyFireTrajectory;
-import frc.robot.trajectories.ResetOdometryToStartOfTrajectory;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -43,8 +44,6 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
                 // addCommands(new FooCommand(), new BarCommand());
                 double timeOut = 15;
 
-                double endPoint = 1.2;
-
                 if (RobotBase.isSimulation())
                         timeOut = 1;
                 addCommands(
@@ -55,29 +54,35 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
 
                                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720, true),
 
-                                                new SetPresetRPM(shooter, 888),
+                                                new SetShootSpeedSource(shooter, shooter.fromCamera),
 
-                                                new PositionTilt(tilt, 11).withTimeout(timeOut),
+                                                new PositionTilt(tilt, 14).withTimeout(timeOut),
 
                                                 new SetFrontIntakeActive(intake, false),
 
                                                 new RunActiveIntake(intake, transport).withTimeout(timeOut)),
+
                                 race(
-                                                new RunShooter(shooter),
+                                                new RunShooter(shooter).deadlineWith(new PositionHoldTiltTurret(
+                                                                tilt,
+                                                                turret,
+                                                                ll)),
                                                 sequence(
 
                                                                 new AltShootCargo(shooter, transport, intake, ll)
                                                                                 .withTimeout(timeOut),
 
-                                                                new WaitCommand(.4),
+                                                                new WaitCommand(.04),
+                                               
                                                                 new AltShootCargo(shooter, transport, intake, ll)
                                                                                 .withTimeout(timeOut),
 
-                                                                new WaitCommand(.4),
+                                                                new WaitCommand(.04),
+                                                 
                                                                 new AltShootCargo(shooter, transport, intake, ll)
                                                                                 .withTimeout(timeOut),
 
-                                                                new WaitCommand(.4))),
+                                                                new WaitCommand(.04))),
 
                                 new ParallelCommandGroup(
 

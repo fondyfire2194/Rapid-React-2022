@@ -51,12 +51,12 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
                                 new RotatePose(drive),
 
                                 new WaitCommand(.02),
-
+                             
+                                new CreateTrajectory(drive, fftraj, mytraj),
+                             
                                 new ParallelCommandGroup(
 
                                                 new WaitCommand(2).deadlineWith(new RunActiveIntake(intake, transport)),
-
-                                                new CreateTrajectory(drive, fftraj, mytraj),
 
                                                 fftraj.getRamsete(mytraj).andThen(
                                                                 () -> drive.tankDriveVolts(0, 0))),

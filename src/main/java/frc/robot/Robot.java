@@ -32,11 +32,13 @@ import frc.robot.commands.AutoCommands.RetPuShootCameraTraj;
 import frc.robot.commands.AutoCommands.RunCenterThirdCargo;
 import frc.robot.commands.AutoCommands.RunRightFirstPickup;
 import frc.robot.commands.AutoCommands.RunRightThreeCargo;
+import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.SetRobotPose;
 import frc.robot.commands.Tilt.TiltMoveToReverseLimit;
+import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -313,7 +315,8 @@ public class Robot extends TimedRobot {
 
             new RunRightThreeCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll));
 
-         //   new RunCenterThirdCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll));
+        // new RunCenterThirdCargo(drive, fftraj, intake, shooter, tilt, turret,
+        // transport, ll));
 
         break;
 
@@ -359,10 +362,12 @@ public class Robot extends TimedRobot {
     }
     autoHasRun = false;
 
-    // new SequentialCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight,
-    //     m_robotContainer.m_shooter),
+    // new SequentialCommandGroup(new
+    // CalculateTargetDistance(m_robotContainer.m_limelight,
+    // m_robotContainer.m_shooter),
 
-    //     new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).perpetually();
+    // new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter,
+    // m_robotContainer.m_tilt)).perpetually();
 
     Shuffleboard.update();
 
@@ -387,6 +392,10 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_shooter.shootLocation = 1;
     m_robotContainer.m_shooter.presetLocationName = FieldMap.shootLocationName[m_robotContainer.m_shooter.shootLocation];
     m_robotContainer.m_shooter.shootModeName = FieldMap.shootModeName[m_robotContainer.m_shooter.shootValuesSource];
+
+    new SequentialCommandGroup(new CalculateTargetDistance(m_limelight, m_shooter),
+
+        new SelectSpeedAndTiltByDistance(m_shooter, m_tilt)).schedule();
 
   }
 

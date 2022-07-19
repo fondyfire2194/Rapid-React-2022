@@ -88,8 +88,8 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     m_lowerRollerMotor.restoreFactoryDefaults();
 
-    m_lowerRollerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-    m_lowerRollerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+    m_lowerRollerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
+    m_lowerRollerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50);
 
     m_lowerPID = m_lowerRollerMotor.getPIDController();
 

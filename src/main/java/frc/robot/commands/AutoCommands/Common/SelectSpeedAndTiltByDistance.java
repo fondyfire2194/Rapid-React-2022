@@ -21,7 +21,10 @@ public class SelectSpeedAndTiltByDistance extends CommandBase {
     m_tilt = m_tilt2;
   }
 
-  // Called when the command is initially scheduled.
+  public SelectSpeedAndTiltByDistance(RevShooterSubsystem mShooter, String mTilt) {
+}
+
+// Called when the command is initially scheduled.
   @Override
   public void initialize() {
 
@@ -64,6 +67,6 @@ public class SelectSpeedAndTiltByDistance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }
