@@ -123,8 +123,10 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         // if (RobotBase.isReal()) {
 
-        mEncoder.setPositionConversionFactor(degreesPerRev);
+        mEncoder.setPositionConversionFactor(degreesPerRev);//.03654
         mEncoder.setVelocityConversionFactor(degreesPerRev / 60);
+
+        SmartDashboard.putNumber("TDPR", degreesPerRev);
 
         // }
 
@@ -444,7 +446,7 @@ public class RevTiltSubsystem extends SubsystemBase {
         kMaxOutput = .75;
         mVelController.setOutputRange(kMinOutput, kMaxOutput, VELOCITY_SLOT);
         maxVel = 5.;// Pref.getPref("tiVMaxV");// deg per sec
-        maxAcc = Pref.getPref("tiVMaxA");// deg per sec per sec
+        maxAcc = 5;//Pref.getPref("tiVMaxA");// deg per sec per sec
         allowedErr = .1;
         calibratePID(p, i, d, iz, allowedErr, VELOCITY_SLOT);
 

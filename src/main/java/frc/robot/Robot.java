@@ -126,7 +126,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("LPCTRA", loopCtr);
 
-    m_robotContainer.tbstraj.periodic();
 
   }
 

@@ -61,7 +61,7 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                                 new RotatePose(drive),
 
-                                new CreateTrajectory(drive, fftraj, mytraj),
+                                //new CreateTrajectory(drive, fftraj, mytraj),
 
                                 new ParallelCommandGroup(
 

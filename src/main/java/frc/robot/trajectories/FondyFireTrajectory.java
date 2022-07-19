@@ -18,6 +18,8 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -26,7 +28,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.SimpleCSVLogger;
 import frc.robot.subsystems.RevDrivetrain;
 
 /**
@@ -35,6 +36,58 @@ import frc.robot.subsystems.RevDrivetrain;
 public class FondyFireTrajectory {
 
         private RevDrivetrain m_drive;
+
+        NetworkTableEntry m_xEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("X");
+        NetworkTableEntry m_yEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Y");
+
+        NetworkTableEntry leftReference = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("left_reference");
+        NetworkTableEntry sampleTime = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("sampleTime");
+
+        NetworkTableEntry leftMeasurement = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("left_measurement");
+        NetworkTableEntry leftError = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("left_error");
+
+        NetworkTableEntry rightReference = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("right_reference");
+        NetworkTableEntry rightMeasurement = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("right_measurement");
+        NetworkTableEntry rightError = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("right_error");
+
+        NetworkTableEntry angleMeasurement = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("angle_measurement");
+
+        NetworkTableEntry leftV = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("left_volts");
+
+        NetworkTableEntry rightV = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("right_volts");
+
+        NetworkTableEntry xPosn = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("x_posn");
+
+        NetworkTableEntry yPosn = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("y_posn");
+
+        NetworkTableEntry trajVel = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("traj_vel");
+        NetworkTableEntry trajAcc = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("traj_acc");
+        NetworkTableEntry trajCurv = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("traj_curv");
+
+        NetworkTableEntry trajX = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("traj_x");
+        NetworkTableEntry trajY = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("traj_y");
+        NetworkTableEntry trajRot = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("traj_rot");
+
+        NetworkTableEntry trajName = NetworkTableInstance.getDefault().getTable("troubleshooting")
+                        .getEntry("traj_name");
 
         // LEFT
 
@@ -82,10 +135,9 @@ public class FondyFireTrajectory {
 
         public Trajectory rightFirstCargoPickup;
 
-        public SimpleCSVLogger trajLogger = new SimpleCSVLogger();
-        public boolean trajLogInProgress;
+ 
         public boolean logTrajItems = false;
-        public boolean endFile;
+     
         public double time;
 
         public DifferentialDriveVoltageConstraint autoVoltageConstraint;

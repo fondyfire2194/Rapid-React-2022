@@ -280,6 +280,9 @@
       },
       "open": true
     },
+    "SmartDashboard": {
+      "open": true
+    },
     "troubleshooting": {
       "open": true
     }
@@ -306,7 +309,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <1>": {
       "plots": [

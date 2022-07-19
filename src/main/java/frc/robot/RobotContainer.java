@@ -80,7 +80,7 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.trajectories.FondyFireTrajectory;
-import frc.robot.trajectories.TroubleshootTrajectories;
+
 
 
 /**
@@ -123,7 +123,7 @@ public class RobotContainer {
 
       public LLVisionShuffleboard m_llVis;
 
-      public TroubleshootTrajectories tbstraj;
+ 
 
       public LimeLight m_limelight;
 
@@ -210,8 +210,6 @@ public class RobotContainer {
             m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
             m_trajectory = new FondyFireTrajectory(m_drive);
-
-            tbstraj = new TroubleshootTrajectories(m_drive, m_trajectory);
             
             ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
 
