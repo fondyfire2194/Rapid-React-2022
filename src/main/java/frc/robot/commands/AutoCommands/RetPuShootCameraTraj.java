@@ -20,6 +20,7 @@ import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
+import frc.robot.commands.Shooter.WaitForTiltTurretInPosition;
 import frc.robot.commands.Tilt.SetTiltTargetAngle;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
@@ -83,11 +84,13 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                                 new WaitCommand(.25),
 
-                                                                new RunTrajectory(ff, drive, traj, "Auto"))),
+                                                                new RunTrajectory(ff, drive, traj))),
 
                                 new ParallelRaceGroup(
 
                                                 new SequentialCommandGroup(
+
+                                                new WaitForTiltTurretInPosition(tilt, turret).withTimeout(timeOut),
 
                                                                 new AltShootCargo(
                                                                                 shooter,

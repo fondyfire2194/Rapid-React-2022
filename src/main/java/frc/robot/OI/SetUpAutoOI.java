@@ -55,7 +55,7 @@ public class SetUpAutoOI {
                         compet.addBoolean("CargoAtRear", () -> intake.getCargoAtRear());
                         compet.addBoolean("CargoAtFront", () -> intake.getCargoAtFront());
                         compet.addBoolean("TiltOnSwitch", () -> tilt.onMinusHardwareLimit());
-
+                        compet.addBoolean("LockAtTarget", () -> turret.getLockAtTarget());
                         ShuffleboardLayout compet1 = Shuffleboard.getTab("Competition")
                                         .getLayout("Values", BuiltInLayouts.kList).withPosition(8, 0).withSize(2, 4)
                                         .withProperties(Map.of("Label position", "TOP"));

@@ -28,7 +28,6 @@ import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.CenterHideOppCargo;
 import frc.robot.commands.AutoCommands.DoNothing;
 import frc.robot.commands.AutoCommands.LeftHideOppCargo;
-import frc.robot.commands.AutoCommands.RetPuShoot1Hide;
 import frc.robot.commands.AutoCommands.RetPuShootCameraTraj;
 import frc.robot.commands.AutoCommands.RunCenterThirdCargo;
 import frc.robot.commands.AutoCommands.RunRightFirstPickup;
@@ -322,9 +321,9 @@ public class Robot extends TimedRobot {
 
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
 
-            new RetPuShoot1Hide(intake, drive, fftraj, fftraj.leftCenterOppHideRev, transport, shooter, tilt, turret, ll,
-                data));
-        break;
+            new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.leftCenterOppHideRev, transport, shooter, tilt, turret, ll, comp, data));
+
+            break;
 
       default:
 

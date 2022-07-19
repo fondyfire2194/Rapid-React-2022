@@ -12,10 +12,14 @@ public class CheckCargoAtShoot extends CommandBase {
   /** Creates a new CheckCargoAtShoot. */
   private CargoTransportSubsystem m_transport;
   private IntakesSubsystem m_intake;
+  private boolean m_loadTwo;
 
-  public CheckCargoAtShoot(CargoTransportSubsystem transport, IntakesSubsystem intake) {
+  public CheckCargoAtShoot(CargoTransportSubsystem transport, IntakesSubsystem intake, boolean loadTwo) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_transport = transport;
+    m_intake = intake;
+    m_loadTwo = loadTwo;
+
   }
 
   // Called when the command is initially scheduled.
@@ -36,6 +40,6 @@ public class CheckCargoAtShoot extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_transport.getCargoAtShoot() && m_intake.getCargoAtRear();
+    return m_transport.getCargoAtShoot() && (m_intake.getCargoAtRear() || !m_loadTwo);
   }
 }

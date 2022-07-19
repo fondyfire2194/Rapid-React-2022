@@ -4,7 +4,6 @@
 
 package frc.robot.commands.Shooter;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
@@ -79,9 +78,9 @@ public class AltShootCargo extends CommandBase {
 
       activeLowStopTime = Pref.getPref("LowRollStopTimeBlue");
 
-    m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
+    m_transport.wrongCargoColor = false;
 
-    m_shooter.wrongCargoColor = m_transport.wrongCargoColor;
+    m_shooter.wrongCargoColor = false;
 
   }
 
@@ -164,7 +163,9 @@ public class AltShootCargo extends CommandBase {
 
         m_transport.latchCargoAtShoot = true;
 
-        m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
+        m_transport.wrongCargoColor = m_transport.wrongCargoColor || m_transport.getCargoAllianceMisMatch();
+
+        m_shooter.wrongCargoColor = m_transport.wrongCargoColor;
 
       }
 

@@ -15,7 +15,7 @@ import frc.robot.subsystems.RevDrivetrain;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class RunTrajectory extends SequentialCommandGroup {
   /** Creates a new RunTraj. */
-  public RunTrajectory(FondyFireTrajectory fftraj, RevDrivetrain drive, Trajectory traj, String name) {
+  public RunTrajectory(FondyFireTrajectory fftraj, RevDrivetrain drive, Trajectory traj) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
@@ -24,7 +24,7 @@ public class RunTrajectory extends SequentialCommandGroup {
 
         parallel(
 
-            new ConditionalCommand(new NetTablesLog(drive, fftraj, traj, name), new DoNothing(),
+            new ConditionalCommand(new NetTablesLog(drive, fftraj, traj), new DoNothing(),
                 () -> fftraj.logTrajItems),
 
             fftraj.getRamsete(traj)

@@ -5,6 +5,7 @@
 package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -47,6 +48,11 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                 double pickUpRate = drive.pickUpRate;
 
+                double timeOut = 15;
+
+                if (RobotBase.isSimulation())
+                        timeOut = 1;
+
                 addCommands(
                                 // parallel(
 
@@ -55,13 +61,15 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
                                 // new ResetGyro(drive),
                                 new WaitCommand(.02),
 
-                                new TurnToAngle(drive, pickUpAngle).andThen(() -> drive.stop()),
+                                new TurnToAngle(drive, pickUpAngle)
+                                
+                                .andThen(() -> drive.stop()).withTimeout(timeOut),
 
                                 new WaitCommand(.02),
 
                                 new RotatePose(drive),
 
-                                //new CreateTrajectory(drive, fftraj, mytraj),
+                                // new CreateTrajectory(drive, fftraj, mytraj),
 
                                 new ParallelCommandGroup(
 

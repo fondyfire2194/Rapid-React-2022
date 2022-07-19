@@ -229,19 +229,19 @@ public class FondyFireTrajectory {
                                 .withSize(2, 3)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
 
-                trajCommands.add("LeftPickup", new RunTrajectory(this, drive, leftPickupRev, "LPU"));
+                trajCommands.add("LeftPickup", new RunTrajectory(this, drive, leftPickupRev));
 
-                trajCommands.add("CenterPickup", new RunTrajectory(this, drive, centerFirstPickUpRev, "CPU1"));
+                trajCommands.add("CenterPickup", new RunTrajectory(this, drive, centerFirstPickUpRev));
 
-                trajCommands.add("CenterThirdShoot", new RunTrajectory(this, drive, centerThirdCargoShoot, "CS"));
+                trajCommands.add("CenterThirdShoot", new RunTrajectory(this, drive, centerThirdCargoShoot));
 
-                trajCommands.add("CenterThirdPickup", new RunTrajectory(this, drive, centerThirdCargoPickUp, "CPU3"));
+                trajCommands.add("CenterThirdPickup", new RunTrajectory(this, drive, centerThirdCargoPickUp));
 
-                trajCommands.add("RightThirdPickup", new RunTrajectory(this, drive, rightThirdCargoPickupRev1, "RPU3"));
+                trajCommands.add("RightThirdPickup", new RunTrajectory(this, drive, rightThirdCargoPickupRev1));
 
-                trajCommands.add("RightFirstPickup", new RunTrajectory(this, drive, rightFirstCargoPickup, "RPU1"));
+                trajCommands.add("RightFirstPickup", new RunTrajectory(this, drive, rightFirstCargoPickup));
   
-                trajCommands.add("LeftCenterHideOpp", new RunTrajectory(this, drive,leftCenterOppHideRev ,"LCOH"));
+                trajCommands.add("LeftCenterHideOpp", new RunTrajectory(this, drive,leftCenterOppHideRev ));
  
  
  

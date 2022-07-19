@@ -21,7 +21,7 @@ public class NetTablesLog extends CommandBase {
     private final RevDrivetrain m_drive;
     private final Trajectory m_traj;
     private final FondyFireTrajectory m_fftraj;
-    private final String m_name;
+    
 
     Translation2d translation;
     State trajState;
@@ -30,19 +30,18 @@ public class NetTablesLog extends CommandBase {
     double trajStepTime;
     private double lastStepTime;
 
-    public NetTablesLog(RevDrivetrain drive, FondyFireTrajectory fftraj, Trajectory traj, String name) {
+    public NetTablesLog(RevDrivetrain drive, FondyFireTrajectory fftraj, Trajectory traj) {
         // Use addRequirements() here to declare subsystem dependencies.
         m_drive = drive;
         m_fftraj = fftraj;
         m_traj = traj;
-        m_name = name;
+      
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
         startTime = Timer.getFPGATimestamp();
-        m_fftraj.trajName.setString(m_name);
         lastStepTime = 0;
     }
 

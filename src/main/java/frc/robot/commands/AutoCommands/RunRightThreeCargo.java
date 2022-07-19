@@ -73,7 +73,8 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
                                                                 ll)),
                                                 sequence(
 
-                                                                new WaitForTiltTurretInPosition(tilt, turret),
+                                                                new WaitForTiltTurretInPosition(tilt, turret)
+                                                                                .withTimeout(timeOut),
 
                                                                 new AltShootCargo(shooter, transport, intake, ll)
                                                                                 .withTimeout(timeOut),
