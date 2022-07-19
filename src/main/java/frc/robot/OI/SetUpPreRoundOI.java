@@ -68,6 +68,9 @@ public class SetUpPreRoundOI {
                         autoChooser.addOption("Right Tarmac Retract Pickup + 3 & 4 Shoot Cargo",
                                         5);
 
+                        autoChooser.addOption("Retract Pickp Opp Shoot One Hide",
+                                        6);
+
                         Shuffleboard.getTab("Pre-Round").add("HidingCargo", hideCargoChooser).withSize(1, 1)
                                         .withPosition(3, 0);
 
@@ -92,7 +95,8 @@ public class SetUpPreRoundOI {
                         oppCommands.add("LeftOpp", new LeftHideOppCargo(intake, drive, transport, shooter, fftraj,
                                         fftraj.leftHideRev));
 
-                        oppCommands.add("CenterOpp", new CenterHideOppCargo(intake, drive, transport, shooter,fftraj,fftraj.centerHide));
+                        oppCommands.add("CenterOpp", new CenterHideOppCargo(intake, drive, transport, shooter, fftraj,
+                                        fftraj.centerHide));
 
                 }
 

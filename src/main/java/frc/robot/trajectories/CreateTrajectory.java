@@ -18,6 +18,7 @@ public class CreateTrajectory extends InstantCommand {
   private RevDrivetrain m_drive;
   private FondyFireTrajectory m_fftraj;
   private Trajectory m_traj;
+  
 
   public CreateTrajectory(RevDrivetrain drive, FondyFireTrajectory fftraj, Trajectory traj) {
     // Use addRequirements() here to declare subsystem dependencies.

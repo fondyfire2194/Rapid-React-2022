@@ -4,6 +4,7 @@
 
 package frc.robot.commands.AutoCommands;
 
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -14,15 +15,13 @@ import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.Intakes.RunActiveIntake;
+import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
-import frc.robot.commands.RobotDrive.PositionStraight;
-import frc.robot.commands.RobotDrive.ResetEncoders;
-import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Tilt.PositionTilt;
+import frc.robot.commands.Tilt.SetTiltTargetAngle;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
@@ -33,21 +32,21 @@ import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
+import frc.robot.trajectories.FondyFireTrajectory;
+import frc.robot.trajectories.RotatePose;
+import frc.robot.trajectories.RunTrajectory;
+import frc.robot.commands.RobotDrive.TurnToAngle;
 
-public class RetPuShootCamera extends SequentialCommandGroup {
+public class RetPuShoot1Hide extends SequentialCommandGroup {
 
         /** Creates a new LRetPuShoot. */
-        public RetPuShootCamera(IntakesSubsystem intake, RevDrivetrain drive,
+        public RetPuShoot1Hide(IntakesSubsystem intake, RevDrivetrain drive, FondyFireTrajectory ff,
+                        Trajectory traj,
                         CargoTransportSubsystem transport, RevShooterSubsystem shooter, RevTiltSubsystem tilt,
-                        RevTurretSubsystem turret, LimeLight ll, Compressor comp, double[] data) {
+                        RevTurretSubsystem turret, LimeLight ll, double[] data) {
                 addRequirements(intake, drive, transport, shooter, turret, tilt);
                 // Use addRequirements() here to declare subsystem dependencies.
 
-                double pickUpRate = drive.pickUpRate;
-                // double positionRate = drive.positionRate;
-
-                double drivePickupPosition = data[0];
-                // double shootPosition = data[1];
                 double tiltAngle = data[2];
                 // double upperTurretAngle = data[3];
                 double upperRPM = data[4];
@@ -62,38 +61,31 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                                 new ParallelCommandGroup(
 
                                                 new SetFrontIntakeActive(intake, false),
-                                                new ResetEncoders(drive),
-                                                new ResetGyro(drive),
+                                                // new ResetEncoders(drive),
+                                                // new ResetGyro(drive),
                                                 new SetShootSpeedSource(shooter, shooter.fromPreset),
+
                                                 new SetPresetRPM(shooter, upperRPM),
 
+                                                new SetTiltTargetAngle(tilt, tiltAngle),
+
                                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720,
-                                                                true),
+                                                                true)),
 
-                                                new PositionStraight(drive, drivePickupPosition,
-                                                                pickUpRate),
+                                new ParallelCommandGroup(
 
-                                                new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
-
-                                                new WaitCommand(2))
+                                                new WaitCommand(2)
                                                                 .deadlineWith(new RunActiveIntake(
-                                                                                intake,
-                                                                                transport)),
-                                // new CalculateTargetDistance(ll, shooter),
+                                                                                intake, transport)),
+                                                new SequentialCommandGroup(
 
-                                // new SelectSpeedAndTiltByDistance(shooter, tilt),
+                                                                new WaitCommand(.25),
+
+                                                                new RunTrajectory(ff, drive, traj, "Auto"))),
 
                                 new ParallelRaceGroup(
 
                                                 new SequentialCommandGroup(
-
-                                                                new AltShootCargo(
-                                                                                shooter,
-                                                                                transport,
-                                                                                intake,
-                                                                                ll).withTimeout(timeOut),
-
-                                                                new WaitCommand(.2),
 
                                                                 new AltShootCargo(
                                                                                 shooter,
@@ -109,6 +101,20 @@ public class RetPuShootCamera extends SequentialCommandGroup {
                                                                                 tilt,
                                                                                 turret,
                                                                                 ll)),
+                                sequence(
+
+                                                new TurnToAngle(drive, 90).andThen(() -> drive.stop()),
+
+                                                new WaitCommand(.02),
+
+                                                new RotatePose(drive),
+
+                                                new WaitCommand(.02)),
+
+                                race(
+                                                new RunCargoOutShooter(shooter, intake, transport, 700),
+
+                                                new WaitCommand(3)),
 
                                 new ParallelCommandGroup(
 

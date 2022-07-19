@@ -29,14 +29,13 @@ public class RunRightFirstPickup extends SequentialCommandGroup {
     // Called when the command is initially scheduled.
     double timeOut = 15;
 
-    double endPoint = 1.2;
-
     if (RobotBase.isSimulation())
       timeOut = 1;
 
     addCommands(
 
         parallel(
+
             new SetFrontIntakeActive(intake, true),
 
             new RunActiveIntake(intake, transport).withTimeout(timeOut),

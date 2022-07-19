@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.PipelinesConstants;
+import frc.robot.Constants.ShooterRangeConstants;
+import frc.robot.Constants.TiltConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.Intakes.RunActiveIntake;
@@ -16,9 +18,10 @@ import frc.robot.commands.Intakes.SetFrontIntakeActive;
 
 import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
-import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
+import frc.robot.commands.Shooter.WaitForTiltTurretInPosition;
 import frc.robot.commands.Tilt.PositionTilt;
+import frc.robot.commands.Tilt.SetTiltTargetAngle;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
@@ -56,7 +59,8 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
 
                                                 new SetShootSpeedSource(shooter, shooter.fromCamera),
 
-                                                new PositionTilt(tilt, 14).withTimeout(timeOut),
+                                                new SetTiltTargetAngle(tilt, ShooterRangeConstants.tiltRange3)
+                                                                .withTimeout(timeOut),
 
                                                 new SetFrontIntakeActive(intake, false),
 
@@ -69,16 +73,18 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
                                                                 ll)),
                                                 sequence(
 
+                                                                new WaitForTiltTurretInPosition(tilt, turret),
+
                                                                 new AltShootCargo(shooter, transport, intake, ll)
                                                                                 .withTimeout(timeOut),
 
                                                                 new WaitCommand(.04),
-                                               
+
                                                                 new AltShootCargo(shooter, transport, intake, ll)
                                                                                 .withTimeout(timeOut),
 
                                                                 new WaitCommand(.04),
-                                                 
+
                                                                 new AltShootCargo(shooter, transport, intake, ll)
                                                                                 .withTimeout(timeOut),
 

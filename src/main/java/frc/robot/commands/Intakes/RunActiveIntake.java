@@ -46,7 +46,7 @@ public class RunActiveIntake extends CommandBase {
     loopctr = 0;
 
     frontInDebouncer = new Debouncer(.2, DebounceType.kRising);
-    rearInDebouncer = new Debouncer(.2, DebounceType.kRising); 
+    rearInDebouncer = new Debouncer(.2, DebounceType.kRising);
 
   }
 
@@ -58,13 +58,15 @@ public class RunActiveIntake extends CommandBase {
 
       loopctr++;
 
-    // if (DriverStation.isTeleop() && m_intake.useFrontIntake && m_intake.useFrontCamera)
+    // if (DriverStation.isTeleop() && m_intake.useFrontIntake &&
+    // m_intake.useFrontCamera)
 
-    //   Shuffleboard.selectTab("FrontIntakeCamera");
+    // Shuffleboard.selectTab("FrontIntakeCamera");
 
-    // if (DriverStation.isTeleop() && !m_intake.useFrontIntake && m_intake.useRearCamera)
+    // if (DriverStation.isTeleop() && !m_intake.useFrontIntake &&
+    // m_intake.useRearCamera)
 
-    //   Shuffleboard.selectTab("RearIntakeCamera");
+    // Shuffleboard.selectTab("RearIntakeCamera");
 
     m_intake.lowerActiveArm();
 
@@ -130,20 +132,12 @@ public class RunActiveIntake extends CommandBase {
     m_transport.stopLowerRoller();
     m_intake.stopLowerRoller = true;
 
-    if (RobotBase.isReal())
-
-      Shuffleboard.selectTab("Competition");
-
-    else
-
-      Shuffleboard.selectTab("Simulation");
-
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return stopActiveIntakeNow && m_startTime != 0 && Timer.getFPGATimestamp() > m_startTime + .1
-        ;// stopActiveIntakeNow;
+    return stopActiveIntakeNow && m_startTime != 0 &&
+        Timer.getFPGATimestamp() > m_startTime + .1;
   }
 }

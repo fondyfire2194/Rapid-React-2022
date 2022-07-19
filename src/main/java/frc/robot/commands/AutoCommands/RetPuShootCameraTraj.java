@@ -32,6 +32,7 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.trajectories.FondyFireTrajectory;
+import frc.robot.trajectories.RunTrajectory;
 
 public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
@@ -82,8 +83,7 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                                 new WaitCommand(.25),
 
-                                                                ff.getRamsete(traj).andThen(
-                                                                                () -> drive.tankDriveVolts(0, 0)))),
+                                                                new RunTrajectory(ff, drive, traj, "Auto"))),
 
                                 new ParallelRaceGroup(
 

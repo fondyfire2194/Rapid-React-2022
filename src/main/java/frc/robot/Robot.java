@@ -28,6 +28,7 @@ import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.CenterHideOppCargo;
 import frc.robot.commands.AutoCommands.DoNothing;
 import frc.robot.commands.AutoCommands.LeftHideOppCargo;
+import frc.robot.commands.AutoCommands.RetPuShoot1Hide;
 import frc.robot.commands.AutoCommands.RetPuShootCameraTraj;
 import frc.robot.commands.AutoCommands.RunCenterThirdCargo;
 import frc.robot.commands.AutoCommands.RunRightFirstPickup;
@@ -125,7 +126,6 @@ public class Robot extends TimedRobot {
     loopCtr++;
 
     SmartDashboard.putNumber("LPCTRA", loopCtr);
-
 
   }
 
@@ -314,9 +314,16 @@ public class Robot extends TimedRobot {
 
             new RunRightThreeCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll));
 
-        // new RunCenterThirdCargo(drive, fftraj, intake, shooter, tilt, turret,
-        // transport, ll));
+        break;
 
+      case 6:
+
+        m_autonomousCommand = new SequentialCommandGroup(
+
+            new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+
+            new RetPuShoot1Hide(intake, drive, fftraj, fftraj.leftCenterOppHideRev, transport, shooter, tilt, turret, ll,
+                data));
         break;
 
       default:
@@ -392,9 +399,9 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_shooter.presetLocationName = FieldMap.shootLocationName[m_robotContainer.m_shooter.shootLocation];
     m_robotContainer.m_shooter.shootModeName = FieldMap.shootModeName[m_robotContainer.m_shooter.shootValuesSource];
 
-    new SequentialCommandGroup(new CalculateTargetDistance(m_limelight, m_shooter),
+    new SequentialCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_shooter),
 
-        new SelectSpeedAndTiltByDistance(m_shooter, m_tilt)).schedule();
+        new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();
 
   }
 

@@ -7,6 +7,7 @@ package frc.robot.commands.AutoCommands;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Intakes.RunActiveIntake;
@@ -14,6 +15,7 @@ import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.CheckCargoAtShoot;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
+import frc.robot.commands.Shooter.WaitForTiltTurretInPosition;
 import frc.robot.commands.Tilt.SetTiltTargetAngle;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
@@ -51,7 +53,7 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
                                                 // new ResetOdometryToStartOfTrajectory(drive,
                                                 // fftraj.centerThirdCargoPickUp),
                                                 new SetTiltTargetAngle(tilt, 11),
-  
+
                                                 fftraj.getRamsete(fftraj.centerThirdCargoPickUp)
                                                                 .andThen(() -> drive.tankDriveVolts(0, 0)),
 
@@ -68,11 +70,19 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
 
                                                 new SetPresetRPM(shooter, 888)),
 
-                                new AltShootCargo(shooter, transport, intake, ll).withTimeout(timeOut)
-                                                .deadlineWith(new RunShooter(shooter)),
+                                race(
+                                                new RunShooter(shooter),
 
-                                new AltShootCargo(shooter, transport, intake, ll).withTimeout(timeOut)
-                                                .deadlineWith(new RunShooter(shooter)),
+                                                sequence(
+
+                                                                new WaitForTiltTurretInPosition(tilt, turret),
+
+                                                                new AltShootCargo(shooter, transport, intake, ll)
+                                                                                .withTimeout(timeOut),
+                                                                new WaitCommand(.04),
+
+                                                                new AltShootCargo(shooter, transport, intake, ll)
+                                                                                .withTimeout(timeOut))),
 
                                 new ParallelCommandGroup(
 

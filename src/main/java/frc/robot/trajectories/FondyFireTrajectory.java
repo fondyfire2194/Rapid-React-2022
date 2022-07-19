@@ -130,14 +130,19 @@ public class FondyFireTrajectory {
         public final Pose2d rightCargoAutoStart = new Pose2d(7.63, 1.9, Rotation2d.fromDegrees(-90));
 
         final Pose2d rightCargoFirstPickup = new Pose2d(7.63, .62, Rotation2d.fromDegrees(-90));
+ 
+        final Pose2d leftCenterOppHideAutoStart = new Pose2d(6.94, 3.97, Rotation2d.fromDegrees(23));
 
+        final Pose2d leftCenterOppHideCargoRev = new Pose2d(4.53, 3.28, Rotation2d.fromDegrees(23));
+ 
         public Trajectory rightThirdCargoPickupRev1;
 
         public Trajectory rightFirstCargoPickup;
 
- 
-        public boolean logTrajItems = false;
-     
+        public Trajectory leftCenterOppHideRev;
+
+        public boolean logTrajItems = true;
+
         public double time;
 
         public DifferentialDriveVoltageConstraint autoVoltageConstraint;
@@ -209,7 +214,17 @@ public class FondyFireTrajectory {
                                 centerCargoRev,
                                 withSpeedAndAcceleration(.75, .25).setReversed(true));
 
-                ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
+                leftCenterOppHideRev = TrajectoryGenerator.generateTrajectory(
+
+                                leftCenterOppHideAutoStart,
+                                List.of(),
+                                leftCenterOppHideCargoRev,
+                                withSpeedAndAcceleration(1, .25)
+                                                .setReversed(true));
+ 
+ 
+ 
+                                ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(5, 0)
                                 .withSize(2, 3)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
@@ -225,6 +240,11 @@ public class FondyFireTrajectory {
                 trajCommands.add("RightThirdPickup", new RunTrajectory(this, drive, rightThirdCargoPickupRev1, "RPU3"));
 
                 trajCommands.add("RightFirstPickup", new RunTrajectory(this, drive, rightFirstCargoPickup, "RPU1"));
+  
+                trajCommands.add("LeftCenterHideOpp", new RunTrajectory(this, drive,leftCenterOppHideRev ,"LCOH"));
+ 
+ 
+ 
                 ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7, 0)
                                 .withSize(2, 4)

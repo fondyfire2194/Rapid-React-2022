@@ -113,11 +113,11 @@ public class RevDrivetrain extends SubsystemBase {
 
     public boolean robotStoppedForOneSecond;
 
-    public final double pickUpRate = .3;
+    public final double pickUpRate = .25;
     public final double positionRate = .4;
     public double rotateStartTime;
 
-    double trajKp = DriveConstants.kPDriveVel;
+    double trajKp = 0;
 
     public PIDController leftController = new PIDController(trajKp, 0, 0);
     public PIDController rightController = new PIDController(trajKp, 0, 0);
