@@ -59,18 +59,25 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
 
                                                 new PositionTilt(tilt, 11).withTimeout(timeOut),
 
-                                                new SetFrontIntakeActive(intake, true),
+                                                new SetFrontIntakeActive(intake, false),
 
                                                 new RunActiveIntake(intake, transport).withTimeout(timeOut)),
+                                race(
+                                                new RunShooter(shooter),
+                                                sequence(
 
-                                sequence(
+                                                                new AltShootCargo(shooter, transport, intake, ll)
+                                                                                .withTimeout(timeOut),
 
-                                                new AltShootCargo(shooter, transport, intake, ll).withTimeout(timeOut)
-                                                                .deadlineWith(new RunShooter(shooter)),
-                                                new AltShootCargo(shooter, transport, intake, ll).withTimeout(timeOut)
-                                                                .deadlineWith(new RunShooter(shooter)),
-                                                new AltShootCargo(shooter, transport, intake, ll).withTimeout(timeOut)
-                                                                .deadlineWith(new RunShooter(shooter))),
+                                                                new WaitCommand(.4),
+                                                                new AltShootCargo(shooter, transport, intake, ll)
+                                                                                .withTimeout(timeOut),
+
+                                                                new WaitCommand(.4),
+                                                                new AltShootCargo(shooter, transport, intake, ll)
+                                                                                .withTimeout(timeOut),
+
+                                                                new WaitCommand(.4))),
 
                                 new ParallelCommandGroup(
 

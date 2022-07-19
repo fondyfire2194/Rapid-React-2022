@@ -37,7 +37,7 @@ public class RunRightFirstPickup extends SequentialCommandGroup {
     addCommands(
 
         parallel(
-            new SetFrontIntakeActive(intake, false),
+            new SetFrontIntakeActive(intake, true),
 
             new RunActiveIntake(intake, transport).withTimeout(timeOut),
 

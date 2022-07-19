@@ -221,7 +221,7 @@ public class RobotContainer {
             // Show_Hide_Screens.setStates(false, true, true);
 
             // // competition configuration
-            Show_Hide_Screens.setStates(true, false, false);
+            Show_Hide_Screens.setStates(true, false, true);
 
             // all configuration
             // Show_Hide_Screens.setStates(true, true, true);

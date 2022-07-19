@@ -8,6 +8,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -168,6 +169,12 @@ public class RevDrivetrain extends SubsystemBase {
         mLeadLeft.setOpenLoopRampRate(.01);
 
         mLeadRight.setOpenLoopRampRate(.01);
+
+
+        mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
+        mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50);
+        mLeadRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
+        mLeadRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50);
 
         mGyro = new AHRS(Port.kUSB);
 

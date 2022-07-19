@@ -112,8 +112,8 @@ public class RevTiltSubsystem extends SubsystemBase {
         m_motor.setOpenLoopRampRate(1);
         m_motor.setClosedLoopRampRate(1);
 
-        m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-        m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+        m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
+        m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50);
 
         mPosController = new PIDController(.003, 0, 0);
         aimCenter();

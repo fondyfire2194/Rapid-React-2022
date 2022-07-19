@@ -65,6 +65,8 @@ public class AltShootCargo extends CommandBase {
 
     cargoReleaseTimer = 0;
 
+    cargoReleasing = false;
+
     m_transport.latchCargoAtShoot = false;
 
     noMoreCargo = false;
@@ -77,8 +79,8 @@ public class AltShootCargo extends CommandBase {
 
       activeLowStopTime = Pref.getPref("LowRollStopTimeBlue");
 
-       m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
-    
+    m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
+
     m_shooter.wrongCargoColor = m_transport.wrongCargoColor;
 
   }
@@ -190,8 +192,8 @@ public class AltShootCargo extends CommandBase {
     if (noMoreCargo) {
       m_shooter.stop();
       m_shooter.stopTopRoller();
-   //   m_ll.setPipeline(PipelinesConstants.ledsOffPipeline);
-     // m_ll.useVision = false;
+      // m_ll.setPipeline(PipelinesConstants.ledsOffPipeline);
+      // m_ll.useVision = false;
     }
     m_transport.stopLowerRoller();
     m_shooter.isShooting = false;

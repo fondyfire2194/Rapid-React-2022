@@ -18,9 +18,11 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -82,7 +84,7 @@ public class FondyFireTrajectory {
 
         public SimpleCSVLogger trajLogger = new SimpleCSVLogger();
         public boolean trajLogInProgress;
-        public boolean logTrajItems = true;
+        public boolean logTrajItems = false;
         public boolean endFile;
         public double time;
 
@@ -120,7 +122,7 @@ public class FondyFireTrajectory {
                                 centerAutoStartRev,
                                 List.of(),
                                 centerCargoRev,
-                                withSpeedAndAcceleration(1, .5)
+                                withSpeedAndAcceleration(.75, .25)
                                                 .setReversed(true));
 
                 centerHide = TrajectoryGenerator.generateTrajectory(
@@ -128,7 +130,7 @@ public class FondyFireTrajectory {
                                 centerCargoRev,
                                 List.of(),
                                 centerHideOppCargo,
-                                withSpeedAndAcceleration(1, 5));
+                                withSpeedAndAcceleration(.75, .25));
 
                 centerThirdCargoPickUp = TrajectoryGenerator.generateTrajectory(
 
@@ -147,13 +149,13 @@ public class FondyFireTrajectory {
                                 rightCargoAutoStart,
                                 List.of(),
                                 rightCargoFirstPickup,
-                                withSpeedAndAcceleration(1, .5).setReversed(true));
+                                withSpeedAndAcceleration(.75, .25));
 
                 rightThirdCargoPickupRev1 = TrajectoryGenerator.generateTrajectory(
                                 rightCargoFirstPickup,
                                 List.of(),
                                 centerCargoRev,
-                                withSpeedAndAcceleration(1, .5).setReversed(true));
+                                withSpeedAndAcceleration(.75, .25).setReversed(true));
 
                 ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(5, 0)
@@ -170,6 +172,7 @@ public class FondyFireTrajectory {
 
                 trajCommands.add("RightThirdPickup", new RunTrajectory(this, drive, rightThirdCargoPickupRev1, "RPU3"));
 
+                trajCommands.add("RightFirstPickup", new RunTrajectory(this, drive, rightFirstCargoPickup, "RPU1"));
                 ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7, 0)
                                 .withSize(2, 4)
@@ -191,11 +194,11 @@ public class FondyFireTrajectory {
 
                 trajInfo.addNumber("RightVolts", () -> drive.rightVolts);
 
-                // ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
+                ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
 
-                // if (RobotBase.isReal())
-                // rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
-                // 4).withWidget("Field");
+                if (RobotBase.isReal())
+                        rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
+                                        4).withWidget("Field");
 
         }
 

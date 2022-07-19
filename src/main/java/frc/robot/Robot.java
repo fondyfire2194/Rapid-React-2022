@@ -311,9 +311,9 @@ public class Robot extends TimedRobot {
 
             new RunRightFirstPickup(drive, fftraj, intake, shooter, tilt, turret, transport, ll),
 
-            new RunRightThreeCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll),
+            new RunRightThreeCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll));
 
-            new RunCenterThirdCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll));
+         //   new RunCenterThirdCargo(drive, fftraj, intake, shooter, tilt, turret, transport, ll));
 
         break;
 

@@ -3,9 +3,19 @@
     "CameraPublisher": {
       "limelight": {
         "open": true
-      }
+      },
+      "open": true
     },
-    "Preferences": {
+    "Shuffleboard": {
+      "SetupRobot": {
+        "Robot": {
+          "open": true
+        },
+        "open": true
+      },
+      "Trajectories": {
+        "open": true
+      },
       "open": true
     },
     "troubleshooting": {
@@ -39,6 +49,7 @@
       "/Shuffleboard/HubVision/bullseye/StopLog": "Command",
       "/Shuffleboard/Intake/IntakeActions/ArmLower": "Command",
       "/Shuffleboard/Intake/IntakeActions/ArmRaise": "Command",
+      "/Shuffleboard/Intake/IntakeActions/IntakeCmd": "Subsystem",
       "/Shuffleboard/Intake/IntakeActions/Run Motor": "Command",
       "/Shuffleboard/Intake/IntakeActions/Stop Motor": "Command",
       "/Shuffleboard/Intake/IntakeSelect/Select Front": "Command",
@@ -97,6 +108,15 @@
       "/Shuffleboard/SetupShooter/MAXRPM 3500/Shoot": "Command",
       "/Shuffleboard/SetupShooter/MAXRPM 3500/Stop Shoot": "Command",
       "/Shuffleboard/SetupShooter/MAXRPM 3500/StopTopRoll": "Command",
+      "/Shuffleboard/SetupShooter/MAXRPM 5500/ClearFaults": "Command",
+      "/Shuffleboard/SetupShooter/MAXRPM 5500/RunShooterFromThrottle": "Command",
+      "/Shuffleboard/SetupShooter/MAXRPM 5500/RunTopRoll": "Command",
+      "/Shuffleboard/SetupShooter/MAXRPM 5500/ShootOne": "Command",
+      "/Shuffleboard/SetupShooter/MAXRPM 5500/ShootTwo": "Command",
+      "/Shuffleboard/SetupShooter/MAXRPM 5500/Start Shooter": "Command",
+      "/Shuffleboard/SetupShooter/MAXRPM 5500/Stop Shoot": "Command",
+      "/Shuffleboard/SetupShooter/MAXRPM 5500/StopTopRoll": "Command",
+      "/Shuffleboard/SetupShooter/ShooterValues1/Cmd": "Subsystem",
       "/Shuffleboard/SetupTilt/Tilt/ClearFaults": "Command",
       "/Shuffleboard/SetupTilt/Tilt/Cmd": "Subsystem",
       "/Shuffleboard/SetupTilt/Tilt/Inc_Position +1 Deg": "Command",
@@ -107,6 +127,7 @@
       "/Shuffleboard/SetupTilt/Tilt/Position To 14": "Command",
       "/Shuffleboard/SetupTilt/Tilt/Position To 15": "Command",
       "/Shuffleboard/SetupTilt/Tilt/Position To 5": "Command",
+      "/Shuffleboard/SetupTilt/Tilt/Position To Entry": "Command",
       "/Shuffleboard/SetupTilt/Tilt/PositionToSwitch": "Command",
       "/Shuffleboard/SetupTilt/Tilt/StopTilt": "Command",
       "/Shuffleboard/SetupTransport/TransportValues/Cmd": "Subsystem",
@@ -123,22 +144,16 @@
       "/Shuffleboard/SetupTurret/Turret/Position To 20": "Command",
       "/Shuffleboard/SetupTurret/Turret/Reset to 0": "Command",
       "/Shuffleboard/SetupTurret/Turret/StopTurret": "Command",
-      "/Shuffleboard/Trajectories/Field": "Field2d",
+      "/Shuffleboard/SetupTurret/Turret/Vision Off": "Command",
+      "/Shuffleboard/SetupTurret/Turret/Vision On": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/CenterPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/CenterThirdPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/CenterThirdShoot": "Command",
-      "/Shuffleboard/Trajectories/TrajectoryRun/CleaPlot": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/LeftPickup": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/LogTrajectoryData": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/NetLogTraj": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/RightThirdPickup": "Command",
-      "/Shuffleboard/Trajectories/TrajectoryRun/RotatePose": "Command",
       "/SmartDashboard/Field": "Field2d"
-    },
-    "windows": {
-      "/Shuffleboard/Can+Sols/Scheduler/Scheduler": {
-        "window": {
-          "visible": true
-        }
-      }
     }
   },
   "NetworkTables Settings": {
@@ -149,7 +164,64 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 1061,
+          "height": 1818,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/traj_curv"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/traj_x"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/traj_y"
+            },
+            {
+              "color": [
+                0.7686275243759155,
+                0.30588236451148987,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/sampleTime"
+            },
+            {
+              "color": [
+                0.5058823823928833,
+                0.44705885648727417,
+                0.7019608020782471,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/traj_rot"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "height": 1299,
           "series": [
             {
               "color": [
@@ -167,7 +239,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/troubleshooting/left_reference"
+              "id": "NT:/troubleshooting/right_measurement"
             },
             {
               "color": [
@@ -176,16 +248,28 @@
                 0.4078431725502014,
                 1.0
               ],
-              "id": "NT:/Preferences/trajAccCH"
+              "id": "NT:/troubleshooting/left_reference"
+            },
+            {
+              "color": [
+                0.7686275243759155,
+                0.30588236451148987,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/right_reference"
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
-    "Plot <1>": {
+    "Plot <2>": {
       "plots": [
         {
-          "height": 864,
+          "height": 1498,
           "series": [
             {
               "color": [
@@ -194,7 +278,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/troubleshooting/X"
+              "id": "NT:/troubleshooting/traj_x"
             },
             {
               "color": [
@@ -203,11 +287,42 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/troubleshooting/right_reference"
+              "id": "NT:/troubleshooting/traj_y"
+            },
+            {
+              "color": [
+                0.658823549747467,
+                0.3333333432674408,
+                0.6151009798049927,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/X"
+            },
+            {
+              "color": [
+                0.7686275243759155,
+                0.30588236451148987,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/Y"
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <3>": {
+      "plots": [
+        {
+          "height": 1229
+        }
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }
