@@ -114,7 +114,7 @@ public class RevDrivetrain extends SubsystemBase {
 
     public boolean robotStoppedForOneSecond;
 
-    public final double pickUpRate = .3;
+    public final double pickUpRate = .25;
     public final double positionRate = .4;
     public double rotateStartTime;
 

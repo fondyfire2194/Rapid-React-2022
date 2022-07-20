@@ -19,7 +19,7 @@ public final class Show_Hide_Screens {
 
     SetUpOI.showTurret = testing;//testing;
     SetUpOI.showTilt = testing;//testing;
-    SetUpOI.showShooter = testing;//testing;
+    SetUpOI.showShooter = true;//testing;
     SetUpOI.showRobot = true;
     SetUpOI.showTransport = testing;
     SetUpOI.showClimber = testing;

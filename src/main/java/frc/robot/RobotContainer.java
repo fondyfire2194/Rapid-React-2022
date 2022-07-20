@@ -318,6 +318,10 @@ public class RobotContainer {
 
                         .whileHeld(new RunClimber(m_climber, Pref.getPref("ClimbArmDown")))
 
+                        .whenPressed(new UseVision(m_limelight, false))
+
+                        .whenPressed(new LimelightSetPipeline(m_limelight, PipelinesConstants.ledsOffPipeline))
+
                         .whenPressed(new PositionTilt(m_tilt, TiltConstants.TILT_MIN_ANGLE))
 
                         .whenPressed(new PositionTurret(m_turret, 0));

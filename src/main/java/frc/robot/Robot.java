@@ -206,7 +206,7 @@ public class Robot extends TimedRobot {
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = 2700;
+        data[4] = 2325;
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -230,7 +230,7 @@ public class Robot extends TimedRobot {
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = 2700;
+        data[4] = 2275;
 
         m_autonomousCommand = new SequentialCommandGroup(
 
