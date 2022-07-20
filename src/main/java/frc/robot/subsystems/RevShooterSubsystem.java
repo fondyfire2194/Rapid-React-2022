@@ -80,8 +80,8 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public double[] rpmFromCameraDistance = {
             1850, 1850, 1850, 2150, 1900,//1 - 5 ft 4 degrees
-            1950, 2000, 2300,//6-8 ft 11 degrees
-            2300, 2350, 2700, 2900, 2900, 2950, // 9-14 ft 14 degrees
+            1950, 2100, 2250,//6-8 ft 11 degrees
+            2350, 2450, 2700, 2900, 2900, 2950, // 9-14 ft 14 degrees
             3100, 3250, 3450, 3450, 4500, 5000 };// 15-20ft 17 degrees
 
     public double startDistance;

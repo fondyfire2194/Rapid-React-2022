@@ -5,13 +5,17 @@
 package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
+import frc.robot.commands.Intakes.IntakeToShootPosition;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.RobotDrive.TurnToAngle;
+import frc.robot.commands.Shooter.CheckCargoAtShoot;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -25,7 +29,7 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
         /** Creates a new LRetPuShoot. */
         public CenterHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,
                         CargoTransportSubsystem transport, RevShooterSubsystem shooter, FondyFireTrajectory fftraj,
-                        Trajectory mytraj) {
+                        Trajectory traj) {
                 addRequirements(intake, drive, transport, shooter);
                 // Use addRequirements() here to declare subsystem dependencies.
 
@@ -36,6 +40,11 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
                 final double pickupPosition = 1.5;
 
                 final double shootAngle = 132;
+
+                double timeOut = 15;
+
+                if (RobotBase.isSimulation())
+                        timeOut = 1;
 
                 // remaining data used in shoot routine
 
@@ -50,23 +59,19 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
                                 new RotatePose(drive),
 
                                 new WaitCommand(.02),
-                             
-                                new CreateTrajectory(drive, fftraj, mytraj),
-                             
-                                new ParallelCommandGroup(
 
-                                                new WaitCommand(2).deadlineWith(new RunActiveIntake(intake, transport)),
-
-                                                fftraj.getRamsete(mytraj).andThen(
-                                                                () -> drive.tankDriveVolts(0, 0))),
+                                new CreateTrajectory(drive, fftraj, fftraj.centerHide, fftraj.centerHideOppCargo, false),
 
                                 new WaitCommand(.02),
 
-                                // new TurnToAngle(drive, shootAngle).andThen(() -> drive.stop()),
+                                parallel(
 
-                                // new WaitCommand(.02),
+                                                new IntakeToShootPosition(intake, transport).withTimeout(timeOut),
 
-                                // new RotatePose(drive),
+                                                fftraj.getRamsete(fftraj.centerHide).andThen(
+                                                                () -> drive.tankDriveVolts(0, 0))),
+
+                                new WaitCommand(.02),
 
                                 race(
                                                 new RunCargoOutShooter(shooter, intake, transport, 700),

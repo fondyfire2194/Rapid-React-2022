@@ -6,6 +6,8 @@ package frc.robot.OI;
 
 import java.util.Map;
 
+import javax.swing.plaf.TreeUI;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -21,6 +23,7 @@ import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
+import frc.robot.trajectories.CreateTrajectory;
 import frc.robot.trajectories.FondyFireTrajectory;
 
 /** Add your docs here. */
@@ -89,14 +92,20 @@ public class SetUpPreRoundOI {
 
                         ShuffleboardLayout oppCommands = Shuffleboard.getTab("Pre-Round")
                                         .getLayout("OppHideTest", BuiltInLayouts.kList).withPosition(8, 0)
-                                        .withSize(2, 1)
+                                        .withSize(2, 2)
                                         .withProperties(Map.of("Label position", "LEFT")); // labels for
 
-                        oppCommands.add("LeftOpp", new LeftHideOppCargo(intake, drive, transport, shooter, fftraj,
-                                        fftraj.leftHideRev));
+                        oppCommands.add("LeftOpp", new LeftHideOppCargo(intake, drive, transport, shooter, fftraj
+                                        ));
 
                         oppCommands.add("CenterOpp", new CenterHideOppCargo(intake, drive, transport, shooter, fftraj,
                                         fftraj.centerHide));
+
+                        oppCommands.add("Redo LeftHideTraj", new CreateTrajectory(drive, fftraj, fftraj.leftHideRev,
+                                        fftraj.leftOppCargoRev,true));
+
+                        oppCommands.add("Redo CenterHideTraj", new CreateTrajectory(drive, fftraj, fftraj.centerHide,
+                                        fftraj.centerHideOppCargo,false));
 
                 }
 

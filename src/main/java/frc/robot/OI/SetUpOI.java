@@ -19,6 +19,7 @@ import frc.robot.FieldMap;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.CargoTransport.RunLowerRoller;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
+import frc.robot.commands.CargoTransport.TestCargoColor;
 import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
 import frc.robot.commands.Intakes.RunActiveIntake;
@@ -320,6 +321,8 @@ public class SetUpOI {
 
                         shooterCommands.add("StopTopRoll", new StopTopRoller(shooter));
 
+                        shooterCommands.add("TestColorMismatch", new TestCargoColor(transport));
+                        
                         ShuffleboardLayout shooterValues = Shuffleboard.getTab("SetupShooter")
                                         .getLayout("ShooterValues", BuiltInLayouts.kList).withPosition(2, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels

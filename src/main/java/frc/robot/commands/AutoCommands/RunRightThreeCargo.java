@@ -18,6 +18,7 @@ import frc.robot.commands.Intakes.SetFrontIntakeActive;
 
 import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Shooter.WaitForTiltTurretInPosition;
 import frc.robot.commands.Tilt.PositionTilt;
@@ -46,6 +47,7 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
                 // Add your commands in the addCommands() call, e.g.
                 // addCommands(new FooCommand(), new BarCommand());
                 double timeOut = 15;
+                double rpm = 2500;
 
                 if (RobotBase.isSimulation())
                         timeOut = 1;
@@ -57,20 +59,22 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
 
                                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720, true),
 
-                                                new SetShootSpeedSource(shooter, shooter.fromCamera),
+                                                new SetShootSpeedSource(shooter, shooter.fromPreset),
 
-                                                new SetTiltTargetAngle(tilt, ShooterRangeConstants.tiltRange3)
+                                                new SetPresetRPM(shooter, rpm),
+
+                                                // new SetTiltTargetAngle(tilt, ShooterRangeConstants.tiltRange3)
+                                                // .withTimeout(timeOut),
+                                                new PositionTilt(tilt, ShooterRangeConstants.tiltRange3)
                                                                 .withTimeout(timeOut),
-
                                                 new SetFrontIntakeActive(intake, false),
 
                                                 new RunActiveIntake(intake, transport).withTimeout(timeOut)),
 
                                 race(
-                                                new RunShooter(shooter).deadlineWith(new PositionHoldTiltTurret(
-                                                                tilt,
-                                                                turret,
-                                                                ll)),
+                                                new RunShooter(shooter),
+                                                new DoNothing(),
+                                                              
                                                 sequence(
 
                                                                 new WaitForTiltTurretInPosition(tilt, turret)
@@ -79,17 +83,17 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
                                                                 new AltShootCargo(shooter, transport, intake, ll)
                                                                                 .withTimeout(timeOut),
 
-                                                                new WaitCommand(.04),
+                                                                new WaitCommand(.4),
 
                                                                 new AltShootCargo(shooter, transport, intake, ll)
                                                                                 .withTimeout(timeOut),
 
-                                                                new WaitCommand(.04),
+                                                                new WaitCommand(.4),
 
                                                                 new AltShootCargo(shooter, transport, intake, ll)
                                                                                 .withTimeout(timeOut),
 
-                                                                new WaitCommand(.04))),
+                                                                new WaitCommand(.4))),
 
                                 new ParallelCommandGroup(
 

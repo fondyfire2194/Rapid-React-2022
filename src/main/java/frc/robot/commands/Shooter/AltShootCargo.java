@@ -163,7 +163,7 @@ public class AltShootCargo extends CommandBase {
 
         m_transport.latchCargoAtShoot = true;
 
-        m_transport.wrongCargoColor = m_transport.wrongCargoColor || m_transport.getCargoAllianceMisMatch();
+        m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
 
         m_shooter.wrongCargoColor = m_transport.wrongCargoColor;
 

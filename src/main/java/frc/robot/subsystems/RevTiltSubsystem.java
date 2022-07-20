@@ -445,8 +445,8 @@ public class RevTiltSubsystem extends SubsystemBase {
         kMinOutput = -.75;
         kMaxOutput = .75;
         mVelController.setOutputRange(kMinOutput, kMaxOutput, VELOCITY_SLOT);
-        maxVel = 5.;// Pref.getPref("tiVMaxV");// deg per sec
-        maxAcc = 5;//Pref.getPref("tiVMaxA");// deg per sec per sec
+        maxVel = Pref.getPref("tiVMaxV");// deg per sec
+        maxAcc = Pref.getPref("tiVMaxA");// deg per sec per sec
         allowedErr = .1;
         calibratePID(p, i, d, iz, allowedErr, VELOCITY_SLOT);
 

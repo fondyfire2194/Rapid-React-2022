@@ -9,10 +9,13 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
+import frc.robot.commands.Intakes.IntakeToShootPosition;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.RobotDrive.TurnToAngle;
+import frc.robot.commands.Shooter.CheckCargoAtShoot;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -33,7 +36,7 @@ import frc.robot.trajectories.RotatePose;
 
 public class LeftHideOppCargo extends SequentialCommandGroup {
 
-        private double pickUpAngle = -133;
+        private double pickUpAngle = -135;
 
         final double pickupPosition = -1.1;
 
@@ -41,8 +44,8 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
         /** Creates a new LRetPuShoot. */
         public LeftHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,
-                        CargoTransportSubsystem transport, RevShooterSubsystem shooter, FondyFireTrajectory fftraj,
-                        Trajectory mytraj) {
+                        CargoTransportSubsystem transport, RevShooterSubsystem shooter, FondyFireTrajectory fftraj
+                        ) {
                 addRequirements(intake, drive, transport, shooter);
                 // Use addRequirements() here to declare subsystem dependencies.
 
@@ -62,20 +65,24 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
                                 new WaitCommand(.02),
 
                                 new TurnToAngle(drive, pickUpAngle)
-                                
-                                .andThen(() -> drive.stop()).withTimeout(timeOut),
+
+                                                .andThen(() -> drive.stop()).withTimeout(timeOut),
 
                                 new WaitCommand(.02),
 
                                 new RotatePose(drive),
 
-                                // new CreateTrajectory(drive, fftraj, mytraj),
+                                new WaitCommand(.02),
 
-                                new ParallelCommandGroup(
+                                new CreateTrajectory(drive, fftraj, fftraj.leftHideRev, fftraj.leftOppCargoRev, true),
+                                
+                                new WaitCommand(.02),
+                                
+                                parallel(
 
-                                                new WaitCommand(2).deadlineWith(new RunActiveIntake(intake, transport)),
-
-                                                fftraj.getRamsete(mytraj).andThen(
+                                                new IntakeToShootPosition(intake, transport).withTimeout(timeOut),
+                                             
+                                                fftraj.getRamsete(fftraj.leftHideRev).andThen(
                                                                 () -> drive.tankDriveVolts(0, 0))),
 
                                 new WaitCommand(.02),
@@ -87,6 +94,8 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
                                 new WaitCommand(.02),
 
                                 new RotatePose(drive),
+
+
 
                                 race(
                                                 new RunCargoOutShooter(shooter, intake, transport, 700),

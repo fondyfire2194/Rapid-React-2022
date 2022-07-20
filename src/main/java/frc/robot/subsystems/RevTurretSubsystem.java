@@ -109,6 +109,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         m_motor.setClosedLoopRampRate(1);
 
         m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
+        m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50);//vel
     
         m_motor.setSmartCurrentLimit(20);
@@ -121,7 +122,7 @@ public class RevTurretSubsystem extends SubsystemBase {
             getVelGains();
             setPosGains();
             setLockGains();
-            mLockController.setTolerance(.25);
+            mLockController.setTolerance(.5);
 
         }
         setSoftwareLimits();
@@ -136,7 +137,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
 
-        m_reverseLimit.enableLimitSwitch(true);
+        m_reverseLimit.enableLimitSwitch(false);
 
         m_forwardLimit = m_motor.getForwardLimitSwitch(Type.kNormallyClosed);
 
@@ -238,7 +239,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         // }
 
-        lockPIDOut = mLockController.calculate(cameraError, 0);
+        lockPIDOut = mLockController.calculate(cameraError, 1);
 
         double maxAllowedOut = .5;
 

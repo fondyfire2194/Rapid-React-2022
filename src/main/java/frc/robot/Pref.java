@@ -42,8 +42,8 @@ public class Pref {
 
     prefDict.put("tiVTune", 0.);
 
-    // prefDict.put("tiVMaxV", 5.);
-    // prefDict.put("tiVMaxA", 5.);
+    prefDict.put("tiVMaxV", 5.);
+    prefDict.put("tiVMaxA", 5.);
 
     // tilt position
 

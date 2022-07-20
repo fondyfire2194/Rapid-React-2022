@@ -91,6 +91,9 @@
       "/Shuffleboard/Pre-Round/HidingCargo": "String Chooser",
       "/Shuffleboard/Pre-Round/OppHideTest/CenterOpp": "Command",
       "/Shuffleboard/Pre-Round/OppHideTest/LeftOpp": "Command",
+      "/Shuffleboard/Pre-Round/OppHideTest/Redo CenterHideTraj": "Command",
+      "/Shuffleboard/Pre-Round/OppHideTest/Redo LeftHideTraj": "Command",
+      "/Shuffleboard/Pre-Round/OppHideTest/RedoHideTraj": "Command",
       "/Shuffleboard/Pre-Round/OppTest/CenterOpp": "Command",
       "/Shuffleboard/Pre-Round/OppTest/CenterThirdPickup": "Command",
       "/Shuffleboard/Pre-Round/OppTest/CenterThirdShoot": "Command",
@@ -242,12 +245,6 @@
         "Values": {
           "open": false
         }
-      },
-      "SetupRobot": {
-        "RobotValues": {
-          "open": true
-        },
-        "open": true
       },
       "SetupTilt": {
         "TiltValues": {

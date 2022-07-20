@@ -207,7 +207,7 @@ public class RobotContainer {
 
             m_trajectory = new FondyFireTrajectory(m_drive);
 
-            ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
+         //   ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
 
             // test configuration
             // Show_Hide_Screens.setStates(false, false,true);
@@ -215,9 +215,9 @@ public class RobotContainer {
             // Show_Hide_Screens.setStates(false, true, true);
 
             // // competition configuration
-            Show_Hide_Screens.setStates(true, false, true);
+            Show_Hide_Screens.setStates(true, true, true);
 
-            // all configuration
+            // all configurati
             // Show_Hide_Screens.setStates(true, true, true);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,

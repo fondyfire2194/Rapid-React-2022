@@ -15,8 +15,7 @@
       },
       "Trajectories": {
         "open": true
-      },
-      "open": true
+      }
     },
     "troubleshooting": {
       "open": true
@@ -146,12 +145,15 @@
       "/Shuffleboard/SetupTurret/Turret/StopTurret": "Command",
       "/Shuffleboard/SetupTurret/Turret/Vision Off": "Command",
       "/Shuffleboard/SetupTurret/Turret/Vision On": "Command",
+      "/Shuffleboard/Trajectories/Field": "Field2d",
       "/Shuffleboard/Trajectories/TrajectoryRun/CenterPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/CenterThirdPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/CenterThirdShoot": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/LeftCenterHideOpp": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/LeftPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/LogTrajectoryData": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/NetLogTraj": "Command",
+      "/Shuffleboard/Trajectories/TrajectoryRun/RightFirstPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/RightThirdPickup": "Command",
       "/SmartDashboard/Field": "Field2d"
     }
@@ -318,6 +320,13 @@
       "plots": [
         {
           "height": 1229
+        }
+      ]
+    },
+    "Plot <4>": {
+      "plots": [
+        {
+          "height": 302
         }
       ],
       "window": {

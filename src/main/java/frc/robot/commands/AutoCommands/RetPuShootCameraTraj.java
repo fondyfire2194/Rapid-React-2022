@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
+import frc.robot.commands.MessageCommand;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
@@ -21,6 +22,7 @@ import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Shooter.WaitForTiltTurretInPosition;
+import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Tilt.SetTiltTargetAngle;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
@@ -70,50 +72,45 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                 new SetPresetRPM(shooter, upperRPM),
 
-                                                new SetTiltTargetAngle(tilt, tiltAngle),
-
                                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720,
                                                                 true)),
 
                                 new ParallelCommandGroup(
+                                                new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
+                                                new WaitCommand(2),
 
-                                                new WaitCommand(2)
-                                                                .deadlineWith(new RunActiveIntake(
-                                                                                intake, transport)),
+                                                new RunActiveIntake(
+                                                                intake, transport).withTimeout(timeOut),
                                                 new SequentialCommandGroup(
 
                                                                 new WaitCommand(.25),
 
                                                                 new RunTrajectory(ff, drive, traj))),
 
-                                new ParallelRaceGroup(
+                                race(
+                                                new DoNothing(), // need for parallel
+                                                new RunShooter(shooter)),
 
-                                                new SequentialCommandGroup(
+                                new SequentialCommandGroup(
 
-                                                new WaitForTiltTurretInPosition(tilt, turret).withTimeout(timeOut),
+                                                new WaitForTiltTurretInPosition(tilt, turret)
+                                                                .withTimeout(timeOut),
 
-                                                                new AltShootCargo(
-                                                                                shooter,
-                                                                                transport,
-                                                                                intake,
-                                                                                ll).withTimeout(timeOut),
+                                                new AltShootCargo(
+                                                                shooter,
+                                                                transport,
+                                                                intake,
+                                                                ll).withTimeout(timeOut),
 
-                                                                new WaitCommand(.2),
+                                                new WaitCommand(.2),
 
-                                                                new AltShootCargo(
-                                                                                shooter,
-                                                                                transport,
-                                                                                intake,
-                                                                                ll).withTimeout(timeOut),
+                                                new AltShootCargo(
+                                                                shooter,
+                                                                transport,
+                                                                intake,
+                                                                ll).withTimeout(timeOut),
 
-                                                                new WaitCommand(1)),
-
-                                                new RunShooter(shooter))
-
-                                                                .deadlineWith(new PositionHoldTiltTurret(
-                                                                                tilt,
-                                                                                turret,
-                                                                                ll)),
+                                                new WaitCommand(1)),
 
                                 new ParallelCommandGroup(
 
@@ -124,7 +121,7 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                 new PositionTurret(
                                                                 turret,
-                                                                0).withTimeout(2)));
+                                                                0).withTimeout(timeOut)));
 
         }
 }

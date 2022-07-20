@@ -129,12 +129,12 @@ public class FondyFireTrajectory {
 
         public final Pose2d rightCargoAutoStart = new Pose2d(7.63, 1.9, Rotation2d.fromDegrees(-90));
 
-        final Pose2d rightCargoFirstPickup = new Pose2d(7.63, .62, Rotation2d.fromDegrees(-90));
- 
-        final Pose2d leftCenterOppHideAutoStart = new Pose2d(6.94, 3.97, Rotation2d.fromDegrees(23));
+        final Pose2d rightCargoFirstPickup = new Pose2d(7.63, .75, Rotation2d.fromDegrees(-90));
+
+        final Pose2d leftCenterOppHideAutoStart = new Pose2d(6.09, 3.97, Rotation2d.fromDegrees(23));
 
         final Pose2d leftCenterOppHideCargoRev = new Pose2d(4.53, 3.28, Rotation2d.fromDegrees(23));
- 
+
         public Trajectory rightThirdCargoPickupRev1;
 
         public Trajectory rightFirstCargoPickup;
@@ -179,7 +179,7 @@ public class FondyFireTrajectory {
                                 centerAutoStartRev,
                                 List.of(),
                                 centerCargoRev,
-                                withSpeedAndAcceleration(.75, .25)
+                                withSpeedAndAcceleration(.5, .25)
                                                 .setReversed(true));
 
                 centerHide = TrajectoryGenerator.generateTrajectory(
@@ -219,12 +219,10 @@ public class FondyFireTrajectory {
                                 leftCenterOppHideAutoStart,
                                 List.of(),
                                 leftCenterOppHideCargoRev,
-                                withSpeedAndAcceleration(1, .25)
+                                withSpeedAndAcceleration(.75, .25)
                                                 .setReversed(true));
- 
- 
- 
-                                ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
+
+                ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(5, 0)
                                 .withSize(2, 3)
                                 .withProperties(Map.of("Label position", "LEFT")); // labels for
@@ -240,11 +238,9 @@ public class FondyFireTrajectory {
                 trajCommands.add("RightThirdPickup", new RunTrajectory(this, drive, rightThirdCargoPickupRev1));
 
                 trajCommands.add("RightFirstPickup", new RunTrajectory(this, drive, rightFirstCargoPickup));
-  
-                trajCommands.add("LeftCenterHideOpp", new RunTrajectory(this, drive,leftCenterOppHideRev ));
- 
- 
- 
+
+                trajCommands.add("LeftCenterHideOpp", new RunTrajectory(this, drive, leftCenterOppHideRev));
+
                 ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
                                 .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7, 0)
                                 .withSize(2, 4)
@@ -265,6 +261,8 @@ public class FondyFireTrajectory {
                 trajInfo.addNumber("LeftVolts", () -> drive.leftVolts);
 
                 trajInfo.addNumber("RightVolts", () -> drive.rightVolts);
+
+                trajInfo.addString("LHC", () -> leftHideRev.toString());
 
                 ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
 
