@@ -14,6 +14,8 @@ import frc.robot.commands.Intakes.IntakeToShootPosition;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
+import frc.robot.commands.RobotDrive.ArcadeDrive;
+import frc.robot.commands.RobotDrive.StopRobot;
 import frc.robot.commands.RobotDrive.TurnToAngle;
 import frc.robot.commands.Shooter.CheckCargoAtShoot;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -44,8 +46,7 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
         /** Creates a new LRetPuShoot. */
         public LeftHideOppCargo(IntakesSubsystem intake, RevDrivetrain drive,
-                        CargoTransportSubsystem transport, RevShooterSubsystem shooter, FondyFireTrajectory fftraj
-                        ) {
+                        CargoTransportSubsystem transport, RevShooterSubsystem shooter, FondyFireTrajectory fftraj) {
                 addRequirements(intake, drive, transport, shooter);
                 // Use addRequirements() here to declare subsystem dependencies.
 
@@ -66,41 +67,41 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                                 new TurnToAngle(drive, pickUpAngle)
 
-                                                .andThen(() -> drive.stop()).withTimeout(timeOut),
+                                                .andThen(() -> drive.rotate(0)).withTimeout(timeOut),
+                                sequence(
+                                                new WaitCommand(1).deadlineWith(new StopRobot(drive),
 
-                                new WaitCommand(.02),
+                                                                new RotatePose(drive),
 
-                                new RotatePose(drive),
+                                                                // new CreateTrajectory(drive, fftraj,
+                                                                //                 fftraj.leftHideRev,
+                                                                //                 fftraj.leftOppCargoRev, true),
 
-                                new WaitCommand(.02),
+                                                                new WaitCommand(.1))),
 
-                                new CreateTrajectory(drive, fftraj, fftraj.leftHideRev, fftraj.leftOppCargoRev, true),
-                                
-                                new WaitCommand(.02),
-                                
                                 parallel(
 
-                                                new IntakeToShootPosition(intake, transport).withTimeout(timeOut),
-                                             
+                                                new IntakeToShootPosition(intake, transport)
+                                                                .withTimeout(timeOut),
+
                                                 fftraj.getRamsete(fftraj.leftHideRev).andThen(
                                                                 () -> drive.tankDriveVolts(0, 0))),
 
                                 new WaitCommand(.02),
 
-                                // new ResetGyro(drive),
-
                                 new TurnToAngle(drive, shootAngle).andThen(() -> drive.stop()),
 
-                                new WaitCommand(.02),
+                                sequence(
 
-                                new RotatePose(drive),
+                                                new WaitCommand(5).deadlineWith(new StopRobot(drive)),
 
+                                                new RotatePose(drive)),
 
+                                new RunCargoOutShooter(shooter, intake, transport, 700)
 
-                                race(
-                                                new RunCargoOutShooter(shooter, intake, transport, 700),
-                                                // new ResetEncoders(drive),
-                                                new WaitCommand(2)));
+                                                .raceWith(
+                                                                // new ResetEncoders(drive),
+                                                                new WaitCommand(2)));
 
         }
 }

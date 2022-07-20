@@ -60,7 +60,8 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
 
                                 new WaitCommand(.02),
 
-                                new CreateTrajectory(drive, fftraj, fftraj.centerHide, fftraj.centerHideOppCargo, false),
+                                new CreateTrajectory(drive, fftraj, fftraj.centerHide, fftraj.centerHideOppCargo,
+                                                false),
 
                                 new WaitCommand(.02),
 
@@ -73,10 +74,11 @@ public class CenterHideOppCargo extends SequentialCommandGroup {
 
                                 new WaitCommand(.02),
 
-                                race(
-                                                new RunCargoOutShooter(shooter, intake, transport, 700),
+                                new RunCargoOutShooter(shooter, intake, transport, 700)
 
-                                                new WaitCommand(3)));
+                                                .raceWith(
+
+                                                                new WaitCommand(3)));
 
         }
 }

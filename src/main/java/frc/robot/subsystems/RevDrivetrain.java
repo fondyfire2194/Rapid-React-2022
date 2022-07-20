@@ -148,8 +148,11 @@ public class RevDrivetrain extends SubsystemBase {
 
         mLeftVel.setFF(.0);
         mLeftVel.setP(.025, 0);
+        mLeftVel.setD(.00001, 0);
+  
         mRightVel.setFF(.0);
         mRightVel.setP(.025, 0);
+        mRightVel.setD(.00001, 0);
 
         mLeftVel.setOutputRange(-.25, .25, VELOCITY_SLOT);
         mRightVel.setOutputRange(-.25, .25, VELOCITY_SLOT);
@@ -527,6 +530,10 @@ public class RevDrivetrain extends SubsystemBase {
         else
 
             m_simAngle.set(0);
+    }
+
+    public boolean isRotating(){
+        return mGyro.isRotating();
     }
 
     public void resetOdometry(Pose2d pose) {

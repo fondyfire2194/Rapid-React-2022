@@ -103,6 +103,8 @@ public class RevTiltSubsystem extends SubsystemBase {
     // .identifyPositionSystem(.1, 0.001);
     // LinearSystemSim<N2, N1, N1> m_tiltSim = new LinearSystemSim<>(m_tilt);
 
+    public boolean positionRunning;
+
     public RevTiltSubsystem() {
         m_motor = new CANSparkMaxWithSim(CANConstants.TILT_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
         mEncoder = m_motor.getEncoder();

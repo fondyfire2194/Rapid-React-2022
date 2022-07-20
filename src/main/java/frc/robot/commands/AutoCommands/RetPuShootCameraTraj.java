@@ -76,41 +76,43 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
                                                                 true)),
 
                                 new ParallelCommandGroup(
-                                                new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
+                                                // new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
+                                                new SetTiltTargetAngle(tilt, tiltAngle),
                                                 new WaitCommand(2),
 
                                                 new RunActiveIntake(
                                                                 intake, transport).withTimeout(timeOut),
+
                                                 new SequentialCommandGroup(
 
                                                                 new WaitCommand(.25),
 
-                                                                new RunTrajectory(ff, drive, traj))),
+                                                                new RunTrajectory(ff, drive, traj))).deadlineWith(
+                                                                                new PositionHoldTiltTurret(tilt, turret,
+                                                                                                ll)),
 
-                                race(
-                                                new DoNothing(), // need for parallel
-                                                new RunShooter(shooter)),
+                                new RunShooter(shooter).raceWith(
 
-                                new SequentialCommandGroup(
+                                                new SequentialCommandGroup(
 
-                                                new WaitForTiltTurretInPosition(tilt, turret)
-                                                                .withTimeout(timeOut),
+                                                                new WaitForTiltTurretInPosition(tilt, turret)
+                                                                                .withTimeout(timeOut),
 
-                                                new AltShootCargo(
-                                                                shooter,
-                                                                transport,
-                                                                intake,
-                                                                ll).withTimeout(timeOut),
+                                                                new AltShootCargo(
+                                                                                shooter,
+                                                                                transport,
+                                                                                intake,
+                                                                                ll).withTimeout(timeOut),
 
-                                                new WaitCommand(.2),
+                                                                new WaitCommand(.2),
 
-                                                new AltShootCargo(
-                                                                shooter,
-                                                                transport,
-                                                                intake,
-                                                                ll).withTimeout(timeOut),
+                                                                new AltShootCargo(
+                                                                                shooter,
+                                                                                transport,
+                                                                                intake,
+                                                                                ll).withTimeout(timeOut),
 
-                                                new WaitCommand(1)),
+                                                                new WaitCommand(1))),
 
                                 new ParallelCommandGroup(
 

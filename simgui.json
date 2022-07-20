@@ -132,6 +132,7 @@
       "/Shuffleboard/SetupShooter/MAXRPM 5500/Start Shooter": "Command",
       "/Shuffleboard/SetupShooter/MAXRPM 5500/Stop Shoot": "Command",
       "/Shuffleboard/SetupShooter/MAXRPM 5500/StopTopRoll": "Command",
+      "/Shuffleboard/SetupShooter/MAXRPM 5500/TestColorMismatch": "Command",
       "/Shuffleboard/SetupShooter/ShooterValues1/Cmd": "Subsystem",
       "/Shuffleboard/SetupTilt/Tilt/ClearFaults": "Command",
       "/Shuffleboard/SetupTilt/Tilt/Cmd": "Subsystem",
@@ -262,8 +263,7 @@
           "Position To -20": {
             "open": true
           }
-        },
-        "open": true
+        }
       },
       "Trajectories": {
         "TrajectoryInfo": {
@@ -335,7 +335,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <2>": {
       "plots": [
@@ -346,6 +349,60 @@
       "window": {
         "visible": false
       }
+    },
+    "Plot <3>": {
+      "plots": [
+        {
+          "height": -37,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/left_measurement"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/left_reference"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <4>": {
+      "plots": [
+        {
+          "height": 693,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/traj_x"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/troubleshooting/traj_y"
+            }
+          ]
+        }
+      ]
     }
   }
 }

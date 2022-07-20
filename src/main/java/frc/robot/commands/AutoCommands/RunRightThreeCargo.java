@@ -48,7 +48,7 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
                 // addCommands(new FooCommand(), new BarCommand());
                 double timeOut = 15;
                 double rpm = 2500;
-
+double noCargoTimeout =6;
                 if (RobotBase.isSimulation())
                         timeOut = 1;
                 addCommands(
@@ -67,14 +67,13 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
                                                 // .withTimeout(timeOut),
                                                 new PositionTilt(tilt, ShooterRangeConstants.tiltRange3)
                                                                 .withTimeout(timeOut),
+
                                                 new SetFrontIntakeActive(intake, false),
 
-                                                new RunActiveIntake(intake, transport).withTimeout(timeOut)),
+                                                new RunActiveIntake(intake, transport).withTimeout(noCargoTimeout)),
 
-                                race(
-                                                new RunShooter(shooter),
-                                                new DoNothing(),
-                                                              
+                                new RunShooter(shooter).raceWith(
+
                                                 sequence(
 
                                                                 new WaitForTiltTurretInPosition(tilt, turret)

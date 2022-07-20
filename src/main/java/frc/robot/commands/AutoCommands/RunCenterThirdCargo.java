@@ -15,6 +15,7 @@ import frc.robot.commands.Intakes.IntakeToShootPosition;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.WaitForTiltTurretInPosition;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
@@ -59,32 +60,21 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
                                                 new SetUpLimelightForTarget(ll,
                                                                 PipelinesConstants.noZoom960720,
                                                                 true),
-                                                                
+
                                                 new SetFrontIntakeActive(intake, false)),
 
-                                                new IntakeToShootPosition(intake, transport),
+                                new IntakeToShootPosition(intake, transport),
 
-                                                
-                                                new SetUpLimelightForTarget(ll,
-                                                                PipelinesConstants.noZoom960720,
-                                                                true),
+                                new SetUpLimelightForTarget(ll,
+                                                PipelinesConstants.noZoom960720,
+                                                true),
 
-                                race(
-                                                new RunShooter(shooter),
-                                                new DoNothing(),
+                                new RunShooter(shooter).raceWith(
 
                                                 sequence(
-                                                                new WaitCommand(2),
-                                                                // new WaitForTiltTurretInPosition(tilt, turret)
-                                                                // .withTimeout(timeOut),
 
-                                                                // new AltShootCargo(
-                                                                // shooter,
-                                                                // transport,
-                                                                // intake,
-                                                                // ll).withTimeout(timeOut),
-
-                                                                // new WaitCommand(.4),
+                                                                new WaitForTiltTurretInPosition(tilt, turret)
+                                                                                .withTimeout(timeOut),
 
                                                                 new AltShootCargo(
                                                                                 shooter,

@@ -7,6 +7,8 @@
 package frc.robot.commands.RobotDrive;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.RevDrivetrain;
@@ -23,6 +25,9 @@ public class TurnToAngle extends PIDCommand {
    * @param targetAngleDegrees The angle to turn to
    * @param drive              The drive subsystem to use
    */
+
+  Debouncer inPosnDebouncer = new Debouncer(5, DebounceType.kRising);
+
   public TurnToAngle(RevDrivetrain drive, double targetAngleDegrees) {
 
     super(
@@ -37,7 +42,7 @@ public class TurnToAngle extends PIDCommand {
         drive);
 
     getController().setSetpoint(targetAngleDegrees); // Set the controller to be continuous
-                                                                          // (because it is an angle controller)
+                                                     // (because it is an angle controller)
     getController().enableContinuousInput(-180, 180);
     // Set the controller tolerance - the delta tolerance ensures the robot is
     // stationary at the
@@ -58,6 +63,7 @@ public class TurnToAngle extends PIDCommand {
   @Override
   public boolean isFinished() {
     // End when the controller is at the reference.
-    return getController().atSetpoint();
+    return inPosnDebouncer.calculate(getController().atSetpoint());
+
   }
 }
