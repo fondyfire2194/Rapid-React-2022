@@ -95,7 +95,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer = new RobotContainer();
 
-    getAllianceColorBlue();
+   
 
     Shuffleboard.selectTab("Pre-Round");
 
@@ -127,7 +127,7 @@ public class Robot extends TimedRobot {
     loopCtr++;
 
     SmartDashboard.putNumber("LPCTRA", loopCtr);
-
+    getAllianceColorBlue();
   }
 
   /**
@@ -331,9 +331,10 @@ public class Robot extends TimedRobot {
 
         data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
 
-        data[3] = 0;// turret will be locked to Limelight
+        data[3] = 1;// turret will be locked to Limelight
 
         data[4] = 2700;
+
         m_autonomousCommand = new SequentialCommandGroup(
 
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),

@@ -200,7 +200,17 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     cargoIsRed = getCargoIsRed();
 
-    return getCargoAtShoot() && ((getAllianceBlue() && cargoIsRed)
+    SmartDashboard.putBoolean("Blue", cargoIsBlue);
+
+    SmartDashboard.putBoolean("Red", cargoIsRed);
+
+    SmartDashboard.putBoolean("Alliance", getAllianceBlue());
+
+    
+
+    
+
+    return ((getAllianceBlue() && cargoIsRed)
 
         || (!getAllianceBlue() && cargoIsBlue));
   }

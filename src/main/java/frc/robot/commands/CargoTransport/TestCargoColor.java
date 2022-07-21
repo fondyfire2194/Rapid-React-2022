@@ -4,18 +4,22 @@
 
 package frc.robot.commands.CargoTransport;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.CargoTransportSubsystem;
+import frc.robot.subsystems.RevShooterSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TestCargoColor extends InstantCommand {
   private CargoTransportSubsystem m_transport;
+  private RevShooterSubsystem m_shooter;
 
-  public TestCargoColor(CargoTransportSubsystem transport) {
+  public TestCargoColor(CargoTransportSubsystem transport,RevShooterSubsystem shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_transport = transport;
+    m_shooter=shooter;
   }
 
   // Called when the command is initially scheduled.
@@ -23,5 +27,6 @@ public class TestCargoColor extends InstantCommand {
   public void initialize() {
    m_transport.wrongCargoColor= m_transport.getCargoAllianceMisMatch();
 
+   m_shooter.wrongCargoColor=m_transport.wrongCargoColor;
   }
 }

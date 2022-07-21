@@ -92,7 +92,7 @@ public class FondyFireTrajectory {
         // LEFT
 
         public Pose2d leftCargoRev = new Pose2d(5.14, 6.07, Rotation2d.fromDegrees(-35));
-   
+
         public Pose2d leftOppCargoRev = new Pose2d(6.01, 7.24, Rotation2d.fromDegrees(-135));
 
         public Pose2d leftAutoStartRev = new Pose2d(6.13, 5.23, Rotation2d.fromDegrees(-41.5));
@@ -103,7 +103,7 @@ public class FondyFireTrajectory {
 
         // CENTER
 
-        public Pose2d centerAutoStartRev = new Pose2d(6.06, 3.86, Rotation2d.fromDegrees(+22));
+        public Pose2d centerAutoStartRev = new Pose2d(6.56, 2.71, Rotation2d.fromDegrees(+28.4));
 
         public Pose2d centerHideOppCargo = new Pose2d(4.39, 3.38, Rotation2d.fromDegrees(+132));
 
@@ -131,7 +131,7 @@ public class FondyFireTrajectory {
 
         final Pose2d rightCargoFirstPickup = new Pose2d(7.63, .75, Rotation2d.fromDegrees(-90));
 
-        final Pose2d leftCenterOppHideAutoStart = new Pose2d(6.07, 3.86, Rotation2d.fromDegrees(21.5));
+        final Pose2d leftCenterOppHideAutoStart = new Pose2d(6.08, 4.30, Rotation2d.fromDegrees(32.6));
 
         final Pose2d leftCenterOppHideCargoRev = new Pose2d(4.53, 3.28, Rotation2d.fromDegrees(24));
 
@@ -282,8 +282,8 @@ public class FondyFireTrajectory {
                                                 clamp(maxSpeedPercent, 0, 1),
                                 DriveConstants.kMaxTrajectoryAccelerationMetersPerSquared *
                                                 clamp(maxAccelerationPercent, 0, 1.5))
-                                                                .setKinematics(DriveConstants.kDriveKinematics)
-                                                                .addConstraint(autoVoltageConstraint);
+                                .setKinematics(DriveConstants.kDriveKinematics)
+                                .addConstraint(autoVoltageConstraint);
         }
 
         public double clamp(double value, double low, double high) {

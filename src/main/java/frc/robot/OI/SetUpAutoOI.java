@@ -112,7 +112,7 @@ public class SetUpAutoOI {
                         compet4.addNumber("TUAngle", () -> turret.getAngle());
                         compet4.addNumber("Visiondistance", () -> shooter.calculatedCameraDistance);
                         compet4.addBoolean("LLHasTarget", () -> ll.getIsTargetFound());
-                        compet4.addBoolean("WrongColor", () -> shooter.wrongCargoColor);
+                        compet4.addBoolean("WrongColor", () -> transport.wrongCargoColor);
 
                         ShuffleboardTab llFeed = Shuffleboard.getTab("Competition");
 

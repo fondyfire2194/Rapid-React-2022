@@ -321,7 +321,7 @@ public class SetUpOI {
 
                         shooterCommands.add("StopTopRoll", new StopTopRoller(shooter));
 
-                        shooterCommands.add("TestColorMismatch", new TestCargoColor(transport));
+                        shooterCommands.add("TestColorMismatch", new TestCargoColor(transport,shooter));
                         
                         ShuffleboardLayout shooterValues = Shuffleboard.getTab("SetupShooter")
                                         .getLayout("ShooterValues", BuiltInLayouts.kList).withPosition(2, 0)
@@ -352,6 +352,8 @@ public class SetUpOI {
                         shooterValues.addBoolean("CargoAtShoot", () -> transport.getCargoAtShoot());
                         shooterValues1.addBoolean("TuneOn", () -> (shooter.tuneOn && shooter.lastTuneOn));
                         shooterValues1.addBoolean("BothConnected(6,7)", () -> shooter.allConnected);
+                        shooterValues1.addBoolean("BlueCargo", () -> transport.cargoIsBlue);
+                        shooterValues1.addBoolean("RedCargo", () -> transport.cargoIsRed);
                         shooterValues1.add("Cmd", shooter);
 
                         ShuffleboardLayout shooterValues3 = Shuffleboard.getTab("SetupShooter")

@@ -26,7 +26,7 @@ public class TurnToAngle extends PIDCommand {
    * @param drive              The drive subsystem to use
    */
 
-  Debouncer inPosnDebouncer = new Debouncer(5, DebounceType.kRising);
+  Debouncer inPosnDebouncer = new Debouncer(.5, DebounceType.kRising);
 
   public TurnToAngle(RevDrivetrain drive, double targetAngleDegrees) {
 

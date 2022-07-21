@@ -8,22 +8,18 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.MessageCommand;
-import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
+import frc.robot.commands.CargoTransport.TestCargoColor;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
-import frc.robot.commands.Shooter.WaitForTiltTurretInPosition;
 import frc.robot.commands.Tilt.PositionTilt;
-import frc.robot.commands.Tilt.SetTiltTargetAngle;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
@@ -77,7 +73,7 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                 new ParallelCommandGroup(
                                                 // new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
-                                                new SetTiltTargetAngle(tilt, tiltAngle),
+                                                new PositionTilt(tilt, tiltAngle),
                                                 new WaitCommand(2),
 
                                                 new RunActiveIntake(
@@ -87,17 +83,17 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                                 new WaitCommand(.25),
 
-                                                                new RunTrajectory(ff, drive, traj))).deadlineWith(
-                                                                                new PositionHoldTiltTurret(tilt, turret,
-                                                                                                ll)),
+                                                                new RunTrajectory(ff, drive, traj))),
+
+                               
 
                                 new RunShooter(shooter).raceWith(
 
                                                 new SequentialCommandGroup(
 
-                                                                new WaitForTiltTurretInPosition(tilt, turret)
-                                                                                .withTimeout(timeOut),
-
+                                                                // new WaitForTiltTurretInPosition(tilt, turret)
+                                                                //                 .withTimeout(timeOut),
+                                                                new WaitCommand(.4),
                                                                 new AltShootCargo(
                                                                                 shooter,
                                                                                 transport,
@@ -105,6 +101,11 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
                                                                                 ll).withTimeout(timeOut),
 
                                                                 new WaitCommand(.2),
+
+                                                                new TestCargoColor(transport, shooter),
+
+                                                                new WaitCommand(.2),
+                                                            
 
                                                                 new AltShootCargo(
                                                                                 shooter,

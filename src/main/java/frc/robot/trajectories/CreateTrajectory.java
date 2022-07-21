@@ -9,7 +9,6 @@ import java.util.List;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.RevDrivetrain;
 
@@ -23,13 +22,14 @@ public class CreateTrajectory extends InstantCommand {
   private Pose2d m_endPose;
   private boolean m_reverse;
 
-  public CreateTrajectory(RevDrivetrain drive, FondyFireTrajectory fftraj, Trajectory traj, Pose2d endPose,boolean reverse) {
+  public CreateTrajectory(RevDrivetrain drive, FondyFireTrajectory fftraj, Trajectory traj, Pose2d endPose,
+      boolean reverse) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = drive;
     m_fftraj = fftraj;
     m_traj = traj;
     m_endPose = endPose;
-    m_reverse=reverse;
+    m_reverse = reverse;
   }
 
   // Called when the command is initially scheduled.
@@ -43,8 +43,6 @@ public class CreateTrajectory extends InstantCommand {
         m_endPose,
         m_fftraj.withSpeedAndAcceleration(.75, .25)
             .setReversed(m_reverse));
-
-      
 
   }
 }

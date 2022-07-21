@@ -4,20 +4,14 @@
 
 package frc.robot.commands.AutoCommands;
 
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.Intakes.IntakeToShootPosition;
-import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
-import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.StopRobot;
 import frc.robot.commands.RobotDrive.TurnToAngle;
-import frc.robot.commands.Shooter.CheckCargoAtShoot;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevDrivetrain;
@@ -69,13 +63,13 @@ public class LeftHideOppCargo extends SequentialCommandGroup {
 
                                                 .andThen(() -> drive.rotate(0)).withTimeout(timeOut),
                                 sequence(
-                                                new WaitCommand(1).deadlineWith(new StopRobot(drive),
+                                                new WaitCommand(.1).deadlineWith(new StopRobot(drive),
 
                                                                 new RotatePose(drive),
 
-                                                                // new CreateTrajectory(drive, fftraj,
-                                                                //                 fftraj.leftHideRev,
-                                                                //                 fftraj.leftOppCargoRev, true),
+                                                                new CreateTrajectory(drive, fftraj,
+                                                                                fftraj.leftHideRev,
+                                                                                fftraj.leftOppCargoRev, true),
 
                                                                 new WaitCommand(.1))),
 

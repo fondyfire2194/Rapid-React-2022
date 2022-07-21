@@ -137,7 +137,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
 
-        m_reverseLimit.enableLimitSwitch(false);
+        m_reverseLimit.enableLimitSwitch(true);
 
         m_forwardLimit = m_motor.getForwardLimitSwitch(Type.kNormallyClosed);
 
@@ -239,7 +239,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         // }
 
-        lockPIDOut = mLockController.calculate(cameraError, 1);
+        lockPIDOut = mLockController.calculate(cameraError, -1);
 
         double maxAllowedOut = .5;
 

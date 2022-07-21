@@ -165,11 +165,12 @@ public class AltShootCargo extends CommandBase {
 
         m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
 
-        m_shooter.wrongCargoColor = m_transport.wrongCargoColor;
+        if (m_transport.wrongCargoColor)
 
+          m_shooter.wrongCargoColor = true;
       }
-
     }
+
     // no second cargo so end when released cargo is out of shooter
 
     if (!cargoAtShoot && !cargoReleasing && !frontIntakeRunning && !rearIntakeRunning) {
@@ -200,6 +201,7 @@ public class AltShootCargo extends CommandBase {
     m_shooter.isShooting = false;
     m_intake.stopFrontIntakeMotor();
     m_intake.stopRearIntakeMotor();
+    m_shooter.wrongCargoColor=false;
 
   }
 

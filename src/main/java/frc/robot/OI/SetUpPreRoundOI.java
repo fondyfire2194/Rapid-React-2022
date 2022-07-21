@@ -6,7 +6,6 @@ package frc.robot.OI;
 
 import java.util.Map;
 
-import javax.swing.plaf.TreeUI;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
