@@ -76,8 +76,7 @@ double noCargoTimeout =6;
 
                                                 sequence(
 
-                                                                new WaitForTiltTurretInPosition(tilt, turret)
-                                                                                .withTimeout(timeOut),
+                                                                new WaitCommand(2),
 
                                                                 new AltShootCargo(shooter, transport, intake, ll)
                                                                                 .withTimeout(timeOut),

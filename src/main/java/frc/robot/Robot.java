@@ -177,7 +177,7 @@ public class Robot extends TimedRobot {
 
     autoChoice = m_robotContainer.m_preOi.autoChooser.getSelected();
 
-    hideOppCargo = m_robotContainer.m_preOi.hideCargoChooser.getSelected();
+    hideOppCargo = false;//m_robotContainer.m_preOi.hideCargoChooser.getSelected();
 
     LimeLight ll = m_robotContainer.m_limelight;
     RevTiltSubsystem tilt = m_robotContainer.m_tilt;

@@ -73,8 +73,7 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
 
                                                 sequence(
 
-                                                                new WaitForTiltTurretInPosition(tilt, turret)
-                                                                                .withTimeout(timeOut),
+                                                                new WaitCommand(2),
 
                                                                 new AltShootCargo(
                                                                                 shooter,

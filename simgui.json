@@ -186,21 +186,6 @@
           "visible": true
         }
       },
-      "/Shuffleboard/Pre-Round/HidingCargo": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/Shuffleboard/Pre-Round/OppHideTest/LeftOpp": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/Shuffleboard/SetupRobot/Robot/Reset Enc": {
-        "window": {
-          "visible": true
-        }
-      },
       "/Shuffleboard/SetupRobot/Robot/To -1.6": {
         "window": {
           "visible": true
@@ -221,15 +206,10 @@
           "visible": true
         }
       },
-      "/Shuffleboard/Trajectories/TrajectoryRun/RotatePose": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Field": {
         "bottom": 900,
         "height": 8.229599952697754,
-        
+        "image": "C:\\Users\\John\\Desktop\\2022-field.png",
         "left": 74,
         "right": 1774,
         "top": 50,
@@ -286,7 +266,7 @@
               "autoFit": true
             }
           ],
-          "height": -37,
+          "height": -24,
           "series": [
             {
               "color": [
@@ -353,7 +333,7 @@
     "Plot <3>": {
       "plots": [
         {
-          "height": -37,
+          "height": -24,
           "series": [
             {
               "color": [
@@ -380,7 +360,7 @@
     "Plot <4>": {
       "plots": [
         {
-          "height": 693,
+          "height": -24,
           "series": [
             {
               "color": [

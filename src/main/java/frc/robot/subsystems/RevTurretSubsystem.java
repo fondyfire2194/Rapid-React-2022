@@ -108,7 +108,7 @@ public class RevTurretSubsystem extends SubsystemBase {
         m_motor.setOpenLoopRampRate(5);
         m_motor.setClosedLoopRampRate(1);
 
-        m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
+        m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
         m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50);//vel
     
