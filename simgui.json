@@ -35,10 +35,13 @@
       "/Shuffleboard/Pre-Round/Auto Commands": "String Chooser",
       "/Shuffleboard/Pre-Round/Auto Delay": "String Chooser",
       "/Shuffleboard/Pre-Round/HidingCargo": "String Chooser",
+      "/Shuffleboard/Pre-Round/OppHideTest/Center Hide": "Command",
+      "/Shuffleboard/Pre-Round/OppHideTest/LeftHide": "Command",
       "/Shuffleboard/SetupRobot/Robot/ClearFaults": "Command",
       "/Shuffleboard/SetupRobot/Robot/Cmd": "Subsystem",
       "/Shuffleboard/SetupRobot/Robot/Reset Enc": "Command",
       "/Shuffleboard/SetupRobot/Robot/Reset Gyro": "Command",
+      "/Shuffleboard/SetupRobot/Robot/ResetPose": "Command",
       "/Shuffleboard/SetupRobot/Robot/Stop Robot": "Command",
       "/Shuffleboard/SetupRobot/Robot/To -1.6": "Command",
       "/Shuffleboard/SetupRobot/Robot/To -3": "Command",
@@ -96,10 +99,20 @@
           "visible": true
         }
       },
+      "/Shuffleboard/Pre-Round/OppHideTest/Center Hide": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/Pre-Round/OppHideTest/LeftHide": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Field": {
         "bottom": 900,
         "height": 8.229599952697754,
-        "image": "C:\\Users\\User\\Desktop\\2022-field.png",
+        "image": "C:\\Users\\John\\Desktop\\2022-field.png",
         "left": 74,
         "right": 1774,
         "top": 50,

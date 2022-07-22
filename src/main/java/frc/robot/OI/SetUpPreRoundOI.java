@@ -11,8 +11,10 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
-
+import frc.robot.commands.AutoCommands.Common.HideIt;
+import frc.robot.commands.RobotDrive.SetRobotPose;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -74,7 +76,7 @@ public class SetUpPreRoundOI {
                                         .withPosition(3, 0);
 
                         hideCargoChooser.setDefaultOption("No", false);
-                        hideCargoChooser.addOption("Yes",true);
+                        hideCargoChooser.addOption("Yes", true);
 
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
                                         .withPosition(4, 0); //
@@ -91,24 +93,24 @@ public class SetUpPreRoundOI {
                                         .withSize(2, 3)
                                         .withProperties(Map.of("Label position", "LEFT")); // labels for
 
-                        // oppCommands.add("LeftOpp", new LeftHideOppCargo(intake, drive, transport, shooter, fftraj));
+                        oppCommands.add("LeftHide",
 
-                        // oppCommands.add("CenterOpp", new CenterHideOppCargo(intake, drive, transport, shooter, fftraj,
-                        //                 fftraj.centerHide));
+                                        new SequentialCommandGroup(
 
-                        // oppCommands.add("Redo LeftHideTraj", new CreateTrajectory(drive, fftraj,
-                        // fftraj.leftHideRev,
-                        // fftraj.leftOppCargoRev,true));
+                                                        new SetRobotPose(drive, fftraj.leftCargoRev),
 
-                        // oppCommands.add("Redo CenterHideTraj", new CreateTrajectory(drive, fftraj,
-                        // fftraj.centerHide,
-                        // fftraj.centerHideOppCargo,false));    //         oppCommands.add("SetLeftCargoPose", new SetRobotPose(drive, fftraj.leftCargo));
- 
-                //        oppCommands.add("GetHideurnAngle", new GetHideTurnAngle(drive, fftraj, fftraj.leftCargo));
+                                                        new HideIt(drive, fftraj, fftraj.leftCargoRev, true, intake,
+                                                                        transport, turret, 30, shooter, 800)));
+                        oppCommands.add("Center Hide",
 
-                        // oppCommands.add("ResetOd", new ResetPose(drive));
-                                            
-                        // oppCommands.add("RobtPickup", new HideIt(drive, fftraj, fftraj.zeroPose,true));
+                                        new SequentialCommandGroup(
+
+                                                        new SetRobotPose(drive, fftraj.zeroPose),
+
+                                                        new SetRobotPose(drive, fftraj.centerCargoRev),
+
+                                                        new HideIt(drive, fftraj, fftraj.centerCargoRev, false, intake,
+                                                                        transport, turret, 20, shooter, 800)));
 
                 }
 
