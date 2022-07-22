@@ -237,6 +237,8 @@ public class Robot extends TimedRobot {
 
             new SetRobotPose(m_robotContainer.m_drive, fftraj.leftAutoStartRev),
 
+            new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
+
             new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.leftPickupRev, transport, shooter, tilt, turret, ll,
                 comp, data),
 
@@ -283,11 +285,11 @@ public class Robot extends TimedRobot {
 
         data[0] = -1.4;// retract point
 
-        data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
+        data[2] = ShooterRangeConstants.tiltRange3;// tilt 11 deg
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = 2700;
+        data[4] = 2550;
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -423,12 +425,12 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_shooter.shootModeName = FieldMap.shootModeName[m_robotContainer.m_shooter.shootValuesSource];
 
 
-    if(!m_shooter.calcDistRunning)
+    if(!m_robotContainer.m_shooter.calcDistRunning){
     
     new ParallelCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_shooter),
 
         new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();
-
+    }
   }
 
   /**

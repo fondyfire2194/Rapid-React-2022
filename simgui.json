@@ -1,13 +1,4 @@
 {
-  "HALProvider": {
-    "Other Devices": {
-      "SPARK MAX [9]": {
-        "header": {
-          "open": true
-        }
-      }
-    }
-  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -20,32 +11,19 @@
       "/LiveWindow/RevTurretSubsystem": "Subsystem",
       "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
       "/LiveWindow/Ungrouped/DigitalInput[0]": "Digital Input",
-      "/LiveWindow/Ungrouped/PIDController[10]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[11]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[12]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[13]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[14]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[15]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[16]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[17]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[18]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[19]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[20]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[6]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[7]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[8]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[9]": "PIDController",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/LiveWindow/Ungrouped/Talon SRX [13]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [14]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [15]": "Motor Controller",
       "/LiveWindow/Ungrouped/navX-Sensor[2]": "Gyro",
-      "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
       "/Shuffleboard/CanBus/Scheduler/Scheduler": "Scheduler",
       "/Shuffleboard/CanBus/Subs 1/Climber": "Subsystem",
       "/Shuffleboard/CanBus/Subs 1/Drive": "Subsystem",
@@ -54,75 +32,26 @@
       "/Shuffleboard/CanBus/Subs 2/Tilt": "Subsystem",
       "/Shuffleboard/CanBus/Subs 2/Transport": "Subsystem",
       "/Shuffleboard/CanBus/Subs 2/Turret": "Subsystem",
-      "/Shuffleboard/Intake/IntakeActions/ArmLower": "Command",
-      "/Shuffleboard/Intake/IntakeActions/ArmRaise": "Command",
-      "/Shuffleboard/Intake/IntakeActions/IntakeCmd": "Subsystem",
-      "/Shuffleboard/Intake/IntakeActions/Run Motor": "Command",
-      "/Shuffleboard/Intake/IntakeActions/Stop Motor": "Command",
-      "/Shuffleboard/Intake/IntakeSelect/Select Front": "Command",
-      "/Shuffleboard/Intake/IntakeSelect/Select Rear": "Command",
-      "/Shuffleboard/LLVision/Camera/DriverCam": "Command",
-      "/Shuffleboard/LLVision/Camera/MainPIP": "Command",
-      "/Shuffleboard/LLVision/Camera/SecIP": "Command",
-      "/Shuffleboard/LLVision/Camera/SideBySideStream": "Command",
-      "/Shuffleboard/LLVision/Camera/VisionCam": "Command",
-      "/Shuffleboard/LLVision/LEDs/LedsBlink": "Command",
-      "/Shuffleboard/LLVision/LEDs/LedsOff": "Command",
-      "/Shuffleboard/LLVision/LEDs/LedsOn": "Command",
-      "/Shuffleboard/LLVision/LEDs/LedsPipeline": "Command",
-      "/Shuffleboard/LLVision/On-Off/Vision Off": "Command",
-      "/Shuffleboard/LLVision/On-Off/Vision On": "Command",
-      "/Shuffleboard/LLVision/Zoom/2XZoom": "Command",
-      "/Shuffleboard/LLVision/Zoom/3X Zoom": "Command",
-      "/Shuffleboard/LLVision/Zoom/No Zoom": "Command",
       "/Shuffleboard/Pre-Round/Auto Commands": "String Chooser",
       "/Shuffleboard/Pre-Round/Auto Delay": "String Chooser",
-      "/Shuffleboard/Pre-Round/HideCargo": "Command",
       "/Shuffleboard/Pre-Round/HidingCargo": "String Chooser",
-      "/Shuffleboard/Pre-Round/OppHideTest/CenterOpp": "Command",
-      "/Shuffleboard/Pre-Round/OppHideTest/GetHideurnAngle": "Command",
-      "/Shuffleboard/Pre-Round/OppHideTest/LeftOpp": "Command",
-      "/Shuffleboard/Pre-Round/OppHideTest/MoveToOppCargo": "Command",
-      "/Shuffleboard/Pre-Round/OppHideTest/Redo CenterHideTraj": "Command",
-      "/Shuffleboard/Pre-Round/OppHideTest/Redo LeftHideTraj": "Command",
-      "/Shuffleboard/Pre-Round/OppHideTest/RedoHideTraj": "Command",
-      "/Shuffleboard/Pre-Round/OppHideTest/ResetOd": "Command",
-      "/Shuffleboard/Pre-Round/OppHideTest/RobotTurnC2C": "Command",
-      "/Shuffleboard/Pre-Round/OppHideTest/RobtPickup": "Command",
-      "/Shuffleboard/Pre-Round/OppHideTest/RotatePose": "Command",
-      "/Shuffleboard/Pre-Round/OppHideTest/SetLeftCargoPose": "Command",
-      "/Shuffleboard/Pre-Round/OppHideTest/SetPose": "Command",
-      "/Shuffleboard/Pre-Round/OppHideTest/TurnRobot": "Command",
-      "/Shuffleboard/Pre-Round/OppTest/CenterOpp": "Command",
-      "/Shuffleboard/Pre-Round/OppTest/CenterThirdPickup": "Command",
-      "/Shuffleboard/Pre-Round/OppTest/CenterThirdShoot": "Command",
-      "/Shuffleboard/Pre-Round/OppTest/LeftOpp": "Command",
-      "/Shuffleboard/SetupRobot/Robot/By -1": "Command",
-      "/Shuffleboard/SetupRobot/Robot/By 2": "Command",
       "/Shuffleboard/SetupRobot/Robot/ClearFaults": "Command",
       "/Shuffleboard/SetupRobot/Robot/Cmd": "Subsystem",
       "/Shuffleboard/SetupRobot/Robot/Reset Enc": "Command",
       "/Shuffleboard/SetupRobot/Robot/Reset Gyro": "Command",
       "/Shuffleboard/SetupRobot/Robot/Stop Robot": "Command",
-      "/Shuffleboard/SetupRobot/Robot/To -1": "Command",
       "/Shuffleboard/SetupRobot/Robot/To -1.6": "Command",
       "/Shuffleboard/SetupRobot/Robot/To -3": "Command",
       "/Shuffleboard/SetupRobot/Robot/To 0": "Command",
       "/Shuffleboard/SetupRobot/Robot/To 2": "Command",
       "/Shuffleboard/SetupRobot/Robot/To 3": "Command",
-      "/Shuffleboard/SetupRobot/Robot1/GetCurrentPose": "Command",
-      "/Shuffleboard/SetupRobot/Robot1/GetSavedPose": "Command",
-      "/Shuffleboard/SetupRobot/Robot1/SavePose": "Command",
-      "/Shuffleboard/SetupRobot/Robot1/SetPose": "Command",
       "/Shuffleboard/SetupRobot/Robot1/Turn To -90": "Command",
       "/Shuffleboard/SetupRobot/Robot1/Turn To 90": "Command",
       "/Shuffleboard/SetupRobot/Robot1/Turn To LHideOpp": "Command",
       "/Shuffleboard/SetupRobot/Robot1/TurnTo -45": "Command",
-      "/Shuffleboard/SetupRobot/Robot1/TurnTo -90": "Command",
       "/Shuffleboard/SetupRobot/Robot1/TurnTo 0": "Command",
       "/Shuffleboard/SetupRobot/Robot1/TurnTo 180": "Command",
       "/Shuffleboard/SetupRobot/Robot1/TurnTo 45": "Command",
-      "/Shuffleboard/SetupRobot/Robot1/TurnTo 90": "Command",
       "/Shuffleboard/SetupShooter/MAXRPM 5500/ClearFaults": "Command",
       "/Shuffleboard/SetupShooter/MAXRPM 5500/RunShooterFromThrottle": "Command",
       "/Shuffleboard/SetupShooter/MAXRPM 5500/RunTopRoll": "Command",
@@ -138,9 +67,6 @@
       "/Shuffleboard/SetupTilt/Tilt/Position To Entry": "Command",
       "/Shuffleboard/SetupTilt/Tilt/PositionToSwitch": "Command",
       "/Shuffleboard/SetupTilt/Tilt/StopTilt": "Command",
-      "/Shuffleboard/SetupTransport/TransportValues/Cmd": "Subsystem",
-      "/Shuffleboard/SetupTransport/TransportValues/StartLowRoll": "Command",
-      "/Shuffleboard/SetupTransport/TransportValues/StopLowRoll": "Command",
       "/Shuffleboard/SetupTurret/Turret/ClearFaults": "Command",
       "/Shuffleboard/SetupTurret/Turret/Cmd": "Subsystem",
       "/Shuffleboard/SetupTurret/Turret/Position To -20": "Command",
@@ -150,42 +76,17 @@
       "/Shuffleboard/SetupTurret/Turret/StopTurret": "Command",
       "/Shuffleboard/SetupTurret/Turret/Vision Off": "Command",
       "/Shuffleboard/SetupTurret/Turret/Vision On": "Command",
-      "/Shuffleboard/Trajectories/Field": "Field2d",
       "/Shuffleboard/Trajectories/TrajectoryRun/CenterPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/CenterThirdPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/CenterThirdShoot": "Command",
-      "/Shuffleboard/Trajectories/TrajectoryRun/CleaPlot": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/LeftCenterHideOpp": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/LeftPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/RightFirstPickup": "Command",
       "/Shuffleboard/Trajectories/TrajectoryRun/RightThirdPickup": "Command",
-      "/Shuffleboard/Trajectories/TrajectoryRun/RotatePose": "Command",
-      "/Shuffleboard/Trajectories/TrajectorySetStart/CenterPickuptSetStart": "Command",
-      "/Shuffleboard/Trajectories/TrajectorySetStart/CenterThirdPickupSetStart": "Command",
-      "/Shuffleboard/Trajectories/TrajectorySetStart/CenterThirdShootSetStart": "Command",
-      "/Shuffleboard/Trajectories/TrajectorySetStart/LeftPickuptSetStart": "Command",
-      "/Shuffleboard/Trajectories/TrajectorySetStart/RightThirdPickupSetStart": "Command",
-      "/Shuffleboard/Trajectories/TrajectoryTest/CenterThirdPickup": "Command",
-      "/Shuffleboard/Trajectories/TrajectoryTest/CenterThirdPickupsetStart": "Command",
-      "/Shuffleboard/Trajectories/TrajectoryTest/CenterThirdShoot": "Command",
-      "/Shuffleboard/Trajectories/TrajectoryTest/CenterThirdShootSetStart": "Command",
-      "/Shuffleboard/Trajectories/TrajectoryTest/LogTraj": "Command",
-      "/Shuffleboard/Trajectories/TrajectoryTest/RightThirdPickup": "Command",
-      "/Shuffleboard/Trajectories/TrajectoryTest/RightThirdPickupSetStart": "Command",
       "/SmartDashboard/Field": "Field2d"
     },
     "windows": {
-      "/Shuffleboard/CanBus/Scheduler/Scheduler": {
-        "window": {
-          "visible": true
-        }
-      },
       "/Shuffleboard/Pre-Round/Auto Commands": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/Shuffleboard/Pre-Round/Auto Delay": {
         "window": {
           "visible": true
         }
@@ -198,7 +99,7 @@
       "/SmartDashboard/Field": {
         "bottom": 900,
         "height": 8.229599952697754,
-        "image": "C:\\Users\\John\\Desktop\\2022-field.png",
+        "image": "C:\\Users\\User\\Desktop\\2022-field.png",
         "left": 74,
         "right": 1774,
         "top": 50,
@@ -210,198 +111,17 @@
     }
   },
   "NetworkTables": {
-    "FMSInfo": {
-      "open": true
-    },
-    "LiveWindow": {
-      ".status": {
-        "open": true
-      }
-    },
     "Shuffleboard": {
-      "Competition": {
-        "Values": {
-          "open": false
-        }
-      },
       "Pre-Round": {
-        "OppHideTest": {
-          "SetLeftCargoPose": {
-            "open": true
-          },
-          "open": true
-        }
-      },
-      "SetupRobot": {
-        "RobotValues": {
+        "Auto Commands": {
           "open": true
         },
         "open": true
       },
-      "SetupTilt": {
-        "TiltValues": {
-          "open": true
-        },
-        "VActGains": {
-          "open": true
-        }
-      },
-      "SetupTurret": {
-        "Turret": {
-          "Cmd": {
-            "open": true
-          },
-          "Position To -20": {
-            "open": true
-          }
-        }
-      },
-      "Trajectories": {
-        "TrajectoryInfo": {
-          "open": true
-        }
-      },
-      "open": true
-    },
-    "troubleshooting": {
       "open": true
     }
   },
-  "Plot": {
-    "Plot <0>": {
-      "plots": [
-        {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
-          "height": 39,
-          "series": [
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/troubleshooting/left_error"
-            },
-            {
-              "color": [
-                0.3333333432674408,
-                0.658823549747467,
-                0.4078431725502014,
-                1.0
-              ],
-              "id": "NT:/troubleshooting/right_error"
-            }
-          ]
-        }
-      ],
-      "window": {
-        "visible": false
-      }
-    },
-    "Plot <1>": {
-      "plots": [
-        {
-          "height": 723,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/troubleshooting/left_measurement"
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/troubleshooting/left_reference"
-            }
-          ]
-        }
-      ],
-      "window": {
-        "visible": false
-      }
-    },
-    "Plot <2>": {
-      "plots": [
-        {
-          "height": 669
-        }
-      ],
-      "window": {
-        "visible": false
-      }
-    },
-    "Plot <3>": {
-      "plots": [
-        {
-          "height": 19,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/troubleshooting/left_measurement"
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/troubleshooting/left_reference"
-            }
-          ]
-        }
-      ],
-      "window": {
-        "visible": false
-      }
-    },
-    "Plot <4>": {
-      "plots": [
-        {
-          "height": 26,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/troubleshooting/traj_x"
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/troubleshooting/traj_y"
-            }
-          ]
-        }
-      ],
-      "window": {
-        "visible": false
-      }
-    }
+  "NetworkTables View": {
+    "visible": false
   }
 }

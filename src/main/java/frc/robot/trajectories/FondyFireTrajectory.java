@@ -104,7 +104,7 @@ public class FondyFireTrajectory {
 
         // CENTER
 
-        public Pose2d centerAutoStartRev = new Pose2d(6.56, 2.71, Rotation2d.fromDegrees(+28.4));
+        public Pose2d centerAutoStartRev = new Pose2d(6.64, 2.66, Rotation2d.fromDegrees(+28));
 
         public Pose2d centerHideOppCargo = new Pose2d(4.39, 3.38, Rotation2d.fromDegrees(+132));
 
