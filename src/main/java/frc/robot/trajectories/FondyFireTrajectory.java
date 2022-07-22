@@ -90,8 +90,9 @@ public class FondyFireTrajectory {
                         .getEntry("traj_name");
 
         // LEFT
-
-        public Pose2d leftCargoRev = new Pose2d(5.14, 6.07, Rotation2d.fromDegrees(-35));
+        public Pose2d zeroPose = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
+        public Pose2d leftCargoRev = new Pose2d(4.85, 6.27, Rotation2d.fromDegrees(-35));
+        public Pose2d leftCargo = new Pose2d(4.85, 6.27, Rotation2d.fromDegrees(145));
 
         public Pose2d leftOppCargoRev = new Pose2d(6.01, 7.24, Rotation2d.fromDegrees(-135));
 
@@ -109,13 +110,13 @@ public class FondyFireTrajectory {
 
         final Pose2d centerCargo3Shoot = new Pose2d(5.2, 1.9, Rotation2d.fromDegrees(45));
 
-        final Pose2d centerCargoRev = new Pose2d(5.13, 1.94, Rotation2d.fromDegrees(+37.));
+        public Pose2d centerCargoRev = new Pose2d(5.13, 1.94, Rotation2d.fromDegrees(37.));
 
-        final Pose2d centerCargo = new Pose2d(5.13, 1.94, Rotation2d.fromDegrees(37.));
+        public Pose2d centerCargo = new Pose2d(5.13, 1.94, Rotation2d.fromDegrees(37.));
 
-        final Pose2d centerThirdCargoGet = new Pose2d(2.36, .75, Rotation2d.fromDegrees(45));
+        public Pose2d centerThirdCargoGet = new Pose2d(2.36, .75, Rotation2d.fromDegrees(45));
 
-        final Pose2d centerThirdCargoGetRev = new Pose2d(2.36, .75, Rotation2d.fromDegrees(+45));
+        public Pose2d centerThirdCargoGetRev = new Pose2d(2.36, .75, Rotation2d.fromDegrees(+45));
 
         public Trajectory centerFirstPickUpRev;
 
@@ -282,8 +283,8 @@ public class FondyFireTrajectory {
                                                 clamp(maxSpeedPercent, 0, 1),
                                 DriveConstants.kMaxTrajectoryAccelerationMetersPerSquared *
                                                 clamp(maxAccelerationPercent, 0, 1.5))
-                                .setKinematics(DriveConstants.kDriveKinematics)
-                                .addConstraint(autoVoltageConstraint);
+                                                                .setKinematics(DriveConstants.kDriveKinematics)
+                                                                .addConstraint(autoVoltageConstraint);
         }
 
         public double clamp(double value, double low, double high) {

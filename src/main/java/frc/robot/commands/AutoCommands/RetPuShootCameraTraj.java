@@ -73,7 +73,7 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                 new ParallelCommandGroup(
                                                 // new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
-                                                new PositionTilt(tilt, tiltAngle),
+                                                new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
                                                 new WaitCommand(2),
 
                                                 new RunActiveIntake(
@@ -102,7 +102,7 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                                 new WaitCommand(.2),
 
-                                                                new TestCargoColor(transport, shooter),
+                                                                new TestCargoColor(transport, shooter).withTimeout(timeOut),
 
                                                                 new WaitCommand(.2),
                                                             

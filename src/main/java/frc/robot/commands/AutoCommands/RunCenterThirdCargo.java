@@ -52,7 +52,7 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
                                 parallel(
 
                                                 new PositionTilt(tilt,
-                                                                ShooterRangeConstants.tiltRange3),
+                                                                ShooterRangeConstants.tiltRange3).withTimeout(timeOut),
 
                                                 new RunTrajectory(fftraj, drive,
                                                                 fftraj.centerThirdCargoPickUp),
@@ -61,9 +61,9 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
                                                                 PipelinesConstants.noZoom960720,
                                                                 true),
 
-                                                new SetFrontIntakeActive(intake, false)),
+                                                new SetFrontIntakeActive(intake, false),
 
-                                new IntakeToShootPosition(intake, transport),
+                                                new IntakeToShootPosition(intake, transport).withTimeout(timeOut)),
 
                                 new SetUpLimelightForTarget(ll,
                                                 PipelinesConstants.noZoom960720,

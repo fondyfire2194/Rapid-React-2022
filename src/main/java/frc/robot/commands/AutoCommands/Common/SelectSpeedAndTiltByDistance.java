@@ -21,8 +21,8 @@ public class SelectSpeedAndTiltByDistance extends CommandBase {
     m_tilt = m_tilt2;
   }
 
-  public SelectSpeedAndTiltByDistance(RevShooterSubsystem mShooter, String mTilt) {
-}
+//   public SelectSpeedAndTiltByDistance(RevShooterSubsystem mShooter, String mTilt) {
+// }
 
 // Called when the command is initially scheduled.
   @Override

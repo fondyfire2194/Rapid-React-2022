@@ -48,7 +48,7 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
                 // addCommands(new FooCommand(), new BarCommand());
                 double timeOut = 15;
                 double rpm = 2500;
-double noCargoTimeout =6;
+                double noCargoTimeout = 6;
                 if (RobotBase.isSimulation())
                         timeOut = 1;
                 addCommands(

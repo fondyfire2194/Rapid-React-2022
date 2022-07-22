@@ -6,15 +6,13 @@ package frc.robot.OI;
 
 import java.util.Map;
 
-
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.AutoCommands.CenterHideOppCargo;
-import frc.robot.commands.AutoCommands.LeftHideOppCargo;
+
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -22,7 +20,6 @@ import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
-import frc.robot.trajectories.CreateTrajectory;
 import frc.robot.trajectories.FondyFireTrajectory;
 
 /** Add your docs here. */
@@ -76,8 +73,8 @@ public class SetUpPreRoundOI {
                         Shuffleboard.getTab("Pre-Round").add("HidingCargo", hideCargoChooser).withSize(1, 1)
                                         .withPosition(3, 0);
 
-                        hideCargoChooser.setDefaultOption("Yes", true);
-                        hideCargoChooser.addOption("No", false);
+                        hideCargoChooser.setDefaultOption("No", false);
+                        hideCargoChooser.addOption("Yes",true);
 
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
                                         .withPosition(4, 0); //
@@ -91,20 +88,27 @@ public class SetUpPreRoundOI {
 
                         ShuffleboardLayout oppCommands = Shuffleboard.getTab("Pre-Round")
                                         .getLayout("OppHideTest", BuiltInLayouts.kList).withPosition(8, 0)
-                                        .withSize(2, 2)
+                                        .withSize(2, 3)
                                         .withProperties(Map.of("Label position", "LEFT")); // labels for
 
-                        oppCommands.add("LeftOpp", new LeftHideOppCargo(intake, drive, transport, shooter, fftraj
-                                        ));
+                        // oppCommands.add("LeftOpp", new LeftHideOppCargo(intake, drive, transport, shooter, fftraj));
 
-                        oppCommands.add("CenterOpp", new CenterHideOppCargo(intake, drive, transport, shooter, fftraj,
-                                        fftraj.centerHide));
+                        // oppCommands.add("CenterOpp", new CenterHideOppCargo(intake, drive, transport, shooter, fftraj,
+                        //                 fftraj.centerHide));
 
-                        oppCommands.add("Redo LeftHideTraj", new CreateTrajectory(drive, fftraj, fftraj.leftHideRev,
-                                        fftraj.leftOppCargoRev,true));
+                        // oppCommands.add("Redo LeftHideTraj", new CreateTrajectory(drive, fftraj,
+                        // fftraj.leftHideRev,
+                        // fftraj.leftOppCargoRev,true));
 
-                        oppCommands.add("Redo CenterHideTraj", new CreateTrajectory(drive, fftraj, fftraj.centerHide,
-                                        fftraj.centerHideOppCargo,false));
+                        // oppCommands.add("Redo CenterHideTraj", new CreateTrajectory(drive, fftraj,
+                        // fftraj.centerHide,
+                        // fftraj.centerHideOppCargo,false));    //         oppCommands.add("SetLeftCargoPose", new SetRobotPose(drive, fftraj.leftCargo));
+ 
+                //        oppCommands.add("GetHideurnAngle", new GetHideTurnAngle(drive, fftraj, fftraj.leftCargo));
+
+                        // oppCommands.add("ResetOd", new ResetPose(drive));
+                                            
+                        // oppCommands.add("RobtPickup", new HideIt(drive, fftraj, fftraj.zeroPose,true));
 
                 }
 

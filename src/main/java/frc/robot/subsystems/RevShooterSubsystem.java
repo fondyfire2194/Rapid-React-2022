@@ -127,6 +127,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public int setUpSource = 0;
     public String shootModeName = "Unassigned";
     public boolean runContinuous;
+    public boolean calcDistRunning =false;
 
     public RevShooterSubsystem() {
 

@@ -29,14 +29,12 @@ import frc.robot.OI.LLVisionShuffleboard;
 import frc.robot.OI.SetUpAutoOI;
 import frc.robot.OI.SetUpOI;
 import frc.robot.OI.SetUpPreRoundOI;
-import frc.robot.OI.ShootSequenceDisplay;
 import frc.robot.OI.Show_Hide_Screens;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.TurnLedsOnOff;
-import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
 import frc.robot.commands.AutoCommands.Common.SetupPresetShootLocation;
 import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
@@ -68,7 +66,6 @@ import frc.robot.commands.Turret.ShiftAimLeftRight;
 import frc.robot.commands.Turret.TurretJog;
 import frc.robot.commands.Turret.TurretJogVelocity;
 import frc.robot.commands.Turret.TurretWaitForStop;
-import frc.robot.commands.Vision.CalculateTargetDistance;
 import frc.robot.commands.Vision.LimelightSetPipeline;
 import frc.robot.commands.Vision.SetUpLimelightForTarget;
 import frc.robot.commands.Vision.UseVision;
@@ -127,9 +124,7 @@ public class RobotContainer {
 
       public FondyFireTrajectory m_trajectory;
 
-      public ShootSequenceDisplay ssdisp;
-
-      // Drive joystick
+       // Drive joystick
 
       // Co driver gamepad
 

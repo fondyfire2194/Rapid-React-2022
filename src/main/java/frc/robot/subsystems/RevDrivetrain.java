@@ -122,10 +122,11 @@ public class RevDrivetrain extends SubsystemBase {
     public PIDController leftController = new PIDController(trajKp, 0, 0);
     public PIDController rightController = new PIDController(trajKp, 0, 0);
 
-    
     public double leftVolts;
     public double rightVolts;
     public boolean trajectoryRunning;
+    private double robotTurnAngle;
+    private double hypotOfRobotTriangle;
 
     public RevDrivetrain() {
 
@@ -149,7 +150,7 @@ public class RevDrivetrain extends SubsystemBase {
         mLeftVel.setFF(.0);
         mLeftVel.setP(.025, 0);
         mLeftVel.setD(.00001, 0);
-  
+
         mRightVel.setFF(.0);
         mRightVel.setP(.025, 0);
         mRightVel.setD(.00001, 0);
@@ -168,11 +169,9 @@ public class RevDrivetrain extends SubsystemBase {
         mLeftEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
         mRightEncoder.setVelocityConversionFactor(DriveConstants.METERS_PER_MOTOR_REV / 60.0);
 
-     
         mLeadLeft.setOpenLoopRampRate(.01);
 
         mLeadRight.setOpenLoopRampRate(.01);
-
 
         mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
         mLeadLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50);
@@ -482,7 +481,22 @@ public class RevDrivetrain extends SubsystemBase {
         return getTranslation().getY();
     }
 
+    public double getHideTurnAngle(){
+        return robotTurnAngle;
+    }
+
+    public void setHideTurnAngle(double value) {
+        robotTurnAngle= value;
+    }
+
     ///////////////////////////////
+    public double getHidePickupDistance() {
+        return hypotOfRobotTriangle;
+    }
+
+    public void setHidePickupDistance(double value) {
+       hypotOfRobotTriangle=value ;
+    }
     // Life Cycle
     ///////////////////////////////
 
@@ -532,7 +546,7 @@ public class RevDrivetrain extends SubsystemBase {
             m_simAngle.set(0);
     }
 
-    public boolean isRotating(){
+    public boolean isRotating() {
         return mGyro.isRotating();
     }
 
@@ -616,8 +630,8 @@ public class RevDrivetrain extends SubsystemBase {
                         .map(state -> state.poseMeters)
                         .collect(Collectors.toList()));
     }
-    
-        public void clearPlot(int l) {
+
+    public void clearPlot(int l) {
 
         // Seems to be the only way to clear the lists
         m_field2d.getObject("trajectory").setPoses(Collections.<Pose2d>emptyList());

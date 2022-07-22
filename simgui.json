@@ -1,16 +1,6 @@
 {
   "HALProvider": {
     "Other Devices": {
-      "SPARK MAX [4]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [6]": {
-        "header": {
-          "open": true
-        }
-      },
       "SPARK MAX [9]": {
         "header": {
           "open": true
@@ -90,10 +80,19 @@
       "/Shuffleboard/Pre-Round/HideCargo": "Command",
       "/Shuffleboard/Pre-Round/HidingCargo": "String Chooser",
       "/Shuffleboard/Pre-Round/OppHideTest/CenterOpp": "Command",
+      "/Shuffleboard/Pre-Round/OppHideTest/GetHideurnAngle": "Command",
       "/Shuffleboard/Pre-Round/OppHideTest/LeftOpp": "Command",
+      "/Shuffleboard/Pre-Round/OppHideTest/MoveToOppCargo": "Command",
       "/Shuffleboard/Pre-Round/OppHideTest/Redo CenterHideTraj": "Command",
       "/Shuffleboard/Pre-Round/OppHideTest/Redo LeftHideTraj": "Command",
       "/Shuffleboard/Pre-Round/OppHideTest/RedoHideTraj": "Command",
+      "/Shuffleboard/Pre-Round/OppHideTest/ResetOd": "Command",
+      "/Shuffleboard/Pre-Round/OppHideTest/RobotTurnC2C": "Command",
+      "/Shuffleboard/Pre-Round/OppHideTest/RobtPickup": "Command",
+      "/Shuffleboard/Pre-Round/OppHideTest/RotatePose": "Command",
+      "/Shuffleboard/Pre-Round/OppHideTest/SetLeftCargoPose": "Command",
+      "/Shuffleboard/Pre-Round/OppHideTest/SetPose": "Command",
+      "/Shuffleboard/Pre-Round/OppHideTest/TurnRobot": "Command",
       "/Shuffleboard/Pre-Round/OppTest/CenterOpp": "Command",
       "/Shuffleboard/Pre-Round/OppTest/CenterThirdPickup": "Command",
       "/Shuffleboard/Pre-Round/OppTest/CenterThirdShoot": "Command",
@@ -186,22 +185,12 @@
           "visible": true
         }
       },
-      "/Shuffleboard/SetupRobot/Robot/To -1.6": {
+      "/Shuffleboard/Pre-Round/Auto Delay": {
         "window": {
           "visible": true
         }
       },
-      "/Shuffleboard/SetupRobot/Robot1/Turn To -90": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/Shuffleboard/SetupTurret/Turret/Position To 20": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/Shuffleboard/Trajectories/TrajectoryRun/LeftPickup": {
+      "/Shuffleboard/Pre-Round/HidingCargo": {
         "window": {
           "visible": true
         }
@@ -221,11 +210,33 @@
     }
   },
   "NetworkTables": {
+    "FMSInfo": {
+      "open": true
+    },
+    "LiveWindow": {
+      ".status": {
+        "open": true
+      }
+    },
     "Shuffleboard": {
       "Competition": {
         "Values": {
           "open": false
         }
+      },
+      "Pre-Round": {
+        "OppHideTest": {
+          "SetLeftCargoPose": {
+            "open": true
+          },
+          "open": true
+        }
+      },
+      "SetupRobot": {
+        "RobotValues": {
+          "open": true
+        },
+        "open": true
       },
       "SetupTilt": {
         "TiltValues": {
@@ -248,8 +259,7 @@
       "Trajectories": {
         "TrajectoryInfo": {
           "open": true
-        },
-        "open": true
+        }
       },
       "open": true
     },
@@ -266,7 +276,7 @@
               "autoFit": true
             }
           ],
-          "height": -24,
+          "height": 39,
           "series": [
             {
               "color": [
@@ -288,7 +298,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <1>": {
       "plots": [
@@ -333,7 +346,7 @@
     "Plot <3>": {
       "plots": [
         {
-          "height": -24,
+          "height": 19,
           "series": [
             {
               "color": [
@@ -355,12 +368,15 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <4>": {
       "plots": [
         {
-          "height": -24,
+          "height": 26,
           "series": [
             {
               "color": [
@@ -382,7 +398,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }

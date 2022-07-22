@@ -34,6 +34,7 @@ public class CalculateTargetDistance extends CommandBase {
   public void initialize() {
     m_shooter.calculatedCameraDistance = -9999;
     cameraAngle = FieldConstants.CAMERA_ANGLE;
+    m_shooter.calcDistRunning = true;
   }
 
   /*

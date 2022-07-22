@@ -26,13 +26,12 @@ import frc.robot.Constants.ShooterRangeConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.commands.MessageCommand;
-import frc.robot.commands.AutoCommands.CenterHideOppCargo;
 import frc.robot.commands.AutoCommands.DoNothing;
-import frc.robot.commands.AutoCommands.LeftHideOppCargo;
 import frc.robot.commands.AutoCommands.RetPuShootCameraTraj;
 import frc.robot.commands.AutoCommands.RunCenterThirdCargo;
 import frc.robot.commands.AutoCommands.RunRightFirstPickup;
 import frc.robot.commands.AutoCommands.RunRightThreeCargo;
+import frc.robot.commands.AutoCommands.Common.HideIt;
 import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
@@ -95,8 +94,6 @@ public class Robot extends TimedRobot {
 
     m_robotContainer = new RobotContainer();
 
-   
-
     Shuffleboard.selectTab("Pre-Round");
 
   }
@@ -155,6 +152,10 @@ public class Robot extends TimedRobot {
 
   public void autonomousInit() {
 
+    new ParallelCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_shooter),
+
+        new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();
+
     m_robotContainer.m_drive.resetAll();
     autoHasRun = false;
     m_robotContainer.m_limelight.allianceIsBlue = DriverStation.getAlliance() == Alliance.Blue;
@@ -177,7 +178,9 @@ public class Robot extends TimedRobot {
 
     autoChoice = m_robotContainer.m_preOi.autoChooser.getSelected();
 
-    hideOppCargo = false;//m_robotContainer.m_preOi.hideCargoChooser.getSelected();
+    hideOppCargo = m_robotContainer.m_preOi.hideCargoChooser.getSelected();
+
+    SmartDashboard.putBoolean("HideOn", hideOppCargo);
 
     LimeLight ll = m_robotContainer.m_limelight;
     RevTiltSubsystem tilt = m_robotContainer.m_tilt;
@@ -197,17 +200,18 @@ public class Robot extends TimedRobot {
       case 0:
         m_autonomousCommand = new MessageCommand("Did Nothing Auto");
         ll.setPipeline(PipelinesConstants.ledsOffPipeline);
-        break;
 
       case 1:// taxi start anywhere as agreed with other teams inside a tarmac facing in
 
         m_autonomousCommand = new SequentialCommandGroup(
+            new SetRobotPose(m_robotContainer.m_drive, fftraj.zeroPose),
+
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
             new ResetEncoders(m_robotContainer.m_drive),
             new ResetGyro(m_robotContainer.m_drive),
             new PositionStraight(m_robotContainer.m_drive, -1.5, .3));
 
-        break;
+        // break;
 
       case 2:// left tarmac start
 
@@ -236,7 +240,8 @@ public class Robot extends TimedRobot {
             new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.leftPickupRev, transport, shooter, tilt, turret, ll,
                 comp, data),
 
-            new ConditionalCommand(new LeftHideOppCargo(intake, drive, transport, shooter, fftraj),
+            new ConditionalCommand(
+                new HideIt(drive, fftraj, fftraj.leftCargoRev, true, intake, transport, turret, 30, shooter, 800),
 
                 new DoNothing(), () -> hideOppCargo));
 
@@ -266,7 +271,7 @@ public class Robot extends TimedRobot {
                 comp, data),
             new CreateTrajectory(drive, fftraj, fftraj.centerHide, fftraj.centerHideOppCargo, false),
             new ConditionalCommand(
-                new CenterHideOppCargo(intake, drive, transport, shooter, fftraj, fftraj.centerHide),
+                new HideIt(drive, fftraj, fftraj.centerCargoRev, false, intake, transport, turret, 20, shooter, 800),
                 new DoNothing(),
                 () -> hideOppCargo));
 
@@ -417,6 +422,9 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_shooter.presetLocationName = FieldMap.shootLocationName[m_robotContainer.m_shooter.shootLocation];
     m_robotContainer.m_shooter.shootModeName = FieldMap.shootModeName[m_robotContainer.m_shooter.shootValuesSource];
 
+
+    if(!m_shooter.calcDistRunning)
+    
     new ParallelCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_shooter),
 
         new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();
