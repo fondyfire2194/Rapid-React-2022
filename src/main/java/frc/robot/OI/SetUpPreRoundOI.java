@@ -105,7 +105,6 @@ public class SetUpPreRoundOI {
 
                                         new SequentialCommandGroup(
 
-                                                        new SetRobotPose(drive, fftraj.zeroPose),
 
                                                         new SetRobotPose(drive, fftraj.centerCargoRev),
 
