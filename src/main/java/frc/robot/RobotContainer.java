@@ -390,8 +390,8 @@ public class RobotContainer {
       }
 
       public Command getArcadeDriveCommandSim() {
-            return new ArcadeDrive(m_drive, () -> -codriverGamepad.getRawAxis(1) / 2,
-                        () -> codriverGamepad.getRawAxis(0) * .75);
+            return new ArcadeDrive(m_drive, () -> -codriverGamepad.getRawAxis(3) / 2,
+                        () -> codriverGamepad.getRawAxis(2) * .75);
       }
 
       public Command getDriveStraightCommand() {
