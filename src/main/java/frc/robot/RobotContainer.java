@@ -124,7 +124,7 @@ public class RobotContainer {
 
       public FondyFireTrajectory m_trajectory;
 
-       // Drive joystick
+      // Drive joystick
 
       // Co driver gamepad
 
@@ -200,20 +200,23 @@ public class RobotContainer {
 
             m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
-            m_trajectory = new FondyFireTrajectory(m_drive);
+            boolean showAuto = false;
 
-         //   ssdisp = new ShootSequenceDisplay(m_transport, m_shooter, m_intake);
+            boolean showRobotShooter = true;
+
+            boolean showTiltTurret = true;
+
+            boolean showTrajectories = true;
+
+            boolean showTransportIntakeClimber = false;
+
+            boolean showVision = false;
 
             // test configuration
-            // Show_Hide_Screens.setStates(false, false,true);
-            // test configuration with vision
-            // Show_Hide_Screens.setStates(false, true, true);
+            Show_Hide_Screens.setStates(showAuto, showRobotShooter, showTiltTurret, showTrajectories,
+                        showTransportIntakeClimber, showVision);
 
-            // // competition configuration
-            Show_Hide_Screens.setStates(true, true, true);
-
-            // all configurati
-            // Show_Hide_Screens.setStates(true, true, true);
+            m_trajectory = new FondyFireTrajectory(m_drive);
 
             m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
                         m_limelight, m_intake, m_climber, m_trajectory);

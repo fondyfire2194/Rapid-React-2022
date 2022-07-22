@@ -150,6 +150,8 @@ public class FondyFireTrajectory {
 
         public String activeTrajectoryName;
 
+        public static boolean showTrajectories;
+
         public FondyFireTrajectory(RevDrivetrain drive) {
 
                 m_drive = drive;
@@ -223,54 +225,57 @@ public class FondyFireTrajectory {
                                 withSpeedAndAcceleration(.75, .25)
                                                 .setReversed(true));
 
-                ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
-                                .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(5, 0)
-                                .withSize(2, 3)
-                                .withProperties(Map.of("Label position", "LEFT")); // labels for
+                if (showTrajectories) {
 
-                trajCommands.add("LeftPickup", new RunTrajectory(this, drive, leftPickupRev));
+                        ShuffleboardLayout trajCommands = Shuffleboard.getTab("Trajectories")
+                                        .getLayout("TrajectoryRun", BuiltInLayouts.kList).withPosition(5, 0)
+                                        .withSize(2, 3)
+                                        .withProperties(Map.of("Label position", "LEFT")); // labels for
 
-                trajCommands.add("CenterPickup", new RunTrajectory(this, drive, centerFirstPickUpRev));
+                        trajCommands.add("LeftPickup", new RunTrajectory(this, drive, leftPickupRev));
 
-                trajCommands.add("CenterThirdShoot", new RunTrajectory(this, drive, centerThirdCargoShoot));
+                        trajCommands.add("CenterPickup", new RunTrajectory(this, drive, centerFirstPickUpRev));
 
-                trajCommands.add("CenterThirdPickup", new RunTrajectory(this, drive, centerThirdCargoPickUp));
+                        trajCommands.add("CenterThirdShoot", new RunTrajectory(this, drive, centerThirdCargoShoot));
 
-                trajCommands.add("RightThirdPickup", new RunTrajectory(this, drive, rightThirdCargoPickupRev1));
+                        trajCommands.add("CenterThirdPickup", new RunTrajectory(this, drive, centerThirdCargoPickUp));
 
-                trajCommands.add("RightFirstPickup", new RunTrajectory(this, drive, rightFirstCargoPickup));
+                        trajCommands.add("RightThirdPickup", new RunTrajectory(this, drive, rightThirdCargoPickupRev1));
 
-                trajCommands.add("LeftCenterHideOpp", new RunTrajectory(this, drive, leftCenterOppHideRev));
+                        trajCommands.add("RightFirstPickup", new RunTrajectory(this, drive, rightFirstCargoPickup));
 
-                ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
-                                .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7, 0)
-                                .withSize(2, 4)
-                                .withProperties(Map.of("Label position", "LEFT")); // labels for
+                        trajCommands.add("LeftCenterHideOpp", new RunTrajectory(this, drive, leftCenterOppHideRev));
 
-                trajInfo.addNumber("LeftPickUpTrajSecs", () -> leftPickupRev.getTotalTimeSeconds());
-                trajInfo.addNumber("Cen1PUTrajSecs", () -> centerFirstPickUpRev.getTotalTimeSeconds());
-                trajInfo.addNumber("Right1PUTrajSecs", () -> rightFirstCargoPickup.getTotalTimeSeconds());
+                        ShuffleboardLayout trajInfo = Shuffleboard.getTab("Trajectories")
+                                        .getLayout("TrajectoryInfo", BuiltInLayouts.kList).withPosition(7, 0)
+                                        .withSize(2, 4)
+                                        .withProperties(Map.of("Label position", "LEFT")); // labels for
 
-                trajInfo.addNumber("CenShootTrajSecs", () -> centerThirdCargoShoot.getTotalTimeSeconds());
+                        trajInfo.addNumber("LeftPickUpTrajSecs", () -> leftPickupRev.getTotalTimeSeconds());
+                        trajInfo.addNumber("Cen1PUTrajSecs", () -> centerFirstPickUpRev.getTotalTimeSeconds());
+                        trajInfo.addNumber("Right1PUTrajSecs", () -> rightFirstCargoPickup.getTotalTimeSeconds());
 
-                trajInfo.addNumber("Right3PUTrajSecs", () -> rightThirdCargoPickupRev1.getTotalTimeSeconds());
+                        trajInfo.addNumber("CenShootTrajSecs", () -> centerThirdCargoShoot.getTotalTimeSeconds());
 
-                trajInfo.addNumber("LeftWheelSpeed", () -> drive.getWheelSpeeds().leftMetersPerSecond);
+                        trajInfo.addNumber("Right3PUTrajSecs", () -> rightThirdCargoPickupRev1.getTotalTimeSeconds());
 
-                trajInfo.addNumber("RightWheelSpeed", () -> drive.getWheelSpeeds().rightMetersPerSecond);
+                        trajInfo.addNumber("LeftWheelSpeed", () -> drive.getWheelSpeeds().leftMetersPerSecond);
 
-                trajInfo.addNumber("LeftVolts", () -> drive.leftVolts);
+                        trajInfo.addNumber("RightWheelSpeed", () -> drive.getWheelSpeeds().rightMetersPerSecond);
 
-                trajInfo.addNumber("RightVolts", () -> drive.rightVolts);
+                        trajInfo.addNumber("LeftVolts", () -> drive.leftVolts);
 
-                trajInfo.addString("LHC", () -> leftHideRev.toString());
+                        trajInfo.addNumber("RightVolts", () -> drive.rightVolts);
 
-                ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
+                        trajInfo.addString("LHC", () -> leftHideRev.toString());
 
-                if (RobotBase.isReal())
-                        rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
-                                        4).withWidget("Field");
+                        ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
 
+                        if (RobotBase.isReal())
+                                rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
+                                                4).withWidget("Field");
+
+                }
         }
 
         public TrajectoryConfig withSpeedAndAcceleration(

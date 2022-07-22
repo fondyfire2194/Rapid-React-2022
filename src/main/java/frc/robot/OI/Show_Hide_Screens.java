@@ -4,33 +4,34 @@
 
 package frc.robot.OI;
 
+import frc.robot.trajectories.FondyFireTrajectory;
+
 public final class Show_Hide_Screens {
 
   private Show_Hide_Screens() {
   }
 
-  public static void setStates(boolean auto, boolean vision, boolean test) {
+  public static void setStates(boolean auto, boolean robotShooter, boolean tiltTurret,
+      boolean trajectories, boolean transportIntakeClimber, boolean vision) {
 
-    boolean autoMode = auto;
+    SetUpAutoOI.m_showAuto = auto;
+    SetUpPreRoundOI.m_showPreRound = auto;
 
-    boolean showVision = vision;
+    SetUpOI.showSubsystems = true;
 
-    boolean testing = test;
+    SetUpOI.showRobot = robotShooter;
+    SetUpOI.showShooter = robotShooter;
 
-    SetUpOI.showTurret = true;// testing;
-    SetUpOI.showTilt = true;// testing;
-    SetUpOI.showShooter = true;// testing;
-    SetUpOI.showRobot = true;
-    SetUpOI.showTransport = false;
-    SetUpOI.showClimber = false;
-    SetUpOI.showSubsystems = testing || auto;
-    SetUpOI.showIntake = testing;
+    SetUpOI.showTilt = tiltTurret;
+    SetUpOI.showTurret = tiltTurret;
 
-    LLVisionShuffleboard.m_showVision = showVision;
+    FondyFireTrajectory.showTrajectories = trajectories;
 
-    SetUpPreRoundOI.m_showPreRound = autoMode;
+    SetUpOI.showTransport = transportIntakeClimber;
+    SetUpOI.showIntake = transportIntakeClimber;
+    SetUpOI.showClimber = transportIntakeClimber;
 
-    SetUpAutoOI.m_showAuto = autoMode;
+    LLVisionShuffleboard.m_showVision = vision;
 
   }
 }
