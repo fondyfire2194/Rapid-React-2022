@@ -93,7 +93,7 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                                 // new WaitForTiltTurretInPosition(tilt, turret)
                                                                 //                 .withTimeout(timeOut),
-                                                                new WaitCommand(.4),
+                                                                new WaitCommand(2),
                                                                 new AltShootCargo(
                                                                                 shooter,
                                                                                 transport,

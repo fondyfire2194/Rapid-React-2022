@@ -267,6 +267,7 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 1)
                         .whileHeld(new RunActiveIntake(m_intake, m_transport))
                         .whenPressed(new TurnLedsOnOff(m_limelight, false))
+                        .whenPressed(new PositionTurret(m_turret, 0))
                         .whenPressed(new RunLowerRollerIntake(m_transport, m_intake))
                         .whenReleased(new StopActiveIntake(m_intake));
 

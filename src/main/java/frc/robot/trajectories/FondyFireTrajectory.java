@@ -271,9 +271,9 @@ public class FondyFireTrajectory {
 
                         ShuffleboardTab rob = Shuffleboard.getTab("Trajectories");
 
-                        if (RobotBase.isReal())
-                                rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
-                                                4).withWidget("Field");
+                        // if (RobotBase.isReal())
+                        //         rob.add("Field", drive.m_field2d).withPosition(0, 0).withSize(5,
+                        //                         4).withWidget("Field");
 
                 }
         }

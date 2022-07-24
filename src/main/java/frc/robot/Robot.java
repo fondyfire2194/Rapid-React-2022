@@ -33,6 +33,7 @@ import frc.robot.commands.AutoCommands.RunRightFirstPickup;
 import frc.robot.commands.AutoCommands.RunRightThreeCargo;
 import frc.robot.commands.AutoCommands.Common.HideIt;
 import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
+import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
 import frc.robot.commands.RobotDrive.ResetGyro;
@@ -152,9 +153,9 @@ public class Robot extends TimedRobot {
 
   public void autonomousInit() {
 
-    new ParallelCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_shooter),
+    // new ParallelCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_shooter),
 
-        new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();
+    //     new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();
 
     m_robotContainer.m_drive.resetAll();
     autoHasRun = false;
@@ -227,11 +228,11 @@ public class Robot extends TimedRobot {
 
         data[0] = -1.6;// retract point
 
-        data[2] = ShooterRangeConstants.tiltRange3;// tilt 14 deg
+        data[2] = ShooterRangeConstants.tiltRange4;// tilt 14 deg
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = 2500;
+        data[4] = 2450;
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -241,6 +242,8 @@ public class Robot extends TimedRobot {
 
             new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.leftPickupRev, transport, shooter, tilt, turret, ll,
                 comp, data),
+
+            new SetFrontIntakeActive(intake, false),
 
             new ConditionalCommand(
                 new HideIt(drive, fftraj, fftraj.leftCargoRev, true, intake, transport, turret, 30, shooter, 800),
@@ -255,11 +258,11 @@ public class Robot extends TimedRobot {
 
         data[0] = -1.4;// retract point
 
-        data[2] = ShooterRangeConstants.tiltRange3;// tilt 14 deg
+        data[2] = ShooterRangeConstants.tiltRange4;// tilt 14 deg
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = 2550;
+        data[4] = 2450;
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -271,7 +274,9 @@ public class Robot extends TimedRobot {
             new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.centerFirstPickUpRev, transport, shooter, tilt,
                 turret, ll,
                 comp, data),
-            new CreateTrajectory(drive, fftraj, fftraj.centerHide, fftraj.centerHideOppCargo, false),
+ 
+                new SetFrontIntakeActive(intake, true),
+
             new ConditionalCommand(
                 new HideIt(drive, fftraj, fftraj.centerCargoRev, false, intake, transport, turret, 20, shooter, 800),
                 new DoNothing(),
@@ -285,11 +290,11 @@ public class Robot extends TimedRobot {
 
         data[0] = -1.4;// retract point
 
-        data[2] = ShooterRangeConstants.tiltRange3;// tilt 11 deg
+        data[2] = ShooterRangeConstants.tiltRange4;// tilt 11 deg
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = 2550;
+        data[4] = 2450;
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -312,11 +317,11 @@ public class Robot extends TimedRobot {
 
         data[0] = -1.4;// retract point
 
-        data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
+        data[2] = ShooterRangeConstants.tiltRange4;// tilt 11 deg
 
         data[3] = 0;// turret will be locked to Limelight
 
-        data[4] = 2700;
+        data[4] = 2450;
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -336,11 +341,11 @@ public class Robot extends TimedRobot {
 
         data[0] = -1.4;// retract point
 
-        data[2] = ShooterRangeConstants.tiltRange2;// tilt 11 deg
+        data[2] = ShooterRangeConstants.tiltRange4;// tilt 11 deg
 
         data[3] = 1;// turret will be locked to Limelight
 
-        data[4] = 2700;
+        data[4] = 2450;
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -424,13 +429,12 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_shooter.presetLocationName = FieldMap.shootLocationName[m_robotContainer.m_shooter.shootLocation];
     m_robotContainer.m_shooter.shootModeName = FieldMap.shootModeName[m_robotContainer.m_shooter.shootValuesSource];
 
-
-    if(!m_robotContainer.m_shooter.calcDistRunning){
     
-    new ParallelCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_shooter),
 
-        new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();
-    }
+      new ParallelCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_shooter),
+
+          new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();
+    
   }
 
   /**
