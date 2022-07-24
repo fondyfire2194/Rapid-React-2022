@@ -237,7 +237,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         // }
 
-        lockPIDOut = mLockController.calculate(cameraError, .5);
+        lockPIDOut = mLockController.calculate(cameraError, -.5);
 
         double maxAllowedOut = .5;
 
