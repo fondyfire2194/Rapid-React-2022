@@ -58,6 +58,8 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
                 if (RobotBase.isSimulation())
                         timeOut = 1;
 
+                double trajTime = traj.getTotalTimeSeconds();
+
                 addCommands(
                                 new ParallelCommandGroup(
 
@@ -74,7 +76,8 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
                                 new ParallelCommandGroup(
                                                 // new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
                                                 new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
-                                                new WaitCommand(2),
+
+                                                new WaitCommand(trajTime + 1),
 
                                                 new RunActiveIntake(
                                                                 intake, transport).withTimeout(timeOut),
@@ -85,15 +88,14 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                                 new RunTrajectory(ff, drive, traj))),
 
-                               
-
                                 new RunShooter(shooter).raceWith(
 
                                                 new SequentialCommandGroup(
 
                                                                 // new WaitForTiltTurretInPosition(tilt, turret)
-                                                                //                 .withTimeout(timeOut),
+                                                                // .withTimeout(timeOut),
                                                                 new WaitCommand(2),
+
                                                                 new AltShootCargo(
                                                                                 shooter,
                                                                                 transport,
@@ -102,10 +104,10 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                                 new WaitCommand(.2),
 
-                                                                new TestCargoColor(transport, shooter).withTimeout(timeOut),
+                                                                new TestCargoColor(transport, shooter)
+                                                                                .withTimeout(timeOut),
 
                                                                 new WaitCommand(.2),
-                                                            
 
                                                                 new AltShootCargo(
                                                                                 shooter,

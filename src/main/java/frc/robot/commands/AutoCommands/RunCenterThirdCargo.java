@@ -15,7 +15,6 @@ import frc.robot.commands.Intakes.IntakeToShootPosition;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
-import frc.robot.commands.Shooter.WaitForTiltTurretInPosition;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
