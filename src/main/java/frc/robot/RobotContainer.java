@@ -77,6 +77,9 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.trajectories.FondyFireTrajectory;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.Logger;
+import io.github.oblarg.oblog.annotations.Log;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -85,7 +88,7 @@ import frc.robot.trajectories.FondyFireTrajectory;
  * scheduler calls). Instead, the structure of the robot (including subsystems,
  * commands, and button mappings) should be declared here.
  */
-public class RobotContainer {
+public class RobotContainer implements Loggable {
       // The robot's subsystems
 
       // The driver's controller
@@ -93,8 +96,8 @@ public class RobotContainer {
       public final XboxController codriverGamepad = new XboxController(OIConstants.kCoDriverControllerPort);
       // public final XboxController setupGamepad = new
       // XboxController(OIConstants.kSetupControllerPort);
-
-      public final RevDrivetrain m_drive;
+      @Log
+      public final RevDrivetrain m_drive = new RevDrivetrain();
 
       public final IntakesSubsystem m_intake;
 
@@ -103,7 +106,7 @@ public class RobotContainer {
       public final RevTurretSubsystem m_turret;
 
       public final RevTiltSubsystem m_tilt;
-
+      @Log
       public final RevShooterSubsystem m_shooter;
 
       public final ClimberSubsystem m_climber;
@@ -156,10 +159,12 @@ public class RobotContainer {
        * The container for the robot. Contains subsysems, OI devices, and commands.
        */
       public RobotContainer() {
+
             // Preferences.removeAll();
             Pref.deleteUnused();
             Pref.addMissing();
-            m_drive = new RevDrivetrain();
+
+            // m_drive = new RevDrivetrain();
             m_transport = new CargoTransportSubsystem();
 
             m_intake = new IntakesSubsystem();
@@ -169,7 +174,7 @@ public class RobotContainer {
             m_tilt = new RevTiltSubsystem();
             m_climber = new ClimberSubsystem();
             m_limelight = new LimeLight();
-
+         
             m_shooter.setDefaultCommand(new JogShooter(m_shooter, () -> 0.));
 
             if (RobotBase.isSimulation())
@@ -215,21 +220,24 @@ public class RobotContainer {
             boolean showVision = false;
 
             // test configuration
-            Show_Hide_Screens.setStates(showAuto, showRobotShooter, showTiltTurret, showTrajectories,
-                        showTransportIntakeClimber, showVision);
+            // Show_Hide_Screens.setStates(showAuto, showRobotShooter, showTiltTurret,
+            // showTrajectories,
+            // showTransportIntakeClimber, showVision);
 
-            m_trajectory = new FondyFireTrajectory(m_drive);
+            // m_trajectory = new FondyFireTrajectory(m_drive);
 
-            m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor,
-                        m_limelight, m_intake, m_climber, m_trajectory);
+            // m_setup = new SetUpOI(m_turret, m_tilt, m_drive, m_shooter, m_transport,
+            // m_compressor,
+            // m_limelight, m_intake, m_climber, m_trajectory);
 
-            m_autoOi = new SetUpAutoOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
-                        m_intake, m_climber, m_trajectory);
+            // m_autoOi = new SetUpAutoOI(m_turret, m_tilt, m_drive, m_shooter, m_transport,
+            // m_compressor, m_limelight,
+            // m_intake, m_climber, m_trajectory);
 
             m_preOi = new SetUpPreRoundOI(m_turret, m_tilt, m_drive, m_shooter, m_transport, m_compressor, m_limelight,
                         m_intake, m_climber, m_trajectory);
 
-            m_llVis = new LLVisionShuffleboard(m_limelight, m_turret, m_tilt, m_shooter);
+            // m_llVis = new LLVisionShuffleboard(m_limelight, m_turret, m_tilt, m_shooter);
 
             configureButtonBindings();
 

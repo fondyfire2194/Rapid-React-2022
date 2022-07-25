@@ -46,8 +46,10 @@ import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
-import frc.robot.trajectories.CreateTrajectory;
 import frc.robot.trajectories.FondyFireTrajectory;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.Logger;
+import io.github.oblarg.oblog.annotations.Config;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -56,7 +58,7 @@ import frc.robot.trajectories.FondyFireTrajectory;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobot implements Loggable{
   private static final LimeLight m_limelight = null;
   private static final RevShooterSubsystem m_shooter = null;
   private static final String m_tilt = null;
@@ -69,6 +71,7 @@ public class Robot extends TimedRobot {
   private double startTime;
   public double timeToStart;
   int tst;
+  @Config
   private int loopCtr;
 
   public static double[] data = { 0, 0, 0, 0, 0 };
@@ -83,19 +86,21 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-
+ 
     // Flush NetworkTables every loop. This ensures that robot pose and other values
     // are sent during every iteration.
     setNetworkTablesFlushEnabled(true);
 
     // Starts recording to data log
 
-    if (RobotBase.isReal())
-      DataLogManager.start();
+    // if (RobotBase.isReal())
+    //   DataLogManager.start();
+
+
 
     m_robotContainer = new RobotContainer();
-
-    Shuffleboard.selectTab("Pre-Round");
+    Logger.configureLoggingAndConfig(m_robotContainer, false);
+    
 
   }
 
@@ -123,6 +128,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_shooter.driverThrottleValue = m_robotContainer.getThrottle();
 
     loopCtr++;
+
+    Logger.updateEntries();
 
     SmartDashboard.putNumber("LPCTRA", loopCtr);
     getAllianceColorBlue();

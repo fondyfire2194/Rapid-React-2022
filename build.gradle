@@ -71,9 +71,13 @@ dependencies {
 	//testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testImplementation  'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     testImplementation 'org.mockito:mockito-core:4.3.1'
+
+    implementation "com.github.Oblarg:Oblog:4.0.9"
     
 }
-
+repositories {
+  maven { url 'https://jitpack.io' }
+}
 
 // Simulation configuration (e.g. environment variables).
 wpi.sim.addGui().defaultEnabled = true

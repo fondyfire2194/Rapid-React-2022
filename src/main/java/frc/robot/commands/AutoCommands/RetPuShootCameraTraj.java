@@ -37,8 +37,8 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
         /** Creates a new LRetPuShoot. */
         public RetPuShootCameraTraj(IntakesSubsystem intake, RevDrivetrain drive, FondyFireTrajectory ff,
-                        Trajectory traj,
-                        CargoTransportSubsystem transport, RevShooterSubsystem shooter, RevTiltSubsystem tilt,
+                        Trajectory traj, CargoTransportSubsystem transport, RevShooterSubsystem shooter,
+                        RevTiltSubsystem tilt,
                         RevTurretSubsystem turret, LimeLight ll, Compressor comp, double[] data) {
                 addRequirements(intake, drive, transport, shooter, turret, tilt);
                 // Use addRequirements() here to declare subsystem dependencies.
@@ -58,6 +58,8 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
                 if (RobotBase.isSimulation())
                         timeOut = 1;
 
+                double trajTime = traj.getTotalTimeSeconds();
+
                 addCommands(
                                 new ParallelCommandGroup(
 
@@ -74,7 +76,8 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
                                 new ParallelCommandGroup(
                                                 // new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
                                                 new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
-                                                new WaitCommand(2),
+
+                                                new WaitCommand(trajTime + 1),
 
                                                 new RunActiveIntake(
                                                                 intake, transport).withTimeout(timeOut),
@@ -85,15 +88,14 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                                 new RunTrajectory(ff, drive, traj))),
 
-                               
-
                                 new RunShooter(shooter).raceWith(
 
                                                 new SequentialCommandGroup(
 
                                                                 // new WaitForTiltTurretInPosition(tilt, turret)
-                                                                //                 .withTimeout(timeOut),
-                                                                new WaitCommand(2),
+                                                                // .withTimeout(timeOut),
+                                                                new WaitCommand(.2),
+
                                                                 new AltShootCargo(
                                                                                 shooter,
                                                                                 transport,
@@ -102,10 +104,10 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                                 new WaitCommand(.2),
 
-                                                                new TestCargoColor(transport, shooter).withTimeout(timeOut),
+                                                                new TestCargoColor(transport, shooter)
+                                                                                .withTimeout(timeOut),
 
                                                                 new WaitCommand(.2),
-                                                            
 
                                                                 new AltShootCargo(
                                                                                 shooter,

@@ -37,6 +37,11 @@
       "/Shuffleboard/Pre-Round/HidingCargo": "String Chooser",
       "/Shuffleboard/Pre-Round/OppHideTest/Center Hide": "Command",
       "/Shuffleboard/Pre-Round/OppHideTest/LeftHide": "Command",
+      "/Shuffleboard/RobotContainer/m_drive": "Subsystem",
+      "/Shuffleboard/RobotContainer/m_shooter": "Subsystem",
+      "/Shuffleboard/SetUpPreRoundOI/autoChooser": "String Chooser",
+      "/Shuffleboard/SetUpPreRoundOI/hideCargoChooser": "String Chooser",
+      "/Shuffleboard/SetUpPreRoundOI/startDelayChooser": "String Chooser",
       "/Shuffleboard/SetupRobot/Robot/ClearFaults": "Command",
       "/Shuffleboard/SetupRobot/Robot/Cmd": "Subsystem",
       "/Shuffleboard/SetupRobot/Robot/Reset Enc": "Command",
@@ -112,7 +117,7 @@
       "/SmartDashboard/Field": {
         "bottom": 900,
         "height": 8.229599952697754,
-        "image": "C:\\Users\\User\\Desktop\\2022-field.png",
+        "image": "C:\\Users\\John\\Desktop\\2022-field.png",
         "left": 74,
         "right": 1774,
         "top": 50,
@@ -131,10 +136,16 @@
         },
         "open": true
       },
+      "RevDrivetrain: Config": {
+        "open": true
+      },
+      "RevDrivetrain: Log": {
+        "open": true
+      },
+      "SetUpPreRoundOI": {
+        "open": true
+      },
       "open": true
     }
-  },
-  "NetworkTables View": {
-    "visible": false
   }
 }

@@ -38,8 +38,10 @@ import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Pref;
 import frc.robot.Sim.CANEncoderSim;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 
-public class RevDrivetrain extends SubsystemBase {
+public class RevDrivetrain extends SubsystemBase implements Loggable {
     // private static final DrivetrainConstants DRIVETRAIN_CONSTANTS = new
     // NeoDrivetrainConstants();
 
@@ -490,6 +492,7 @@ public class RevDrivetrain extends SubsystemBase {
     }
 
     ///////////////////////////////
+    @Config
     public double getHidePickupDistance() {
         return hypotOfRobotTriangle;
     }
@@ -642,6 +645,7 @@ public class RevDrivetrain extends SubsystemBase {
             m_field2d.getObject("waypoints" + i).setPoses(Collections.<Pose2d>emptyList());
     }
 
+    @Config
     public double getMatchTime() {
         return DriverStation.getMatchTime();
     }
@@ -695,7 +699,7 @@ public class RevDrivetrain extends SubsystemBase {
     // iset = mleftPID.getI();
 
     // }
-
+    @Config
     private void checkTune() {
 
         tuneOn = Pref.getPref("dRTune") == 1. && allConnected;

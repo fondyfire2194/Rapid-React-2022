@@ -25,8 +25,11 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Pref;
 import frc.robot.Sim.CANEncoderSim;
 import frc.robot.Sim.CANSparkMaxWithSim;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class RevShooterSubsystem extends SubsystemBase {
+public class RevShooterSubsystem extends SubsystemBase implements Loggable {
 
     public final CANSparkMaxWithSim mLeftMotor; // NOPMD
     private CANSparkMaxWithSim mRightMotor; // NOPMD
@@ -79,8 +82,8 @@ public class RevShooterSubsystem extends SubsystemBase {
     public final int POSITION_SLOT = 2;
 
     public double[] rpmFromCameraDistance = {
-            1850, 1850, 1850, 2150, 1900,//1 - 5 ft 4 degrees
-            1950, 2100, 2250,//6-8 ft 11 degrees
+            1850, 1850, 1850, 2150, 1900, // 1 - 5 ft 4 degrees
+            1950, 2100, 2250, // 6-8 ft 11 degrees
             2350, 2450, 2700, 2900, 2900, 2950, // 9-14 ft 14 degrees
             3100, 3250, 3450, 3450, 4500, 5000 };// 15-20ft 17 degrees
 
@@ -127,7 +130,7 @@ public class RevShooterSubsystem extends SubsystemBase {
     public int setUpSource = 0;
     public String shootModeName = "Unassigned";
     public boolean runContinuous;
-    public boolean calcDistRunning =false;
+    public boolean calcDistRunning = false;
 
     public RevShooterSubsystem() {
 
@@ -147,12 +150,10 @@ public class RevShooterSubsystem extends SubsystemBase {
         mRightMotor.restoreFactoryDefaults();
         mRightMotor.follow(mLeftMotor, true);
 
-        
-        
         mLeftMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
         mLeftMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         mLeftMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50);
-        
+
         mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
         mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50);
@@ -285,11 +286,13 @@ public class RevShooterSubsystem extends SubsystemBase {
         return Math.round(mEncoder.getVelocity());
     }
 
+    @Log.BooleanBox(name = "Shooter At Setpoint")
     public boolean getShooterAtSpeed() {
         return isAtSpeed;
 
     }
 
+    @Log.BooleanBox(name = "Shooter Is Shooting")
     public boolean getShooterIsShooting() {
         return isShooting;
     }
@@ -345,6 +348,7 @@ public class RevShooterSubsystem extends SubsystemBase {
         return minrpm + rpmRange * driverThrottleValue;
     }
 
+    @Config
     public double getLeftPctOut() {
         return mLeftMotor.get();
     }
@@ -354,6 +358,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     }
 
+    @Config
     public void clearRightFaults() {
 
         mRightMotor.clearFaults();

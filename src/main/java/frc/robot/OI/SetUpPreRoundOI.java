@@ -7,10 +7,9 @@ package frc.robot.OI;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.AutoCommands.Common.HideIt;
@@ -23,12 +22,17 @@ import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
 import frc.robot.trajectories.FondyFireTrajectory;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
+import io.github.oblarg.oblog.annotations.Log;
 
 /** Add your docs here. */
-public class SetUpPreRoundOI {
-
+public class SetUpPreRoundOI implements Loggable {
+        @Log
         public SendableChooser<Integer> autoChooser = new SendableChooser<>();
+        @Log
         public SendableChooser<Double> startDelayChooser = new SendableChooser<>();
+        @Log
         public SendableChooser<Boolean> hideCargoChooser = new SendableChooser<>();
 
         public static boolean m_showPreRound;
@@ -44,74 +48,43 @@ public class SetUpPreRoundOI {
                  * Pre round
                  */
 
-                if (m_showPreRound) {
-                        // Put
-                        // autonomous chooser on the dashboard.
-                        // The first argument is the root container
-                        // The second argument is whether logging and config should be given separate
-                        // tabs
-                        Shuffleboard.getTab("Pre-Round").add("Auto Commands", autoChooser).withSize(3, 1)
-                                        .withPosition(0, 0); // place it in the top-left corner
+                // Put
+                // autonomous chooser on the dashboard.
+                // The first argument is the root container
+                // The second argument is whether logging and config should be given separate
+                // tabs
 
-                        autoChooser.setDefaultOption("Do Nothing", 0);
+                autoChooser.setDefaultOption("Do Nothing", 0);
 
-                        autoChooser.addOption("Taxi", 1);
+                autoChooser.addOption("Taxi", 1);
 
-                        autoChooser.addOption("Left Tarmac Retract Pickup Shoot",
-                                        2);
+                autoChooser.addOption("Left Tarmac Retract Pickup Shoot",
+                                2);
 
-                        autoChooser.addOption("Center Tarmac Retract Pickup Shoot",
-                                        3);
+                autoChooser.addOption("Center Tarmac Retract Pickup Shoot",
+                                3);
 
-                        autoChooser.addOption("Center Tarmac Retract Pickup Shoot + 3 & 4 Cargo",
-                                        4);
+                autoChooser.addOption("Center Tarmac Retract Pickup Shoot + 3 & 4 Cargo",
+                                4);
 
-                        autoChooser.addOption("Right Tarmac Retract Pickup + 3 & 4 Shoot Cargo",
-                                        5);
+                autoChooser.addOption("Right Tarmac Retract Pickup + 3 & 4 Shoot Cargo",
+                                5);
 
-                        autoChooser.addOption("Retract Pickp Opp Shoot One Hide",
-                                        6);
+                autoChooser.addOption("Retract Pickp Opp Shoot One Hide",
+                                6);
 
-                        Shuffleboard.getTab("Pre-Round").add("HidingCargo", hideCargoChooser).withSize(1, 1)
-                                        .withPosition(3, 0);
+                hideCargoChooser.setDefaultOption("No", false);
+                hideCargoChooser.addOption("Yes", true);
 
-                        hideCargoChooser.setDefaultOption("No", false);
-                        hideCargoChooser.addOption("Yes", true);
-
-                        Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
-                                        .withPosition(4, 0); //
-
-                        startDelayChooser.setDefaultOption("No Delay", 0.);
-                        startDelayChooser.addOption("One Second", 1.);
-                        startDelayChooser.addOption("Two Seconds", 2.);
-                        startDelayChooser.addOption("Three Seconds", 3.);
-                        startDelayChooser.addOption("Four Seconds", 4.);
-                        startDelayChooser.addOption("Five Seconds", 5.);
-
-                        ShuffleboardLayout oppCommands = Shuffleboard.getTab("Pre-Round")
-                                        .getLayout("OppHideTest", BuiltInLayouts.kList).withPosition(8, 0)
-                                        .withSize(2, 3)
-                                        .withProperties(Map.of("Label position", "LEFT")); // labels for
-
-                        oppCommands.add("LeftHide",
-
-                                        new SequentialCommandGroup(
-
-                                                        new SetRobotPose(drive, fftraj.leftCargoRev),
-
-                                                        new HideIt(drive, fftraj, fftraj.leftCargoRev, true, intake,
-                                                                        transport, turret, 30, shooter, 800)));
-                        oppCommands.add("Center Hide",
-
-                                        new SequentialCommandGroup(
+                startDelayChooser.setDefaultOption("No Delay", 0.);
+                startDelayChooser.addOption("One Second", 1.);
+                startDelayChooser.addOption("Two Seconds", 2.);
+                startDelayChooser.addOption("Three Seconds", 3.);
+                startDelayChooser.addOption("Four Seconds", 4.);
+                startDelayChooser.addOption("Five Seconds", 5.);
 
 
-                                                        new SetRobotPose(drive, fftraj.centerCargoRev),
-
-                                                        new HideIt(drive, fftraj, fftraj.centerCargoRev, false, intake,
-                                                                        transport, turret, 20, shooter, 800)));
-
-                }
+                ("Turn To LHideOpp", new TurnToAngle(drive, FieldMap.leftStartHideAngle));                     
 
         }
 }
