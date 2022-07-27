@@ -111,7 +111,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
       lowRollEncoderSim = new CANEncoderSim(m_lowerRollerMotor.getDeviceId(), false);
       lowRollerSim = new FlywheelSim(
-          LinearSystemId.identifyVelocitySystem(ShooterConstants.kV, ShooterConstants.kA),
+          LinearSystemId.identifyVelocitySystem(ShooterConstants.kVVoltSecondsPerRotation, ShooterConstants.kaVoltSecondsSquaredPerRotation),
           DCMotor.getNeo550(1),
           4096);
 
@@ -123,7 +123,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // SmartDashboard.putNumber("PROXVAL", rcs.getProximity());
-    // SmartDashboard.putNumber("LowRollOut", getLowerRoller());
+     SmartDashboard.putNumber("LowRollOut", getLowerRoller());
 
   }
 

@@ -11,6 +11,8 @@ import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.math.controller.BangBangController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -79,8 +81,8 @@ public class RevShooterSubsystem extends SubsystemBase {
     public final int POSITION_SLOT = 2;
 
     public double[] rpmFromCameraDistance = {
-            1850, 1850, 1850, 2150, 1900,//1 - 5 ft 4 degrees
-            1950, 2100, 2250,//6-8 ft 11 degrees
+            1850, 1850, 1850, 2150, 1900, // 1 - 5 ft 4 degrees
+            1950, 2100, 2250, // 6-8 ft 11 degrees
             2350, 2450, 2700, 2900, 2900, 2950, // 9-14 ft 14 degrees
             3100, 3250, 3450, 3450, 4500, 5000 };// 15-20ft 17 degrees
 
@@ -127,7 +129,12 @@ public class RevShooterSubsystem extends SubsystemBase {
     public int setUpSource = 0;
     public String shootModeName = "Unassigned";
     public boolean runContinuous;
-    public boolean calcDistRunning =false;
+    public boolean calcDistRunning = false;
+
+    private BangBangController m_bangBang = new BangBangController();
+    public final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(ShooterConstants.kSVolts,
+            ShooterConstants.kVVoltSecondsPerRotation, ShooterConstants.kaVoltSecondsSquaredPerRotation);
+    private boolean runBangBang = false;
 
     public RevShooterSubsystem() {
 
@@ -147,12 +154,10 @@ public class RevShooterSubsystem extends SubsystemBase {
         mRightMotor.restoreFactoryDefaults();
         mRightMotor.follow(mLeftMotor, true);
 
-        
-        
         mLeftMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
         mLeftMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         mLeftMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50);
-        
+
         mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
         mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         mRightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50);
@@ -199,13 +204,15 @@ public class RevShooterSubsystem extends SubsystemBase {
         if (RobotBase.isSimulation()) {
 
             flywheel = new FlywheelSim(
-                    LinearSystemId.identifyVelocitySystem(ShooterConstants.kV, ShooterConstants.kA),
+                    LinearSystemId.identifyVelocitySystem(ShooterConstants.kVVoltSecondsPerRotation,
+                            ShooterConstants.kaVoltSecondsSquaredPerRotation),
                     DCMotor.getNEO(2),
                     4096);
             mEncoderSim = new CANEncoderSim(mLeftMotor.getDeviceId(), false);
 
             topRollerSim = new FlywheelSim(
-                    LinearSystemId.identifyVelocitySystem(ShooterConstants.kV, ShooterConstants.kA),
+                    LinearSystemId.identifyVelocitySystem(ShooterConstants.kVVoltSecondsPerRotation,
+                            ShooterConstants.kaVoltSecondsSquaredPerRotation),
                     DCMotor.getNeo550(1),
                     4096);
             m_topEncoderSim = new CANEncoderSim(m_topRollerMotor.getDeviceId(), false);
@@ -255,9 +262,23 @@ public class RevShooterSubsystem extends SubsystemBase {
 
             rpm = 800;
 
-        spinAtRPM(rpm);
+        if (runBangBang) {
+
+            runBangBang(rpm);
+        }
+
+        else {
+
+            spinAtRPM(rpm);
+
+        }
 
         runTopAtVelocity(Pref.getPref("TopRollShootRPM"));
+    }
+
+    public void runBangBang(double setpoint) {
+
+        m_bangBang.calculate(getRPM(), setpoint * 12.0 + 0.9 * m_feedforward.calculate(setpoint));
     }
 
     public void reverseUpperRoller() {

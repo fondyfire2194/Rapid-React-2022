@@ -171,11 +171,11 @@ public final class Constants {
    public static class ShooterConstants {
 
       public static final double MAX_SHOOTER_RPM = 5700;
-      public static double kVVoltSecondsPerRotation;
-      public static double kA = 0.0061592;
-      public static double kV = 0.13622;
+      public static double kVVoltSecondsPerRotation=0.13622;
+      public static double kaVoltSecondsSquaredPerRotation = 0.0061592;
+   
 
-      public static double kS = 0.38817;
+      public static double kSVolts = 0.38817;
 
    }
 

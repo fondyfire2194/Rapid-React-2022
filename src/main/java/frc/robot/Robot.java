@@ -31,6 +31,7 @@ import frc.robot.commands.AutoCommands.RetPuShootCameraTraj;
 import frc.robot.commands.AutoCommands.RunCenterThirdCargo;
 import frc.robot.commands.AutoCommands.RunRightFirstPickup;
 import frc.robot.commands.AutoCommands.RunRightThreeCargo;
+import frc.robot.commands.AutoCommands.Common.AutoLogIntakeShootData;
 import frc.robot.commands.AutoCommands.Common.HideIt;
 import frc.robot.commands.AutoCommands.Common.SelectSpeedAndTiltByDistance;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
@@ -46,7 +47,6 @@ import frc.robot.subsystems.RevDrivetrain;
 import frc.robot.subsystems.RevShooterSubsystem;
 import frc.robot.subsystems.RevTiltSubsystem;
 import frc.robot.subsystems.RevTurretSubsystem;
-import frc.robot.trajectories.CreateTrajectory;
 import frc.robot.trajectories.FondyFireTrajectory;
 
 /**
@@ -57,9 +57,7 @@ import frc.robot.trajectories.FondyFireTrajectory;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final LimeLight m_limelight = null;
-  private static final RevShooterSubsystem m_shooter = null;
-  private static final String m_tilt = null;
+  
   private Command m_autonomousCommand;
   private int autoChoice;
 
@@ -153,9 +151,9 @@ public class Robot extends TimedRobot {
 
   public void autonomousInit() {
 
-    // new ParallelCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_shooter),
+    new ParallelCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_shooter),
 
-    //     new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();
+        new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();
 
     m_robotContainer.m_drive.resetAll();
     autoHasRun = false;
@@ -193,8 +191,12 @@ public class Robot extends TimedRobot {
     Compressor comp = m_robotContainer.m_compressor;
     FondyFireTrajectory fftraj = m_robotContainer.m_trajectory;
 
+    new AutoLogIntakeShootData(intake, transport, shooter, drive).schedule();
+
     ll.setLEDMode(LedMode.kpipeLine);
     ll.setPipeline(PipelinesConstants.noZoom960720);
+
+    SmartDashboard.putNumber("AutoChoice", autoChoice);
 
     switch (autoChoice) {
 
@@ -274,8 +276,8 @@ public class Robot extends TimedRobot {
             new RetPuShootCameraTraj(intake, drive, fftraj, fftraj.centerFirstPickUpRev, transport, shooter, tilt,
                 turret, ll,
                 comp, data),
- 
-                new SetFrontIntakeActive(intake, true),
+
+            new SetFrontIntakeActive(intake, true),
 
             new ConditionalCommand(
                 new HideIt(drive, fftraj, fftraj.centerCargoRev, false, intake, transport, turret, 20, shooter, 800),
@@ -428,13 +430,14 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_shooter.shootLocation = 1;
     m_robotContainer.m_shooter.presetLocationName = FieldMap.shootLocationName[m_robotContainer.m_shooter.shootLocation];
     m_robotContainer.m_shooter.shootModeName = FieldMap.shootModeName[m_robotContainer.m_shooter.shootValuesSource];
+    autoChoice = 10;
+    new AutoLogIntakeShootData(m_robotContainer.m_intake, m_robotContainer.m_transport, m_robotContainer.m_shooter,
+        m_robotContainer.m_drive).schedule();
 
-    
+    new ParallelCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_shooter),
 
-      new ParallelCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_shooter),
+        new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();
 
-          new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();
-    
   }
 
   /**

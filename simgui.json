@@ -112,7 +112,7 @@
       "/SmartDashboard/Field": {
         "bottom": 900,
         "height": 8.229599952697754,
-        "image": "C:\\Users\\User\\Desktop\\2022-field.png",
+        "image": "C:\\Users\\John\\Desktop\\2022-field.png",
         "left": 74,
         "right": 1774,
         "top": 50,
@@ -132,9 +132,9 @@
         "open": true
       },
       "open": true
+    },
+    "autolog": {
+      "open": true
     }
-  },
-  "NetworkTables View": {
-    "visible": false
   }
 }

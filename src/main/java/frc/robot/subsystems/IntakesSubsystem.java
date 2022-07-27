@@ -40,9 +40,9 @@ public class IntakesSubsystem extends SubsystemBase {
 
   public boolean rearIntakeMotorConnected;
 
-  private AnalogInput frontIntakeCargoDetect;
+  public AnalogInput frontIntakeCargoDetect;
 
-  private AnalogInput rearIntakeCargoDetect;// next to be released for shooting
+  public AnalogInput rearIntakeCargoDetect;// next to be released for shooting
 
   private double cargoDetectedVolts = 1.8;
 
@@ -109,12 +109,12 @@ public class IntakesSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    SmartDashboard.putNumber("FCDV", frontIntakeCargoDetect.getVoltage());
-    SmartDashboard.putNumber("RCDV", rearIntakeCargoDetect.getVoltage());
+    // SmartDashboard.putNumber("FCDV", frontIntakeCargoDetect.getVoltage());
+    // SmartDashboard.putNumber("RCDV", rearIntakeCargoDetect.getVoltage());
 
-    SmartDashboard.putNumber("FrontIntakeMotor", getFrontMotor());
+    // SmartDashboard.putNumber("FrontIntakeMotor", getFrontMotor());
 
-    SmartDashboard.putNumber("RearIntakeMotor", getRearMotor());
+    // SmartDashboard.putNumber("RearIntakeMotor", getRearMotor());
   }
 
   public boolean getCargoAtFront() {

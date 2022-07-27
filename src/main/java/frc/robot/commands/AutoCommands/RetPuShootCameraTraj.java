@@ -19,6 +19,7 @@ import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
+import frc.robot.commands.Shooter.StopShooter;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
@@ -70,8 +71,8 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                 new SetPresetRPM(shooter, upperRPM),
 
-                                                new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720,
-                                                                true)),
+                                                new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720, true))
+                                                                .deadlineWith(new StopShooter(shooter)),
 
                                 new ParallelCommandGroup(
                                                 // new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
@@ -86,7 +87,8 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                                 new WaitCommand(.25),
 
-                                                                new RunTrajectory(ff, drive, traj))),
+                                                                new RunTrajectory(ff, drive, traj)))
+                                                                                .deadlineWith(new StopShooter(shooter)),
 
                                 new RunShooter(shooter).raceWith(
 
