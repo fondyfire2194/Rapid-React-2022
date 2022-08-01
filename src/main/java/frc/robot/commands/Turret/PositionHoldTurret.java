@@ -53,7 +53,7 @@ public class PositionHoldTurret extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-   
+
     targetSeen = m_limelight.getIsTargetFound();
 
     // To limit effect of possible Limelight jitter, valid target is held off for 25
@@ -63,7 +63,7 @@ public class PositionHoldTurret extends CommandBase {
     m_turret.validTargetSeen = m_limelight.useVision && visionTargetDebounce.calculate(targetSeen);
 
     if (targetSeen && m_turret.validTargetSeen) {
- SmartDashboard.putBoolean("LLVTS", m_turret.validTargetSeen);
+      SmartDashboard.putBoolean("LLVTS", m_turret.validTargetSeen);
       cameraHorizontalError = m_limelight.getdegRotationToTarget();
 
       m_turret.lockTurretToVision(cameraHorizontalError);
@@ -71,7 +71,7 @@ public class PositionHoldTurret extends CommandBase {
       m_turret.targetAngle = m_turret.getAngle();
     }
 
-    if ( !m_turret.validTargetSeen) {
+    if (!m_turret.validTargetSeen) {
 
       m_turret.goToPosition(m_turret.targetAngle);
 

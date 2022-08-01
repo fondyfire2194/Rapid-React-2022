@@ -15,14 +15,24 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.numbers.N0;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.CTRECanCoder;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Pref;
+import frc.robot.Sim.CANEncoderSim;
 import frc.robot.Sim.CANSparkMaxWithSim;
 
 /**
@@ -95,6 +105,11 @@ public class RevTurretSubsystem extends SubsystemBase {
     public double presetPosition;
     public double targetAngle;
 
+    private CANEncoderSim mEncoderSim;
+    final LinearSystem<N2, N1, N1> m_turret = LinearSystemId
+            .identifyPositionSystem(.0774, 0.0005);
+    LinearSystemSim<N2, N1, N1> m_turretSim = new LinearSystemSim<>(m_turret);
+
     private CTRECanCoder tuCanCoder = new CTRECanCoder(CANConstants.TURRET_CANCODER);
     private double m_startUpAbsoluteValue;
     private double startUpAngleFromZeroValue;
@@ -110,11 +125,17 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
         m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-        m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50);//vel
-    
+        m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50);// vel
+
         m_motor.setSmartCurrentLimit(20);
         mPosController = new PIDController(.01, 0, 0);
         mEncoder.setPosition(0);
+
+        setSoftwareLimits();
+
+        mEncoder.setPositionConversionFactor(DEG_PER_MOTOR_REV);
+
+        mEncoder.setVelocityConversionFactor(DEG_PER_MOTOR_REV / 60);
 
         if (RobotBase.isReal()) {
             // setFF_MaxOuts();
@@ -125,14 +146,10 @@ public class RevTurretSubsystem extends SubsystemBase {
             mLockController.setTolerance(.5);
 
         }
-        setSoftwareLimits();
-
-        mEncoder.setPositionConversionFactor(DEG_PER_MOTOR_REV);
-
-        mEncoder.setVelocityConversionFactor(DEG_PER_MOTOR_REV / 60);
 
         if (RobotBase.isSimulation()) {
 
+            mEncoderSim = new CANEncoderSim(m_motor.getDeviceId(), false);
         }
 
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
@@ -173,18 +190,18 @@ public class RevTurretSubsystem extends SubsystemBase {
     public void simulationPeriodic() {
         // In this method, we update our simulation of what our elevator is doing
         // First, we set our "inputs" (voltages)
-        // m_turretSim.setInput(m_motor.get() * RobotController.getBatteryVoltage());
-        // SmartDashboard.putNumber("TUSIMI", m_motor.get() *
-        // RobotController.getBatteryVoltage());
+        m_turretSim.setInput(m_motor.get() * RobotController.getBatteryVoltage());
+        SmartDashboard.putNumber("TUSIMI", m_motor.get() *
+                RobotController.getBatteryVoltage());
         // // Next, we update it. The standard loop time is 20ms.
-        // m_turretSim.update(0.020);
-        // SmartDashboard.putNumber("TUSIMO", m_turretSim.getOutput(0));
+        m_turretSim.update(0.020);
+        SmartDashboard.putNumber("TUSIMO", m_turretSim.getOutput(0));
         // // Finally, we set our simulated encoder's readings and simulated battery
         // // voltage
-        // mEncoderSim.setPosition(m_turretSim.getOutput(0));
-        // // SimBattery estimates loaded battery voltages
-        // RoboRioSim.setVInVoltage(
-        // BatterySim.calculateDefaultBatteryLoadedVoltage(m_turretSim.getCurrentDrawAmps()));
+        mEncoderSim.setPosition(m_turretSim.getOutput(0));
+        // SimBattery estimates loaded battery voltages
+        RoboRioSim.setVInVoltage(
+                BatterySim.calculateDefaultBatteryLoadedVoltage(m_turretSim.getCurrentDrawAmps()));
 
     }
 
@@ -197,18 +214,8 @@ public class RevTurretSubsystem extends SubsystemBase {
     }
 
     public void moveManually(double speed) {
-
-        if (RobotBase.isReal()) {
-            m_motor.set(speed);
-        }
-
-        else {
-
-            m_motor.setVoltage(speed * 12);
-        }
-
+        m_motor.set(speed);
         targetAngle = getAngle();
-
     }
 
     public void goToPosition(double degrees) {
@@ -216,12 +223,15 @@ public class RevTurretSubsystem extends SubsystemBase {
         double pidout = 0;
 
         pidout = mPosController.calculate(getAngle(), degrees);
-        // SmartDashboard.putNumber("TUPERR", mPosController.getPositionError());
-        // SmartDashboard.putNumber("PosPGain", mPosController.getP());
 
-        // SmartDashboard.putNumber("TUPIDOUT", -pidout);
+        if (RobotBase.isReal())
 
-        moveAtVelocity(-pidout * maxVel);
+            moveAtVelocity(-pidout * maxVel);
+
+        else
+
+            moveManually(pidout);
+
     }
 
     public double getTargetHorOffset() {
@@ -233,9 +243,9 @@ public class RevTurretSubsystem extends SubsystemBase {
         double maxAllowedCameraError = 10;
         boolean negError = cameraError < 0;
         // if (Math.abs(cameraError) > maxAllowedCameraError) {
-        //     cameraError = maxAllowedCameraError;
-        //     if (negError)
-        //         cameraError = -cameraError;
+        // cameraError = maxAllowedCameraError;
+        // if (negError)
+        // cameraError = -cameraError;
 
         // }
 
@@ -250,7 +260,7 @@ public class RevTurretSubsystem extends SubsystemBase {
 
         // else
 
-        //     lockPIDOut = 0;
+        // lockPIDOut = 0;
 
         SmartDashboard.putNumber("tulLockMove", lockPIDOut * maxVel);
 
@@ -279,8 +289,8 @@ public class RevTurretSubsystem extends SubsystemBase {
 
     public void resetAngle(double angle) {
         mEncoder.setPosition(angle);
-        // if (RobotBase.isSimulation())
-        // mEncoderSim.setPosition(angle);
+        if (RobotBase.isSimulation())
+            mEncoderSim.setPosition(angle);
 
         targetAngle = angle;
     }

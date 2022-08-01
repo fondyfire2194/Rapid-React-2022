@@ -11,7 +11,6 @@ import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
-import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -131,10 +130,8 @@ public class RevShooterSubsystem extends SubsystemBase {
     public boolean runContinuous;
     public boolean calcDistRunning = false;
 
-    private BangBangController m_bangBang = new BangBangController();
     public final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(ShooterConstants.kSVolts,
             ShooterConstants.kVVoltSecondsPerRotation, ShooterConstants.kaVoltSecondsSquaredPerRotation);
-    private boolean runBangBang = false;
 
     public RevShooterSubsystem() {
 
@@ -177,12 +174,13 @@ public class RevShooterSubsystem extends SubsystemBase {
         m_topRollerMotor.setInverted(false);
         setTopRollerBrakeOn(true);
 
+        m_topRollerMotor.setSmartCurrentLimit(20);
+
         Arrays.asList(mLeftMotor, mRightMotor)
                 .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
 
-        // Set motors to brake mode for faster stop
         Arrays.asList(mLeftMotor, mRightMotor, m_topRollerMotor)
-                .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
+                .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kCoast));
 
         tuneGains();
 
@@ -262,23 +260,9 @@ public class RevShooterSubsystem extends SubsystemBase {
 
             rpm = 800;
 
-        if (runBangBang) {
-
-            runBangBang(rpm);
-        }
-
-        else {
-
-            spinAtRPM(rpm);
-
-        }
+        spinAtRPM(rpm);
 
         runTopAtVelocity(Pref.getPref("TopRollShootRPM"));
-    }
-
-    public void runBangBang(double setpoint) {
-
-        m_bangBang.calculate(getRPM(), setpoint * 12.0 + 0.9 * m_feedforward.calculate(setpoint));
     }
 
     public void reverseUpperRoller() {

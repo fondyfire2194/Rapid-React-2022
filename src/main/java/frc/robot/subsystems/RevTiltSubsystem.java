@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.Map;
 
-import com.revrobotics.CANSparkMax;
+//import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -15,16 +15,26 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.TiltConstants;
 import frc.robot.Pref;
+import frc.robot.Sim.CANEncoderSim;
 import frc.robot.Sim.CANSparkMaxWithSim;
 
 public class RevTiltSubsystem extends SubsystemBase {
@@ -98,10 +108,10 @@ public class RevTiltSubsystem extends SubsystemBase {
 
     public double presetPosition;
     public NetworkTableEntry tiltTarget;
-    // private CANEncoderSim mEncoderSim;
-    // final LinearSystem<N2, N1, N1> m_tilt = LinearSystemId
-    // .identifyPositionSystem(.1, 0.001);
-    // LinearSystemSim<N2, N1, N1> m_tiltSim = new LinearSystemSim<>(m_tilt);
+    private CANEncoderSim mEncoderSim;
+    final LinearSystem<N2, N1, N1> m_tilt = LinearSystemId
+            .identifyPositionSystem(.0774, 0.0005);
+    LinearSystemSim<N2, N1, N1> m_tiltSim = new LinearSystemSim<>(m_tilt);
 
     public boolean positionRunning;
 
@@ -126,7 +136,7 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         // if (RobotBase.isReal()) {
 
-        mEncoder.setPositionConversionFactor(degreesPerRev);//.03654
+        mEncoder.setPositionConversionFactor(degreesPerRev);// .03654
         mEncoder.setVelocityConversionFactor(degreesPerRev / 60);
 
         SmartDashboard.putNumber("TDPR", degreesPerRev);
@@ -137,11 +147,11 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         m_motor.setClosedLoopRampRate(2);
 
-        if (RobotBase.isReal()) {
+       // if (RobotBase.isReal()) {
             setFF_MaxOuts();
             setPosGains();
             setVelGains();
-        }
+      //  }
         m_motor.setIdleMode(IdleMode.kBrake);
 
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
@@ -154,8 +164,10 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         if (RobotBase.isSimulation()) {
             positionResetDone = true;
-            // mEncoderSim = new CANEncoderSim(m_motor.getDeviceId(), false);
+            mEncoderSim = new CANEncoderSim(m_motor.getDeviceId(), false);
             mPosController.setP(.02);
+
+            maxVel = 5;
 
             mVelController.setP(.05);
 
@@ -168,11 +180,11 @@ public class RevTiltSubsystem extends SubsystemBase {
             resetAngle();
 
         }
-        setSoftwareLimits();
+
         if (RobotBase.isReal() && m_reverseLimit.isPressed()) {
 
             resetAngle();
-
+            setSoftwareLimits();
             enableSoftLimits(true);
 
         }
@@ -216,18 +228,18 @@ public class RevTiltSubsystem extends SubsystemBase {
     public void simulationPeriodic() {
         // In this method, we update our simulation of what our elevator is doing
         // First, we set our "inputs" (voltages)
-        // m_tiltSim.setInput(m_motor.get() * RobotController.getBatteryVoltage());
-        // SmartDashboard.putNumber("TSIMI", m_motor.get() *
-        // RobotController.getBatteryVoltage());
+        m_tiltSim.setInput(m_motor.get() * RobotController.getBatteryVoltage());
+        SmartDashboard.putNumber("TSIMI", m_motor.getAppliedOutput() *
+                RobotController.getBatteryVoltage());
         // Next, we update it. The standard loop time is 20ms.
-        // m_tiltSim.update(0.020);
+        m_tiltSim.update(0.020);
         // SmartDashboard.putNumber("SIMO", m_tiltSim.getOutput(0));
         // Finally, we set our simulated encoder's readings and simulated battery
         // voltage
-        // mEncoderSim.setPosition(m_tiltSim.getOutput(0));
+        mEncoderSim.setPosition(m_tiltSim.getOutput(0));
         // SimBattery estimates loaded battery voltages
-        // RoboRioSim.setVInVoltage(
-        // BatterySim.calculateDefaultBatteryLoadedVoltage(m_tiltSim.getCurrentDrawAmps()));
+        RoboRioSim.setVInVoltage(
+                BatterySim.calculateDefaultBatteryLoadedVoltage(m_tiltSim.getCurrentDrawAmps()));
 
     }
 
@@ -256,6 +268,7 @@ public class RevTiltSubsystem extends SubsystemBase {
     }
 
     public void moveManually(double speed) {
+        SmartDashboard.putNumber("TISPD", speed);
         m_motor.set(speed);
 
     }
@@ -268,7 +281,12 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("TIPIDOUT", pidout);
 
-        moveAtVelocity(pidout * maxVel);
+        if (RobotBase.isReal())
+
+            moveAtVelocity(pidout * maxVel);
+
+        else
+            moveManually(pidout);
     }
 
     public void resetAngle() {
@@ -343,8 +361,8 @@ public class RevTiltSubsystem extends SubsystemBase {
     }
 
     public void setSoftwareLimits() {
-        m_motor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, (float) TiltConstants.TILT_MIN_ANGLE);
-        m_motor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) TiltConstants.TILT_MAX_ANGLE);
+        m_motor.setSoftLimit(CANSparkMaxWithSim.SoftLimitDirection.kReverse, (float) TiltConstants.TILT_MIN_ANGLE);
+        m_motor.setSoftLimit(CANSparkMaxWithSim.SoftLimitDirection.kForward, (float) TiltConstants.TILT_MAX_ANGLE);
         m_motor.setIdleMode(IdleMode.kBrake);
 
     }

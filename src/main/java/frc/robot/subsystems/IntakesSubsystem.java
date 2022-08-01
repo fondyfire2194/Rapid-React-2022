@@ -109,12 +109,6 @@ public class IntakesSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    // SmartDashboard.putNumber("FCDV", frontIntakeCargoDetect.getVoltage());
-    // SmartDashboard.putNumber("RCDV", rearIntakeCargoDetect.getVoltage());
-
-    // SmartDashboard.putNumber("FrontIntakeMotor", getFrontMotor());
-
-    // SmartDashboard.putNumber("RearIntakeMotor", getRearMotor());
   }
 
   public boolean getCargoAtFront() {

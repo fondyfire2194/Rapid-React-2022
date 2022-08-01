@@ -83,7 +83,7 @@ public class NetTablesLog extends CommandBase {
                     m_drive.rightController.getSetpoint() -
                             m_drive.getWheelSpeeds().rightMetersPerSecond);
 
-            m_fftraj.angleMeasurement.setNumber(m_drive.getHeading());
+            m_fftraj.angleMeasurement.setNumber(m_drive.getRotationDegrees());
         }
     }
 

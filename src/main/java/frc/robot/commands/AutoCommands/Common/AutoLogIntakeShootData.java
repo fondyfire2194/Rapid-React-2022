@@ -4,8 +4,11 @@
 
 package frc.robot.commands.AutoCommands.Common;
 
+import java.sql.DriverPropertyInfo;
+
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -24,6 +27,8 @@ public class AutoLogIntakeShootData extends CommandBase {
   NetworkTableEntry autotime = NetworkTableInstance.getDefault().getTable("autolog").getEntry("autotime");
   NetworkTableEntry cargoatshoot = NetworkTableInstance.getDefault().getTable("autolog").getEntry("cargatshoot");
 
+  NetworkTableEntry rearIntakeActive = NetworkTableInstance.getDefault().getTable("autolog")
+      .getEntry("rearintakeactive");
   NetworkTableEntry frontIntakeMotor = NetworkTableInstance.getDefault().getTable("autolog")
       .getEntry("frontintakemotor");
   NetworkTableEntry frontIntakeSensor = NetworkTableInstance.getDefault().getTable("autolog")
@@ -43,11 +48,16 @@ public class AutoLogIntakeShootData extends CommandBase {
       .getEntry("cargoatrear");
 
   NetworkTableEntry lowRollerMotor = NetworkTableInstance.getDefault().getTable("autolog").getEntry("lowrollerrpm");
+  NetworkTableEntry lowRollerMotorOut = NetworkTableInstance.getDefault().getTable("autolog").getEntry("lowrollerout");
+  NetworkTableEntry lowRollerMotorAmps = NetworkTableInstance.getDefault().getTable("autolog")
+      .getEntry("lowrolleramps");
   NetworkTableEntry topRollerMotor = NetworkTableInstance.getDefault().getTable("autolog").getEntry("toproller");
   NetworkTableEntry leftshootermotor = NetworkTableInstance.getDefault().getTable("autolog").getEntry("leftshooterrpm");
   NetworkTableEntry autoTime = NetworkTableInstance.getDefault().getTable("autolog").getEntry("autotime");
 
   NetworkTableEntry robotPosition = NetworkTableInstance.getDefault().getTable("autolog").getEntry("robotposition");
+  NetworkTableEntry inAutoEnabled = NetworkTableInstance.getDefault().getTable("autolog").getEntry("inautoenabled");
+  NetworkTableEntry inTeleopEnabled = NetworkTableInstance.getDefault().getTable("autolog").getEntry("inteleopenabled");
 
   public AutoLogIntakeShootData(IntakesSubsystem intake, CargoTransportSubsystem transport, RevShooterSubsystem shooter,
       RevDrivetrain drive) {
@@ -74,16 +84,18 @@ public class AutoLogIntakeShootData extends CommandBase {
 
     cargoatshoot.setBoolean(m_transport.getCargoAtShoot());
     lowRollerMotor.setNumber(m_transport.getLowerRPM());
+    lowRollerMotorOut.setNumber(m_transport.getLowerRoller());
+    lowRollerMotorAmps.setNumber(m_transport.getLowerRollerMotorAmps());
+
+    rearIntakeActive.setBoolean(!m_intake.useFrontIntake);
 
     cargoatfront.setBoolean(m_intake.getCargoAtFront());
     frontIntakeSensor.setNumber(m_intake.frontIntakeCargoDetect.getVoltage());
-    cargoatfront.setBoolean(m_intake.getCargoAtFront());
     frontIntakeMotor.setNumber(m_intake.getFrontMotor());
     frontIntakeArm.setBoolean(m_intake.getFrontArmLowered());
 
     cargoatrear.setBoolean(m_intake.getCargoAtRear());
     rearIntakeSensor.setNumber(m_intake.rearIntakeCargoDetect.getVoltage());
-    cargoatfront.setBoolean(m_intake.getCargoAtFront());
     rearIntakeMotor.setNumber(m_intake.getRearMotor());
     rearIntakeArm.setBoolean(m_intake.getRearArmLowered());
 
@@ -91,6 +103,9 @@ public class AutoLogIntakeShootData extends CommandBase {
     leftshootermotor.setNumber(m_shooter.getRPM());
 
     robotPosition.setNumber(m_drive.getAverageDistance());
+
+    inAutoEnabled.setBoolean(DriverStation.isAutonomousEnabled());
+    inTeleopEnabled.setBoolean(DriverStation.isTeleopEnabled());
   }
 
   // Called once the command ends or is interrupted.

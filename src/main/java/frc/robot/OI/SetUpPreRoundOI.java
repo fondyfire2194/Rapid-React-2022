@@ -75,8 +75,8 @@ public class SetUpPreRoundOI {
                         Shuffleboard.getTab("Pre-Round").add("HidingCargo", hideCargoChooser).withSize(1, 1)
                                         .withPosition(3, 0);
 
-                        hideCargoChooser.setDefaultOption("No", false);
-                        hideCargoChooser.addOption("Yes", true);
+                        hideCargoChooser.setDefaultOption("Yes", true);
+                        hideCargoChooser.addOption("No", false);
 
                         Shuffleboard.getTab("Pre-Round").add("Auto Delay", startDelayChooser).withSize(2, 1)
                                         .withPosition(4, 0); //

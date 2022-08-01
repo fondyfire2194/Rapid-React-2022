@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
+import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.CargoTransport.TestCargoColor;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
@@ -20,6 +21,7 @@ import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
 import frc.robot.commands.Shooter.StopShooter;
+import frc.robot.commands.Tilt.PositionHoldTiltTest;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
@@ -72,7 +74,10 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
                                                 new SetPresetRPM(shooter, upperRPM),
 
                                                 new SetUpLimelightForTarget(ll, PipelinesConstants.noZoom960720, true))
-                                                                .deadlineWith(new StopShooter(shooter)),
+                                                                .deadlineWith(new ParallelCommandGroup(
+                                                                                new StopShooter(shooter),
+                                                                                new PositionHoldTiltTurret(tilt, turret,
+                                                                                                ll))),
 
                                 new ParallelCommandGroup(
                                                 // new PositionTilt(tilt, tiltAngle).withTimeout(timeOut),
@@ -117,7 +122,9 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
                                                                                 intake,
                                                                                 ll).withTimeout(timeOut),
 
-                                                                new WaitCommand(1))),
+                                                                new WaitCommand(1)).deadlineWith(
+                                                                                new PositionHoldTiltTurret(tilt, turret,
+                                                                                                ll))),
 
                                 new ParallelCommandGroup(
 

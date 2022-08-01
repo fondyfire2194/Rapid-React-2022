@@ -125,6 +125,21 @@
   },
   "NetworkTables": {
     "Shuffleboard": {
+      "CanBus": {
+        "Subs 2": {
+          "Tilt": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      },
+      "Competition": {
+        "Values": {
+          "open": true
+        },
+        "open": true
+      },
       "Pre-Round": {
         "Auto Commands": {
           "open": true

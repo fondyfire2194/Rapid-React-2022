@@ -88,7 +88,10 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     m_lowerRollerMotor.restoreFactoryDefaults();
 
+    m_lowerRollerMotor.setSmartCurrentLimit(20);
+
     m_lowerRollerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
+
     m_lowerRollerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50);
 
     m_lowerPID = m_lowerRollerMotor.getPIDController();
@@ -111,7 +114,8 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
       lowRollEncoderSim = new CANEncoderSim(m_lowerRollerMotor.getDeviceId(), false);
       lowRollerSim = new FlywheelSim(
-          LinearSystemId.identifyVelocitySystem(ShooterConstants.kVVoltSecondsPerRotation, ShooterConstants.kaVoltSecondsSquaredPerRotation),
+          LinearSystemId.identifyVelocitySystem(ShooterConstants.kVVoltSecondsPerRotation,
+              ShooterConstants.kaVoltSecondsSquaredPerRotation),
           DCMotor.getNeo550(1),
           4096);
 
@@ -123,7 +127,8 @@ public class CargoTransportSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // SmartDashboard.putNumber("PROXVAL", rcs.getProximity());
-     SmartDashboard.putNumber("LowRollOut", getLowerRoller());
+    SmartDashboard.putNumber("LowRollOut", getLowerRoller());
+    SmartDashboard.putNumber("LowRollAmps", getLowerRollerMotorAmps()); 
 
   }
 
@@ -164,7 +169,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
       return cargoSensor.get();
 
     else
-    
+
       return !cargoSensor.get();
   }
 
@@ -200,30 +205,11 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     cargoIsRed = getCargoIsRed();
 
-    SmartDashboard.putBoolean("Blue", cargoIsBlue);
-
-    SmartDashboard.putBoolean("Red", cargoIsRed);
-
-    SmartDashboard.putBoolean("Alliance", getAllianceBlue());
-
-    
-
-    
-
     return ((getAllianceBlue() && cargoIsRed)
 
         || (!getAllianceBlue() && cargoIsBlue));
   }
 
-  public boolean getCargoRed() {
-
-    return cargoIsRed;
-  }
-
-  public boolean getCargoBlue() {
-
-    return cargoIsBlue;
-  }
 
   public void releaseCargo() {
 
