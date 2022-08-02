@@ -134,14 +134,10 @@ public class RevTiltSubsystem extends SubsystemBase {
         targetAngle = 0;
         positionResetDone = false;
 
-        // if (RobotBase.isReal()) {
-
         mEncoder.setPositionConversionFactor(degreesPerRev);// .03654
         mEncoder.setVelocityConversionFactor(degreesPerRev / 60);
 
         SmartDashboard.putNumber("TDPR", degreesPerRev);
-
-        // }
 
         m_motor.setSmartCurrentLimit(20);
 

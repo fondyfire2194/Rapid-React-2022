@@ -127,9 +127,6 @@
     "Shuffleboard": {
       "CanBus": {
         "Subs 2": {
-          "Tilt": {
-            "open": true
-          },
           "open": true
         },
         "open": true
@@ -146,9 +143,6 @@
         },
         "open": true
       },
-      "open": true
-    },
-    "autolog": {
       "open": true
     }
   }
