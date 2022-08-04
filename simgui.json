@@ -89,16 +89,6 @@
       "/SmartDashboard/Field": "Field2d"
     },
     "windows": {
-      "/Shuffleboard/Pre-Round/Auto Commands": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/Shuffleboard/Pre-Round/HidingCargo": {
-        "window": {
-          "visible": true
-        }
-      },
       "/Shuffleboard/Pre-Round/OppHideTest/Center Hide": {
         "window": {
           "visible": true

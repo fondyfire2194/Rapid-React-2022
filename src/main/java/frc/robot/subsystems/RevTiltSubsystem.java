@@ -143,11 +143,11 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         m_motor.setClosedLoopRampRate(2);
 
-       // if (RobotBase.isReal()) {
-            setFF_MaxOuts();
-            setPosGains();
-            setVelGains();
-      //  }
+        // if (RobotBase.isReal()) {
+        setFF_MaxOuts();
+        setPosGains();
+        setVelGains();
+        // }
         m_motor.setIdleMode(IdleMode.kBrake);
 
         m_reverseLimit = m_motor.getReverseLimitSwitch(Type.kNormallyClosed);
@@ -176,11 +176,12 @@ public class RevTiltSubsystem extends SubsystemBase {
             resetAngle();
 
         }
-
+        setSoftwareLimits();
+        
         if (RobotBase.isReal() && m_reverseLimit.isPressed()) {
 
             resetAngle();
-            setSoftwareLimits();
+
             enableSoftLimits(true);
 
         }
@@ -215,7 +216,8 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("TIPLLIMSW", m_motor.getSoftLimit(SoftLimitDirection.kForward));
         SmartDashboard.putNumber("TIMINLIMSW", m_motor.getSoftLimit(SoftLimitDirection.kReverse));
-
+        SmartDashboard.putNumber("PlusSWLI", m_motor.getSoftLimit(SoftLimitDirection.kForward));
+        SmartDashboard.putNumber("MinSWLI", m_motor.getSoftLimit(SoftLimitDirection.kReverse));
         // SmartDashboard.putBoolean("RefDone", positionResetDone);
 
     }

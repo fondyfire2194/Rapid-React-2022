@@ -34,6 +34,7 @@ public class AltShootCargo extends CommandBase {
   private boolean cargoReleasing;
   private double cargoReleaseTimer;
   private LimeLight m_ll;
+  private double intakeStartTimer;
 
   public AltShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
       IntakesSubsystem intake, LimeLight ll) {
@@ -81,6 +82,8 @@ public class AltShootCargo extends CommandBase {
     m_transport.wrongCargoColor = false;
 
     m_shooter.wrongCargoColor = false;
+
+    intakeStartTimer = 0;
 
   }
 
@@ -134,18 +137,22 @@ public class AltShootCargo extends CommandBase {
 
     if (!cargoAtShoot && !cargoReleasing && !rearIntakeRunning && (m_intake.getCargoAtFront() || frontIntakeRunning)) {
 
-      m_intake.runFrontIntakeMotor();
-
       frontIntakeRunning = true;
+
+      if (intakeStartTimer == 0)
+        intakeStartTimer = Timer.getFPGATimestamp();
+      // m_intake.runFrontIntakeMotor();
+
     }
 
     // if no cargo at shoot and cargo available at rear then run rear intake motor
 
     if (!cargoAtShoot && !cargoReleasing && !frontIntakeRunning && (m_intake.getCargoAtRear() || rearIntakeRunning)) {
 
-      m_intake.runRearIntakeMotor();
-
       rearIntakeRunning = true;
+      if (intakeStartTimer == 0)
+        intakeStartTimer = Timer.getFPGATimestamp();
+      // m_intake.runRearIntakeMotor();
     }
 
     // second cargo on its way from an intake so run low roller until it arrives at
@@ -156,6 +163,16 @@ public class AltShootCargo extends CommandBase {
       if (!secondCargoAtLowRoller)
 
         m_transport.intakeCargo();
+
+      if (Timer.getFPGATimestamp() > intakeStartTimer + .5) {
+        if (frontIntakeRunning) {
+          m_intake.runFrontIntakeMotor();
+        }
+        if (rearIntakeRunning) {
+          m_intake.runRearIntakeMotor();
+        }
+
+      }
 
       if (timeCargoToLowRoller == 0 && cargoAtShoot) {
 
@@ -201,7 +218,7 @@ public class AltShootCargo extends CommandBase {
     m_shooter.isShooting = false;
     m_intake.stopFrontIntakeMotor();
     m_intake.stopRearIntakeMotor();
-    m_shooter.wrongCargoColor=false;
+    m_shooter.wrongCargoColor = false;
 
   }
 
