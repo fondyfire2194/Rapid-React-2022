@@ -191,7 +191,7 @@ public class Robot extends TimedRobot {
     Compressor comp = m_robotContainer.m_compressor;
     FondyFireTrajectory fftraj = m_robotContainer.m_trajectory;
 
-    new AutoLogIntakeShootData(intake, transport, shooter, drive).schedule();
+    new AutoLogIntakeShootData(intake, transport, shooter, drive,tilt).schedule();
 
     ll.setLEDMode(LedMode.kpipeLine);
     ll.setPipeline(PipelinesConstants.noZoom960720);
@@ -431,9 +431,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_shooter.presetLocationName = FieldMap.shootLocationName[m_robotContainer.m_shooter.shootLocation];
     m_robotContainer.m_shooter.shootModeName = FieldMap.shootModeName[m_robotContainer.m_shooter.shootValuesSource];
     autoChoice = 10;
-    new AutoLogIntakeShootData(m_robotContainer.m_intake, m_robotContainer.m_transport, m_robotContainer.m_shooter,
-        m_robotContainer.m_drive).schedule();
-
+   
     new ParallelCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_shooter),
 
         new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();

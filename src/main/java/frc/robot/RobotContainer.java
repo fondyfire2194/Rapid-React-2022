@@ -35,6 +35,7 @@ import frc.robot.Vision.LimelightControlMode.CamMode;
 import frc.robot.Vision.LimelightControlMode.LedMode;
 import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.TurnLedsOnOff;
+import frc.robot.commands.AutoCommands.Common.AutoLogIntakeShootData;
 import frc.robot.commands.AutoCommands.Common.SetupPresetShootLocation;
 import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
@@ -273,13 +274,13 @@ public class RobotContainer {
 
             new JoystickButton(m_driverController, 2)
                         .whenPressed(new RunShooter(m_shooter))
-                        .whenPressed(new TurnLedsOnOff(m_limelight, true))
-                        .whenPressed(new AltShootCargo(m_shooter, m_transport, m_intake, m_limelight));
+                        .whenPressed(new SetUpLimelightForTarget(m_limelight, 0, true))
+                        .whenPressed(new AltShootCargo(m_shooter, m_transport, m_intake, m_limelight))
+                        .whenPressed(new AutoLogIntakeShootData(m_intake, m_transport, m_shooter, m_drive, m_tilt));
 
             new JoystickButton(m_driverController, 6).whenPressed(new SetFrontIntakeActive(m_intake, true));
 
             new JoystickButton(m_driverController, 3).whenPressed(new StopShoot(m_shooter, m_transport))
-                        // .whenPressed(new TurnLedsOnOff(m_limelight, false))
                         .whenPressed(new StopLowerRoller(m_transport));
 
             new JoystickButton(m_driverController, 4).whenPressed(new SetFrontIntakeActive(m_intake, false));
