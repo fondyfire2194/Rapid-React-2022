@@ -11,8 +11,6 @@ public class StopActiveIntake extends CommandBase {
 
   private IntakesSubsystem m_intake;
 
-  private int loopctr;
-
   public StopActiveIntake(IntakesSubsystem intake) {
     m_intake = intake;
 
@@ -20,13 +18,12 @@ public class StopActiveIntake extends CommandBase {
   }
 
   public void initialize() {
-    loopctr = 0;
   }
 
   @Override
 
   public void execute() {
-    loopctr++;
+    
     m_intake.stopFrontIntakeMotor();
     m_intake.raiseFrontArm();
 

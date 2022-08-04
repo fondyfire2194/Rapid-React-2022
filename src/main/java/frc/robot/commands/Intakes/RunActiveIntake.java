@@ -56,27 +56,20 @@ public class RunActiveIntake extends CommandBase {
 
       loopctr++;
 
-    // if (DriverStation.isTeleop() && m_intake.useFrontIntake &&
-    // m_intake.useFrontCamera)
-
-    // Shuffleboard.selectTab("FrontIntakeCamera");
-
-    // if (DriverStation.isTeleop() && !m_intake.useFrontIntake &&
-    // m_intake.useRearCamera)
-
-    // Shuffleboard.selectTab("RearIntakeCamera");
-
     m_intake.lowerActiveArm();
-
-    // m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
 
     // run intake until first cargo is at lower rollers
 
     if (!m_transport.getCargoAtShoot() && loopctr > 10) {
 
-      // if (!stopActiveIntakeNow)
-
       m_intake.runActiveIntakeMotor();
+
+      m_transport.intakeCargo();
+    }
+
+    if (m_transport.getCargoAtShoot()) {
+
+      m_transport.stopLowerRoller();
     }
 
     // watch for second cargo and latch its arrival
@@ -84,6 +77,8 @@ public class RunActiveIntake extends CommandBase {
     // out of sensor range
 
     if (m_transport.getCargoAtShoot() && !stopActiveIntakeNow) {
+
+      m_transport.stopLowerRoller();
 
       if (m_intake.useFrontIntake) {
 
@@ -127,15 +122,13 @@ public class RunActiveIntake extends CommandBase {
     m_intake.raiseRearArm();
     m_intake.raiseFrontArm();
     stopActiveIntakeNow = false;
-    m_transport.stopLowerRoller();
-    m_intake.stopLowerRoller = true;
 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    
+
     return stopActiveIntakeNow && m_startTime != 0 &&
 
         Timer.getFPGATimestamp() > m_startTime + .1;

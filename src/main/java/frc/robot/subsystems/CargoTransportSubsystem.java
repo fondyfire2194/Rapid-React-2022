@@ -221,7 +221,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public void intakeCargo() {
 
-    double rpm = Pref.getPref("LowRollReleaseRPM");
+    double rpm = Pref.getPref("LowRollIntakeRPM");
 
     runLowerAtVelocity(rpm);
 

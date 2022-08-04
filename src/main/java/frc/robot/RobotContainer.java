@@ -37,6 +37,7 @@ import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.TurnLedsOnOff;
 import frc.robot.commands.AutoCommands.Common.AutoLogIntakeShootData;
 import frc.robot.commands.AutoCommands.Common.SetupPresetShootLocation;
+import frc.robot.commands.CargoTransport.DelayOffLowRoller;
 import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Climber.RunClimber;
@@ -267,9 +268,10 @@ public class RobotContainer {
 
             new JoystickButton(m_driverController, 1)
                         .whileHeld(new RunActiveIntake(m_intake, m_transport))
-                        .whenPressed(new TurnLedsOnOff(m_limelight, false))
+                        .whenPressed(new LimelightSetPipeline(m_limelight, PipelinesConstants.ledsOffPipeline))
                         .whenPressed(new PositionTurret(m_turret, 0))
                         .whenPressed(new RunLowerRollerIntake(m_transport, m_intake))
+                        .whenReleased(new DelayOffLowRoller(m_transport).withTimeout(1))
                         .whenReleased(new StopActiveIntake(m_intake));
 
             new JoystickButton(m_driverController, 2)

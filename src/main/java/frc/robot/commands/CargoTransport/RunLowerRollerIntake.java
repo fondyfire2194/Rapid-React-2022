@@ -35,22 +35,21 @@ public class RunLowerRollerIntake extends CommandBase {
     m_transport.haltLowerRollerMotor = false;
     m_transport.latchCargoAtShoot = false;
     m_startTime = 0;
-    m_intake.stopLowerRoller = false;
 
     activeLowStopTime = Pref.getPref("LowRollStopTimeRed");
 
     if (Robot.getAllianceColorBlue())
-    
+
       activeLowStopTime = Pref.getPref("LowRollStopTimeBlue");
 
-      cargoAlreadyAtShoot=m_transport.getCargoAtShoot();
+    cargoAlreadyAtShoot = m_transport.getCargoAtShoot();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    m_transport.runLowerAtVelocity(Pref.getPref("LowRollIntakeRPM"));
+    m_transport.intakeCargo();
 
     if (!m_transport.latchCargoAtShoot && m_transport.getCargoAtShoot()) {
 
@@ -76,7 +75,7 @@ public class RunLowerRollerIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return  m_intake.stopLowerRoller ||cargoAlreadyAtShoot
+    return cargoAlreadyAtShoot
         || m_transport.latchCargoAtShoot && m_startTime != 0
             && Timer.getFPGATimestamp() > m_startTime + activeLowStopTime;
 
