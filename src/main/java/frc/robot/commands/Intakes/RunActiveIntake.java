@@ -4,47 +4,59 @@
 
 package frc.robot.commands.Intakes;
 
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Pref;
+import frc.robot.Robot;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 
 public class RunActiveIntake extends CommandBase {
 
-  private IntakesSubsystem m_intake;
+  private final IntakesSubsystem m_intake;
 
-  private CargoTransportSubsystem m_transport;
+  private final CargoTransportSubsystem m_transport;
 
-  private boolean stopActiveIntakeNow;
+  private boolean stopActiveIntake;
 
   private double m_startTime;
 
   private int loopctr;
 
-  private Debouncer frontInDebouncer;
+  private double timeCargoToShoot;
 
-  private Debouncer rearInDebouncer;
+  private boolean cargoAtShoot;
 
-  public RunActiveIntake(IntakesSubsystem intake, CargoTransportSubsystem transport) {
+  private double activeShootStopTime;
+
+  private double intakeStopTime = .05;
+
+  public RunActiveIntake(final IntakesSubsystem intake, final CargoTransportSubsystem transport) {
 
     m_intake = intake;
 
     m_transport = transport;
 
-    addRequirements(m_intake);
+    addRequirements(m_intake, m_transport);
   }
 
   public void initialize() {
 
-    stopActiveIntakeNow = false;
+    m_startTime = 0;
+
+    stopActiveIntake = false;
+
+    timeCargoToShoot = 0;
+
+    m_transport.latchCargoAtShoot = false;
 
     loopctr = 0;
 
-    frontInDebouncer = new Debouncer(.2, DebounceType.kRising);
-    rearInDebouncer = new Debouncer(.2, DebounceType.kRising);
+    activeShootStopTime = Pref.getPref("LowRollStopTimeRed");
+
+    if (Robot.getAllianceColorBlue())
+
+      activeShootStopTime = Pref.getPref("LowRollStopTimeBlue");
 
   }
 
@@ -52,76 +64,73 @@ public class RunActiveIntake extends CommandBase {
 
   public void execute() {
 
-    if (loopctr < 30)
+    loopctr++;
 
-      loopctr++;
+    cargoAtShoot = m_transport.getCargoAtShoot();
 
-    m_intake.lowerActiveArm();
+    if (loopctr < 10) {
 
-    // run intake until first cargo is at lower rollers
+      m_intake.lowerActiveArm();
+    }
 
-    if (!m_transport.getCargoAtShoot() && loopctr > 10) {
+    // run intake until first cargo is at shoot position (lower rollers)
+
+    // intake motor runs until end of routine
+
+    if (loopctr > 30) {
 
       m_intake.runActiveIntakeMotor();
+    }
+
+    // low rollers run until cargo at shoot(low rollers) and short delay
+
+    if (!m_transport.latchCargoAtShoot) {
 
       m_transport.intakeCargo();
     }
 
-    if (m_transport.getCargoAtShoot()) {
-
-      m_transport.stopLowerRoller();
-    }
-
-    // watch for second cargo and latch its arrival
-    // stop intake quickly and latch cargo at intake in case it goes
-    // out of sensor range
-
-    if (m_transport.getCargoAtShoot() && !stopActiveIntakeNow) {
+    else {
 
       m_transport.stopLowerRoller();
 
-      if (m_intake.useFrontIntake) {
-
-        m_intake.runFrontIntakeMotor();
-
-        stopActiveIntakeNow = m_intake.getCargoAtFront();
-
-        m_startTime = Timer.getFPGATimestamp();
-
-        m_intake.twoCargoOnBoard = true;
-
-      }
-
-      if (!m_intake.useFrontIntake && !stopActiveIntakeNow) {
-
-        m_intake.runRearIntakeMotor();
-
-        stopActiveIntakeNow = m_intake.getCargoAtRear();
-
-        m_startTime = Timer.getFPGATimestamp();
-
-        m_intake.twoCargoOnBoard = true;
-
-      }
     }
-    SmartDashboard.putBoolean("SAIN", stopActiveIntakeNow);
 
-    if (stopActiveIntakeNow && m_startTime != 0) {
+    // cargo is at shoot (low rollers) so start the time delay
 
-      m_intake.m_frontIntakeMotor.stopMotor();
+    if (cargoAtShoot && timeCargoToShoot == 0) {
 
-      m_intake.m_rearIntakeMotor.stopMotor();
+      timeCargoToShoot = Timer.getFPGATimestamp();
     }
+
+    // cargo at shoot for duration of time delay
+
+    m_transport.latchCargoAtShoot = m_transport.latchCargoAtShoot
+
+        || cargoAtShoot && Timer.getFPGATimestamp() > timeCargoToShoot + activeShootStopTime;
+
+    // second cargo is at active intake position
+    // routine will end after short time delay to make sure caro is completely in
+    // robot
+
+    stopActiveIntake = cargoAtShoot && m_intake.getCargoAtActiveIntake();
+
+    if (stopActiveIntake && m_startTime != 0) {
+
+      m_startTime = Timer.getFPGATimestamp();
+    }
+
+    m_intake.twoCargoOnBoard = true;
 
   }
 
   @Override
-  public void end(boolean interrupted) {
+  public void end(final boolean interrupted) {
     m_intake.stopFrontIntakeMotor();
     m_intake.stopRearIntakeMotor();
     m_intake.raiseRearArm();
     m_intake.raiseFrontArm();
-    stopActiveIntakeNow = false;
+    stopActiveIntake = false;
+    m_transport.stopLowerRoller();
 
   }
 
@@ -129,8 +138,6 @@ public class RunActiveIntake extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    return stopActiveIntakeNow && m_startTime != 0 &&
-
-        Timer.getFPGATimestamp() > m_startTime + .1;
+    return m_startTime != 0 && Timer.getFPGATimestamp() > m_startTime + intakeStopTime;
   }
 }

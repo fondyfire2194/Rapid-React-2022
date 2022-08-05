@@ -26,6 +26,7 @@ public class AutoLogIntakeShootData extends CommandBase {
 
         NetworkTableEntry autotime = NetworkTableInstance.getDefault().getTable("autolog").getEntry("autotime");
         NetworkTableEntry cargoatshoot = NetworkTableInstance.getDefault().getTable("autolog").getEntry("cargatshoot");
+        NetworkTableEntry is_shooting = NetworkTableInstance.getDefault().getTable("autolog").getEntry("isshooting");
 
         NetworkTableEntry rearIntakeActive = NetworkTableInstance.getDefault().getTable("autolog")
                         .getEntry("rearintakeactive");
@@ -95,6 +96,7 @@ public class AutoLogIntakeShootData extends CommandBase {
                 autoTime.setNumber(Timer.getFPGATimestamp() - m_autoStartTime);
 
                 cargoatshoot.setBoolean(m_transport.getCargoAtShoot());
+                is_shooting.setBoolean(m_shooter.isShooting);
                 lowRollerMotor.setNumber(m_transport.getLowerRPM());
                 lowRollerMotorOut.setNumber(m_transport.getLowerRoller());
                 lowRollerMotorAmps.setNumber(m_transport.getLowerRollerMotorAmps());

@@ -19,8 +19,8 @@ public class AltShootCargo extends CommandBase {
   private RevShooterSubsystem m_shooter;
   private CargoTransportSubsystem m_transport;
   private IntakesSubsystem m_intake;
-  private boolean frontIntakeRunning;
-  private boolean rearIntakeRunning;
+  private boolean frontIntakeToStart;
+  private boolean rearIntakeToStart;
 
   private boolean cargoAtShoot;
   private boolean noCargoAtStart;
@@ -35,6 +35,7 @@ public class AltShootCargo extends CommandBase {
   private double cargoReleaseTimer;
   private LimeLight m_ll;
   private double intakeStartTimer;
+  private boolean cargoIntaking;
 
   public AltShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
       IntakesSubsystem intake, LimeLight ll) {
@@ -53,9 +54,9 @@ public class AltShootCargo extends CommandBase {
 
     m_shooter.isShooting = true;
 
-    frontIntakeRunning = false;
+    frontIntakeToStart = false;
 
-    rearIntakeRunning = false;
+    rearIntakeToStart = false;
 
     m_intake.cargoAtBothIntakes = m_intake.getCargoAtFront() && m_intake.getCargoAtRear();
 
@@ -66,6 +67,8 @@ public class AltShootCargo extends CommandBase {
     cargoReleaseTimer = 0;
 
     cargoReleasing = false;
+
+    cargoIntaking = false;
 
     m_transport.latchCargoAtShoot = false;
 
@@ -84,6 +87,8 @@ public class AltShootCargo extends CommandBase {
     m_shooter.wrongCargoColor = false;
 
     intakeStartTimer = 0;
+
+    m_transport.stopLowerRoller();
 
   }
 
@@ -108,12 +113,16 @@ public class AltShootCargo extends CommandBase {
   @Override
   public void execute() {
 
+    if (!cargoReleasing && !cargoIntaking)
+
+      m_transport.stopLowerRoller();
+
     cargoAtShoot = m_transport.getCargoAtShoot();
 
     // if intakes aren't delivering second cargo and cargo is available at shoot
     // position sensor, shoot by starting low rollers
 
-    if (cargoReleasing || (!frontIntakeRunning && !rearIntakeRunning && cargoAtShoot && m_shooter.getShooterAtSpeed()
+    if (cargoReleasing || (!frontIntakeToStart && !rearIntakeToStart && cargoAtShoot && m_shooter.getShooterAtSpeed()
 
         && m_shooter.getTopRollerAtSpeed())) {
 
@@ -134,41 +143,51 @@ public class AltShootCargo extends CommandBase {
     }
 
     // if no cargo at shoot and cargo available at front then run front intake motor
+    // after a short delay to get low roller up to speed
 
-    if (!cargoAtShoot && !cargoReleasing && !rearIntakeRunning && (m_intake.getCargoAtFront() || frontIntakeRunning)) {
+    if (!cargoAtShoot && !cargoReleasing && !rearIntakeToStart && (m_intake.getCargoAtFront() || frontIntakeToStart)) {
 
-      frontIntakeRunning = true;
+      frontIntakeToStart = true;
 
       if (intakeStartTimer == 0)
+
         intakeStartTimer = Timer.getFPGATimestamp();
-      // m_intake.runFrontIntakeMotor();
 
     }
 
     // if no cargo at shoot and cargo available at rear then run rear intake motor
 
-    if (!cargoAtShoot && !cargoReleasing && !frontIntakeRunning && (m_intake.getCargoAtRear() || rearIntakeRunning)) {
+    if (!cargoAtShoot && !cargoReleasing && !frontIntakeToStart && (m_intake.getCargoAtRear() || rearIntakeToStart)) {
 
-      rearIntakeRunning = true;
+      rearIntakeToStart = true;
+
       if (intakeStartTimer == 0)
+
         intakeStartTimer = Timer.getFPGATimestamp();
-      // m_intake.runRearIntakeMotor();
+
     }
 
     // second cargo on its way from an intake so run low roller until it arrives at
     // sensor then delay, stop low roller and end this routine
 
-    if (frontIntakeRunning || rearIntakeRunning) {
+    if (frontIntakeToStart || rearIntakeToStart) {
 
-      if (!secondCargoAtLowRoller)
+      if (!secondCargoAtLowRoller) {
 
         m_transport.intakeCargo();
 
+        cargoIntaking = true;
+      }
+
       if (Timer.getFPGATimestamp() > intakeStartTimer + .5) {
-        if (frontIntakeRunning) {
+
+        if (frontIntakeToStart) {
+
           m_intake.runFrontIntakeMotor();
         }
-        if (rearIntakeRunning) {
+
+        if (rearIntakeToStart) {
+
           m_intake.runRearIntakeMotor();
         }
 
@@ -190,7 +209,7 @@ public class AltShootCargo extends CommandBase {
 
     // no second cargo so end when released cargo is out of shooter
 
-    if (!cargoAtShoot && !cargoReleasing && !frontIntakeRunning && !rearIntakeRunning) {
+    if (!cargoAtShoot && !cargoReleasing && !frontIntakeToStart && !rearIntakeToStart) {
 
       noMoreCargo = true;
     }
@@ -211,14 +230,13 @@ public class AltShootCargo extends CommandBase {
     if (noMoreCargo) {
       m_shooter.stop();
       m_shooter.stopTopRoller();
-      // m_ll.setPipeline(PipelinesConstants.ledsOffPipeline);
-      // m_ll.useVision = false;
     }
     m_transport.stopLowerRoller();
     m_shooter.isShooting = false;
     m_intake.stopFrontIntakeMotor();
     m_intake.stopRearIntakeMotor();
     m_shooter.wrongCargoColor = false;
+    cargoIntaking = false;
 
   }
 

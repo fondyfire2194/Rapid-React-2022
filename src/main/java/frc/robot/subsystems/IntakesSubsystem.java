@@ -121,6 +121,11 @@ public class IntakesSubsystem extends SubsystemBase {
 
   }
 
+  public boolean getCargoAtActiveIntake() {
+
+    return getActiveIntake() && getCargoAtFront() || !getActiveIntake() && getCargoAtRear();
+  }
+
   public boolean checkFrontCAN() {
     return frontIntakeMotorConnected = m_frontIntakeMotor.getFirmwareVersion() != -1;
 
