@@ -105,8 +105,7 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
                                                                 new AltShootCargo(
                                                                                 shooter,
                                                                                 transport,
-                                                                                intake,
-                                                                                ll).withTimeout(timeOut),
+                                                                                intake).withTimeout(timeOut),
 
                                                                 new WaitCommand(.2),
 
@@ -118,8 +117,7 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
                                                                 new AltShootCargo(
                                                                                 shooter,
                                                                                 transport,
-                                                                                intake,
-                                                                                ll).withTimeout(timeOut),
+                                                                                intake).withTimeout(timeOut),
 
                                                                 new WaitCommand(1)).deadlineWith(
                                                                                 new PositionHoldTiltTurret(tilt, turret,

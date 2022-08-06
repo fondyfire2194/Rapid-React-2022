@@ -100,6 +100,8 @@ public class RunActiveIntake extends CommandBase {
     if (cargoAtShoot && timeCargoToShoot == 0) {
 
       timeCargoToShoot = Timer.getFPGATimestamp();
+
+      m_transport.resetPosition();
     }
 
     // cargo at shoot for duration of time delay
@@ -131,6 +133,7 @@ public class RunActiveIntake extends CommandBase {
     m_intake.raiseFrontArm();
     stopActiveIntake = false;
     m_transport.stopLowerRoller();
+    m_transport.distanceToCargoEndPosition = m_transport.getPosition();
 
   }
 

@@ -73,17 +73,17 @@ public class RunRightThreeCargo extends SequentialCommandGroup {
 
                                                                 new WaitCommand(2),
 
-                                                                new AltShootCargo(shooter, transport, intake, ll)
+                                                                new AltShootCargo(shooter, transport, intake)
                                                                                 .withTimeout(timeOut),
 
                                                                 new WaitCommand(.4),
 
-                                                                new AltShootCargo(shooter, transport, intake, ll)
+                                                                new AltShootCargo(shooter, transport, intake)
                                                                                 .withTimeout(timeOut),
 
                                                                 new WaitCommand(.4),
 
-                                                                new AltShootCargo(shooter, transport, intake, ll)
+                                                                new AltShootCargo(shooter, transport, intake)
                                                                                 .withTimeout(timeOut),
 
                                                                 new WaitCommand(.4))),

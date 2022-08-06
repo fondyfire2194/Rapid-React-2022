@@ -6,6 +6,8 @@ package frc.robot.OI;
 
 import java.util.Map;
 
+import org.opencv.video.TrackerMIL_Params;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Compressor;
@@ -308,9 +310,9 @@ public class SetUpOI {
                         shooterCommands.add("Start Shooter", new RunShooter(shooter));
 
                         shooterCommands.add("ShootOne",
-                                        new AltShootCargo(shooter, transport, intake, limelight));
+                                        new AltShootCargo(shooter, transport, intake));
                         shooterCommands.add("ShootTwo",
-                                        new AltShootCargo(shooter, transport, intake, limelight));
+                                        new AltShootCargo(shooter, transport, intake));
 
                         shooterCommands.add("ClearFaults", new ClearShFaults(shooter));
 
@@ -321,8 +323,8 @@ public class SetUpOI {
 
                         shooterCommands.add("StopTopRoll", new StopTopRoller(shooter));
 
-                        shooterCommands.add("TestColorMismatch", new TestCargoColor(transport,shooter));
-                        
+                        shooterCommands.add("TestColorMismatch", new TestCargoColor(transport, shooter));
+
                         ShuffleboardLayout shooterValues = Shuffleboard.getTab("SetupShooter")
                                         .getLayout("ShooterValues", BuiltInLayouts.kList).withPosition(2, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels
@@ -393,6 +395,7 @@ public class SetUpOI {
                         transportValues.addNumber("LowRollCMDRPM", () -> transport.lowerRequiredRPM);
                         transportValues.addNumber("LowRollAmps", () -> transport.getLowerRollerMotorAmps());
                         transportValues.addNumber("LowRollOut", () -> transport.getLowerRoller());
+                        transportValues.addNumber("DistToShootPos", () -> transport.distanceToCargoEndPosition);
 
                         transportValues.add("Cmd", transport);
                         transportValues.addBoolean("LowerRollerAtSpeed", () -> transport.getLowerRollerAtSpeed());
@@ -448,9 +451,8 @@ public class SetUpOI {
                         robotCommands1.add("TurnTo 180", new TurnToAngle(drive, 180));
                         robotCommands1.add("TurnTo -45", new TurnToAngle(drive, -45));
                         robotCommands1.add("Turn To -90", new TurnToAngle(drive, -90));
-                        robotCommands1.add("Turn To LHideOpp", new TurnToAngle(drive, FieldMap.leftStartHideAngle));                     
+                        robotCommands1.add("Turn To LHideOpp", new TurnToAngle(drive, FieldMap.leftStartHideAngle));
 
-   
                         ShuffleboardLayout robotValues = Shuffleboard.getTab("SetupRobot")
                                         .getLayout("RobotValues", BuiltInLayouts.kList).withPosition(4, 0)
                                         .withSize(2, 4).withProperties(Map.of("Label position", "LEFT")); // labels

@@ -82,6 +82,8 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean cargoIsRed;
 
+  public double distanceToCargoEndPosition;
+
   public CargoTransportSubsystem() {
 
     m_lowerRollerMotor = new CANSparkMaxWithSim(CANConstants.LOWER_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -128,7 +130,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     // SmartDashboard.putNumber("PROXVAL", rcs.getProximity());
     SmartDashboard.putNumber("LowRollOut", getLowerRoller());
-    SmartDashboard.putNumber("LowRollAmps", getLowerRollerMotorAmps()); 
+    SmartDashboard.putNumber("LowRollAmps", getLowerRollerMotorAmps());
 
   }
 
@@ -209,7 +211,6 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
         || (!getAllianceBlue() && cargoIsBlue));
   }
-
 
   public void releaseCargo() {
 
@@ -294,6 +295,14 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     m_lowerRollerMotor.setClosedLoopRampRate(acc);
 
+  }
+
+  public double getPosition(){
+    return m_lowerEncoder.getPosition();
+  }
+
+  public void resetPosition() {
+    m_lowerEncoder.setPosition(0);
   }
 
 }

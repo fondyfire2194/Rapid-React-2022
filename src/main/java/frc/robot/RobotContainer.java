@@ -277,7 +277,7 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 2)
                         .whenPressed(new RunShooter(m_shooter))
                         .whenPressed(new SetUpLimelightForTarget(m_limelight, 0, true))
-                        .whenPressed(new AltShootCargo(m_shooter, m_transport, m_intake, m_limelight))
+                        .whenPressed(new AltShootCargo(m_shooter, m_transport, m_intake))
                         .whenPressed(new AutoLogIntakeShootData(m_intake, m_transport, m_shooter, m_drive, m_tilt));
 
             new JoystickButton(m_driverController, 6).whenPressed(new SetFrontIntakeActive(m_intake, true));

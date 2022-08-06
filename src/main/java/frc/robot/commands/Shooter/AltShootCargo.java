@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
 import frc.robot.Robot;
-import frc.robot.Vision.LimeLight;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
 import frc.robot.subsystems.RevShooterSubsystem;
@@ -25,25 +24,23 @@ public class AltShootCargo extends CommandBase {
   private boolean cargoAtShoot;
   private boolean noCargoAtStart;
 
-  private double timeCargoToLowRoller;
+  private double timeCargoToShoot;
 
-  private boolean secondCargoAtLowRoller;
+  private boolean secondCargoAtShoot;
   private boolean noMoreCargo;
-  private double activeLowStopTime;
+  private double activeShootStopTime;
   private double cargoReleaseTime = .25;
   private boolean cargoReleasing;
   private double cargoReleaseTimer;
-  private LimeLight m_ll;
   private double intakeStartTimer;
   private boolean cargoIntaking;
 
   public AltShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
-      IntakesSubsystem intake, LimeLight ll) {
+      IntakesSubsystem intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_transport = transport;
     m_intake = intake;
-    m_ll = ll;
 
     addRequirements(m_intake, m_transport);
   }
@@ -62,7 +59,7 @@ public class AltShootCargo extends CommandBase {
 
     noCargoAtStart = !m_intake.getCargoAtFront() && !m_intake.getCargoAtRear() && !m_transport.getCargoAtShoot();
 
-    timeCargoToLowRoller = 0;
+    timeCargoToShoot = 0;
 
     cargoReleaseTimer = 0;
 
@@ -70,17 +67,15 @@ public class AltShootCargo extends CommandBase {
 
     cargoIntaking = false;
 
-    m_transport.latchCargoAtShoot = false;
-
     noMoreCargo = false;
 
-    secondCargoAtLowRoller = false;
+    secondCargoAtShoot = false;
 
-    activeLowStopTime = Pref.getPref("LowRollStopTimeRed");
+    activeShootStopTime = Pref.getPref("LowRollStopTimeRed");
 
     if (Robot.getAllianceColorBlue())
 
-      activeLowStopTime = Pref.getPref("LowRollStopTimeBlue");
+      activeShootStopTime = Pref.getPref("LowRollStopTimeBlue");
 
     m_transport.wrongCargoColor = false;
 
@@ -113,11 +108,14 @@ public class AltShootCargo extends CommandBase {
   @Override
   public void execute() {
 
-    if (!cargoReleasing && !cargoIntaking)
+    cargoAtShoot = m_transport.getCargoAtShoot();
+
+    // make sure the loww rollers have a command
+
+    if (!cargoReleasing && !cargoIntaking) {
 
       m_transport.stopLowerRoller();
-
-    cargoAtShoot = m_transport.getCargoAtShoot();
+    }
 
     // if intakes aren't delivering second cargo and cargo is available at shoot
     // position sensor, shoot by starting low rollers
@@ -130,14 +128,18 @@ public class AltShootCargo extends CommandBase {
 
       cargoReleasing = true;
 
-      if (!cargoAtShoot && cargoReleaseTimer == 0) {
-
-        cargoReleaseTimer = Timer.getFPGATimestamp();
-
-      }
     }
 
-    if (cargoReleasing && Timer.getFPGATimestamp() > cargoReleaseTimer + cargoReleaseTime) {
+    // cargo released to shoot wheels and clear of sensor - start timer to make sure
+    // it is clear before bringing in second cargo
+
+    if (cargoReleasing && !cargoAtShoot && cargoReleaseTimer == 0) {
+
+      cargoReleaseTimer = Timer.getFPGATimestamp();
+
+    }
+
+    if (cargoReleasing && cargoReleaseTimer != 0 && Timer.getFPGATimestamp() > cargoReleaseTimer + cargoReleaseTime) {
 
       cargoReleasing = false;
     }
@@ -157,7 +159,7 @@ public class AltShootCargo extends CommandBase {
 
     // if no cargo at shoot and cargo available at rear then run rear intake motor
 
-    if (!cargoAtShoot && !cargoReleasing && !frontIntakeToStart && (m_intake.getCargoAtRear() || rearIntakeToStart)) {
+    if (!cargoAtShoot && !cargoReleasing && !frontIntakeToStart && m_intake.getCargoAtRear() || rearIntakeToStart) {
 
       rearIntakeToStart = true;
 
@@ -172,7 +174,7 @@ public class AltShootCargo extends CommandBase {
 
     if (frontIntakeToStart || rearIntakeToStart) {
 
-      if (!secondCargoAtLowRoller) {
+      if (!secondCargoAtShoot) {
 
         m_transport.intakeCargo();
 
@@ -193,11 +195,23 @@ public class AltShootCargo extends CommandBase {
 
       }
 
-      if (timeCargoToLowRoller == 0 && cargoAtShoot) {
+      // second cargo at shoot sensor - start timer to stop low roller
 
-        timeCargoToLowRoller = Timer.getFPGATimestamp();
+      if (cargoIntaking && cargoAtShoot && timeCargoToShoot == 0) {
 
-        m_transport.latchCargoAtShoot = true;
+        timeCargoToShoot = Timer.getFPGATimestamp();
+
+        m_transport.resetPosition();
+
+      }
+
+      // second cargo now fully at shoot position so stop low rollers
+
+      if (cargoIntaking && timeCargoToShoot != 0 && Timer.getFPGATimestamp() > timeCargoToShoot + activeShootStopTime) {
+
+        secondCargoAtShoot = true;
+
+        cargoIntaking = false;
 
         m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
 
@@ -209,17 +223,15 @@ public class AltShootCargo extends CommandBase {
 
     // no second cargo so end when released cargo is out of shooter
 
-    if (!cargoAtShoot && !cargoReleasing && !frontIntakeToStart && !rearIntakeToStart) {
+    if (!cargoAtShoot && !cargoReleasing && !cargoIntaking &&
+
+        !frontIntakeToStart && !rearIntakeToStart) {
 
       noMoreCargo = true;
     }
 
-    // end this shoot routine when second cargo arrives at low rollers
+    // end this shoot routine when second cargo arrives at low rollers (shoot poasition)
     // shooter keeps running to make sure cargo being fired exits correctly
-
-    secondCargoAtLowRoller = m_transport.latchCargoAtShoot
-
-        && Timer.getFPGATimestamp() > timeCargoToLowRoller + activeLowStopTime;
 
   }
 
@@ -237,15 +249,13 @@ public class AltShootCargo extends CommandBase {
     m_intake.stopRearIntakeMotor();
     m_shooter.wrongCargoColor = false;
     cargoIntaking = false;
-
+    m_transport.distanceToCargoEndPosition = m_transport.getPosition();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
 
-    return noCargoAtStart || secondCargoAtLowRoller || noMoreCargo
-
-        || m_transport.latchCargoAtShoot;
+    return noCargoAtStart || secondCargoAtShoot || noMoreCargo;
   }
 }
