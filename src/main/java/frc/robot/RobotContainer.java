@@ -38,7 +38,6 @@ import frc.robot.Vision.TurnLedsOnOff;
 import frc.robot.commands.AutoCommands.Common.AutoLogIntakeShootData;
 import frc.robot.commands.AutoCommands.Common.SetupPresetShootLocation;
 import frc.robot.commands.CargoTransport.DelayOffLowRoller;
-import frc.robot.commands.CargoTransport.RunLowerRollerIntake;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Climber.RunClimber;
 import frc.robot.commands.Climber.StopClimber;

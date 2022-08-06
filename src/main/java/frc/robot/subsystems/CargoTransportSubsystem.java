@@ -76,13 +76,13 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean wrongCargoColor;
 
-  public boolean latchCargoAtShoot;
+  public boolean cargoFullyAtShoot;
 
   public boolean cargoIsBlue;
 
   public boolean cargoIsRed;
 
-  public double distanceToCargoEndPosition;
+  public double distanceTraveledToCargoEndPosition;
 
   public CargoTransportSubsystem() {
 

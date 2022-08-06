@@ -48,7 +48,7 @@ public class RunActiveIntake extends CommandBase {
 
     timeCargoToShoot = 0;
 
-    m_transport.latchCargoAtShoot = false;
+    m_transport.cargoFullyAtShoot = false;
 
     loopctr = 0;
 
@@ -84,7 +84,7 @@ public class RunActiveIntake extends CommandBase {
 
     // low rollers run until cargo at shoot(low rollers) and short delay
 
-    if (!m_transport.latchCargoAtShoot) {
+    if (!m_transport.cargoFullyAtShoot) {
 
       m_transport.intakeCargo();
     }
@@ -106,7 +106,7 @@ public class RunActiveIntake extends CommandBase {
 
     // cargo at shoot for duration of time delay
 
-    m_transport.latchCargoAtShoot = m_transport.latchCargoAtShoot
+    m_transport.cargoFullyAtShoot = m_transport.cargoFullyAtShoot
 
         || cargoAtShoot && Timer.getFPGATimestamp() > timeCargoToShoot + activeShootStopTime;
 
@@ -133,7 +133,7 @@ public class RunActiveIntake extends CommandBase {
     m_intake.raiseFrontArm();
     stopActiveIntake = false;
     m_transport.stopLowerRoller();
-    m_transport.distanceToCargoEndPosition = m_transport.getPosition();
+    m_transport.distanceTraveledToCargoEndPosition= m_transport.getPosition();
 
   }
 

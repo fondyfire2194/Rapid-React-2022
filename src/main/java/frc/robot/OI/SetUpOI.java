@@ -395,7 +395,7 @@ public class SetUpOI {
                         transportValues.addNumber("LowRollCMDRPM", () -> transport.lowerRequiredRPM);
                         transportValues.addNumber("LowRollAmps", () -> transport.getLowerRollerMotorAmps());
                         transportValues.addNumber("LowRollOut", () -> transport.getLowerRoller());
-                        transportValues.addNumber("DistToShootPos", () -> transport.distanceToCargoEndPosition);
+                        transportValues.addNumber("DistToShootPos", () -> transport.distanceTraveledToCargoEndPosition);
 
                         transportValues.add("Cmd", transport);
                         transportValues.addBoolean("LowerRollerAtSpeed", () -> transport.getLowerRollerAtSpeed());
