@@ -29,12 +29,12 @@ public class AltShootCargo extends CommandBase {
   private boolean secondCargoFullyAtShoot;
   private boolean noMoreCargo;
   private double fullyAtShootTime;
-  private double cargoReleaseTime = .25;
+  private double cargoClearShooterTime = .25;
   private double intakeStartDelayTime = .5;
   private boolean cargoShooting;
   private double cargoShootTimer;
   private double intakeStartTimer;
-  private boolean cargoIntaking;
+  private boolean cargoMovingToShootPosition;
 
   public AltShootCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
       IntakesSubsystem intake) {
@@ -66,7 +66,7 @@ public class AltShootCargo extends CommandBase {
 
     cargoShooting = false;
 
-    cargoIntaking = false;
+    cargoMovingToShootPosition = false;
 
     noMoreCargo = false;
 
@@ -113,14 +113,14 @@ public class AltShootCargo extends CommandBase {
 
     // make sure the loww rollers have a command
 
-    if (!cargoShooting && !cargoIntaking) {
+    if (!cargoShooting && !cargoMovingToShootPosition) {
 
       m_transport.stopLowerRoller();
     }
 
     // check conditions for shooting
 
-    if (!cargoIntaking && cargoAtShoot && m_shooter.getShooterAtSpeed()
+    if (!cargoMovingToShootPosition && cargoAtShoot && m_shooter.getShooterAtSpeed()
 
         && m_shooter.getTopRollerAtSpeed()) {
 
@@ -143,7 +143,7 @@ public class AltShootCargo extends CommandBase {
     // check for cargo clear of shooter wheels
     if (cargoShooting && cargoShootTimer != 0 &&
 
-        Timer.getFPGATimestamp() > (cargoShootTimer + cargoReleaseTime)) {
+        Timer.getFPGATimestamp() > (cargoShootTimer + cargoClearShooterTime)) {
 
       cargoShooting = false;
     }
@@ -185,7 +185,7 @@ public class AltShootCargo extends CommandBase {
 
         m_transport.intakeCargo();
 
-        cargoIntaking = true;
+        cargoMovingToShootPosition = true;
       }
 
       if (Timer.getFPGATimestamp() > intakeStartTimer + intakeStartDelayTime) {
@@ -204,7 +204,7 @@ public class AltShootCargo extends CommandBase {
 
       // second cargo at shoot sensor - start timer to stop low roller
 
-      if (cargoIntaking && cargoAtShoot && timeCargoFullyAtShoot == 0) {
+      if (cargoMovingToShootPosition && cargoAtShoot && timeCargoFullyAtShoot == 0) {
 
         timeCargoFullyAtShoot = Timer.getFPGATimestamp();
 
@@ -214,15 +214,15 @@ public class AltShootCargo extends CommandBase {
 
       // second cargo now fully at shoot position so end intakink
 
-      if (cargoIntaking && timeCargoFullyAtShoot != 0 &&
+      if (cargoMovingToShootPosition && timeCargoFullyAtShoot != 0 &&
 
           Timer.getFPGATimestamp() > timeCargoFullyAtShoot + fullyAtShootTime) {
 
         secondCargoFullyAtShoot = true;
 
-        cargoIntaking = false;
+        cargoMovingToShootPosition = false;
 
-        //caheck for ame color as alliance and drop shooter speed if wrong
+        //check for same color as alliance and drop shooter speed if wrong
 
         m_transport.wrongCargoColor = m_transport.getCargoAllianceMisMatch();
 
@@ -234,7 +234,7 @@ public class AltShootCargo extends CommandBase {
 
     // no second cargo so end when released cargo is out of shooter
 
-    noMoreCargo = !cargoAtShoot && !cargoShooting && !cargoIntaking;
+    noMoreCargo = !cargoAtShoot && !cargoShooting && !cargoMovingToShootPosition;
 
     // end this shoot routine when second cargo fully arrives at low rollers (shoot
     // poasition)
@@ -251,7 +251,7 @@ public class AltShootCargo extends CommandBase {
     m_intake.stopFrontIntakeMotor();
     m_intake.stopRearIntakeMotor();
     m_shooter.wrongCargoColor = false;
-    cargoIntaking = false;
+    cargoMovingToShootPosition = false;
     m_transport.distanceTraveledToCargoEndPosition = m_transport.getPosition();
   }
 

@@ -53,6 +53,7 @@ import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
+import frc.robot.commands.Shooter.ShootMoveCargoToShootSeq;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Tilt.PositionHoldTilt;
 import frc.robot.commands.Tilt.PositionTilt;
@@ -276,7 +277,8 @@ public class RobotContainer {
             new JoystickButton(m_driverController, 2)
                         .whenPressed(new RunShooter(m_shooter))
                         .whenPressed(new SetUpLimelightForTarget(m_limelight, 0, true))
-                        .whenPressed(new AltShootCargo(m_shooter, m_transport, m_intake))
+                        // .whenPressed(new AltShootCargo(m_shooter, m_transport, m_intake))
+                        .whenPressed(new ShootMoveCargoToShootSeq(m_shooter, m_transport, m_intake))
                         .whenPressed(new AutoLogIntakeShootData(m_intake, m_transport, m_shooter, m_drive, m_tilt));
 
             new JoystickButton(m_driverController, 6).whenPressed(new SetFrontIntakeActive(m_intake, true));
