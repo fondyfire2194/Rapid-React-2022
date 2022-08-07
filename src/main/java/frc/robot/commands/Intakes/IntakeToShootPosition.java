@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Intakes;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
@@ -46,6 +47,9 @@ public class IntakeToShootPosition extends CommandBase {
       activeShootStopTime = Pref.getPref("LowRollStopTimeBlue");
 
     cargoAtShootInitially = m_transport.getCargoAtShoot();
+
+    m_transport.simCargoAtShoot = false;
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -78,6 +82,9 @@ public class IntakeToShootPosition extends CommandBase {
       m_transport.stopLowerRoller();
 
     }
+    if (RobotBase.isSimulation() && loopctr > 100)
+
+      m_transport.simCargoAtShoot = true;
 
     // cargo is at shoot (low rollers) so start the time delay
 

@@ -4,7 +4,9 @@
 
 package frc.robot.commands.Shooter;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
 import frc.robot.Robot;
@@ -27,6 +29,7 @@ public class MoveCargoToShootPosition extends CommandBase {
   private double cargoFullyAtShootTimer;
   private double fullyAtShootTime;
   private boolean noCargoAtIntakesInitially;
+  private int loopCtr;
 
   public MoveCargoToShootPosition(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
       IntakesSubsystem intake) {
@@ -65,12 +68,19 @@ public class MoveCargoToShootPosition extends CommandBase {
     cargoFullyAtShootTimer = 0;
 
     noCargoAtIntakesInitially = !m_intake.getCargoAtFront() && !m_intake.getCargoAtRear();
+
+    loopCtr = 0;
+
+    m_transport.simCargoAtShoot = false;
+    m_intake.simCargoAtFrontIntake = RobotBase.isSimulation();
+    // m_intake.simCargoAtRearIntake = RobotBase.isSimulation();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    loopCtr++;
     // if no cargo at shoot and cargo available at front then run front intake motor
     // after a short delay to get low roller up to speed
 
@@ -81,7 +91,6 @@ public class MoveCargoToShootPosition extends CommandBase {
         m_intake.getCargoAtFront()) {
 
       frontIntakeToStart = true;
-
     }
 
     // if no cargo at shoot and cargo available at rear then run rear intake motor
@@ -93,7 +102,7 @@ public class MoveCargoToShootPosition extends CommandBase {
       rearIntakeToStart = true;
     }
 
-    // start low rollers befor intake motor
+    // start low rollers before intake motor
 
     if (frontIntakeToStart || rearIntakeToStart) {
 
@@ -110,7 +119,7 @@ public class MoveCargoToShootPosition extends CommandBase {
       m_transport.intakeCargo();
 
     } else {
-      
+
       m_transport.stopLowerRoller();
     }
 
@@ -125,9 +134,16 @@ public class MoveCargoToShootPosition extends CommandBase {
 
         m_intake.runRearIntakeMotor();
       }
-
     }
 
+    if (RobotBase.isSimulation() && loopCtr > 35)
+
+      m_intake.simCargoAtFrontIntake = false;
+
+    if (RobotBase.isSimulation() && loopCtr > 80)
+
+      m_transport.simCargoAtShoot = true;
+      
     // cargo is seen at shoot sensor - start timer to stop low roller
 
     if (cargoMovingToShootPosition && cargoAtShoot && cargoFullyAtShootTimer == 0) {

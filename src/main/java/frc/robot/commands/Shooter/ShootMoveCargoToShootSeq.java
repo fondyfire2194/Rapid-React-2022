@@ -20,6 +20,8 @@ public class ShootMoveCargoToShootSeq extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
 
+    
+
     new ShootOneCargo(shooter, transport, intake).withTimeout(2),
 
     new MoveCargoToShootPosition(shooter, transport, intake).withTimeout(2));

@@ -82,6 +82,8 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public double distanceTraveledToCargoEndPosition;
 
+  public boolean simCargoAtShoot;
+
   public CargoTransportSubsystem() {
 
     m_lowerRollerMotor = new CANSparkMaxWithSim(CANConstants.LOWER_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -140,7 +142,6 @@ public class CargoTransportSubsystem extends SubsystemBase {
     lowRollerSim.setInputVoltage(vin);
     lowRollerSim.update(0.02);
     lowRollEncoderSim.setVelocity(lowRollerSim.getAngularVelocityRPM());
-
   }
 
   public boolean checkCAN() {
@@ -170,7 +171,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
     else
 
-      return !cargoSensor.get();
+      return simCargoAtShoot;
   }
 
   public void positionLowerRoller(double distance) {
@@ -295,7 +296,7 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   }
 
-  public double getPosition(){
+  public double getPosition() {
     return m_lowerEncoder.getPosition();
   }
 

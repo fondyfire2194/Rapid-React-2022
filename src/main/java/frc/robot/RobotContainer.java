@@ -41,6 +41,7 @@ import frc.robot.commands.CargoTransport.DelayOffLowRoller;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Climber.RunClimber;
 import frc.robot.commands.Climber.StopClimber;
+import frc.robot.commands.Intakes.CancelCommand;
 import frc.robot.commands.Intakes.IntakeToIntakePosition;
 import frc.robot.commands.Intakes.IntakeToShootPosition;
 import frc.robot.commands.Intakes.RunActiveIntake;
@@ -214,7 +215,7 @@ public class RobotContainer {
 
             boolean showTrajectories = true && !competition;
 
-            boolean showTransportIntakeClimber = false;
+            boolean showTransportIntakeClimber = true;
 
             boolean showVision = false;
 
@@ -269,8 +270,8 @@ public class RobotContainer {
              */
 
             new JoystickButton(m_driverController, 1)
-            
-                        .whileHeld(
+
+                        .whenPressed(
 
                                     new SequentialCommandGroup(
 
@@ -278,11 +279,13 @@ public class RobotContainer {
 
                                                 new IntakeToIntakePosition(m_intake, m_transport)))
 
-            //            .whileHeld(new RunActiveIntake(m_intake, m_transport))
+                        // .whileHeld(new RunActiveIntake(m_intake, m_transport))
                         .whenPressed(new LimelightSetPipeline(m_limelight, PipelinesConstants.ledsOffPipeline))
-            
-                        .whenPressed(new PositionTurret(m_turret, 0));
-    
+
+                        .whenPressed(new PositionTurret(m_turret, 0))
+
+                        .whenReleased(new SequentialCommandGroup(new WaitCommand(1),
+                                    new CancelCommand(m_intake, m_transport)));
 
             new JoystickButton(m_driverController, 2)
                         .whenPressed(new RunShooter(m_shooter))

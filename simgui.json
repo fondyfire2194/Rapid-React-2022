@@ -32,6 +32,13 @@
       "/Shuffleboard/CanBus/Subs 2/Tilt": "Subsystem",
       "/Shuffleboard/CanBus/Subs 2/Transport": "Subsystem",
       "/Shuffleboard/CanBus/Subs 2/Turret": "Subsystem",
+      "/Shuffleboard/Intake/IntakeActions/ArmLower": "Command",
+      "/Shuffleboard/Intake/IntakeActions/ArmRaise": "Command",
+      "/Shuffleboard/Intake/IntakeActions/IntakeCmd": "Subsystem",
+      "/Shuffleboard/Intake/IntakeActions/Run Motor": "Command",
+      "/Shuffleboard/Intake/IntakeActions/Stop Motor": "Command",
+      "/Shuffleboard/Intake/IntakeSelect/Select Front": "Command",
+      "/Shuffleboard/Intake/IntakeSelect/Select Rear": "Command",
       "/Shuffleboard/Pre-Round/Auto Commands": "String Chooser",
       "/Shuffleboard/Pre-Round/Auto Delay": "String Chooser",
       "/Shuffleboard/Pre-Round/HidingCargo": "String Chooser",
@@ -70,6 +77,9 @@
       "/Shuffleboard/SetupTilt/Tilt/Position To Entry": "Command",
       "/Shuffleboard/SetupTilt/Tilt/PositionToSwitch": "Command",
       "/Shuffleboard/SetupTilt/Tilt/StopTilt": "Command",
+      "/Shuffleboard/SetupTransport/TransportValues/Cmd": "Subsystem",
+      "/Shuffleboard/SetupTransport/TransportValues/StartLowRoll": "Command",
+      "/Shuffleboard/SetupTransport/TransportValues/StopLowRoll": "Command",
       "/Shuffleboard/SetupTurret/Turret/ClearFaults": "Command",
       "/Shuffleboard/SetupTurret/Turret/Cmd": "Subsystem",
       "/Shuffleboard/SetupTurret/Turret/Position To -20": "Command",
@@ -116,6 +126,12 @@
   "NetworkTables": {
     "Shuffleboard": {
       "CanBus": {
+        "Scheduler": {
+          "Scheduler": {
+            "open": true
+          },
+          "open": true
+        },
         "Subs 2": {
           "open": true
         },
@@ -127,6 +143,9 @@
         },
         "open": true
       },
+      "Intake": {
+        "open": true
+      },
       "Pre-Round": {
         "Auto Commands": {
           "open": true
@@ -135,5 +154,8 @@
       },
       "open": true
     }
+  },
+  "NetworkTables View": {
+    "visible": false
   }
 }

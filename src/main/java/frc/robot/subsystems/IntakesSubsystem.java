@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
@@ -53,6 +54,10 @@ public class IntakesSubsystem extends SubsystemBase {
   public boolean stopLowerRoller;
 
   public boolean endIntakeCommand;
+
+  public boolean simCargoAtRearIntake;
+
+  public boolean simCargoAtFrontIntake;
 
   public IntakesSubsystem() {
 
@@ -112,12 +117,16 @@ public class IntakesSubsystem extends SubsystemBase {
   }
 
   public boolean getCargoAtFront() {
-    return frontIntakeCargoDetect.getVoltage() > cargoDetectedVolts;
+    return frontIntakeCargoDetect.getVoltage() > cargoDetectedVolts
+
+        || RobotBase.isSimulation() && simCargoAtFrontIntake;
 
   }
 
   public boolean getCargoAtRear() {
-    return rearIntakeCargoDetect.getVoltage() > cargoDetectedVolts;
+    return rearIntakeCargoDetect.getVoltage() > cargoDetectedVolts
+    
+        || RobotBase.isSimulation() && simCargoAtRearIntake;
 
   }
 

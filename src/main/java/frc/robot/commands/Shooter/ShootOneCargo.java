@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Shooter;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -22,6 +23,7 @@ public class ShootOneCargo extends CommandBase {
   private boolean noCargoAtShootInitially;
   private boolean cargoClearOfShoot;
   private boolean shooterNotRunning;
+  private int loopCtr;
 
   public ShootOneCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
       IntakesSubsystem intake) {
@@ -37,6 +39,7 @@ public class ShootOneCargo extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_transport.simCargoAtShoot = RobotBase.isSimulation();
     noCargoAtShootInitially = !m_transport.getCargoAtShoot();
     cargoShootTimer = 0;
     m_shooter.isShooting = true;
@@ -45,15 +48,21 @@ public class ShootOneCargo extends CommandBase {
     shooterNotRunning = !m_shooter.getShooterAtSpeed()
 
         || !m_shooter.getTopRollerAtSpeed();
+
+    m_intake.simCargoAtFrontIntake = RobotBase.isSimulation();
+
+    loopCtr = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
+    loopCtr++;
+
     cargoAtShoot = m_transport.getCargoAtShoot();
 
-    if (!cargoShooting && cargoAtShoot) {
+    if (m_shooter.isAtSpeed && !cargoShooting && cargoAtShoot) {
 
       cargoShooting = true;
 
@@ -66,6 +75,11 @@ public class ShootOneCargo extends CommandBase {
     } else {
 
       m_transport.stopLowerRoller();
+    }
+
+    if (loopCtr > 100) {
+
+      m_transport.simCargoAtShoot = false;
     }
 
     // cargo released to shoot wheels and clear of sensor - start timer to make sure

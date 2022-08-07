@@ -4,7 +4,9 @@
 
 package frc.robot.commands.Intakes;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -54,6 +56,8 @@ public class IntakeToIntakePosition extends CommandBase {
 
   public void execute() {
 
+    cargoAtShoot = m_transport.getCargoAtShoot();
+
     loopctr++;
 
     if (loopctr < 10) {
@@ -74,13 +78,22 @@ public class IntakeToIntakePosition extends CommandBase {
     // routine will end after short time delay to make sure caro is completely in
     // robot
 
+    if (loopctr > 100) {
+
+      m_intake.simCargoAtFrontIntake = m_intake.getActiveIntake();
+
+      m_intake.simCargoAtRearIntake = !m_intake.getActiveIntake();
+
+    }
+
     stopActiveIntake = cargoAtShoot && m_intake.getCargoAtActiveIntake();
 
-    if (stopActiveIntake && m_startTime != 0) {
+    if (stopActiveIntake && m_startTime == 0) {
 
       m_startTime = Timer.getFPGATimestamp();
     }
-
+SmartDashboard.putBoolean("CFAI", cargoFullyAtIntake);
+SmartDashboard.putNumber("m_STT", m_startTime);
     cargoFullyAtIntake = stopActiveIntake && m_startTime != 0
 
         && Timer.getFPGATimestamp() > m_startTime + intakeStopTime;
