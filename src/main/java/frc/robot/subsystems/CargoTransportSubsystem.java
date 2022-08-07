@@ -76,8 +76,6 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean wrongCargoColor;
 
-  public boolean cargoFullyAtShoot;
-
   public boolean cargoIsBlue;
 
   public boolean cargoIsRed;

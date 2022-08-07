@@ -23,13 +23,17 @@ public class RunActiveIntake extends CommandBase {
 
   private int loopctr;
 
-  private double timeCargoToShoot;
+  private double cargoFullyAtShootTimer;
 
   private boolean cargoAtShoot;
 
   private double activeShootStopTime;
 
   private double intakeStopTime = .05;
+
+  private boolean cargoFullyAtShoot;
+
+  private boolean noRoomForCargo;
 
   public RunActiveIntake(final IntakesSubsystem intake, final CargoTransportSubsystem transport) {
 
@@ -46,9 +50,9 @@ public class RunActiveIntake extends CommandBase {
 
     stopActiveIntake = false;
 
-    timeCargoToShoot = 0;
+    cargoFullyAtShootTimer = 0;
 
-    m_transport.cargoFullyAtShoot = false;
+    cargoFullyAtShoot = false;
 
     loopctr = 0;
 
@@ -57,6 +61,8 @@ public class RunActiveIntake extends CommandBase {
     if (Robot.getAllianceColorBlue())
 
       activeShootStopTime = Pref.getPref("LowRollStopTimeBlue");
+
+    noRoomForCargo = m_transport.getCargoAtShoot() && m_intake.getCargoAtActiveIntake();
 
   }
 
@@ -84,7 +90,7 @@ public class RunActiveIntake extends CommandBase {
 
     // low rollers run until cargo at shoot(low rollers) and short delay
 
-    if (!m_transport.cargoFullyAtShoot) {
+    if (!cargoFullyAtShoot) {
 
       m_transport.intakeCargo();
     }
@@ -97,18 +103,18 @@ public class RunActiveIntake extends CommandBase {
 
     // cargo is at shoot (low rollers) so start the time delay
 
-    if (cargoAtShoot && timeCargoToShoot == 0) {
+    if (cargoAtShoot && cargoFullyAtShootTimer == 0) {
 
-      timeCargoToShoot = Timer.getFPGATimestamp();
+      cargoFullyAtShootTimer = Timer.getFPGATimestamp();
 
       m_transport.resetPosition();
     }
 
     // cargo at shoot for duration of time delay
 
-    m_transport.cargoFullyAtShoot = m_transport.cargoFullyAtShoot
+    cargoFullyAtShoot =
 
-        || cargoAtShoot && Timer.getFPGATimestamp() > timeCargoToShoot + activeShootStopTime;
+        cargoAtShoot && Timer.getFPGATimestamp() > cargoFullyAtShootTimer + activeShootStopTime;
 
     // second cargo is at active intake position
     // routine will end after short time delay to make sure caro is completely in
@@ -133,7 +139,7 @@ public class RunActiveIntake extends CommandBase {
     m_intake.raiseFrontArm();
     stopActiveIntake = false;
     m_transport.stopLowerRoller();
-    m_transport.distanceTraveledToCargoEndPosition= m_transport.getPosition();
+    m_transport.distanceTraveledToCargoEndPosition = m_transport.getPosition();
 
   }
 
@@ -141,6 +147,6 @@ public class RunActiveIntake extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    return m_startTime != 0 && Timer.getFPGATimestamp() > m_startTime + intakeStopTime;
+    return noRoomForCargo || m_startTime != 0 && Timer.getFPGATimestamp() > m_startTime + intakeStopTime;
   }
 }

@@ -21,6 +21,7 @@ public class ShootOneCargo extends CommandBase {
   private double cargoClearShooterTime = .25;
   private boolean noCargoAtShootInitially;
   private boolean cargoClearOfShoot;
+  private boolean shooterNotRunning;
 
   public ShootOneCargo(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
       IntakesSubsystem intake) {
@@ -41,6 +42,9 @@ public class ShootOneCargo extends CommandBase {
     m_shooter.isShooting = true;
     cargoShooting = false;
     cargoClearOfShoot = false;
+    shooterNotRunning = !m_shooter.getShooterAtSpeed()
+
+        || !m_shooter.getTopRollerAtSpeed();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,9 +53,7 @@ public class ShootOneCargo extends CommandBase {
 
     cargoAtShoot = m_transport.getCargoAtShoot();
 
-    if (!cargoShooting && cargoAtShoot && m_shooter.getShooterAtSpeed()
-
-        && m_shooter.getTopRollerAtSpeed()) {
+    if (!cargoShooting && cargoAtShoot) {
 
       cargoShooting = true;
 
@@ -60,7 +62,7 @@ public class ShootOneCargo extends CommandBase {
     if (cargoShooting) {
 
       m_transport.releaseCargo();// low rollers run to feed cargo to shooter
-      
+
     } else {
 
       m_transport.stopLowerRoller();
@@ -77,7 +79,7 @@ public class ShootOneCargo extends CommandBase {
 
     cargoClearOfShoot = cargoShootTimer != 0 &&
 
-        Timer.getFPGATimestamp() > (cargoShootTimer + cargoClearShooterTime);
+        Timer.getFPGATimestamp() >= (cargoShootTimer + cargoClearShooterTime);
   }
 
   // Called once the command ends or is interrupted.
@@ -85,14 +87,13 @@ public class ShootOneCargo extends CommandBase {
   public void end(boolean interrupted) {
     cargoShooting = false;
     cargoShootTimer = 0;
+    cargoClearOfShoot = false;
     m_shooter.isShooting = false;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return noCargoAtShootInitially || (cargoShooting && cargoShootTimer != 0 &&
-
-        cargoClearOfShoot);
+    return noCargoAtShootInitially || shooterNotRunning || cargoClearOfShoot;
   }
 }

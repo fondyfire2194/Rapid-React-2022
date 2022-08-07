@@ -24,7 +24,7 @@ public class MoveCargoToShootPosition extends CommandBase {
   private boolean cargoFullyAtShoot;
   private boolean cargoMovingToShootPosition;
   private double intakeStartDelayTime = .5;
-  private double timeCargoFullyAtShoot;
+  private double cargoFullyAtShootTimer;
   private double fullyAtShootTime;
   private boolean noCargoAtIntakesInitially;
 
@@ -62,7 +62,7 @@ public class MoveCargoToShootPosition extends CommandBase {
 
     intakeStartTimer = 0;
 
-    timeCargoFullyAtShoot = 0;
+    cargoFullyAtShootTimer = 0;
 
     noCargoAtIntakesInitially = !m_intake.getCargoAtFront() && !m_intake.getCargoAtRear();
   }
@@ -106,8 +106,11 @@ public class MoveCargoToShootPosition extends CommandBase {
     }
 
     if (cargoMovingToShootPosition && !cargoFullyAtShoot) {
+
       m_transport.intakeCargo();
+
     } else {
+      
       m_transport.stopLowerRoller();
     }
 
@@ -127,9 +130,9 @@ public class MoveCargoToShootPosition extends CommandBase {
 
     // cargo is seen at shoot sensor - start timer to stop low roller
 
-    if (cargoMovingToShootPosition && cargoAtShoot && timeCargoFullyAtShoot == 0) {
+    if (cargoMovingToShootPosition && cargoAtShoot && cargoFullyAtShootTimer == 0) {
 
-      timeCargoFullyAtShoot = Timer.getFPGATimestamp();
+      cargoFullyAtShootTimer = Timer.getFPGATimestamp();
 
       m_transport.resetPosition();// test for how far cargo travels after seeing sensor
 
@@ -137,9 +140,9 @@ public class MoveCargoToShootPosition extends CommandBase {
 
     // second cargo now fully at shoot position so end intakink
 
-    if (cargoMovingToShootPosition && timeCargoFullyAtShoot != 0 &&
+    if (cargoMovingToShootPosition && cargoFullyAtShootTimer != 0 &&
 
-        Timer.getFPGATimestamp() > (timeCargoFullyAtShoot + fullyAtShootTime)) {
+        Timer.getFPGATimestamp() > (cargoFullyAtShootTimer + fullyAtShootTime)) {
 
       cargoFullyAtShoot = true;
 
