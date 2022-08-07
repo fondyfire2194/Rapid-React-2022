@@ -41,6 +41,8 @@ import frc.robot.commands.CargoTransport.DelayOffLowRoller;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Climber.RunClimber;
 import frc.robot.commands.Climber.StopClimber;
+import frc.robot.commands.Intakes.IntakeToIntakePosition;
+import frc.robot.commands.Intakes.IntakeToShootPosition;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
@@ -267,12 +269,20 @@ public class RobotContainer {
              */
 
             new JoystickButton(m_driverController, 1)
-                        .whileHeld(new RunActiveIntake(m_intake, m_transport))
+            
+                        .whileHeld(
+
+                                    new SequentialCommandGroup(
+
+                                                new IntakeToShootPosition(m_intake, m_transport),
+
+                                                new IntakeToIntakePosition(m_intake, m_transport)))
+
+            //            .whileHeld(new RunActiveIntake(m_intake, m_transport))
                         .whenPressed(new LimelightSetPipeline(m_limelight, PipelinesConstants.ledsOffPipeline))
-                        .whenPressed(new PositionTurret(m_turret, 0))
-                        // .whenPressed(new RunLowerRollerIntake(m_transport, m_intake))
-                        .whenReleased(new DelayOffLowRoller(m_transport).withTimeout(1))
-                        .whenReleased(new StopActiveIntake(m_intake));
+            
+                        .whenPressed(new PositionTurret(m_turret, 0));
+    
 
             new JoystickButton(m_driverController, 2)
                         .whenPressed(new RunShooter(m_shooter))
