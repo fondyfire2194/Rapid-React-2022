@@ -161,11 +161,11 @@ public class RevTiltSubsystem extends SubsystemBase {
         if (RobotBase.isSimulation()) {
             positionResetDone = true;
             mEncoderSim = new CANEncoderSim(m_motor.getDeviceId(), false);
-            mPosController.setP(.02);
+            mPosController.setP(2);
 
-            maxVel = 5;
+            maxVel = 25;
 
-            mVelController.setP(.05);
+            mVelController.setP(5);
 
             m_forwardLimit.enableLimitSwitch(false);
 

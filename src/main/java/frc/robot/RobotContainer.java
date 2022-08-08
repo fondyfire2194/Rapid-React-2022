@@ -205,13 +205,13 @@ public class RobotContainer {
 
             m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
-            boolean competition = false;
+            boolean competition = true;
 
             boolean showAuto = competition;
 
-            boolean showRobotShooter = true && !competition;
+            boolean showRobotShooter = true;// && !competition;
 
-            boolean showTiltTurret = true && !competition;
+            boolean showTiltTurret = true;// && !competition;
 
             boolean showTrajectories = true && !competition;
 

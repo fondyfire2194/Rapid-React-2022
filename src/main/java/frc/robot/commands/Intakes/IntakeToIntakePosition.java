@@ -4,9 +4,7 @@
 
 package frc.robot.commands.Intakes;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CargoTransportSubsystem;
 import frc.robot.subsystems.IntakesSubsystem;
@@ -19,9 +17,7 @@ public class IntakeToIntakePosition extends CommandBase {
 
   private boolean stopActiveIntake;
 
-  private double m_startTime;
-
-  private boolean cargoAtShoot;
+  private double cargoFullyAtIntakeTimer;
 
   private double intakeStopTime = .05;
 
@@ -44,7 +40,7 @@ public class IntakeToIntakePosition extends CommandBase {
 
     loopctr = 0;
 
-    m_startTime = 0;
+    cargoFullyAtIntakeTimer = 0;
 
     stopActiveIntake = false;
 
@@ -55,8 +51,6 @@ public class IntakeToIntakePosition extends CommandBase {
   @Override
 
   public void execute() {
-
-    cargoAtShoot = m_transport.getCargoAtShoot();
 
     loopctr++;
 
@@ -80,23 +74,22 @@ public class IntakeToIntakePosition extends CommandBase {
 
     if (loopctr > 100) {
 
-      m_intake.simCargoAtFrontIntake = m_intake.getActiveIntake();
+      m_intake.simCargoAtFrontIntake = m_intake.useFrontIntake;
 
-      m_intake.simCargoAtRearIntake = !m_intake.getActiveIntake();
+      m_intake.simCargoAtRearIntake = !m_intake.useFrontIntake;
 
     }
 
-    stopActiveIntake = cargoAtShoot && m_intake.getCargoAtActiveIntake();
+    stopActiveIntake = m_intake.getCargoAtActiveIntake();
 
-    if (stopActiveIntake && m_startTime == 0) {
+    if (stopActiveIntake && cargoFullyAtIntakeTimer == 0) {
 
-      m_startTime = Timer.getFPGATimestamp();
+      cargoFullyAtIntakeTimer = Timer.getFPGATimestamp();
     }
-SmartDashboard.putBoolean("CFAI", cargoFullyAtIntake);
-SmartDashboard.putNumber("m_STT", m_startTime);
-    cargoFullyAtIntake = stopActiveIntake && m_startTime != 0
 
-        && Timer.getFPGATimestamp() > m_startTime + intakeStopTime;
+    cargoFullyAtIntake = stopActiveIntake && cargoFullyAtIntakeTimer != 0
+
+        && Timer.getFPGATimestamp() > cargoFullyAtIntakeTimer + intakeStopTime;
 
     m_intake.twoCargoOnBoard = cargoFullyAtIntake;
 
@@ -110,8 +103,6 @@ SmartDashboard.putNumber("m_STT", m_startTime);
     m_intake.raiseFrontArm();
     stopActiveIntake = false;
     m_transport.stopLowerRoller();
-    m_transport.distanceTraveledToCargoEndPosition = m_transport.getPosition();
-
   }
 
   // Returns true when the command should end.

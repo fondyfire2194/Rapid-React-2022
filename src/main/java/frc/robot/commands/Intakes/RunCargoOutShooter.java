@@ -46,6 +46,9 @@ public class RunCargoOutShooter extends CommandBase {
     // m_intake.runRearIntakeMotor();
     // m_intake.runFrontIntakeMotor();
 
+    m_intake.simCargoAtFrontIntake = false;
+    m_intake.simCargoAtRearIntake = false;   
+
   }
 
   // Called once the command ends or is interrupted.

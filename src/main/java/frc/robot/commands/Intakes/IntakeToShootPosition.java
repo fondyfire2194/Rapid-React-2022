@@ -99,7 +99,8 @@ public class IntakeToShootPosition extends CommandBase {
 
     cargoFullyAtShoot =
 
-        cargoAtShoot && Timer.getFPGATimestamp() > cargoFullyAtShootTimer + activeShootStopTime;
+        cargoAtShoot && cargoFullyAtShootTimer != 0
+            && Timer.getFPGATimestamp() > cargoFullyAtShootTimer + activeShootStopTime;
 
   }
 
@@ -116,6 +117,9 @@ public class IntakeToShootPosition extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return cargoAtShootInitially || cargoFullyAtShoot;
+
+    return cargoAtShootInitially ||
+
+        (cargoFullyAtShoot && m_transport.getLowerRollerStopped());
   }
 }

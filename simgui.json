@@ -1,4 +1,13 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "SPARK MAX [6]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -99,16 +108,6 @@
       "/SmartDashboard/Field": "Field2d"
     },
     "windows": {
-      "/Shuffleboard/Pre-Round/OppHideTest/Center Hide": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/Shuffleboard/Pre-Round/OppHideTest/LeftHide": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Field": {
         "bottom": 900,
         "height": 8.229599952697754,

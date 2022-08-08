@@ -14,13 +14,16 @@ import frc.robot.Constants.PipelinesConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.AutoCommands.Common.PositionHoldTiltTurret;
 import frc.robot.commands.CargoTransport.TestCargoColor;
+import frc.robot.commands.Intakes.IntakeToIntakePosition;
 import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.SetPresetRPM;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
+import frc.robot.commands.Shooter.ShootMoveCargoToShootSeq;
 import frc.robot.commands.Shooter.StopShooter;
+import frc.robot.commands.Shooter.WaitForTiltTurretInPosition;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
@@ -84,8 +87,10 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                 new WaitCommand(trajTime + 1),
 
-                                                new RunActiveIntake(
-                                                                intake, transport).withTimeout(timeOut),
+                                                // new RunActiveIntake(
+                                                // intake, transport).withTimeout(timeOut),
+
+                                                new IntakeToIntakePosition(intake, transport).withTimeout(timeOut),
 
                                                 new SequentialCommandGroup(
 
@@ -98,14 +103,17 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                 new SequentialCommandGroup(
 
-                                                                // new WaitForTiltTurretInPosition(tilt, turret)
-                                                                // .withTimeout(timeOut),
-                                                                new WaitCommand(2),
+                                                                new WaitForTiltTurretInPosition(tilt, turret)
+                                                                                .withTimeout(timeOut),
+                                                                // new WaitCommand(2),
 
-                                                                new AltShootCargo(
-                                                                                shooter,
-                                                                                transport,
-                                                                                intake).withTimeout(timeOut),
+                                                                // new AltShootCargo(
+                                                                // shooter,
+                                                                // transport,
+                                                                // intake).withTimeout(timeOut),
+
+                                                                new ShootMoveCargoToShootSeq(shooter, transport, intake)
+                                                                                .withTimeout(timeOut),
 
                                                                 new WaitCommand(.2),
 
@@ -114,10 +122,13 @@ public class RetPuShootCameraTraj extends SequentialCommandGroup {
 
                                                                 new WaitCommand(.2),
 
-                                                                new AltShootCargo(
-                                                                                shooter,
-                                                                                transport,
-                                                                                intake).withTimeout(timeOut),
+                                                                // new AltShootCargo(
+                                                                // shooter,
+                                                                // transport,
+                                                                // intake).withTimeout(timeOut),
+
+                                                                new ShootMoveCargoToShootSeq(shooter, transport, intake)
+                                                                                .withTimeout(timeOut),
 
                                                                 new WaitCommand(1)).deadlineWith(
                                                                                 new PositionHoldTiltTurret(tilt, turret,

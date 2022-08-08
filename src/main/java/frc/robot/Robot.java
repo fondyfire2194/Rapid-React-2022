@@ -57,7 +57,7 @@ import frc.robot.trajectories.FondyFireTrajectory;
  * project.
  */
 public class Robot extends TimedRobot {
-  
+
   private Command m_autonomousCommand;
   private int autoChoice;
 
@@ -191,7 +191,7 @@ public class Robot extends TimedRobot {
     Compressor comp = m_robotContainer.m_compressor;
     FondyFireTrajectory fftraj = m_robotContainer.m_trajectory;
 
-    new AutoLogIntakeShootData(intake, transport, shooter, drive,tilt).schedule();
+    new AutoLogIntakeShootData(intake, transport, shooter, drive, tilt).schedule();
 
     ll.setLEDMode(LedMode.kpipeLine);
     ll.setPipeline(PipelinesConstants.noZoom960720);
@@ -266,6 +266,8 @@ public class Robot extends TimedRobot {
 
         data[4] = 2450;
 
+        m_robotContainer.m_transport.simCargoAtShoot = true;
+
         m_autonomousCommand = new SequentialCommandGroup(
 
             new SetRobotPose(m_robotContainer.m_drive,
@@ -298,6 +300,8 @@ public class Robot extends TimedRobot {
 
         data[4] = 2450;
 
+        m_robotContainer.m_transport.simCargoAtShoot = true;
+
         m_autonomousCommand = new SequentialCommandGroup(
 
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
@@ -325,6 +329,8 @@ public class Robot extends TimedRobot {
 
         data[4] = 2450;
 
+        m_robotContainer.m_transport.simCargoAtShoot = true;
+
         m_autonomousCommand = new SequentialCommandGroup(
 
             new TiltMoveToReverseLimit(m_robotContainer.m_tilt),
@@ -348,6 +354,8 @@ public class Robot extends TimedRobot {
         data[3] = 1;// turret will be locked to Limelight
 
         data[4] = 2450;
+
+        m_robotContainer.m_transport.simCargoAtShoot = true;
 
         m_autonomousCommand = new SequentialCommandGroup(
 
@@ -431,7 +439,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_shooter.presetLocationName = FieldMap.shootLocationName[m_robotContainer.m_shooter.shootLocation];
     m_robotContainer.m_shooter.shootModeName = FieldMap.shootModeName[m_robotContainer.m_shooter.shootValuesSource];
     autoChoice = 10;
-   
+
     new ParallelCommandGroup(new CalculateTargetDistance(m_robotContainer.m_limelight, m_robotContainer.m_shooter),
 
         new SelectSpeedAndTiltByDistance(m_robotContainer.m_shooter, m_robotContainer.m_tilt)).schedule();

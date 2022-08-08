@@ -257,6 +257,10 @@ public class CargoTransportSubsystem extends SubsystemBase {
     m_lowerRollerMotor.set(0);
   }
 
+  public boolean getLowerRollerStopped() {
+    return Math.abs(getLowerRPM()) < 5;
+  }
+
   public double getLowerRollerMotorAmps() {
     return m_lowerRollerMotor.getOutputCurrent();
   }
