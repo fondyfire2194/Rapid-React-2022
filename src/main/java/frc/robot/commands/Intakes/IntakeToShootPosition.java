@@ -6,6 +6,7 @@ package frc.robot.commands.Intakes;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pref;
 import frc.robot.Robot;
@@ -60,19 +61,19 @@ public class IntakeToShootPosition extends CommandBase {
 
     cargoAtShoot = m_transport.getCargoAtShoot();
 
-    if (loopctr < 10) {
+    if (loopctr > 1) {
 
       m_intake.lowerActiveArm();
     }
 
-    if (loopctr > 30) {
+    if (loopctr > 3 &&loopctr<25) {
 
       m_intake.runActiveIntakeMotor();
     }
-
+    SmartDashboard.putNumber("LPCTRINT", loopctr);
     // low rollers run until cargo at shoot(low rollers) and short delay
 
-    if (!cargoFullyAtShoot) {
+    if (loopctr > 3 && !cargoFullyAtShoot) {
 
       m_transport.intakeCargo();
     }

@@ -19,7 +19,7 @@ public class ShootOneCargo extends CommandBase {
   private boolean cargoAtShoot;
   private boolean cargoShooting;
   private double cargoShootTimer;
-  private double cargoClearShooterTime = .25;
+  private double cargoClearShooterTime = .1;
   private boolean noCargoAtShootInitially;
   private boolean cargoClearOfShoot;
   private boolean shooterNotRunning;
@@ -108,6 +108,6 @@ public class ShootOneCargo extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return noCargoAtShootInitially || shooterNotRunning || cargoClearOfShoot;
+    return noCargoAtShootInitially || cargoClearOfShoot;
   }
 }

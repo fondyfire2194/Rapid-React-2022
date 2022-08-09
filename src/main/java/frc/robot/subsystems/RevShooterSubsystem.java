@@ -345,7 +345,7 @@ public class RevShooterSubsystem extends SubsystemBase {
 
     public double getRPMfromThrottle() {
         double maxrpm = 5500;
-        double minrpm = 500;
+        double minrpm = 800;
         double rpmRange = maxrpm - minrpm;
         return minrpm + rpmRange * driverThrottleValue;
     }

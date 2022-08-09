@@ -59,7 +59,7 @@ public class RevDrivetrain extends SubsystemBase {
     // Simulation
     private CANEncoderSim m_leftEncodersSim;
     private CANEncoderSim m_rightEncodersSim;
-    private DifferentialDrivetrainSim m_dts;
+    public DifferentialDrivetrainSim m_dts;
     private SimDouble m_simAngle;
 
     private final DifferentialDrive mDrive;

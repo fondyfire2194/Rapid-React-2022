@@ -201,7 +201,7 @@ public class IntakesSubsystem extends SubsystemBase {
   }
 
   public void runRearIntakeMotor() {
-    double speed = Pref.getPref("IntakeSpeed");
+    double speed = Pref.getPref("IntakeSpeed") + .1;
     m_rearIntakeMotor.set(ControlMode.PercentOutput, speed);
   }
 

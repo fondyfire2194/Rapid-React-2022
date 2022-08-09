@@ -64,6 +64,7 @@
       "/Shuffleboard/SetupRobot/Robot/To 0": "Command",
       "/Shuffleboard/SetupRobot/Robot/To 2": "Command",
       "/Shuffleboard/SetupRobot/Robot/To 3": "Command",
+      "/Shuffleboard/SetupRobot/Robot1/ResetFieldPose": "Command",
       "/Shuffleboard/SetupRobot/Robot1/Turn To -90": "Command",
       "/Shuffleboard/SetupRobot/Robot1/Turn To 90": "Command",
       "/Shuffleboard/SetupRobot/Robot1/Turn To LHideOpp": "Command",

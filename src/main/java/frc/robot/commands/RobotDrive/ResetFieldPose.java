@@ -9,6 +9,7 @@ package frc.robot.commands.RobotDrive;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.RevDrivetrain;
@@ -41,6 +42,8 @@ public class ResetFieldPose extends InstantCommand {
       SmartDashboard.putNumber("HEAD2", now.getRotation().getDegrees());
 
       drive.resetPose(now);
+
+      if(RobotBase.isSimulation())drive.m_dts.setPose(now);
 
    }
 }

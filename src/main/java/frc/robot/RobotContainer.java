@@ -37,20 +37,17 @@ import frc.robot.Vision.LimelightControlMode.StreamType;
 import frc.robot.Vision.TurnLedsOnOff;
 import frc.robot.commands.AutoCommands.Common.AutoLogIntakeShootData;
 import frc.robot.commands.AutoCommands.Common.SetupPresetShootLocation;
-import frc.robot.commands.CargoTransport.DelayOffLowRoller;
 import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.Climber.RunClimber;
 import frc.robot.commands.Climber.StopClimber;
 import frc.robot.commands.Intakes.CancelCommand;
 import frc.robot.commands.Intakes.IntakeToIntakePosition;
 import frc.robot.commands.Intakes.IntakeToShootPosition;
-import frc.robot.commands.Intakes.RunActiveIntake;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Intakes.StopActiveIntake;
 import frc.robot.commands.RobotDrive.ArcadeDrive;
 import frc.robot.commands.RobotDrive.DriveStraightJoystick;
-import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.ChangeShooterSpeed;
 import frc.robot.commands.Shooter.JogShooter;
 import frc.robot.commands.Shooter.JogShooterVelocity;
@@ -213,7 +210,7 @@ public class RobotContainer {
 
             boolean showTiltTurret = true;// && !competition;
 
-            boolean showTrajectories = true && !competition;
+            boolean showTrajectories = false && !competition;
 
             boolean showTransportIntakeClimber = true;
 
@@ -284,12 +281,14 @@ public class RobotContainer {
 
                         .whenPressed(new PositionTurret(m_turret, 0))
 
+                        .whenPressed(new AutoLogIntakeShootData(m_intake, m_transport, m_shooter, m_drive, m_tilt))
+
                         .whenReleased(new SequentialCommandGroup(new WaitCommand(1),
                                     new CancelCommand(m_intake, m_transport)));
 
             new JoystickButton(m_driverController, 2)
                         .whenPressed(new RunShooter(m_shooter))
-                        .whenPressed(new SetUpLimelightForTarget(m_limelight, 0, true))
+                        // .whenPressed(new SetUpLimelightForTarget(m_limelight, 0, true))
                         // .whenPressed(new AltShootCargo(m_shooter, m_transport, m_intake))
                         .whenPressed(new ShootMoveCargoToShootSeq(m_shooter, m_transport, m_intake))
                         .whenPressed(new AutoLogIntakeShootData(m_intake, m_transport, m_shooter, m_drive, m_tilt));

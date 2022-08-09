@@ -19,7 +19,7 @@ public class IntakeToIntakePosition extends CommandBase {
 
   private double cargoFullyAtIntakeTimer;
 
-  private double intakeStopTime = .05;
+  private double intakeStopTime = .0;
 
   private boolean noRoomForCargo;
 
@@ -54,7 +54,7 @@ public class IntakeToIntakePosition extends CommandBase {
 
     loopctr++;
 
-    if (loopctr < 10) {
+    if (loopctr > 1) {
 
       m_intake.lowerActiveArm();
     }
@@ -63,7 +63,7 @@ public class IntakeToIntakePosition extends CommandBase {
 
     // intake motor runs until end of routine
 
-    if (loopctr > 30) {
+    if (loopctr > 3) {
 
       m_intake.runActiveIntakeMotor();
     }

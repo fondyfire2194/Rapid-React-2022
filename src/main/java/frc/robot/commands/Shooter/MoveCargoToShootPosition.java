@@ -25,11 +25,12 @@ public class MoveCargoToShootPosition extends CommandBase {
   private double intakeStartTimer;
   private boolean cargoFullyAtShoot;
   private boolean cargoMovingToShootPosition;
-  private double intakeStartDelayTime = .5;
+  private double intakeStartDelayTime = .75;
   private double cargoFullyAtShootTimer;
   private double fullyAtShootTime;
   private boolean noCargoAtIntakesInitially;
   private int loopCtr;
+  private int latchl0opctr;
 
   public MoveCargoToShootPosition(RevShooterSubsystem shooter, CargoTransportSubsystem transport,
       IntakesSubsystem intake) {
@@ -70,6 +71,8 @@ public class MoveCargoToShootPosition extends CommandBase {
     noCargoAtIntakesInitially = !m_intake.getCargoAtFront() && !m_intake.getCargoAtRear();
 
     loopCtr = 0;
+
+    latchl0opctr = 0;
 
     m_transport.simCargoAtShoot = false;
     m_intake.simCargoAtFrontIntake = RobotBase.isSimulation();
@@ -132,7 +135,11 @@ public class MoveCargoToShootPosition extends CommandBase {
 
       if (rearIntakeToStart) {
 
-        m_intake.runRearIntakeMotor();
+        if (latchl0opctr == 0)
+          latchl0opctr = loopCtr;
+
+        if (loopCtr - latchl0opctr < 10)
+          m_intake.runRearIntakeMotor();
       }
     }
 
@@ -143,7 +150,7 @@ public class MoveCargoToShootPosition extends CommandBase {
     if (RobotBase.isSimulation() && loopCtr > 80)
 
       m_transport.simCargoAtShoot = true;
-      
+
     // cargo is seen at shoot sensor - start timer to stop low roller
 
     if (cargoMovingToShootPosition && cargoAtShoot && cargoFullyAtShootTimer == 0) {

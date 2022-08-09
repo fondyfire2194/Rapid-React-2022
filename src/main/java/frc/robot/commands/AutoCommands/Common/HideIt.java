@@ -12,6 +12,7 @@ import frc.robot.commands.Intakes.IntakeToShootPosition;
 import frc.robot.commands.Intakes.RunCargoOutShooter;
 import frc.robot.commands.RobotDrive.PositionToPickup;
 import frc.robot.commands.RobotDrive.ResetEncoders;
+import frc.robot.commands.RobotDrive.SetRobotPose;
 import frc.robot.commands.RobotDrive.TurnToHideAngle;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -25,8 +26,6 @@ import frc.robot.trajectories.FondyFireTrajectory;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class HideIt extends SequentialCommandGroup {
-
-  
 
   /** Creates a new HideIt. */
   public HideIt(RevDrivetrain drive, FondyFireTrajectory fftraj,
@@ -59,12 +58,12 @@ public class HideIt extends SequentialCommandGroup {
 
             new WaitCommand(.25),
 
-            new ResetEncoders(drive),
+            new SetRobotPose(drive, drive.getPose()),
 
             new WaitCommand(.1)),
 
         parallel(
-          
+
             new PositionToPickup(drive, .25),
 
             new IntakeToShootPosition(intake, transport).withTimeout(timeOut),

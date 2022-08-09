@@ -6,7 +6,6 @@ package frc.robot.OI;
 
 import java.util.Map;
 
-import org.opencv.video.TrackerMIL_Params;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
@@ -30,6 +29,7 @@ import frc.robot.commands.Intakes.StopIntakeMotors;
 import frc.robot.commands.RobotDrive.ClearRobFaults;
 import frc.robot.commands.RobotDrive.PositionStraight;
 import frc.robot.commands.RobotDrive.ResetEncoders;
+import frc.robot.commands.RobotDrive.ResetFieldPose;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.StopRobot;
 import frc.robot.commands.RobotDrive.TurnToAngle;
@@ -452,6 +452,8 @@ public class SetUpOI {
                         robotCommands1.add("TurnTo -45", new TurnToAngle(drive, -45));
                         robotCommands1.add("Turn To -90", new TurnToAngle(drive, -90));
                         robotCommands1.add("Turn To LHideOpp", new TurnToAngle(drive, FieldMap.leftStartHideAngle));
+                        robotCommands1.add("ResetFieldPose", new ResetFieldPose(drive, false));
+
 
                         ShuffleboardLayout robotValues = Shuffleboard.getTab("SetupRobot")
                                         .getLayout("RobotValues", BuiltInLayouts.kList).withPosition(4, 0)
