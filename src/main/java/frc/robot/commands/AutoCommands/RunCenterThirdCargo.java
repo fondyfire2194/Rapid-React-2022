@@ -13,8 +13,8 @@ import frc.robot.Constants.ShooterRangeConstants;
 import frc.robot.Vision.LimeLight;
 import frc.robot.commands.Intakes.IntakeToShootPosition;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
-import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.ShootMoveCargoToShootSeq;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.commands.Turret.PositionTurret;
 import frc.robot.commands.Vision.LimelightSetPipeline;
@@ -74,7 +74,7 @@ public class RunCenterThirdCargo extends SequentialCommandGroup {
 
                                                                 new WaitCommand(2),
 
-                                                                new AltShootCargo(
+                                                                new ShootMoveCargoToShootSeq(
                                                                                 shooter,
                                                                                 transport,
                                                                                 intake).withTimeout(timeOut),

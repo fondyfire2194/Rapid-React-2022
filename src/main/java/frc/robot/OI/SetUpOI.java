@@ -23,7 +23,7 @@ import frc.robot.commands.CargoTransport.StopLowerRoller;
 import frc.robot.commands.CargoTransport.TestCargoColor;
 import frc.robot.commands.Intakes.ActiveIntakeArmLower;
 import frc.robot.commands.Intakes.ActiveIntakeArmRaise;
-import frc.robot.commands.Intakes.RunActiveIntake;
+import frc.robot.commands.Intakes.IntakeToIntakePosition;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Intakes.StopIntakeMotors;
 import frc.robot.commands.RobotDrive.ClearRobFaults;
@@ -33,11 +33,11 @@ import frc.robot.commands.RobotDrive.ResetFieldPose;
 import frc.robot.commands.RobotDrive.ResetGyro;
 import frc.robot.commands.RobotDrive.StopRobot;
 import frc.robot.commands.RobotDrive.TurnToAngle;
-import frc.robot.commands.Shooter.AltShootCargo;
 import frc.robot.commands.Shooter.ClearShFaults;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Shooter.RunTopRoller;
 import frc.robot.commands.Shooter.SetShootSpeedSource;
+import frc.robot.commands.Shooter.ShootMoveCargoToShootSeq;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Shooter.StopTopRoller;
 import frc.robot.commands.Tilt.ClearFaults;
@@ -97,7 +97,7 @@ public class SetUpOI {
 
                         intakeActions.add("ArmRaise", new ActiveIntakeArmRaise(intake));
                         intakeActions.add("ArmLower", new ActiveIntakeArmLower(intake));
-                        intakeActions.add("Run Motor", new RunActiveIntake(intake, transport));
+                        intakeActions.add("Run Motor", new IntakeToIntakePosition(intake, transport));
                         intakeActions.add("Stop Motor", new StopIntakeMotors(intake));
 
                         ShuffleboardLayout intakeValues = Shuffleboard.getTab("Intake")
@@ -310,10 +310,8 @@ public class SetUpOI {
                         shooterCommands.add("Start Shooter", new RunShooter(shooter));
 
                         shooterCommands.add("ShootOne",
-                                        new AltShootCargo(shooter, transport, intake));
-                        shooterCommands.add("ShootTwo",
-                                        new AltShootCargo(shooter, transport, intake));
-
+                                        new ShootMoveCargoToShootSeq(shooter, transport, intake));
+                        
                         shooterCommands.add("ClearFaults", new ClearShFaults(shooter));
 
                         shooterCommands.add("RunShooterFromThrottle",

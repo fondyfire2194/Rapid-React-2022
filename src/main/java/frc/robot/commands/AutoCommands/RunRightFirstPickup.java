@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Vision.LimeLight;
-import frc.robot.commands.Intakes.RunActiveIntake;
+import frc.robot.commands.Intakes.IntakeToIntakePosition;
 import frc.robot.commands.Intakes.SetFrontIntakeActive;
 import frc.robot.commands.Tilt.PositionTilt;
 import frc.robot.subsystems.CargoTransportSubsystem;
@@ -41,7 +41,7 @@ public class RunRightFirstPickup extends SequentialCommandGroup {
 
             new SetFrontIntakeActive(intake, true),
 
-            new RunActiveIntake(intake, transport).withTimeout(timeOut),
+            new IntakeToIntakePosition(intake, transport).withTimeout(timeOut),
 
             new ResetOdometryToStartOfTrajectory(fftraj,
                 fftraj.rightFirstCargoPickup, drive),

@@ -63,7 +63,7 @@ public class IntakeToIntakePosition extends CommandBase {
 
     // intake motor runs until end of routine
 
-    if (loopctr > 3) {
+    if (loopctr > 3 && !m_intake.getCargoAtActiveIntake()) {
 
       m_intake.runActiveIntakeMotor();
     }
