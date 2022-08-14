@@ -211,7 +211,7 @@ public class RobotContainer {
 
             boolean showTiltTurret = true;// && !competition;
 
-            boolean showTrajectories = false && !competition;
+            boolean showTrajectories = false;// && !competition;
 
             boolean showTransportIntakeClimber = true;
 
@@ -280,12 +280,14 @@ public class RobotContainer {
                         // .whileHeld(new RunActiveIntake(m_intake, m_transport))
                         .whenPressed(new LimelightSetPipeline(m_limelight, PipelinesConstants.ledsOffPipeline))
 
+                        .whenPressed(new UseVision(m_limelight, false))
+
                         .whenPressed(new PositionTurret(m_turret, 0))
 
                         .whenPressed(new AutoLogIntakeShootData(m_intake, m_transport, m_shooter, m_drive, m_tilt))
 
-                        .whenReleased(new SequentialCommandGroup(new WaitCommand(1),
-                                    new CancelCommand(m_intake, m_transport)));
+                        .whenReleased(
+                                    new CancelCommand(m_intake, m_transport));
 
             new JoystickButton(m_driverController, 2)
                         .whenPressed(new RunShooter(m_shooter))

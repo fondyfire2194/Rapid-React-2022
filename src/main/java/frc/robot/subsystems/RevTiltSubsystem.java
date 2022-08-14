@@ -158,6 +158,8 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         m_forwardLimit.enableLimitSwitch(true);
 
+        previousCameraCalculatedTiltPosition = cameraCalculatedTiltPosition;
+
         if (RobotBase.isSimulation()) {
             positionResetDone = true;
             mEncoderSim = new CANEncoderSim(m_motor.getDeviceId(), false);
@@ -177,7 +179,7 @@ public class RevTiltSubsystem extends SubsystemBase {
 
         }
         setSoftwareLimits();
-        
+
         if (RobotBase.isReal() && m_reverseLimit.isPressed()) {
 
             resetAngle();

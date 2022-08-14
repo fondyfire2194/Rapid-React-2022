@@ -195,6 +195,7 @@ public class Robot extends TimedRobot {
 
     ll.setLEDMode(LedMode.kpipeLine);
     ll.setPipeline(PipelinesConstants.noZoom960720);
+    m_robotContainer.m_tilt.positionResetDone = m_robotContainer.m_tilt.m_reverseLimit.isPressed();
 
     SmartDashboard.putNumber("AutoChoice", autoChoice);
 
@@ -422,6 +423,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_drive.setIdleMode(true);
 
     CommandScheduler.getInstance().cancelAll();
+
+    m_robotContainer.m_tilt.positionResetDone = m_robotContainer.m_tilt.m_reverseLimit.isPressed();
 
     if (!m_robotContainer.m_tilt.positionResetDone)
 

@@ -66,7 +66,7 @@ public class IntakeToShootPosition extends CommandBase {
       m_intake.lowerActiveArm();
     }
 
-    if (loopctr > 3 &&loopctr<25) {
+    if (loopctr > 3 && loopctr < 25) {
 
       m_intake.runActiveIntakeMotor();
     }

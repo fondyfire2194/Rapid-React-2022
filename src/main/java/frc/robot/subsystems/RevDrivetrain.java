@@ -109,10 +109,6 @@ public class RevDrivetrain extends SubsystemBase {
     public final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts,
             DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter);
 
-    private int robotStoppedCtr;
-
-    public boolean robotStoppedForOneSecond;
-
     public final double pickUpRate = .25;
     public final double positionRate = .4;
     public double rotateStartTime;
@@ -246,15 +242,6 @@ public class RevDrivetrain extends SubsystemBase {
         SmartDashboard.putString("Pose", mOdometry.getPoseMeters().toString());
 
         checkTune();
-
-        if (!isStopped()) {
-            robotStoppedCtr = 0;
-        }
-
-        if (isStopped() && robotStoppedCtr <= 50)
-            robotStoppedCtr++;
-
-        robotStoppedForOneSecond = isStopped() && robotStoppedCtr >= 50;
 
     }
 

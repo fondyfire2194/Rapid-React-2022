@@ -19,7 +19,7 @@ public class IntakeToIntakePosition extends CommandBase {
 
   private double cargoFullyAtIntakeTimer;
 
-  private double intakeStopTime = .0;
+  private double intakeStopTime = .04;
 
   private boolean noRoomForCargo;
 
@@ -66,6 +66,12 @@ public class IntakeToIntakePosition extends CommandBase {
     if (loopctr > 3 && !m_intake.getCargoAtActiveIntake()) {
 
       m_intake.runActiveIntakeMotor();
+
+    }else{
+
+      m_intake.stopFrontIntakeMotor();
+
+      m_intake.stopRearIntakeMotor();
     }
 
     // second cargo is at active intake position

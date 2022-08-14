@@ -18,6 +18,7 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -25,6 +26,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Pref;
@@ -202,9 +204,9 @@ public class CargoTransportSubsystem extends SubsystemBase {
 
   public boolean getCargoAllianceMisMatch() {
 
-    cargoIsBlue = getCargoIsBlue();
+    cargoIsBlue = getAllianceBlue();//getCargoIsBlue();
 
-    cargoIsRed = getCargoIsRed();
+    cargoIsRed = !getAllianceBlue();//getCargoIsRed();
 
     return ((getAllianceBlue() && cargoIsRed)
 

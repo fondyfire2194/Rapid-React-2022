@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.SolenoidConstants;
@@ -117,6 +116,7 @@ public class IntakesSubsystem extends SubsystemBase {
   }
 
   public boolean getCargoAtFront() {
+
     return frontIntakeCargoDetect.getVoltage() > cargoDetectedVolts
 
         || RobotBase.isSimulation() && simCargoAtFrontIntake;
@@ -124,6 +124,7 @@ public class IntakesSubsystem extends SubsystemBase {
   }
 
   public boolean getCargoAtRear() {
+
     return rearIntakeCargoDetect.getVoltage() > cargoDetectedVolts
     
         || RobotBase.isSimulation() && simCargoAtRearIntake;
@@ -201,7 +202,7 @@ public class IntakesSubsystem extends SubsystemBase {
   }
 
   public void runRearIntakeMotor() {
-    double speed = Pref.getPref("IntakeSpeed") + .1;
+    double speed = Pref.getPref("IntakeSpeed");
     m_rearIntakeMotor.set(ControlMode.PercentOutput, speed);
   }
 
